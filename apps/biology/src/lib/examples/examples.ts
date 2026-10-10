@@ -275,6 +275,49 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('enzyme-activity', [
+    {
+      slug: 'enzyme-activity-ph-graph-pepsin-amylase-trypsin',
+      title: 'Enzyme activity against pH: pepsin, amylase and trypsin',
+      alt: 'Graph of rate of reaction against pH with no numbers on the axes: three bell-shaped curves, pepsin (solid blue) peaking at pH 2, salivary amylase (dashed red) at pH 7 and trypsin (dotted green) at pH 8, each peak marked with a dot, a dashed line down to the pH axis and the label Optimum, and a key under the graph',
+      caption:
+        'The rate of reaction against pH for three digestive enzymes, drawn as shapes with no numbers on the axes. Pepsin (solid blue) works best at about pH 2, as in the stomach, salivary amylase (dashed red) at about pH 7, as in the mouth, and trypsin (dotted green) at about pH 8, as in the small intestine. Each curve is a bell around its optimum, marked with a dot and a dashed line down to the pH axis, and falls to zero either side where the enzyme denatures.',
+      settings: { graph: 'ph', xTitle: 'pH', enzyme1: 'pepsin', show2: true, enzyme2: 'amylase', show3: true, enzyme3: 'trypsin' },
+    },
+    {
+      slug: 'enzyme-activity-temperature-graph-human-enzyme-taq-polymerase',
+      title: 'Enzyme activity against temperature: human enzyme and Taq polymerase',
+      alt: 'Graph of rate of reaction against temperature (°C) with no numbers on the axes: a solid blue curve for a human enzyme and a dashed red curve for Taq polymerase, each rising slowly to an optimum marked with a dot and a dashed line, labeled Optimum, then falling steeply to a dot on the axis labeled Denatured',
+      caption:
+        'The rate of reaction against temperature for an enzyme from the human body (solid blue) and Taq polymerase, from bacteria living in hot springs (dashed red). Each rate rises gently as the temperature goes up, peaks at the enzyme’s optimum, about 37 °C for the human enzyme and 75 °C for Taq polymerase, then falls steeply as the enzyme denatures. Dots mark each optimum, with a dashed line down to the temperature axis, and where each curve falls to zero.',
+      settings: { show2: true, markDen: true },
+    },
+    {
+      slug: 'competitive-non-competitive-inhibitor-graph-michaelis-menten',
+      title: 'Competitive and non-competitive inhibitor graph (rate against substrate concentration)',
+      alt: 'Graph of rate of reaction against substrate concentration with no numbers on the axes: three curves rising and levelling off, no inhibitor (solid blue), a competitive inhibitor (dashed red) reaching the same Vmax more slowly, and a non-competitive inhibitor (dotted green) levelling off at a lower Vmax, with dashed Vmax lines labeled Vmax at the y-axis and a key under the graph',
+      caption:
+        'The rate of reaction against substrate concentration for an enzyme on its own (solid blue), with a competitive inhibitor (dashed red) and with a non-competitive inhibitor (dotted green), drawn as Michaelis–Menten curves. With a competitive inhibitor the rate climbs more slowly but reaches the same Vmax, since enough substrate outcompetes it; with a non-competitive inhibitor it levels off at a lower Vmax. Dashed lines across mark each Vmax, labeled at the y-axis.',
+      settings: { graph: 'substrate', xTitle: 'Substrate concentration', show2: true, show3: true },
+    },
+    {
+      slug: 'michaelis-menten-graph-vmax-km',
+      title: 'Michaelis–Menten graph with Vmax, ½Vmax and Km',
+      alt: 'Graph of rate of reaction against substrate concentration with no numbers on the axes: one curve rising steeply and levelling off under a dashed line labeled Vmax, with a dot at half that height joined by dashed lines to the y-axis, labeled ½Vmax, and down to the x-axis, labeled Km',
+      caption:
+        'A Michaelis–Menten curve: the rate of an enzyme-catalysed reaction rises steeply as substrate is added, then levels off as every active site becomes busy. A dashed line across marks the top rate, Vmax. A dot marks where the rate is half of Vmax, with dashed lines across to the y-axis, labeled ½Vmax, and down to the substrate concentration that gives it, labeled Km.',
+      settings: { graph: 'substrate', xTitle: 'Substrate concentration', markKm: true },
+    },
+    {
+      slug: 'enzyme-temperature-graph-worksheet-label-optimum-denatured',
+      title: 'Enzyme and temperature graph worksheet: label the optimum and denaturation',
+      alt: 'Black and white graph of rate of reaction against temperature (°C) with no numbers on the axes: one curve rising to a peak and falling steeply to the axis, a dot on the peak with a dashed line down and a dot where the curve meets the axis, each with a blank line for students to label',
+      caption:
+        'A worksheet graph of a human enzyme’s rate of reaction against temperature, in black and white with no numbers on the axes. The rate rises to a peak and then falls steeply to zero. A dot marks the peak, with a dashed line down to the temperature axis, and another marks where the rate reaches zero, each with a blank line for students to write what happens there.',
+      settings: { color: false, markDen: true, optLabelMode: 'blank', denLabelMode: 'blank' },
+    },
+  ]),
+
   ...examplesOf('gel-electrophoresis', [
     {
       slug: 'dna-fingerprinting-gel-crime-scene-suspects',
