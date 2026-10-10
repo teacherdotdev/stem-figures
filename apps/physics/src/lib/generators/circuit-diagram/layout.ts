@@ -15,6 +15,20 @@ import { labelRuns } from '$lib/shared/label'
 import type { Segment } from '$lib/shared/vector'
 import type { Arrow, Circuit, Group, Item, Part, PartKind } from './tree'
 
+/** Every symbol PartSymbol draws: the generator's parts, and those only the Circuit Editor places. */
+export type SymbolKind = PartKind | 'voltmeter'
+
+/** What a symbol's drawing depends on: a generator's part, or one placed in the Circuit Editor. */
+export interface SymbolPart {
+  kind: SymbolKind
+  /** A battery: one cell or a battery of two. */
+  cells?: 1 | 2
+  /** A switch: open or closed. */
+  open?: boolean
+  /** A battery turned round, its + facing back. */
+  flip?: boolean
+}
+
 export interface Pt {
   x: number
   y: number
@@ -92,20 +106,21 @@ const MARGIN = 16
 const TITLE_SIZE = 24
 
 /** Half a symbol's length along the wire, and its half-height either side of it. */
-export function symbolSize(part: Part): { half: number; up: number; down: number } {
-  const SIZES: Record<PartKind, { half: number; up: number; down: number }> = {
+export function symbolSize(part: SymbolPart): { half: number; up: number; down: number } {
+  const SIZES: Record<SymbolKind, { half: number; up: number; down: number }> = {
     battery: { half: part.cells === 2 ? 15 : 5, up: 17, down: 17 },
     resistor: { half: 22, up: 9, down: 9 },
     bulb: { half: 15, up: 15, down: 15 },
     switch: { half: 17, up: part.open ? 18 : 4, down: 4 },
     ammeter: { half: 15, up: 15, down: 15 },
+    voltmeter: { half: 15, up: 15, down: 15 },
   }
   return SIZES[part.kind]
 }
 
 // Label sizes, estimated from their text (a figure is drawn without a browser).
 
-const shows = (label: Label | null): label is Label => !!label && (label.mode === 'blank' || (label.mode === 'text' && label.text.trim() !== ''))
+export const shows = (label: Label | null): label is Label => !!label && (label.mode === 'blank' || (label.mode === 'text' && label.text.trim() !== ''))
 
 /** How wide a label is drawn. */
 export function labelWidth(label: Label): number {
@@ -329,7 +344,7 @@ interface Drawing {
 const emptyDrawing = (): Drawing => ({ wires: [], dots: [], parts: [], meters: [], points: [], arrows: [], labels: [], letters: [] })
 
 /** A label's baseline point and anchor, given the side of `at` it sits on (as a direction on screen). */
-function placeLabel(label: Label, at: Pt, dir: Pt): PlacedLabel {
+export function placeLabel(label: Label, at: Pt, dir: Pt): PlacedLabel {
   if (dir.y < 0) return { label, x: at.x, y: at.y - LABEL_GAP - DESCENT, anchor: 'middle' }
   if (dir.y > 0) return { label, x: at.x, y: at.y + LABEL_GAP + ASCENT, anchor: 'middle' }
   return { label, x: at.x + dir.x * LABEL_GAP, y: at.y + ASCENT * 0.45, anchor: dir.x < 0 ? 'end' : 'start' }

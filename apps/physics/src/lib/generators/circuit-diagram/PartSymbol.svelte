@@ -3,11 +3,12 @@
   // travelling along +x; the figure turns it into place. Its wires stop where
   // the symbol starts (symbolSize gives how far that is). A battery's long
   // plate (+) faces forward unless it's flipped. Letters (the A in an ammeter)
-  // are drawn by the figure, so they stay upright.
-  import type { Part } from './tree'
+  // are drawn by the figure, so they stay upright. The Circuit Editor draws its
+  // parts with it too.
+  import type { SymbolPart } from './layout'
 
   interface Props {
-    part: Part
+    part: SymbolPart
     style: 'us' | 'iec'
     ink: string
   }
@@ -54,6 +55,6 @@
   {/if}
   <circle cx="-17" r="3.2" fill="#fff" stroke={ink} stroke-width="2" />
   <circle cx="17" r="3.2" fill="#fff" stroke={ink} stroke-width="2" />
-{:else if part.kind === 'ammeter'}
+{:else if part.kind === 'ammeter' || part.kind === 'voltmeter'}
   <circle r="15" fill="#fff" stroke={ink} stroke-width="2.2" />
 {/if}

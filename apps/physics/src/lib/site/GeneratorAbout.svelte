@@ -38,17 +38,24 @@
     </header>
     {#each copy.intro as paragraph, i (i)}<p>{paragraph}</p>{/each}
 
-    <h3>What you can set</h3>
+    <h3>{generator.kind === 'editor' ? 'What you can draw' : 'What you can set'}</h3>
     <ul>
       {#each copy.settings as line, i (i)}<li>{line}</li>{/each}
     </ul>
 
     <h3>Copying, printing and sharing</h3>
-    <p>
-      Copy the figure straight into a test, worksheet or slide, or download it as a PNG or SVG. Printing the page prints
-      just the figure. Share link copies the page’s address with your settings in it, so anyone who opens it sees this
-      exact figure, and presets save settings you use often in your browser. It’s free, with no sign-up.
-    </p>
+    {#if generator.kind === 'editor'}
+      <p>
+        Copy the drawing straight into a test, worksheet or slide, or download it as a PNG or SVG, cropped to just what
+        you drew. Your drawing stays in this browser, so it’s still here when you come back. It’s free, with no sign-up.
+      </p>
+    {:else}
+      <p>
+        Copy the figure straight into a test, worksheet or slide, or download it as a PNG or SVG. Printing the page prints
+        just the figure. Share link copies the page’s address with your settings in it, so anyone who opens it sees this
+        exact figure, and presets save settings you use often in your browser. It’s free, with no sign-up.
+      </p>
+    {/if}
 
     <div class="gallery"><ExampleGallery generator={generator.id} /></div>
 

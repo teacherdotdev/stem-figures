@@ -104,4 +104,19 @@ export const PHYSICS: CatalogEntry[] = [
       'current', 'voltage', 'potential difference', 'equivalent resistance', 'symbols', 'iec', 'gcse', 'printable',
     ],
   },
+  {
+    id: 'circuit-editor',
+    site: 'physics',
+    kind: 'editor',
+    name: 'Circuit Editor',
+    path: '/circuit-editor',
+    blurb: 'Draw any circuit yourself, part by part and wire by wire.',
+    description:
+      'Draw circuit diagrams for physics tests. Drag cells, resistors, bulbs, switches and meters onto a grid, join them with wires, and copy the finished schematic into your worksheet.',
+    keywords: [
+      'circuit', 'circuits', 'circuit diagram', 'circuit builder', 'circuit maker', 'schematic', 'draw', 'drawing', 'editor',
+      'electric', 'electricity', 'series', 'parallel', 'combination', 'kirchhoff', 'resistor', 'battery', 'cell', 'bulb',
+      'lamp', 'switch', 'ammeter', 'voltmeter', 'wire', 'symbols', 'iec', 'gcse', 'printable',
+    ],
+  },
 ]

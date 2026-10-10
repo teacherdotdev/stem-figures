@@ -181,3 +181,22 @@ _Avoid_: Node, junction (a junction is where wires meet, drawn as a dot with no 
 **Symbol style**:
 US symbols (a zigzag resistor, a bulb with a looped filament) or IEC symbols, as UK GCSE uses (a box resistor, a bulb with a cross).
 _Avoid_: Standard, notation
+
+### Circuit Editor
+
+**Circuit Editor**:
+The one page where a teacher draws a figure by hand: parts dragged from a tray onto a grid and joined by wires, for any circuit the Circuit Diagram can't make. It is an editor, not a generator: nothing is in its address, and the drawing stays in the browser (ADR 0005).
+_Avoid_: Circuit builder (fine as a search word), canvas, sandbox
+
+**Terminal**:
+One of a part's two ends, where wires join it. In the editor a voltmeter and an ammeter are parts with two terminals like any other.
+_Avoid_: Pin, lead, port
+
+**Wire**:
+A line from one terminal to another, horizontal and vertical runs through its bends. It routes itself round the parts when it's drawn, and the teacher can drag its bends.
+_Avoid_: Connection, link, edge
+
+**Junction**:
+A dot where three or more wires meet, worked out from the drawing. Wires that only cross get no dot.
+_Avoid_: Node, point (that's a lettered one)
+

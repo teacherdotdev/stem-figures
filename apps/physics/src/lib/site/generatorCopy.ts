@@ -309,6 +309,37 @@ export const COPY: Record<string, GeneratorCopy> = {
     imageAlt: 'A printable circuit diagram of a 12 V battery with three resistors in series, R₁, R₂ and R₃, made with the Circuit Diagram Generator',
     educationalLevel: ['Middle school', 'High school', 'AP Physics'],
   },
+
+  'circuit-editor': {
+    heading: 'Draw any circuit diagram by hand',
+    intro: [
+      'The Circuit Editor is for the circuits a settings form can’t describe: resistors in series and in parallel in one circuit, two batteries, a meter wherever you want it, or parts laid out the way your textbook draws them. Drag cells, batteries, resistors, bulbs, switches and meters from the tray onto a grid, then join their terminals with wires. Each wire finds its own way round the parts with right-angle bends, and junction dots appear wherever three or more wires meet.',
+      'Tap a part to name it, give it a value or a blank line, or turn it a quarter turn. Tap a wire to drag its bends. Your drawing stays in this browser, with undo and redo, and copies or downloads cropped to just the circuit.',
+    ],
+    settings: [
+      'Cells, batteries of two cells, resistors, bulbs, switches (open or closed), ammeters and voltmeters',
+      'Wires between any two terminals, routed at right angles, with bends you can drag and junction dots drawn for you',
+      'Every part’s name and value written, with subscripts and Ω, a blank line for students, or left off',
+      'Parts turned in quarter turns, with their labels on either side',
+      'US or IEC (UK GCSE) symbols, and + and − beside cells and batteries',
+    ],
+    faqs: [
+      {
+        q: 'How do I join two parts with a wire?',
+        a: 'Switch to Wire mode, tap a terminal on one part (or the part, near that end), then tap a terminal on the other. The wire routes itself with right-angle bends. To change its path, go back to Move mode, tap the wire, and drag the square on any bend.',
+      },
+      {
+        q: 'How do I draw parts in parallel?',
+        a: 'Join each branch to the same terminals. Two wires from one terminal share their path until they part, and a junction dot appears where they split, the way parallel branches are drawn in a textbook.',
+      },
+      {
+        q: 'Where does my drawing go when I close the page?',
+        a: 'It stays in this browser and is back when you open the editor again. Nothing is sent anywhere, so it won’t follow you to another computer: copy or download the picture to keep it.',
+      },
+    ],
+    imageAlt: 'A circuit drawn in the Circuit Editor: a 12 V battery and R₁ in series with R₂ and R₃ in parallel',
+    educationalLevel: ['Middle school', 'High school', 'AP Physics'],
+  },
 }
 
 /** The copy for a generator; every generator on the site has some. */

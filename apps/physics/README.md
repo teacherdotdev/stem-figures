@@ -76,6 +76,7 @@ src/lib/shared/        pieces every generator uses: figure card and toolbar,
                        undo history, presets, dialogs, fields
 $shared/               ../../packages/shared: pieces shared with the other sites
 src/lib/generators/    index.ts lists every generator; one folder each
+src/lib/editors/       the Circuit Editor, drawn by hand (listed in index.ts too)
 ```
 
 To add a generator: make a folder under `src/lib/generators/` with its

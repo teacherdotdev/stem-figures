@@ -1,7 +1,8 @@
 // Every generator on the site. Their names, addresses and search words are
 // in the STEM Figures catalog ($shared/catalog), with every other site's;
 // here each gets the component drawing its directory preview. Page titles,
-// the sitemap and the top bar read GENERATORS.
+// the sitemap and the top bar read GENERATORS. It includes the site's editor
+// (src/lib/editors/), listed and shown like a generator.
 //
 // The Coil and Magnet generator (coil-and-magnet/) is switched off for now:
 // it has no catalog entry, preview here or page. Restore all three to bring
@@ -17,6 +18,7 @@ import ProjectileMotionPreview from './projectile-motion/Preview.svelte'
 import PulleyPreview from './pulley/Preview.svelte'
 import SpringScalePreview from './spring-scale/Preview.svelte'
 import VectorDiagramPreview from './vector-diagram/Preview.svelte'
+import CircuitEditorPreview from '$lib/editors/circuit-editor/Preview.svelte'
 
 /** Each generator's directory preview, by id. */
 export const PREVIEWS: Record<string, Component> = {
@@ -27,6 +29,7 @@ export const PREVIEWS: Record<string, Component> = {
   'projectile-motion': ProjectileMotionPreview,
   'spring-scale': SpringScalePreview,
   'circuit-diagram': CircuitDiagramPreview,
+  'circuit-editor': CircuitEditorPreview,
 }
 
 export const GENERATORS = generatorsOn(SITE_ID, PREVIEWS)
