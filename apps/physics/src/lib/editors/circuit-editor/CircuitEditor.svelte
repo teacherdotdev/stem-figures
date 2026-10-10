@@ -8,9 +8,10 @@
   //   Wire:   tap one terminal, then another, to join them
   //   Delete: tap a part or wire, or drag a box around parts, to remove them
   // The drawing is kept in this browser (nothing goes in the address), with
-  // undo and redo, and exports cropped to just the circuit. Its scaffolding
-  // (grid, tray, modes, undo, storage and export) is copied from Chemistry's
-  // Organic Structure Editor.
+  // undo and redo, and exports cropped to just the circuit. The Circuit
+  // Diagram Generator's Edit by hand leaves its circuit in storage for the
+  // editor to open (see ./handoff). Its scaffolding (grid, tray, modes, undo,
+  // storage and export) is copied from Chemistry's Organic Structure Editor.
   import { Cable, Copy, Eraser, FileDown, ImageDown, MousePointer2, Redo2, RotateCw, Trash2, Undo2 } from '@lucide/svelte'
   import { onMount, untrack } from 'svelte'
   import { copyPng, downloadPng, downloadSvg } from '$shared/exporting'
@@ -18,6 +19,7 @@
   import LabelField from '$lib/shared/LabelField.svelte'
   import type { Label } from '$lib/shared/label'
   import CircuitDrawing from './CircuitDrawing.svelte'
+  import { HANDOFF_KEY } from './handoff'
   import { commit as record, redo as redoIn, replace, settle, startHistory, undo as undoIn } from './history'
   import PartIcon from './PartIcon.svelte'
   import {
@@ -61,6 +63,16 @@
     try {
       history = startHistory(tidySchematic(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null')))
       if (history.present.parts.length) message = 'Your last circuit is back. Keep drawing, or clear the page for a new one.'
+      // A circuit the generator handed over replaces the drawing, as one step Undo takes back.
+      const handed = localStorage.getItem(HANDOFF_KEY)
+      if (handed) {
+        localStorage.removeItem(HANDOFF_KEY)
+        const had = history.present.parts.length
+        history = record(history, tidySchematic(JSON.parse(handed)))
+        message = had
+          ? 'Here’s the circuit from the generator. Undo brings back what you had drawn before.'
+          : 'Here’s the circuit from the generator. Add parts, move them, or join them with more wires.'
+      }
     } catch {
       /* nothing saved, or storage blocked */
     }

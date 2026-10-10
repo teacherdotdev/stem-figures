@@ -1,7 +1,10 @@
 <script lang="ts">
   // The Circuit Diagram Generator: the circuit, its meters and its symbols on
   // the left, the figure on the right. Settings live in the page address.
-  import { BatteryFull, ChevronDown, CircuitBoard, Gauge, Heading, Palette, Plus, Trash2 } from '@lucide/svelte'
+  // Edit by hand opens the circuit in the Circuit Editor, for whatever the
+  // generator can't draw.
+  import { BatteryFull, ChevronDown, CircuitBoard, Gauge, Heading, Palette, PencilRuler, Plus, Trash2 } from '@lucide/svelte'
+  import { fromGenerator, HANDOFF_KEY } from '$lib/editors/circuit-editor/handoff'
   import { SvelteSet } from 'svelte/reactivity'
   import Choice from '$lib/shared/Choice.svelte'
   import { createGenerator } from '$lib/shared/generator.svelte'
@@ -51,6 +54,15 @@
     const at = Number(gen.s.voltmeter)
     if (at === i + 1) gen.s.voltmeter = 'none'
     else if (at > i + 1) gen.s.voltmeter = String(at - 1) as VoltmeterPlace
+  }
+
+  /** Leave the circuit for the editor to pick up as the link opens it. */
+  function handOff() {
+    try {
+      localStorage.setItem(HANDOFF_KEY, JSON.stringify(fromGenerator(gen.snapshot())))
+    } catch {
+      /* storage blocked: the editor opens with what it had */
+    }
   }
 
   const voltmeterPlaces = $derived<[VoltmeterPlace, string][]>([
@@ -141,6 +153,14 @@
       <div class="field"><LabelField name="Chart title" placeholder="Title" bind:label={gen.s.title} /></div>
     </Section>
     <FigureOptions bind:mirror={gen.s.mirror} bind:color={gen.s.color} />
+
+    <div class="by-hand">
+      <a class="btn-ghost edit" href="/circuit-editor" onclick={handOff}><PencilRuler size={16} aria-hidden="true" /> Edit by hand</a>
+      <p class="note">
+        Opens this circuit in the Circuit Editor, to add parts, mix series and parallel, or move things yourself. It
+        replaces what’s drawn there; Undo brings that back.
+      </p>
+    </div>
   {/snippet}
 
   {#snippet figure()}
@@ -160,5 +180,7 @@
   .row[open] .row-summary { display: none; }
   .chevron { display: inline-flex; color: var(--muted); transform: rotate(-90deg); transition: transform 0.15s; }
   .row[open] .chevron { transform: none; }
+  .by-hand { margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px solid var(--border); }
+  .edit { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.45rem 0.8rem; border-radius: 9px; font-weight: 700; text-decoration: none; }
   .add { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.35rem 0.65rem; font-size: 0.85rem; border-radius: 9px; }
 </style>

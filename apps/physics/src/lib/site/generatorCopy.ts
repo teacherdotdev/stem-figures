@@ -283,6 +283,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       'An ammeter in the main line, and a voltmeter across the battery or one part, each with its reading or none',
       'Every part’s name and value written, with subscripts and Ω, a blank line for students, or left off',
       'US or IEC (UK GCSE) symbols, a chart title, mirror, and color for slides',
+      'Edit by hand, to open the circuit in the Circuit Editor and add whatever the generator can’t draw',
     ],
     faqs: [
       {
@@ -299,7 +300,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'Can it draw resistors in series and in parallel in the same circuit?',
-        a: 'No. This generator keeps to all in series or all in parallel, the circuits most questions start with, so a figure is quick to set up and always drawn neatly.',
+        a: 'Not here: this generator keeps to all in series or all in parallel, the circuits most questions start with. For a combination circuit, a second battery or more parts, press Edit by hand. Your circuit opens in the Circuit Editor, where you can add parts and wires anywhere.',
       },
       {
         q: 'Where do the ammeter and voltmeter go?',
@@ -335,6 +336,10 @@ export const COPY: Record<string, GeneratorCopy> = {
       {
         q: 'Where does my drawing go when I close the page?',
         a: 'It stays in this browser and is back when you open the editor again. Nothing is sent anywhere, so it won’t follow you to another computer: copy or download the picture to keep it.',
+      },
+      {
+        q: 'Can I start from a series or parallel circuit?',
+        a: 'Yes. Set it up in the Circuit Diagram Generator and press Edit by hand. The circuit opens here with its parts and wires where the generator drew them, ready for whatever else you need. It replaces what was drawn here, and Undo brings that back.',
       },
     ],
     imageAlt: 'A circuit drawn in the Circuit Editor: a 12 V battery and R₁ in series with R₂ and R₃ in parallel',
