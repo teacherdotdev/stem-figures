@@ -10,11 +10,11 @@ Components and helpers used by more than one STEM Figures site, imported as
 | `Modal`                                                                                     | math, chemistry, physics, biology, engineering |
 | `LabelField`                                                                                | math, chemistry, biology, engineering     |
 | `GeneratorPage`, `generatorState`, and through them `FigureCanvas`, `Presets`, `presetStore`, `history`, `exporting` | math, chemistry, physics, biology |
-| `labelSize`                                                                                 | math, chemistry (Titration Curve), biology (Cell Diagram, Population Growth, Punnett Square, Mitosis & Meiosis, Predator–Prey Cycles) |
-| `graph/`: `Grid`, `grid`, `axes`, `AxisSettings`, `TitleSettings`, `GridlineSettings`       | math (Coordinate Grid), chemistry (Titration Curve), biology (Population Growth, Predator–Prey Cycles) |
-| `graph/`: `numbering`, `caps`, `CapPicker`, `colors`                                        | math, chemistry (Titration Curve), biology (Population Growth, Predator–Prey Cycles) |
+| `labelSize`                                                                                 | math, chemistry (Titration Curve), biology (Cell Diagram, Population Growth, Punnett Square, Mitosis & Meiosis, Predator–Prey Cycles, Enzyme Activity) |
+| `graph/`: `Grid`, `grid`, `axes`, `AxisSettings`, `TitleSettings`, `GridlineSettings`       | math (Coordinate Grid), chemistry (Titration Curve), biology (Population Growth, Predator–Prey Cycles, Enzyme Activity) |
+| `graph/`: `numbering`, `caps`, `CapPicker`, `colors`                                        | math, chemistry (Titration Curve), biology (Population Growth, Predator–Prey Cycles, Enzyme Activity) |
 | `Section`                                                                                   | math, physics (Spring Scale), chemistry (Titration Curve), biology (every generator) |
-| `HelpTip`                                                                                   | math, biology (Population Growth, Predator–Prey Cycles) |
+| `HelpTip`                                                                                   | math, biology (Population Growth, Predator–Prey Cycles, Enzyme Activity) |
 | `FigureFrame`, `figureAlign`, `settings`, `figureText`, `FigureTextSettings`                | physics (Spring Scale), math (Length Reading), biology (`settings` in every generator, `FigureFrame` in all but the two graphs, `FigureTextSettings` in Micropipette Reading) |
 | `Magnifier`, `MagnifierSettings`, `magnify`                                                 | physics (Spring Scale), math (Length Reading), biology (Micropipette Reading: `Magnifier`, `magnify`) |
 | `marks`, `ReadingField`                                                                     | physics (Spring Scale), biology (Microscope Field of View: `ReadingField`) |
