@@ -98,20 +98,55 @@ describe('an enzyme activity graph', () => {
     const axisY = g.grid.y + g.grid.h
     const [top, low] = g.lines.map((l) => axisY - l.y1)
     expect(top / low).toBeCloseTo(2.5, 6)
-    expect(g.sideLabels.map(labelText)).toEqual(['Vmax', 'Vmax'])
+    // Named for its curve, but for the enzyme's own.
+    expect(g.sideLabels.map(labelText)).toEqual(['Vmax', 'Vmax (non-competitive)'])
   })
 
   it('marks ½Vmax and Km at the axes, Km raised by a competitive inhibitor and kept by a non-competitive one', () => {
     const g = build(INHIBITORS + '&markVmax=0&markKm=1')
     // Dots at Km (1) for the enzyme and the non-competitive inhibitor, and 2.5 for the competitive one.
     const at = g.dots.map((d) => Math.round(((d.x - g.grid.x) / g.grid.w) * 10 * 100) / 100)
-    expect(at).toEqual([1, 2.5, 1])
-    expect(g.sideLabels.filter((l) => l.anchor === 'middle').map(labelText)).toEqual(['Km', 'Km'])
-    expect(g.sideLabels.filter((l) => l.anchor === 'end').map(labelText)).toEqual(['½Vmax', '½Vmax'])
+    expect(at).toEqual([1, 1, 2.5])
+    expect(g.sideLabels.filter((l) => l.anchor === 'middle').map(labelText)).toEqual(['Km', 'Km (competitive)'])
+    expect(g.sideLabels.filter((l) => l.anchor === 'end').map(labelText)).toEqual(['½Vmax', '½Vmax (non-competitive)'])
     // Km's labels sit under the x-axis, ½Vmax's left of the y-axis.
     for (const l of g.sideLabels) {
       if (l.anchor === 'middle') expect(l.y).toBeGreaterThan(g.grid.y + g.grid.h)
       else expect(l.x).toBeLessThan(g.grid.x)
+    }
+  })
+
+  it('names each Vmax, ½Vmax and Km for its curve only when there’s more than one', () => {
+    const one = build('graph=substrate&inhibitor1=competitive&markKm=1')
+    expect(one.sideLabels.map(labelText)).toEqual(['Vmax', '½Vmax', 'Km'])
+    // A competitive and a non-competitive inhibitor share nothing, so both are named.
+    const both = build('graph=substrate&inhibitor1=competitive&show3=1&markKm=1')
+    expect(both.sideLabels.map(labelText).sort()).toEqual([
+      'Km (competitive)', 'Km (non-competitive)', 'Vmax (competitive)', 'Vmax (non-competitive)',
+      '½Vmax (competitive)', '½Vmax (non-competitive)',
+    ])
+    // A name typed for the key is the one used.
+    const named = build(INHIBITORS + '&markKm=1&name3=Cyanide')
+    expect(named.sideLabels.map(labelText)).toContain('Vmax (Cyanide)')
+    // Blank lines stay blank, for students.
+    const blank = build(INHIBITORS + '&markKm=1&kmLabelMode=blank')
+    expect(blank.sideLabels.filter((l) => l.anchor === 'middle').every((l) => l.blank && !l.runs)).toBe(true)
+  })
+
+  it('keeps the named labels apart, Km’s each centered under its line, inside the figure', () => {
+    for (const query of [INHIBITORS + '&markKm=1', 'graph=substrate&inhibitor1=competitive&show3=1&markKm=1', INHIBITORS + '&markKm=1&km=0.4&strength=1.5']) {
+      const g = build(query)
+      const boxes = g.sideLabels.map((l) => boxOf(l, g.labelFs))
+      for (const [k, a] of boxes.entries()) for (const b of boxes.slice(k + 1)) expect(overlap(a, b), query).toBe(false)
+      for (const b of boxes) {
+        expect(b.x0, query).toBeGreaterThanOrEqual(0)
+        expect(b.x1, query).toBeLessThanOrEqual(g.width)
+      }
+      const downs = g.guides.filter((l) => l.x1 === l.x2).map((l) => l.x1)
+      for (const l of g.sideLabels.filter((l) => l.anchor === 'middle')) expect(downs, query).toContain(l.x)
+      // The x-axis title stays below every row of them.
+      const title = g.labels.find((l) => l.kind === 'side' && !l.rotate)!
+      for (const b of boxes) expect(b.y1, query).toBeLessThan(title.y - g.fs)
     }
   })
 

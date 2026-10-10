@@ -295,9 +295,9 @@ export const EXAMPLES: Example[] = [
     {
       slug: 'competitive-non-competitive-inhibitor-graph-michaelis-menten',
       title: 'Competitive and non-competitive inhibitor graph (rate against substrate concentration)',
-      alt: 'Graph of rate of reaction against substrate concentration with no numbers on the axes: three curves rising and levelling off, no inhibitor (solid blue), a competitive inhibitor (dashed red) reaching the same Vmax more slowly, and a non-competitive inhibitor (dotted green) levelling off at a lower Vmax, with dashed Vmax lines labeled Vmax at the y-axis and a key under the graph',
+      alt: 'Graph of rate of reaction against substrate concentration with no numbers on the axes: three curves rising and levelling off, no inhibitor (solid blue), a competitive inhibitor (dashed red) reaching the same Vmax more slowly, and a non-competitive inhibitor (dotted green) levelling off at a lower Vmax, with dashed Vmax lines labeled Vmax and Vmax (non-competitive) at the y-axis and a key under the graph',
       caption:
-        'The rate of reaction against substrate concentration for an enzyme on its own (solid blue), with a competitive inhibitor (dashed red) and with a non-competitive inhibitor (dotted green), drawn as Michaelis–Menten curves. With a competitive inhibitor the rate climbs more slowly but reaches the same Vmax, since enough substrate outcompetes it; with a non-competitive inhibitor it levels off at a lower Vmax. Dashed lines across mark each Vmax, labeled at the y-axis.',
+        'The rate of reaction against substrate concentration for an enzyme on its own (solid blue), with a competitive inhibitor (dashed red) and with a non-competitive inhibitor (dotted green), drawn as Michaelis–Menten curves. With a competitive inhibitor the rate climbs more slowly but reaches the same Vmax, since enough substrate outcompetes it; with a non-competitive inhibitor it levels off at a lower Vmax. Dashed lines across mark each Vmax, labeled at the y-axis: the enzyme’s own, which the competitive inhibitor shares, and the non-competitive inhibitor’s.',
       settings: { graph: 'substrate', xTitle: 'Substrate concentration', show2: true, show3: true },
     },
     {

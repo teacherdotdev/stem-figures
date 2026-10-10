@@ -232,7 +232,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       'Rate against temperature, pH or substrate concentration',
       'Up to three curves, each one of the enzymes (human enzyme, Taq polymerase, pepsin, salivary amylase, trypsin or catalase) or an unknown enzyme with its own optimum and width, named in a key',
       'Against substrate concentration, each curve with no inhibitor, a competitive inhibitor or a non-competitive one, how soon the rate levels off (Km), and how strong the inhibitor is',
-      'The optimum and denaturation marked with dots, or Vmax, ½Vmax and Km with dashed lines to the axes, each labeled, left as a blank line for students, or unlabeled',
+      'The optimum and denaturation marked with dots, or Vmax, ½Vmax and Km with dashed lines to the axes, named for their curve when there’s more than one, each labeled, left as a blank line for students, or unlabeled',
       'Color or black and white, gridlines, arrows at the axes’ ends, the chart and axis titles (or blank lines), and label size',
     ],
     faqs: [
@@ -254,7 +254,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'What are Vmax and Km?',
-        a: 'Vmax is the fastest rate an enzyme reaches when every active site is busy, where the curve levels off. Km, the Michaelis constant, is the substrate concentration at which the rate is half of Vmax; the lower it is, the more easily the enzyme takes up its substrate. Under Marked, Vmax gets a dashed line across, and ½Vmax and Km a dot with dashed lines to both axes, labeled at the axes.',
+        a: 'Vmax is the fastest rate an enzyme reaches when every active site is busy, where the curve levels off. Km, the Michaelis constant, is the substrate concentration at which the rate is half of Vmax; the lower it is, the more easily the enzyme takes up its substrate. Under Marked, Vmax gets a dashed line across, and ½Vmax and Km a dot with dashed lines to both axes, labeled at the axes. With an inhibitor, each label names its curve, like Vmax (non-competitive) or Km (competitive).',
       },
       {
         q: 'How do I make a worksheet where students label the graph?',
