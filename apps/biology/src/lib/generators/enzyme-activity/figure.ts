@@ -98,7 +98,8 @@ export function rangeOf(s: EnzymeSettings) {
   const shapes = (drawn.length ? drawn : [0 as const]).map((i) => shapeOf(s, i))
   if (s.graph === 'temperature') {
     const end = Math.max(...shapes.map((sh) => denaturedAbove(sh.opt, sh.width)))
-    return { from: 0, to: Math.min(150, Math.max(30, Math.ceil((end + 5) / 10) * 10)) }
+    // A fifth more past it, to the next 10 °C, leaves room for its label.
+    return { from: 0, to: Math.min(150, Math.max(30, Math.ceil((end * 1.2) / 10) * 10)) }
   }
   if (s.graph === 'ph') {
     const from = Math.max(0, Math.floor(Math.min(...shapes.map((sh) => sh.opt - sh.width)) - 1))

@@ -14,8 +14,12 @@
 // competitive inhibitor raises Km and a non-competitive one lowers Vmax,
 // each by the inhibitor's strength, 1 + [I]/Ki.
 
-/** How much of the rate is left where an enzyme counts as denatured; the temperature curve meets the axis there. */
-export const DENATURED = 0.01
+/**
+ * How much of the rate is left where an enzyme counts as denatured. The
+ * temperature curve is lowered by this much, so it meets the axis there at
+ * a slant, as textbooks draw it, rather than trailing along it.
+ */
+export const DENATURED = 0.05
 /** How steeply the enzyme denatures past the optimum, in widths. */
 const STEEP = 6
 // Where the denaturing is centered, so the rate's slope is 0 at the optimum.

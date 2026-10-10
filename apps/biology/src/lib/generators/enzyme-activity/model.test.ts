@@ -36,7 +36,7 @@ describe('rate against temperature', () => {
     expect(rateAtTemperature(d - 0.5, 37, 10)).toBeGreaterThan(0)
     expect(rateAtTemperature(d + 0.01, 37, 10)).toBe(0)
     expect(rateAtTemperature(100, 37, 10)).toBe(0)
-    expect(DENATURED).toBeLessThan(0.05)
+    expect(DENATURED).toBeLessThanOrEqual(0.05)
   })
 
   it('has every curve the same shape, stretched by its width', () => {

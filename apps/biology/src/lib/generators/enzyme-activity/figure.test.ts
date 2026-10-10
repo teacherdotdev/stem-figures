@@ -54,8 +54,8 @@ describe('an enzyme activity graph', () => {
   })
 
   it('fits the temperature axis to every curve drawn', () => {
-    expect(build('show2=1').range).toEqual({ from: 0, to: 100 })
-    expect(build('enzyme1=unknown&tOpt1=20&tWidth1=5').range).toEqual({ from: 0, to: 40 })
+    expect(build('show2=1').range).toEqual({ from: 0, to: 110 })
+    expect(build('enzyme1=unknown&tOpt1=20&tWidth1=5').range).toEqual({ from: 0, to: 30 })
   })
 
   it('compares pepsin, amylase and trypsin against pH, dashed apart and named in a key', () => {
@@ -151,7 +151,7 @@ describe('an enzyme activity graph', () => {
 
 describe('the readout', () => {
   it('says where each enzyme works', () => {
-    expect(readoutOf(settingsOf(''))).toEqual(['Human enzyme: works best at 37 °C, and has denatured by 50 °C'])
+    expect(readoutOf(settingsOf(''))).toEqual(['Human enzyme: works best at 37 °C, and has denatured by 47 °C'])
     expect(readoutOf(settingsOf(THREE_PH))[0]).toBe('Pepsin: works best at pH 2, and between pH 0 and 4.5')
     expect(readoutOf(settingsOf(INHIBITORS))).toEqual([
       'No inhibitor: Vmax and Km of the enzyme on its own',
