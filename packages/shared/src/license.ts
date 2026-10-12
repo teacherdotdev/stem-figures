@@ -1,5 +1,6 @@
-// The terms every figure made on a STEM Figures site is shared under: CC0, so
-// teachers can use them anywhere without asking or giving credit (see
+// The terms every figure made on a STEM Figures site is shared under: our part
+// of it is CC0, so teachers can use it anywhere without asking or giving
+// credit, and anything original they add is theirs (see
 // docs/adr/0002-figures-are-cc0.md). The code is separately Apache 2.0
 // (LICENSE.txt at the repo root).
 //
@@ -14,10 +15,12 @@ export const FIGURE_LICENSE = {
   page: '/reuse',
 } as const
 
-/** The notice written into every exported SVG and PNG. */
+/** The notice written into every exported SVG and PNG. We can only waive our
+ *  own rights, so it doesn't claim whatever the teacher added themselves. */
 export const FIGURE_NOTICE =
-  `Made with STEM Figures (stemfigures.com), a teacher.dev project. No rights reserved: ` +
-  `dedicated to the public domain under ${FIGURE_LICENSE.fullName} (${FIGURE_LICENSE.url}).`
+  `Made with STEM Figures (stemfigures.com), a teacher.dev project. Everything STEM Figures contributes to ` +
+  `this figure is dedicated to the public domain under ${FIGURE_LICENSE.name} (${FIGURE_LICENSE.url}). ` +
+  `Anything original added by the person who made it is theirs.`
 
 const RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
 const DC = 'http://purl.org/dc/elements/1.1/'
@@ -30,13 +33,13 @@ export const SVG_METADATA =
   `<cc:license rdf:resource="${FIGURE_LICENSE.url}"/></cc:Work></rdf:RDF></metadata>`
 
 /** The same as XMP, which image viewers, editors and search engines read from a PNG.
- *  xmpRights:Marked False is how XMP says public domain. */
+ *  No xmpRights:Marked, which would call the whole figure public domain (False)
+ *  or rights-managed (True) when it may be partly the teacher's. */
 const XMP =
   `<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?>` +
   `<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="${RDF}">` +
   `<rdf:Description rdf:about="" xmlns:dc="${DC}" xmlns:cc="${CC}" xmlns:xmpRights="http://ns.adobe.com/xap/1.0/rights/">` +
   `<dc:rights><rdf:Alt><rdf:li xml:lang="x-default">${FIGURE_NOTICE}</rdf:li></rdf:Alt></dc:rights>` +
-  `<xmpRights:Marked>False</xmpRights:Marked>` +
   `<xmpRights:WebStatement>${FIGURE_LICENSE.url}</xmpRights:WebStatement>` +
   `<cc:license rdf:resource="${FIGURE_LICENSE.url}"/>` +
   `</rdf:Description></rdf:RDF></x:xmpmeta><?xpacket end="r"?>`

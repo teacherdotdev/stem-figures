@@ -5,7 +5,7 @@
   import Seo from '$lib/site/Seo.svelte'
 </script>
 
-<Seo title="Reusing our figures" description="Every figure you make on Chemistry Figures is in the public domain (CC0): use it in tests, worksheets, slides or anything else, no credit needed." path={IMAGE_LICENSE.page} />
+<Seo title="Reusing our figures" description="Figures you make on Chemistry Figures are free to use in tests, worksheets, slides or anything else: our part is in the public domain (CC0), and anything you add is yours." path={IMAGE_LICENSE.page} />
 
 <div class="page">
   <a class="back" href="/">← All figures</a>
@@ -19,9 +19,14 @@
       don’t need to ask, and you don’t need to credit us.
     </p>
     <p>
-      We’ve dedicated them to the public domain under the
-      <a href={IMAGE_LICENSE.url} rel="license">{IMAGE_LICENSE.fullName}</a>. Downloaded SVG and PNG files say so
-      in their metadata too.
+      Everything we contribute to a figure (the drawing, its layout and its style) is dedicated to the public domain
+      under the <a href={IMAGE_LICENSE.url} rel="license">{IMAGE_LICENSE.fullName}</a>. The example figures are
+      entirely ours, so they’re public domain too. Downloaded SVG and PNG files say so in their metadata.
+    </p>
+    <p>
+      Anything original you add yourself, such as your own text or a structure you draw, is yours. The worksheet, test
+      or slides you put a figure in are yours as well. What nobody can own is the figure itself: anyone can make the
+      same one here and use it.
     </p>
     <p>{IMAGE_LICENSE.copyright}.</p>
   </section>

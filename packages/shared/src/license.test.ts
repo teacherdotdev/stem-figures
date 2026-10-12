@@ -37,11 +37,11 @@ describe('the license in an exported PNG', () => {
     expect(chunks(png).map(([type]) => type)).toEqual(['IHDR', 'tEXt', 'iTXt', 'IEND'])
   })
 
-  it('names CC0 as plain text and as XMP', () => {
+  it('names CC0 as plain text and as XMP, without calling the whole figure public domain', () => {
     const [, [, copyright], [, xmp]] = chunks(withLicense(blank()))
     expect(copyright).toBe(`Copyright\0${FIGURE_NOTICE}`)
     expect(xmp.startsWith('XML:com.adobe.xmp\0')).toBe(true)
     expect(xmp).toContain(`<xmpRights:WebStatement>${FIGURE_LICENSE.url}</xmpRights:WebStatement>`)
-    expect(xmp).toContain('<xmpRights:Marked>False</xmpRights:Marked>')
+    expect(xmp).not.toContain('xmpRights:Marked')
   })
 })

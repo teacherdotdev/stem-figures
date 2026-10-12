@@ -54,10 +54,11 @@ one site's Caret never changes the other's.
 
 The code is open source under the Apache License 2.0 (`LICENSE.txt`).
 
-The figures are a separate matter. Every figure a teacher makes on any of the
-sites, and every example picture on them, is dedicated to the public domain
-under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/): use it
-anywhere, without asking or giving credit. The terms live in
+The figures are a separate matter. Everything the sites contribute to a
+figure a teacher makes, and every example picture, is dedicated to the public
+domain under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/):
+use it anywhere, without asking or giving credit. We can only waive our own
+rights, so anything original a teacher adds stays theirs. The terms live in
 `packages/shared/src/license.ts`. Exported SVGs and PNGs carry them as
 metadata, and each figure site explains them at `/reuse`. Why CC0:
 `packages/shared/docs/adr/0002-figures-are-cc0.md`. Any new way of saving a
