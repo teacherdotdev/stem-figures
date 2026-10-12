@@ -94,7 +94,7 @@
   {/if}
 
   <p class="license no-print">
-    Free to use in your tests, worksheets, slides or anything else. Open source under
+    Free to use in your tests, worksheets, slides or anything else, no credit needed. Public domain under
     <a href={IMAGE_LICENSE.url} rel="license">{IMAGE_LICENSE.name}</a>.
     <a href={IMAGE_LICENSE.page}>How to reuse our figures</a>
   </p>

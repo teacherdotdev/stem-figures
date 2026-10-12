@@ -13,7 +13,8 @@
 // For every example page in the sitemap it opens the page's "Edit this
 // figure" link, the generator with the example's settings, and exports the
 // figure the way the generator's Download SVG / PNG buttons do (the same
-// SVG, drawn on white), only larger: about 1600 pixels on its longest side.
+// SVG, drawn on white, with the CC0 license written in), only larger: about
+// 1600 pixels on its longest side.
 // Each picture is saved where the sitemap says it is, under the app's
 // static/ (e.g. static/examples/volume-reading/buret-reading-12-35-ml.png),
 // and its size goes in src/lib/examples/sizes.json for the pages' <img> tags.
@@ -25,6 +26,7 @@
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { chromium } from 'playwright-core'
+import { withLicense } from '../packages/shared/src/license.ts'
 
 const args = process.argv.slice(2)
 const appName = args.find((a) => a.startsWith('--app='))?.slice('--app='.length) ?? 'chemistry'
@@ -63,11 +65,11 @@ try {
   sizes = JSON.parse(await readFile(sizesFile, 'utf8'))
 } catch {}
 
-/** Save a PNG from a data: URL under static/. */
+/** Save a PNG from a data: URL under static/, with the license written in. */
 async function save(sitePath, dataUrl) {
   const file = path.join(staticDir, sitePath)
   await mkdir(path.dirname(file), { recursive: true })
-  await writeFile(file, Buffer.from(dataUrl.split(',')[1], 'base64'))
+  await writeFile(file, withLicense(Buffer.from(dataUrl.split(',')[1], 'base64')))
 }
 
 /** Open a page, again if a dev server reloading it cut the first try short. */
