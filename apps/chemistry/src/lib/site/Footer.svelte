@@ -7,6 +7,7 @@
   </a>
   <a href="/about"><span>About</span></a>
   <a href="/privacy"><span>Privacy</span></a>
+  <a href="/reuse"><span>Reuse</span></a>
   <a href="/linking"><span>Link to a figure</span></a>
 </footer>
 

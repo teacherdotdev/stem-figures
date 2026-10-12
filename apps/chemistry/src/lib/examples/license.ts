@@ -1,14 +1,12 @@
-// The terms the example images are shared under, in one place: the example
+// The terms this site's figures are shared under, in one place: the example
 // pages and their structured data, the /reuse page and the sitemap read it.
-// Like all of STEM Figures, they're open source under Apache 2.0.
+// Like every figure on STEM Figures, they're dedicated to the public domain
+// under CC0 ($shared/license.ts).
+import { FIGURE_LICENSE } from '$shared/license'
 
 export const IMAGE_LICENSE = {
-  name: 'Apache 2.0',
-  fullName: 'Apache License 2.0',
-  url: 'https://www.apache.org/licenses/LICENSE-2.0',
-  /** the page telling teachers how they may reuse the images */
-  page: '/reuse',
+  ...FIGURE_LICENSE,
   /** the name search engines show as the images' credit */
   credit: 'Chemistry Figures',
-  copyright: '© Chemistry Figures (chemistryfigures.com), a teacher.dev project',
+  copyright: 'No rights reserved. Dedicated to the public domain by Chemistry Figures (chemistryfigures.com), a teacher.dev project',
 } as const
