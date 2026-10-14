@@ -1,5 +1,5 @@
 // The choices in a row style: how one equation row is drawn. The coordinate
-// grid uses all but values; endpoints and asymptotes are its own. The number
+// grid uses all but values; endpoints, asymptotes and fills are its own. The number
 // line uses the color, point mark, label style and values, since its thick
 // line, arrows and circles carry meaning.
 
@@ -23,6 +23,9 @@ export const VALUE_STYLES = { shown: 'Write values', hidden: 'No values' }
 export const ENDPOINTS = { shown: 'Show endpoints', hidden: 'No endpoints' }
 // Whether a curve's asymptotes are drawn as dotted lines. Hidden unless asked, so a test can ask for them.
 export const ASYMPTOTES = { hidden: 'No asymptotes', shown: 'Show asymptotes' }
+// How an inequality's shaded region is filled: a see-through tint, or
+// hatching, which keeps overlapping regions apart in black and white.
+export const FILLS = { tint: 'Tint', hatch: 'Hatching' }
 
 export type LineStyle = keyof typeof LINE_STYLES
 export type Arrows = keyof typeof ARROWS
@@ -31,3 +34,4 @@ export type LabelStyle = keyof typeof LABEL_STYLES
 export type ValueStyle = keyof typeof VALUE_STYLES
 export type Endpoints = keyof typeof ENDPOINTS
 export type AsymptoteStyle = keyof typeof ASYMPTOTES
+export type Fill = keyof typeof FILLS

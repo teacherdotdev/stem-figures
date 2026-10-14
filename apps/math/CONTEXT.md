@@ -77,7 +77,7 @@ A figure of one horizontal axis with evenly spaced ticks, for placing numbers an
 _Avoid_: Line graph, ruler
 
 **Equation**:
-What the teacher types to graph, one per row. On a number line it's an inequality or equation in one letter, such as −2 < x ≤ 5, x < −1 or x ≥ 3, or x = 2, or a list of points, each one number, such as 3 or −1, 2.5, π/2, or a sequence; every row is drawn over the same line, and a number line with no equation is blank. On a coordinate grid it's a line or curve that can be written as y = …, such as y = 2x + 1, 2x + 3y = 6, x = 4 or y = x² − 4, or a list of points, such as (1, 2), (3, 4). Points aren't equations, but they're typed in the same rows and called the same thing. (Both generators' rows are `eq` in the page address; the number line's reading code still calls an equation `inequality`, and older number line links with `inequality=` still open.)
+What the teacher types to graph, one per row. On a number line it's an inequality or equation in one letter, such as −2 < x ≤ 5, x < −1 or x ≥ 3, or x = 2, or a list of points, each one number, such as 3 or −1, 2.5, π/2, or a sequence; every row is drawn over the same line, and a number line with no equation is blank. On a coordinate grid it's a line or curve that can be written as y = …, such as y = 2x + 1, 2x + 3y = 6, x = 4 or y = x² − 4, an inequality of one, such as y > 2x + 1, or a list of points, such as (1, 2), (3, 4). Points aren't equations, but they're typed in the same rows and called the same thing. (Both generators' rows are `eq` in the page address; the number line's reading code still calls an equation `inequality`, and older number line links with `inequality=` still open.)
 _Avoid_: Solution set, interval, expression
 
 **Tick**:
@@ -89,11 +89,11 @@ The thick line, arrows and endpoints drawn over a number line to show which numb
 _Avoid_: Shading, solution, plot
 
 **Graphed line**:
-A straight line or curve drawn across a coordinate grid from an equation, with an arrowhead where it leaves the grid. A curve is anything that can be solved for y, such as a parabola or 2^x; sideways curves, circles and shaded inequalities aren't drawn yet.
+A straight line or curve drawn across a coordinate grid from an equation, with an arrowhead where it leaves the grid. A curve is anything that can be solved for y, such as a parabola or 2^x; sideways curves and circles aren't drawn yet. An inequality row's graphed line is the boundary of its shaded region.
 _Avoid_: Plot, function, curve
 
 **Row style**:
-How one equation is drawn, set from the button before it, which shows a miniature of how the row is drawn: a color, a line style (solid, dashed or dotted) and which ends have arrows (both, neither, left or right; for an up-and-down line, left means the bottom), whether endpoints show, and whether asymptotes show. Points take the color and a point mark: a dot, or a cross as French classrooms use. On a number line a row's style is its color, whether values are written, and for points and sequences a point mark and how point labels show; a number line's thick line, arrows and circles carry meaning, so they can't be changed. Every row starts black. Values are written above the line for endpoints and unlabeled points that don't sit on a numbered tick, the way their own row was typed (0.35 as 0.35, 3/8 as a fraction), unless the row style turns them off (for an estimate-this-point question). The color goes on the row's thick line, arrows, circles and points, never on the line, ticks or numbers. Rows of the same color join into one equation graph, as they always have; rows of different colors are drawn separately, each color over the colors that came before it in the list.
+How one equation is drawn, set from the button before it, which shows a miniature of how the row is drawn: a color, a line style (solid, dashed or dotted) and which ends have arrows (both, neither, left or right; for an up-and-down line, left means the bottom), whether endpoints show, and whether asymptotes show. An inequality row's style also picks how its shaded region is filled, a tint or hatching, but not its line style, which its sign decides. Points take the color and a point mark: a dot, or a cross as French classrooms use. On a number line a row's style is its color, whether values are written, and for points and sequences a point mark and how point labels show; a number line's thick line, arrows and circles carry meaning, so they can't be changed. Every row starts black. Values are written above the line for endpoints and unlabeled points that don't sit on a numbered tick, the way their own row was typed (0.35 as 0.35, 3/8 as a fraction), unless the row style turns them off (for an estimate-this-point question). The color goes on the row's thick line, arrows, circles and points, never on the line, ticks or numbers. Rows of the same color join into one equation graph, as they always have; rows of different colors are drawn separately, each color over the colors that came before it in the list.
 _Avoid_: Format, appearance, theme
 
 **Point mark**:
@@ -123,6 +123,14 @@ _Avoid_: Gap, removable discontinuity (fine in teaching, not as the name), missi
 **Asymptote**:
 A line that a graphed line approaches but never reaches: vertical, horizontal or slant. Where a graphed line meets a vertical asymptote, the curve breaks and each side runs to the grid's edge with an arrowhead. Asymptotes are found for the whole row and, when its row style shows them, drawn as dotted lines in the row's color, without their equations; they're hidden unless the teacher shows them.
 _Avoid_: Discontinuity, break, limit line
+
+**Shaded region**:
+The part of a coordinate grid filled in to show the points that make an inequality row true, such as y > 2x + 1, y ≥ x² − 4, x < 3 or −2 < x ≤ 3. It's filled in the row's color, as a see-through tint or as hatching, and runs to the grid's edges, under the gridlines, axes and every other row so points can be read through it. Hatching runs a different way for each hatched row, in list order (/, \, |, —), so overlaps show even in black and white. Several inequality rows are a system: each shades its own side, and where they overlap shows the points that make every one true. An inequality row has no domain; each inequality is its own row.
+_Avoid_: Shading (that's an angle's), solution set, half-plane (fine in teaching), area
+
+**Boundary**:
+The graphed line along the edge of a shaded region, where the inequality's sides are equal. It's dashed for < and > (its points aren't included) and solid for ≤ and ≥ (they are), and the row style can't change that, since it carries meaning. It starts without arrows, since the shading shows it goes on. A boundary breaks at an asymptote and keeps its holes just as a graphed line does, and each piece shades its own side. To have students do the shading, a teacher graphs the equation instead, dashed or solid.
+_Avoid_: Edge, border, endpoint (that's a circle where a line stops)
 
 **Point label**:
 The letter written at a point, typed before it in textbook notation: A(1, 2) on a coordinate grid, P(0.35) on a number line. It's one letter, with primes or a subscript allowed (A′, A₁), and it belongs to its point, so it stays when the point's numbers change and goes when the point is deleted. A points row's style shows just the labels or the labels with their coordinates or values, A or A(0.35). On a number line a labeled point's value is never written, since it would give the answer away; endpoints and sequence terms aren't labeled.

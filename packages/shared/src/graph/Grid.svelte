@@ -2,7 +2,8 @@
   // A graph's grid, axes, numbers and titles, as a self-contained SVG that
   // prints crisply and exports cleanly to PNG/SVG (fonts and colors are
   // inline, no page CSS). What's graphed is drawn by `children`, over the
-  // axes and under the numbers and titles.
+  // axes and under the numbers and titles; `under`, if given, is drawn under
+  // even the gridlines (a shaded region, which they show through).
   import type { Snippet } from 'svelte'
   import type { GridSettings } from './axes'
   import type { Cap } from './caps'
@@ -17,8 +18,9 @@
     /** Prefixes the arrowheads' ids, which have to be unique on the page. */
     id?: string
     children?: Snippet
+    under?: Snippet
   }
-  let { layout: g, settings, label, svg = $bindable(), id = 'g', children }: Props = $props()
+  let { layout: g, settings, label, svg = $bindable(), id = 'g', children, under }: Props = $props()
 
   const cap = (c: Cap) => (c === 'none' ? undefined : `url(#${id}-${c})`)
 </script>
@@ -46,6 +48,8 @@
   </defs>
 
   <rect width={g.width} height={g.height} fill="#fff" />
+
+  {@render under?.()}
 
   <!-- Minor gridlines: thin and faint, under the block lines. -->
   {#if g.minorV.length}

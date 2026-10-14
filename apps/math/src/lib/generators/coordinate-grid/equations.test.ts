@@ -34,8 +34,7 @@ describe('parseEquation', () => {
     ['y^2 = x', 'Sideways curves and circles'],
     ['x^2 + y^2 = 9', 'Sideways curves and circles'],
     ['x^2 = 4', 'An equation in x alone'],
-    ['y > 2x', 'Shading inequalities'],
-    ['1 < y < 3', 'Use one = sign'],
+    ['y = 2x = 3', 'Use one = sign'],
     ['y = 2t', 'Use x and y, not t'],
     ['2 = 3', 'never true'],
     ['y = y', 'true for every point'],
@@ -357,7 +356,7 @@ describe('equations in the page address', () => {
     expect(settingsFromParams(new URLSearchParams(q)).equations.map((r) => r.text)).toEqual(['y=2x+1', '(1,2),(3,4)'])
   })
   test('a row keeps its style, and only what differs from the default is written', () => {
-    const row = { text: 'y=2x+1', color: 'red', line: 'dashed', arrows: 'both', point: 'dot', names: 'name', ends: 'shown', asym: 'hidden' }
+    const row = { text: 'y=2x+1', color: 'red', line: 'dashed', arrows: 'both', point: 'dot', names: 'name', ends: 'shown', asym: 'hidden', fill: 'tint', barrows: 'none' }
     const q = settingsToQuery(cleanSettings({ ...DEFAULT_SETTINGS, equations: [row] }))
     expect(new URLSearchParams(q).get('eq')).toBe('y=2x+1|color=red|line=dashed')
     expect(settingsFromParams(new URLSearchParams(q)).equations).toEqual([row])
@@ -377,4 +376,99 @@ describe('equations in the page address', () => {
     expect(rowFromParam(rowToParam(row))).toEqual(row)
   })
   test('no rows, no eq', () => expect(settingsToQuery(cleanSettings(DEFAULT_SETTINGS))).toBe(''))
+})
+
+describe('inequalities', () => {
+  const box = { x0: -5, x1: 5, y0: -5, y1: 5 }
+  const read = (text: string, b = box) => readEquations([text], b)[0]!
+  // Is (x, y) inside one of the shaded polygons? (Even–odd ray casting.)
+  const shaded = (regions: { x: number; y: number }[][], x: number, y: number) =>
+    regions.some((poly) =>
+      poly.reduce((inside, p, i) => {
+        const q = poly[(i + 1) % poly.length]
+        return (p.y > y) !== (q.y > y) && x < ((q.x - p.x) * (y - p.y)) / (q.y - p.y) + p.x ? !inside : inside
+      }, false),
+    )
+
+  test.each([
+    ['y > 2x + 1', [[0, 3], [-3, 0]], [[0, -1], [3, 0]], true],
+    ['y ≤ 2x + 1', [[0, -1], [3, 0]], [[0, 3], [-3, 0]], false],
+    ['2x + 3y >= 6', [[3, 3]], [[0, 0]], false],
+    ['x < 3', [[0, 0], [-4, 4]], [[4, 0]], true],
+    ['1 < y', [[0, 2]], [[0, 0]], true],
+    ['-2 < x <= 3', [[0, 0], [2.5, -4]], [[-3, 0], [4, 0]], null],
+  ])('%s shades the right side', (text, inside, outside, strict) => {
+    const r = read(text)
+    expect(r.problem).toBeUndefined()
+    for (const [x, y] of inside) expect(shaded(r.regions!, x, y)).toBe(true)
+    for (const [x, y] of outside) expect(shaded(r.regions!, x, y)).toBe(false)
+    if (strict !== null) expect(r.runs!.map((run) => run.strict)).toEqual([strict])
+  })
+
+  test('a compound inequality has a boundary for each sign, each dashed or solid by its own', () => {
+    expect(read('-2 < x <= 3').runs!.map((run) => [run.points[0].x, run.strict])).toEqual([[-2, true], [3, false]])
+  })
+
+  test('a curve shades above or below itself', () => {
+    const r = read('y >= x^2 - 4')
+    expect(r.runs!.every((run) => run.strict === false)).toBe(true)
+    expect(shaded(r.regions!, 0, 0)).toBe(true)
+    expect(shaded(r.regions!, 0, -4.5)).toBe(false)
+    expect(shaded(r.regions!, 4, 4)).toBe(false) // 4² − 4 = 12, off the top
+    expect(shaded(read('y < 2^x').regions!, 0, 0.5)).toBe(true)
+    expect(shaded(read('y < 2^x').regions!, 0, 1.5)).toBe(false)
+  })
+
+  test('each branch shades its own side of an asymptote', () => {
+    const r = read('y > 1/x')
+    expect(shaded(r.regions!, 2, 1)).toBe(true) // above 1/2
+    expect(shaded(r.regions!, 2, 0.2)).toBe(false)
+    expect(shaded(r.regions!, -2, 0)).toBe(true) // above −1/2
+    expect(shaded(r.regions!, -2, -1)).toBe(false)
+  })
+
+  test('the side follows the sign of what y is multiplied by', () => {
+    const r = read('xy > 1')
+    expect(shaded(r.regions!, 2, 1)).toBe(true)
+    expect(shaded(r.regions!, -2, -1)).toBe(true) // below 1/x on the left
+    expect(shaded(r.regions!, -2, 0)).toBe(false)
+  })
+
+  test('a hole stays an open circle, and the shading runs past it', () => {
+    const r = read('y >= (x^2 - 1)/(x - 1)')
+    expect(r.circles!.map((c) => [Math.round(c.x * 1e6) / 1e6, Math.round(c.y * 1e6) / 1e6, c.closed])).toEqual([[1, 2, false]])
+    expect(shaded(r.regions!, 1, 3)).toBe(true)
+  })
+
+  test('nothing is shaded where the curve isn’t defined', () => {
+    const r = read('y > sqrt(x)')
+    expect(shaded(r.regions!, -2, 3)).toBe(false)
+    expect(shaded(r.regions!, 4, 3)).toBe(true)
+  })
+
+  test('a region covering the whole grid has no boundary on it, and that’s fine', () => {
+    const r = read('y < 100')
+    expect(r.problem).toBeUndefined()
+    expect(r.runs).toEqual([])
+    expect(shaded(r.regions!, 0, 0)).toBe(true)
+  })
+
+  test('a region off the grid says so', () => expect(read('y > 100').problem).toMatch(/misses the grid/))
+
+  test.each([
+    ['y > 2x, x < 1', /can’t take a domain/],
+    ['y ≠ 2x', /≠ can’t be shaded/],
+    ['y < 2x = 3', /not both/],
+    ['1 < x > 3', /same way/],
+    ['1 < x < y < 3', /at most two signs/],
+    ['0 < y < x^2', /straight lines/],
+    ['3 < x < 1', /No points make that true/],
+  ])('%s: %s', (text, message) => expect(parseEquation(text)!.error).toMatch(message))
+
+  test('a row’s fill and boundary arrows go in the address only when changed', () => {
+    const row = { ...ROW_DEFAULTS, text: 'y>x', fill: 'hatch' as const, barrows: 'both' as const }
+    expect(rowToParam(row)).toBe('y>x|fill=hatch|barrows=both')
+    expect(rowFromParam('y>x|fill=hatch|barrows=both')).toEqual(row)
+    expect(rowToParam({ ...ROW_DEFAULTS, text: 'y>x' })).toBe('y>x')
+  })
 })

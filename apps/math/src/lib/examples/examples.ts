@@ -72,6 +72,17 @@ export const EXAMPLES: Example[] = [
         'The curve y = sin x on a coordinate grid whose x-axis runs from −2π to 2π, with a gridline every π/2 and numbers at −2π, −π, 0, π and 2π, and whose y-axis runs from −2 to 2. The curve rises and falls between 1 and −1, crossing the x-axis at every multiple of π. The equation isn’t written on the figure.',
       settings: { xFrom: '-2pi', xTo: '2pi', xStep: 'pi/2', xEvery: 2, yFrom: '-2', yTo: '2', equations: [{ text: 'y=sin(x)' }] },
     },
+    {
+      slug: 'system-of-linear-inequalities-graph',
+      title: 'System of linear inequalities: y > x − 2 and y ≤ −x + 3',
+      alt: 'A coordinate grid from −6 to 6 with the region above the dashed line y = x − 2 shaded blue and the region below the solid line y = −x + 3 shaded red, overlapping on the left',
+      caption:
+        'A coordinate grid numbered from −6 to 6 on both axes with two inequalities shaded. Above the dashed line y = x − 2 is shaded blue, dashed because points on it don’t make y > x − 2 true; below the solid line y = −x + 3 is shaded red, solid because points on it make y ≤ −x + 3 true. The lines cross at (2.5, 0.5), and the solutions to the system are where the shading overlaps, to the left of that point.',
+      settings: {
+        xFrom: '-6', xTo: '6', yFrom: '-6', yTo: '6',
+        equations: [{ text: 'y>x-2', color: 'blue' }, { text: 'y<=-x+3', color: 'red' }],
+      },
+    },
   ]),
 
   ...examplesOf('number-line', [

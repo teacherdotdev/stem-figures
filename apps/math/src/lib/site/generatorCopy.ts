@@ -27,12 +27,12 @@ export const COPY: Record<string, GeneratorCopy> = {
   'coordinate-grid': {
     heading: 'Coordinate grids and graph paper for graphing',
     intro: [
-      'The Coordinate Grid Generator draws a grid of square blocks with an x-axis and a y-axis, numbered along each axis over the range you set. Leave it blank as graph paper, or type equations and points to graph on it: straight lines like y = 2x + 1, curves like y = x² − 4 or y = sin(x), and labeled points like A(2, 3).',
-      'Teachers use it for plotting points, graphing linear equations, reading slope and intercepts, and graphing functions in Algebra and beyond. Type a range with fractions or π for a trig graph, or with ° for degrees, and give each axis a title or a blank line for students.',
+      'The Coordinate Grid Generator draws a grid of square blocks with an x-axis and a y-axis, numbered along each axis over the range you set. Leave it blank as graph paper, or type equations and points to graph on it: straight lines like y = 2x + 1, curves like y = x² − 4 or y = sin(x), inequalities like y > 2x + 1, shaded on one side, and labeled points like A(2, 3).',
+      'Teachers use it for plotting points, graphing linear equations, reading slope and intercepts, graphing inequalities and systems of inequalities, and graphing functions in Algebra and beyond. Type a range with fractions or π for a trig graph, or with ° for degrees, and give each axis a title or a blank line for students.',
     ],
     settings: [
-      'Equations to graph, one per row: lines, curves, points, and pieces of a piecewise function with open or closed endpoints',
-      'Each row’s style: its color, a solid, dashed or dotted line, which ends have arrows, endpoints and asymptotes shown or hidden, and a dot or cross for points',
+      'Equations to graph, one per row: lines, curves, points, pieces of a piecewise function with open or closed endpoints, and inequalities to shade',
+      'Each row’s style: its color, a solid, dashed or dotted line, which ends have arrows, endpoints and asymptotes shown or hidden, a dot or cross for points, and a tint or hatching for an inequality’s shading',
       'Each axis’s range (From, To and Count by), typed as whole numbers, decimals, fractions, multiples of π or degrees, and how often it is numbered',
       'A chart title and axis titles, as text or a blank line for students, and the x and y labels at the arrow tips',
       'How each end of each axis finishes: a triangle arrow, a line arrow, a circle or nothing',
@@ -45,11 +45,15 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'What equations can I graph?',
-        a: 'Anything that can be written as y = …, such as y = 2x + 1, 2x + 3y = 6, y = −(x − 2)² + 3, y = 2ˣ or y = |x|, plus up-and-down lines like x = 4. Trig, log and ln functions work too. Circles, sideways curves and shaded inequalities aren’t drawn yet.',
+        a: 'Anything that can be written as y = …, such as y = 2x + 1, 2x + 3y = 6, y = −(x − 2)² + 3, y = 2ˣ or y = |x|, plus up-and-down lines like x = 4. Trig, log and ln functions work too, and any of these can be an inequality to shade. Circles and sideways curves aren’t drawn yet.',
       },
       {
         q: 'How do I plot and label points?',
         a: 'Type points in a row, like (1, 2), (3, 4), or give each a letter first, like A(1, 2), B(−3, 4). The row’s style chooses a dot or a cross and whether the label shows just the letter or the letter with its coordinates.',
+      },
+      {
+        q: 'How do I graph an inequality or a system of inequalities?',
+        a: 'Type it with <, ≤, > or ≥, like y > 2x + 1, y ≤ x² − 4, x < 3 or −2 < x ≤ 3, and the side that makes it true is shaded. The boundary is dashed for < and > and solid for ≤ and ≥. For a system, give each inequality its own row: each shades its own side, and the solutions are where the shading overlaps. In black and white, set each row’s shading to hatching so the overlap still shows.',
       },
       {
         q: 'Can I graph a piecewise function?',

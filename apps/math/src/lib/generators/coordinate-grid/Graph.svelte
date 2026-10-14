@@ -13,6 +13,20 @@
 </script>
 
 <Grid layout={g} {settings} {id} bind:svg label={settings.title || 'Coordinate grid'}>
+  <!-- Inequalities' shaded regions, under the gridlines so the grid reads through them. -->
+  {#snippet under()}
+    {#each g.regions as r, k}
+      {#if r.hatch === null}
+        <path d={r.d} fill={r.color} fill-opacity={g.tint} />
+      {:else}
+        <pattern id="{id}-hatch-{k}" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate({r.hatch})">
+          <line x1="4.5" y1="0" x2="4.5" y2="9" stroke={r.color} stroke-width="1.5" />
+        </pattern>
+        <path d={r.d} fill="url(#{id}-hatch-{k})" />
+      {/if}
+    {/each}
+  {/snippet}
+
   <!-- Asymptotes: dots on a white band, so one lying along a gridline doesn't disappear into it. -->
   {#each g.asymptotes as a}
     <path d={a.d} fill="none" stroke="#fff" stroke-width="3.2" />

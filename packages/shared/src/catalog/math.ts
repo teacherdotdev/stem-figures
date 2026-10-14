@@ -11,12 +11,13 @@ export const MATH: CatalogEntry[] = [
     path: '/coordinate-grid',
     blurb: 'Square grids with x- and y-axes, for plotting points and lines.',
     description:
-      'Make a printable coordinate grid (graph paper) for your class. Graph lines like y = 2x + 1 and plot points, choose the range, titles and axis arrows, then copy it into a worksheet or test.',
+      'Make a printable coordinate grid (graph paper) for your class. Graph lines like y = 2x + 1, shade inequalities and plot points, choose the range, titles and axis arrows, then copy it into a worksheet or test.',
     keywords: [
       'graph paper', 'grid paper', 'coordinate plane', 'cartesian plane', 'cartesian coordinate plane',
       'cartesian coordinates', 'rectangular coordinates', 'xy plane', 'x-y grid', 'xy', 'axes', 'x-axis', 'y-axis',
       'quadrant', 'first quadrant', 'four quadrants', 'origin', 'ordered pairs', 'plot points', 'plotting',
       'graphing', 'linear equations', 'slope', 'grid', 'graph', 'blank graph', 'printable',
+      'graphing inequalities', 'linear inequalities', 'systems of inequalities', 'shaded region', 'shading',
     ],
   },
   {

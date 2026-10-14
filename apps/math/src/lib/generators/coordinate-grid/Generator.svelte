@@ -87,7 +87,9 @@
         <HelpTip id="equation-tip" label="How to type an equation">
           Type a line like y = 2x + 1, 2x + 3y = 6 or x = 4, a curve like y = x^2 − 4 or y = −(x − 2)^2 + 3, or points like
           (2, 3) or (1, 2), (3, 4). To draw only part of a line, give its domain after a comma: y = 3x, −5 ≤ x &lt; 7 (≤ for a
-          closed circle, &lt; for an open one); a piecewise function is a row for each piece. Name points by writing a letter
+          closed circle, &lt; for an open one); a piecewise function is a row for each piece. To shade an inequality, type
+          it with &lt;, ≤, &gt; or ≥, like y &gt; 2x + 1, y ≤ x^2 or −2 &lt; x ≤ 3; for a system, give each inequality its own
+          row. Name points by writing a letter
           first: A(1, 2), B'(3, 4). Functions work too: sin, cos,
           tan, sec, csc, cot, arcsin, ln, log, log_2 (type _ for the base), e^x and |x|. Type ^ for an exponent, / for a fraction
           and pi for π.
@@ -96,7 +98,7 @@
       {#each s.equations as row, i}
         <div class="row">
           <RowStyle {row} id="eq-{i}-style" label="equation {i + 1}" isPoints={!!rows[i]?.points} hasDomain={!!rows[i]?.circles?.some((c) => c.end)}
-            hasAsymptotes={!!rows[i]?.asymptotes?.length}
+            hasAsymptotes={!!rows[i]?.asymptotes?.length} isInequality={!!rows[i]?.regions}
           />
           <MathInput
             kind="equation"

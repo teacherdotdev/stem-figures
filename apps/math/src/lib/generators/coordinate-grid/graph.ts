@@ -11,6 +11,9 @@ const HEAD = 12 // length of an arrowhead where a graphed line leaves the grid
 const HEAD_HALF = 5.5 // half its width
 const CIRCLE_R = 5.5 // a hole's or endpoint's circle
 const NAME_GAP = 7 // how far a point name sits up and right of its point
+const TINT = 0.18 // how strongly a shaded region's color shows, so the grid reads through it
+// Hatching's direction for each hatched row in turn (degrees from upright), so overlapping regions stay apart in gray.
+const HATCH_ANGLES = [45, -45, 0, 90]
 
 const pathLength = (pts: Point[]) => pts.reduce((sum, p, k) => (k ? sum + Math.hypot(p.x - pts[k - 1].x, p.y - pts[k - 1].y) : 0), 0)
 
@@ -63,10 +66,23 @@ export function buildGraph(settings: Settings) {
   const pointNames: (Point & { name: string; coords: string; color: string })[] = []
   // Asymptotes, when a row shows them: dotted lines in the row's color, under the curves.
   const asymptotes: { d: string; color: string }[] = []
+  // Inequalities' shaded regions, drawn under the gridlines: a tint, or hatching at an angle.
+  const regions: { d: string; color: string; hatch: number | null }[] = []
+  let hatched = 0
   const rows = settings.equations ?? []
   readEquations(rows.map((r) => r.text), box, settings.angle).forEach((read, i) => {
-    const { color, line: style, arrows, point, names, ends, asym } = rows[i]
+    const { color, point, names, ends, asym, fill } = rows[i]
     const ink = COLORS[color]
+    // An inequality's boundary has its own arrows, and is dashed or solid by its sign.
+    const inequality = !!read?.regions
+    const arrows = inequality ? rows[i].barrows : rows[i].arrows
+    if (read?.regions?.length) {
+      regions.push({
+        d: read.regions.map((poly) => `${pathOf(poly.map(px))}Z`).join(''),
+        color: ink,
+        hatch: fill === 'hatch' ? HATCH_ANGLES[hatched++ % HATCH_ANGLES.length] : null,
+      })
+    }
     if (asym === 'shown') {
       for (const a of read?.asymptotes ?? []) {
         const seg = clipLine(a, box)
@@ -74,6 +90,7 @@ export function buildGraph(settings: Settings) {
       }
     }
     for (const run of read?.runs ?? []) {
+      const style = run.strict === undefined ? rows[i].line : run.strict ? 'dashed' : 'solid'
       let pts = run.points.map(px)
       const heads: string[] = []
       // Arrows go on ends that leave the grid, if the teacher wants that end.
@@ -112,5 +129,7 @@ export function buildGraph(settings: Settings) {
     r: CIRCLE_R,
     pointNames,
     asymptotes,
+    regions,
+    tint: TINT,
   }
 }

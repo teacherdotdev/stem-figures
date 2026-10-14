@@ -1,8 +1,9 @@
 // Reading what a teacher types to graph on a coordinate grid, with Caret (see
 // docs/adr/0002-caret-for-math-input.md): a straight line like y = 2x + 1,
 // 2x + 3y = 6 or x = 4, a curve that can be solved for y like y = x^2 - 4,
-// y = 2^x or y = 3sin(2x), or points like (2, 3) or A(1, 2), B(3, 4). Not yet:
-// sideways curves, circles and shaded inequalities. Runs on the server too.
+// y = 2^x or y = 3sin(2x), an inequality of either like y > 2x + 1, x < 3 or
+// −2 < x ≤ 3 (shaded on one side of its boundary), or points like (2, 3) or
+// A(1, 2), B(3, 4). Not yet: sideways curves and circles. Runs on the server too.
 
 import type { TreeNode } from '@caret-js/core'
 import { CommaListNode, ComparisonNode, ParenthesesChildTag, VariableNode } from '@caret-js/math'
@@ -12,8 +13,8 @@ import { FunctionNameNode } from '$lib/shared/functions.js'
 import { splitLabels } from '$lib/shared/pointLabels.js'
 import { divisors, evaluate, type AngleUnit } from './evaluate.js'
 import {
-  ARROWS, ASYMPTOTES, COLORS, ENDPOINTS, LINE_STYLES, LABEL_STYLES, POINT_STYLES,
-  type Arrows, type AsymptoteStyle, type Color, type Endpoints, type LineStyle, type LabelStyle, type PointStyle,
+  ARROWS, ASYMPTOTES, COLORS, ENDPOINTS, FILLS, LINE_STYLES, LABEL_STYLES, POINT_STYLES,
+  type Arrows, type AsymptoteStyle, type Color, type Endpoints, type Fill, type LineStyle, type LabelStyle, type PointStyle,
 } from '$lib/shared/rowStyle.js'
 
 const EXAMPLE = 'Try a line like y = 2x + 1, a curve like y = x^2 − 4, a point like (2, 3), or a list of points like (2, 3), (1, 4).'
@@ -22,15 +23,26 @@ const EPS = 1e-9
 class ReadError extends Error {}
 
 export { splitLabels }
-export { ARROWS, ASYMPTOTES, COLORS, ENDPOINTS, LINE_STYLES, LABEL_STYLES, POINT_STYLES }
-export type { Arrows, AsymptoteStyle, Color, Endpoints, LineStyle, LabelStyle, PointStyle }
+export { ARROWS, ASYMPTOTES, COLORS, ENDPOINTS, FILLS, LINE_STYLES, LABEL_STYLES, POINT_STYLES }
+export type { Arrows, AsymptoteStyle, Color, Endpoints, Fill, LineStyle, LabelStyle, PointStyle }
 
-/** One equation row: what's typed, and how it's drawn. */
-export type Row = { text: string; color: Color; line: LineStyle; arrows: Arrows; point: PointStyle; names: LabelStyle; ends: Endpoints; asym: AsymptoteStyle }
+/**
+ * One equation row: what's typed, and how it's drawn. An inequality's boundary
+ * has arrows of its own (barrows), which start off, since its shading shows it
+ * goes on, and how its shaded region is filled.
+ */
+export type Row = {
+  text: string; color: Color; line: LineStyle; arrows: Arrows; point: PointStyle; names: LabelStyle; ends: Endpoints; asym: AsymptoteStyle
+  fill: Fill; barrows: Arrows
+}
 
-export const ROW_DEFAULTS: Row = { text: '', color: 'black', line: 'solid', arrows: 'both', point: 'dot', names: 'name', ends: 'shown', asym: 'hidden' }
+export const ROW_DEFAULTS: Row = {
+  text: '', color: 'black', line: 'solid', arrows: 'both', point: 'dot', names: 'name', ends: 'shown', asym: 'hidden', fill: 'tint', barrows: 'none',
+}
 
-const STYLE_KEYS = { color: COLORS, line: LINE_STYLES, arrows: ARROWS, point: POINT_STYLES, names: LABEL_STYLES, ends: ENDPOINTS, asym: ASYMPTOTES }
+const STYLE_KEYS = {
+  color: COLORS, line: LINE_STYLES, arrows: ARROWS, point: POINT_STYLES, names: LABEL_STYLES, ends: ENDPOINTS, asym: ASYMPTOTES, fill: FILLS, barrows: ARROWS,
+}
 type StyleKey = keyof typeof STYLE_KEYS
 
 /** A point, in the grid's own values, and its point name if it has one (A, B′). */
@@ -39,17 +51,28 @@ export type Point = { x: number; y: number; name?: string }
 export type Line = { a: number; b: number; c: number }
 /** The stretch of values a grid covers. */
 export type Box = { x0: number; x1: number; y0: number; y1: number }
-/** Part of a line or curve inside the grid, left to right, and whether each end leaves through the grid's edge. */
-export type Run = { points: Point[]; edges: [boolean, boolean] }
+/**
+ * Part of a line or curve inside the grid, left to right, and whether each end
+ * leaves through the grid's edge. An inequality's boundary says whether its
+ * points are left out (strict: < or >, drawn dashed) or included (≤ or ≥, solid).
+ */
+export type Run = { points: Point[]; edges: [boolean, boolean]; strict?: boolean }
 /** An open or closed circle on a graphed line: a hole, or (end) an endpoint at the end of its domain. */
 export type Circle = Point & { closed: boolean; end?: boolean }
-/** y = f(x), and the parts of it that divide by something with x in it (see divisors()). */
-export type Curve = { f: (x: number) => number | null; divisors: ((x: number) => number | null)[] }
-/** One row, read: what it draws, or a problem for the settings panel. */
+/**
+ * y = f(x), and the parts of it that divide by something with x in it (see
+ * divisors()). It was read from an equation F(x, y) = 0 with F = A(x)·y + B(x);
+ * lead is A, whose sign says which side of the curve F is positive on.
+ */
+export type Curve = { f: (x: number) => number | null; divisors: ((x: number) => number | null)[]; lead: (x: number) => number | null }
+/**
+ * One row, read: what it draws, or a problem for the settings panel. An
+ * inequality also has its shaded region, as polygons (possibly none on the grid).
+ */
 export type ReadRow =
-  | { problem: string; runs?: undefined; points?: undefined; circles?: undefined; asymptotes?: undefined }
-  | { runs: Run[]; circles: Circle[]; asymptotes: Line[]; problem?: undefined; points?: undefined }
-  | { points: Point[]; problem: string | null; runs?: undefined; circles?: undefined; asymptotes?: undefined }
+  | { problem: string; runs?: undefined; points?: undefined; circles?: undefined; asymptotes?: undefined; regions?: undefined }
+  | { runs: Run[]; circles: Circle[]; asymptotes: Line[]; regions?: Point[][]; problem?: undefined; points?: undefined }
+  | { points: Point[]; problem: string | null; runs?: undefined; circles?: undefined; asymptotes?: undefined; regions?: undefined }
 
 /** A row from a form, a stored preset or an older link (just its text). */
 export function cleanRow(r: any): Row {
@@ -101,14 +124,19 @@ const XS = [-7.3, -3.7, -1.2, 0.4, 1.9, 2.9, 5.3, 8.6]
  * Both sides are evaluated at test points to see which, so any way of writing
  * it works: y − 3 = (x − 1)², for one.
  */
-function graphOf(node: ComparisonNode, angle: AngleUnit): { line: Line; curve?: undefined } | { curve: Curve; line?: undefined } {
+function graphOf(node: ComparisonNode, angle: AngleUnit): Graph {
   if (node.operators.length > 1) throw new ReadError('Use one = sign, like y = 2x + 1.')
-  if (node.operators[0] !== '=') throw new ReadError('Shading inequalities isn’t here yet. Try an equation like y = 2x + 1.')
+  return sidesGraph(node, node.operands[0], node.operands[1], angle)
+}
+
+type Graph = { line: Line; curve?: undefined } | { curve: Curve; line?: undefined }
+
+/** The graph of left = right, read from the comparison they're part of. */
+function sidesGraph(node: ComparisonNode, left: TreeNode, right: TreeNode, angle: AngleUnit): Graph {
   for (const n of node.traverse()) {
     if (n instanceof FunctionNameNode) throw new ReadError(`Give ${n.name} something to work on, like ${n.name}(x).`)
     if (n instanceof VariableNode && n.name !== 'x' && n.name !== 'y') throw new ReadError(`Use x and y, not ${n.name}.`)
   }
-  const [left, right] = node.operands
   const F = (x: number, y: number) => {
     const l = evaluate(left, { x, y }, angle)
     const r = evaluate(right, { x, y }, angle)
@@ -169,9 +197,65 @@ function graphOf(node: ComparisonNode, angle: AngleUnit): { line: Line; curve?: 
       },
       // Solving for y divides by y's coefficient too: y(x − 1) = x² − 1.
       divisors: [...divs, A],
+      lead: A,
     },
   }
 }
+
+const INEQUALITY_SIGNS = ['<', '≤', '>', '≥']
+
+/**
+ * One side of a boundary: the points where F = left − right is positive
+ * (greater, for > and ≥) or negative, and whether the boundary itself is left
+ * out (strict, for < and >).
+ */
+export type Condition = Graph & { greater: boolean; strict: boolean }
+
+/**
+ * An inequality, as the conditions that all hold: one, like y > 2x + 1, or two
+ * for a compound one like −2 < x ≤ 3, whose boundaries both have to be lines.
+ */
+function inequalityOf(node: ComparisonNode, angle: AngleUnit): Condition[] {
+  const ops = node.operators
+  if (ops.includes('≠')) throw new ReadError('≠ can’t be shaded. Try an inequality like y > 2x + 1 or y ≤ x^2.')
+  if (ops.some((op) => !INEQUALITY_SIGNS.includes(op))) throw new ReadError('Use = for a line, or <, ≤, > or ≥ to shade, not both in one row.')
+  if (ops.length > 2) throw new ReadError('Use at most two signs, like −2 < x ≤ 3.')
+  const less = (op: string) => op === '<' || op === '≤'
+  if (ops.length === 2 && less(ops[0]) !== less(ops[1])) throw new ReadError('Point both signs the same way, like −2 < x ≤ 3.')
+  const conditions = ops.map((op, i) => ({
+    ...sidesGraph(node, node.operands[i], node.operands[i + 1], angle),
+    greater: !less(op),
+    strict: op === '<' || op === '>',
+  }))
+  if (conditions.length > 1) {
+    if (conditions.some((c) => c.curve)) throw new ReadError('A compound inequality has to be in straight lines, like −2 < x ≤ 3. Give a curve’s inequalities a row each.')
+    const far = 1e9
+    const everywhere = [{ x: -far, y: -far }, { x: far, y: -far }, { x: far, y: far }, { x: -far, y: far }]
+    if (!conditions.reduce((poly, c) => clipHalf(poly, c.line!, c.greater), everywhere).length) {
+      throw new ReadError('No points make that true, so there’s nothing to shade.')
+    }
+  }
+  return conditions
+}
+
+/** A polygon cut down to where a·x + b·y + c is positive (greater) or negative, as Sutherland–Hodgman does it. */
+function clipHalf(poly: Point[], { a, b, c }: Line, greater: boolean): Point[] {
+  const side = (p: Point) => (greater ? 1 : -1) * (a * p.x + b * p.y + c)
+  const out: Point[] = []
+  poly.forEach((p, i) => {
+    const q = poly[(i + 1) % poly.length]
+    const [sp, sq] = [side(p), side(q)]
+    if (sp >= 0) out.push(p)
+    if (sp >= 0 !== sq >= 0) {
+      const t = sp / (sp - sq)
+      out.push({ x: p.x + t * (q.x - p.x), y: p.y + t * (q.y - p.y) })
+    }
+  })
+  return out
+}
+
+/** A polygon's area. */
+const areaOf = (poly: Point[]) => Math.abs(poly.reduce((sum, p, i) => sum + p.x * poly[(i + 1) % poly.length].y - poly[(i + 1) % poly.length].x * p.y, 0)) / 2
 
 /** One end of a domain: where it stops, and whether that number is included (≤) or not (<). */
 export type Bound = { v: number; closed: boolean }
@@ -220,15 +304,19 @@ function domainOf(conditions: TreeNode[], angle: AngleUnit): Domain {
 export function parseEquation(
   text: string,
   angle: AngleUnit = 'radians',
-): { line?: Line; curve?: Curve; domain?: Domain; points?: Point[]; error?: string } | null {
+): { line?: Line; curve?: Curve; domain?: Domain; inequality?: Condition[]; points?: Point[]; error?: string } | null {
   if (!String(text ?? '').trim()) return null
   try {
     const labeled = splitLabels(text)
     const node = parsers.equation.parse(fromText(labeled?.text ?? text))
-    if (node instanceof ComparisonNode) return graphOf(node, angle)
+    const isInequality = (n: ComparisonNode) => n.operators.some((op) => op !== '=')
+    if (node instanceof ComparisonNode) return isInequality(node) ? { inequality: inequalityOf(node, angle) } : graphOf(node, angle)
     // An equation and its domain after a comma: y = 3x, −5 ≤ x < 7.
     if (node instanceof CommaListNode && !node.hasTag(ParenthesesChildTag) && node.expressions[0] instanceof ComparisonNode) {
       const [eq, ...conditions] = node.expressions
+      if (isInequality(eq as ComparisonNode)) {
+        throw new ReadError('An inequality can’t take a domain. Give each inequality its own row; together they’re shaded as a system.')
+      }
       const graph = graphOf(eq as ComparisonNode, angle)
       const domain = domainOf(conditions, angle)
       if (graph.curve && domain.variable === 'y') throw new ReadError('Give a curve’s domain in x, like y = x^2, −2 ≤ x ≤ 3.')
@@ -490,6 +578,88 @@ export function curveRuns(f: (x: number) => number | null, box: Box, breaks: num
 }
 
 /**
+ * The shaded region on one side of y = f(x) inside the box, as polygons: at
+ * each x it runs from the curve (or the grid's edge, where the curve is past
+ * it) to the top or the bottom, whichever side F is positive on (greater) or
+ * negative. That side can change along the curve, where lead does: x·y > 1 is
+ * above y = 1/x on the right and below it on the left. Never joined across a
+ * break (an asymptote or a jump), and nothing where f isn't defined, except
+ * at a hole, which the shading runs past.
+ */
+export function curveRegions(curve: Curve, greater: boolean, box: Box, breaks: number[] = [], holes: number[] = [], samples = 960): Point[][] {
+  const w = box.x1 - box.x0
+  const d = w * 1e-9
+  const xs = Array.from({ length: samples + 1 }, (_, i) => ({ x: box.x0 + (w * i) / samples, brk: false }))
+  for (const b of breaks) if (b > box.x0 && b < box.x1) xs.push({ x: b - d, brk: false }, { x: b + d, brk: true })
+  xs.sort((p, q) => p.x - q.x)
+
+  const out: Point[][] = []
+  let poly: Point[] = []
+  let side: 'up' | 'down' | null = null
+  const close = () => {
+    const edge = side === 'up' ? box.y1 : box.y0
+    // (A curve past the edge it shades toward leaves nothing to shade.)
+    if (poly.length > 1 && poly.some((p) => Math.abs(p.y - edge) > EPS)) out.push([...poly, { x: poly.at(-1)!.x, y: edge }, { x: poly[0].x, y: edge }])
+    poly = []
+    side = null
+  }
+  for (const { x, brk } of xs) {
+    const y = curve.f(x)
+    const A = curve.lead(x)
+    const here = y === null || !Number.isFinite(y) || A === null || Math.abs(A) < 1e-12 ? null : greater === A > 0 ? 'up' : 'down'
+    if (!here && holes.some((h) => Math.abs(h - x) < w * 1e-6)) continue
+    if (here !== side || brk) close()
+    if (here) {
+      side = here
+      poly.push({ x, y: Math.min(box.y1, Math.max(box.y0, y!)) })
+    }
+  }
+  close()
+  return out
+}
+
+/** A curve's asymptotes on the grid: vertical ones at its poles, and the lines it settles toward at whichever ends run on. */
+function asymptotesOf(f: Curve['f'], poles: number[], box: Box, sides: { left: boolean; right: boolean }): Line[] {
+  return [
+    ...poles.filter((r) => r > box.x0 + EPS && r < box.x1 - EPS).map((r) => ({ a: 1, b: 0, c: -r })),
+    ...endAsymptotes(f, box, sides).filter((l) => clipLine(l, box)),
+  ]
+}
+
+/**
+ * An inequality row fitted to the grid: its boundaries, dashed or solid by
+ * whether they're included, and its shaded region. A boundary has no domain,
+ * so it runs to the grid's edges like an equation's graphed line, keeping its
+ * holes and breaking at asymptotes, and the shading runs past its holes.
+ */
+function readInequality(conditions: Condition[], box: Box): ReadRow {
+  const runs: Run[] = []
+  const circles: Circle[] = []
+  const asymptotes: Line[] = []
+  let regions: Point[][] = []
+  for (const c of conditions) {
+    if (c.line) {
+      const ends = clipLine(c.line, box)
+      if (ends) runs.push({ points: leftFirst(...ends) ? ends : [ends[1], ends[0]], edges: [true, true], strict: c.strict })
+    } else {
+      const { holes, at, poles } = breaksOf(c.curve, box)
+      runs.push(...curveRuns(c.curve.f, box, at).map((r) => ({ ...r, strict: c.strict })))
+      circles.push(...holes.map((p) => ({ ...p, closed: false })))
+      asymptotes.push(...asymptotesOf(c.curve.f, poles, box, { left: true, right: true }))
+      const gaps = holes.map((p) => p.x)
+      regions = curveRegions(c.curve, c.greater, box, at.filter((x) => !gaps.some((h) => Math.abs(h - x) < (box.x1 - box.x0) * 1e-6)), gaps)
+    }
+  }
+  if (conditions.every((c) => c.line)) {
+    const corners = [{ x: box.x0, y: box.y0 }, { x: box.x1, y: box.y0 }, { x: box.x1, y: box.y1 }, { x: box.x0, y: box.y1 }]
+    const poly = conditions.reduce((p, c) => clipHalf(p, c.line!, c.greater), corners)
+    regions = areaOf(poly) > (box.x1 - box.x0) * (box.y1 - box.y0) * 1e-9 ? [poly] : []
+  }
+  if (!runs.length && !regions.length) return { problem: 'That inequality’s shaded region misses the grid. Widen the axes to show it.' }
+  return { runs, circles, asymptotes, regions }
+}
+
+/**
  * Every row, read and fitted to the grid's box of values: the parts of a line
  * or curve inside the grid (runs), the points on it, and a problem for the
  * settings panel when a row can't be read or doesn't show.
@@ -499,6 +669,7 @@ export function readEquations(texts: string[], box: Box, angle: AngleUnit = 'rad
     const read = parseEquation(text, angle)
     if (!read) return null
     if (read.error) return { problem: read.error }
+    if (read.inequality) return readInequality(read.inequality, box)
     if (read.line || read.curve) {
       // A domain narrows the box the graph is drawn in. An end cut off by the
       // domain inside the grid stops at an endpoint instead of an arrow.
@@ -533,10 +704,7 @@ export function readEquations(texts: string[], box: Box, angle: AngleUnit = 'rad
         const { holes, at, poles } = breaksOf(read.curve!, sub)
         runs = curveRuns(f, sub, at)
         // Asymptotes: vertical ones inside the domain, and the lines it settles toward where its domain runs on.
-        asymptotes = [
-          ...poles.filter((r) => r > box.x0 + EPS && r < box.x1 - EPS).map((r) => ({ a: 1, b: 0, c: -r })),
-          ...endAsymptotes(f, box, { left: !d?.lo, right: !d?.hi }).filter((l) => clipLine(l, box)),
-        ]
+        asymptotes = asymptotesOf(f, poles, box, { left: !d?.lo, right: !d?.hi })
         for (const run of runs) {
           if (atLo(run.points[0]) || atHi(run.points[0])) run.edges[0] = false
           if (atLo(run.points.at(-1)!) || atHi(run.points.at(-1)!)) run.edges[1] = false
