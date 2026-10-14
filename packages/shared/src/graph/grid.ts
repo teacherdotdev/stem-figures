@@ -16,6 +16,18 @@ export const INK = '#111827'
 export const SANS = 'Arial, Helvetica, sans-serif'
 export const SERIF = "'Times New Roman', Times, serif"
 
+// How the gridlines are drawn, for a graph that lets the teacher choose: light gray so the
+// axes and what's graphed stand out, standard (every other graph's), bold to survive a
+// photocopier, or none, which leaves the axes with a tick at each block.
+export const GRIDLINES = { light: 'Light', standard: 'Standard', bold: 'Bold', none: 'None' }
+export type Gridlines = keyof typeof GRIDLINES
+export const GRIDLINE_STYLES: Record<Gridlines, { block: string; blockWidth: number; minor: string; minorWidth: number; axisWidth: number }> = {
+  light: { block: '#9ca3af', blockWidth: 1, minor: '#d1d5db', minorWidth: 0.6, axisWidth: 2.4 },
+  standard: { block: INK, blockWidth: 1, minor: '#9ca3af', minorWidth: 0.5, axisWidth: 2.4 },
+  bold: { block: INK, blockWidth: 1.6, minor: '#4b5563', minorWidth: 0.9, axisWidth: 3.2 },
+  none: { block: 'none', blockWidth: 0, minor: 'none', minorWidth: 0, axisWidth: 2.4 },
+}
+
 export type Point = { x: number; y: number }
 type Text = { x: number; y: number; text: string; anchor?: 'start' | 'middle' | 'end' }
 type Segment = { x1: number; y1: number; x2: number; y2: number }

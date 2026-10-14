@@ -32,11 +32,11 @@ export const COPY: Record<string, GeneratorCopy> = {
     ],
     settings: [
       'Equations to graph, one per row: lines, curves, points, pieces of a piecewise function with open or closed endpoints, and inequalities to shade',
-      'Each row’s style: its color, a solid, dashed or dotted line, which ends have arrows, endpoints and asymptotes shown or hidden, a dot or cross for points, and a tint or hatching for an inequality’s shading',
+      'Each row’s style: its color, a solid, dashed or dotted line, a thin, medium or thick line, which ends have arrows, endpoints and asymptotes shown or hidden, a dot or cross for points, and a tint or hatching for an inequality’s shading',
       'Each axis’s range (From, To and Count by), typed as whole numbers, decimals, fractions, multiples of π or degrees, and how often it is numbered',
       'A chart title and axis titles, as text or a blank line for students, and the x and y labels at the arrow tips',
       'How each end of each axis finishes: a triangle arrow, a line arrow, a circle or nothing',
-      'Minor gridlines splitting each block into 2, 4 or 5, and small, medium or large labels',
+      'Light, standard or bold gridlines, or none, minor gridlines splitting each block into 2, 4 or 5, and small, medium or large labels',
     ],
     faqs: [
       {
@@ -54,6 +54,10 @@ export const COPY: Record<string, GeneratorCopy> = {
       {
         q: 'How do I graph an inequality or a system of inequalities?',
         a: 'Type it with <, ≤, > or ≥, like y > 2x + 1, y ≤ x² − 4, x < 3 or −2 < x ≤ 3, and the side that makes it true is shaded. The boundary is dashed for < and > and solid for ≤ and ≥. For a system, give each inequality its own row: each shades its own side, and the solutions are where the shading overlaps. In black and white, set each row’s shading to hatching so the overlap still shows.',
+      },
+      {
+        q: 'Can I make the lines darker so they show up on photocopies?',
+        a: 'Yes. Under Grid, set Gridlines to Bold for darker, thicker gridlines and axes, or to Light to make the grid gray so the axes and graphs stand out; None leaves just the axes. To make one graphed line thicker or thinner, open the button before its row and pick a thickness.',
       },
       {
         q: 'Can I graph a piecewise function?',

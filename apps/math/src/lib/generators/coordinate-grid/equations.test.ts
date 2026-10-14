@@ -356,7 +356,7 @@ describe('equations in the page address', () => {
     expect(settingsFromParams(new URLSearchParams(q)).equations.map((r) => r.text)).toEqual(['y=2x+1', '(1,2),(3,4)'])
   })
   test('a row keeps its style, and only what differs from the default is written', () => {
-    const row = { text: 'y=2x+1', color: 'red', line: 'dashed', arrows: 'both', point: 'dot', names: 'name', ends: 'shown', asym: 'hidden', fill: 'tint', barrows: 'none' }
+    const row = { text: 'y=2x+1', color: 'red', line: 'dashed', arrows: 'both', point: 'dot', names: 'name', ends: 'shown', asym: 'hidden', fill: 'tint', barrows: 'none', width: 'medium' }
     const q = settingsToQuery(cleanSettings({ ...DEFAULT_SETTINGS, equations: [row] }))
     expect(new URLSearchParams(q).get('eq')).toBe('y=2x+1|color=red|line=dashed')
     expect(settingsFromParams(new URLSearchParams(q)).equations).toEqual([row])

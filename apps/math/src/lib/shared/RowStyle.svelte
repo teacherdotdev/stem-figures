@@ -5,18 +5,19 @@
   // CapPicker's menu, so the scrolling settings column can't clip it.
   import { tick } from 'svelte'
   import {
-    ARROWS, ASYMPTOTES, COLORS, ENDPOINTS, FILLS, LABEL_STYLES, LINE_STYLES, POINT_STYLES, VALUE_STYLES,
-    type Arrows, type AsymptoteStyle, type Color, type Endpoints, type Fill, type LabelStyle, type LineStyle, type PointStyle, type ValueStyle,
+    ARROWS, ASYMPTOTES, COLORS, ENDPOINTS, FILLS, LABEL_STYLES, LINE_STYLES, POINT_STYLES, THICKNESSES, VALUE_STYLES,
+    type Arrows, type AsymptoteStyle, type Color, type Endpoints, type Fill, type LabelStyle, type LineStyle, type PointStyle, type Thickness,
+    type ValueStyle,
   } from './rowStyle.js'
 
   // What a row style can hold. The grid keeps its label style in `names` (its
   // links say names=); a number line row keeps it in `labels`, and has `values`.
   type Styled = {
     color: Color; point: PointStyle; line?: LineStyle; arrows?: Arrows; ends?: Endpoints; asym?: AsymptoteStyle
-    names?: LabelStyle; labels?: LabelStyle; values?: ValueStyle; fill?: Fill; barrows?: Arrows
+    names?: LabelStyle; labels?: LabelStyle; values?: ValueStyle; fill?: Fill; barrows?: Arrows; width?: Thickness
   }
 
-  // row: { color, line, arrows, point, … }, edited in place. isPoints: only color, point and labels apply.
+  // row: { color, line, arrows, point, width, … }, edited in place. isPoints: only color, point and labels apply.
   // hasDomain: the row's line stops at a domain, so it can show endpoints. hasAsymptotes: its curve has some to show.
   // isInequality: a coordinate grid row that shades a region; its boundary's line style follows its sign, its
   // arrows are its own (barrows), and it picks a fill.
@@ -33,6 +34,9 @@
 
   const arrowKey = $derived(isInequality ? 'barrows' : 'arrows')
   const arrows = $derived(row[arrowKey] ?? 'both')
+  // How much the miniature's line thickens or thins, as the figure's does.
+  const WEIGHT: Record<Thickness, number> = { thin: 0.6, medium: 1, thick: 1.6 }
+  const weight = $derived(WEIGHT[row.width ?? 'medium'])
   const labelKey = $derived(row.labels !== undefined ? 'labels' : row.names !== undefined ? 'names' : null)
 
   let open = $state(false)
@@ -104,7 +108,7 @@
       {/if}
       <line
         x1={left ? 7.5 : 4} y1={left ? 16.5 : 20} x2={right ? 16.5 : 20} y2={right ? 7.5 : 4}
-        stroke={ink} stroke-width={!isInequality && row.line === 'dotted' ? 2.6 : 2.2}
+        stroke={ink} stroke-width={(!isInequality && row.line === 'dotted' ? 2.6 : 2.2) * weight}
         stroke-dasharray={isInequality ? undefined : row.line === 'dashed' ? '4 2.6' : row.line === 'dotted' ? '0.01 3.6' : undefined}
         stroke-linecap={!isInequality && row.line === 'dotted' ? 'round' : 'butt'}
       />
@@ -121,6 +125,12 @@
       stroke-dasharray={style === 'dashed' ? '6 4' : style === 'dotted' ? '0.01 4.5' : undefined}
       stroke-linecap={style === 'dotted' ? 'round' : 'butt'}
     />
+  </svg>
+{/snippet}
+
+{#snippet widthIcon(width: Thickness)}
+  <svg viewBox="0 0 28 12" width="28" height="12" aria-hidden="true">
+    <line x1="3" y1="6" x2="25" y2="6" stroke="currentColor" stroke-width={2.5 * WEIGHT[width]} />
   </svg>
 {/snippet}
 
@@ -263,6 +273,19 @@
             {/each}
           </div>
         </div>
+        {/if}
+
+        {#if row.width !== undefined}
+          <div class="group">
+            <span class="name" id="{id}-width">Thickness</span>
+            <div class="segmented" role="radiogroup" aria-labelledby="{id}-width">
+              {#each (Object.entries(THICKNESSES) as [Thickness, string][]) as [v, name]}
+                <button type="button" role="radio" aria-checked={row.width === v} aria-label={name} title={name} class:on={row.width === v} onclick={() => (row.width = v)}>
+                  {@render widthIcon(v)}
+                </button>
+              {/each}
+            </div>
+          </div>
         {/if}
 
         {#if hasDomain}

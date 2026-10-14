@@ -66,6 +66,10 @@ _Avoid_: Format, label style
 A thin, faint, unnumbered line that splits each block of a coordinate grid into 2, 4 or 5 parts. A grid has none unless the teacher picks a number.
 _Avoid_: Subdivision, fine grid, minor tick
 
+**Gridlines**:
+How a coordinate grid's lines are drawn, one choice for the whole grid: light (gray, so the axes and graphed lines stand out), standard, bold (darker and thicker, with thicker axes, to survive a photocopier) or none (just the axes, with a tick at each block). Every grid starts standard.
+_Avoid_: Grid weight, grid color, contrast
+
 **Angle unit**:
 Whether a coordinate grid's trig functions read x in radians or degrees. It's one setting for the whole figure, set with the x-axis: radians, until the teacher types ° in the x-axis range (which switches it to degrees) or picks degrees.
 _Avoid_: Angle mode, trig mode
@@ -93,7 +97,7 @@ A straight line or curve drawn across a coordinate grid from an equation, with a
 _Avoid_: Plot, function, curve
 
 **Row style**:
-How one equation is drawn, set from the button before it, which shows a miniature of how the row is drawn: a color, a line style (solid, dashed or dotted) and which ends have arrows (both, neither, left or right; for an up-and-down line, left means the bottom), whether endpoints show, and whether asymptotes show. An inequality row's style also picks how its shaded region is filled, a tint or hatching, but not its line style, which its sign decides. Points take the color and a point mark: a dot, or a cross as French classrooms use. On a number line a row's style is its color, whether values are written, and for points and sequences a point mark and how point labels show; a number line's thick line, arrows and circles carry meaning, so they can't be changed. Every row starts black. Values are written above the line for endpoints and unlabeled points that don't sit on a numbered tick, the way their own row was typed (0.35 as 0.35, 3/8 as a fraction), unless the row style turns them off (for an estimate-this-point question). The color goes on the row's thick line, arrows, circles and points, never on the line, ticks or numbers. Rows of the same color join into one equation graph, as they always have; rows of different colors are drawn separately, each color over the colors that came before it in the list.
+How one equation is drawn, set from the button before it, which shows a miniature of how the row is drawn: a color, a line style (solid, dashed or dotted), a thickness (thin, medium or thick; its arrowheads and circles grow with it) and which ends have arrows (both, neither, left or right; for an up-and-down line, left means the bottom), whether endpoints show, and whether asymptotes show. An inequality row's style also picks how its shaded region is filled, a tint or hatching, but not its line style, which its sign decides. Points take the color and a point mark: a dot, or a cross as French classrooms use. On a number line a row's style is its color, whether values are written, and for points and sequences a point mark and how point labels show; a number line's thick line, arrows and circles carry meaning, so they can't be changed. Every row starts black. Values are written above the line for endpoints and unlabeled points that don't sit on a numbered tick, the way their own row was typed (0.35 as 0.35, 3/8 as a fraction), unless the row style turns them off (for an estimate-this-point question). The color goes on the row's thick line, arrows, circles and points, never on the line, ticks or numbers. Rows of the same color join into one equation graph, as they always have; rows of different colors are drawn separately, each color over the colors that came before it in the list.
 _Avoid_: Format, appearance, theme
 
 **Point mark**:

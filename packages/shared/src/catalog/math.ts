@@ -17,7 +17,7 @@ export const MATH: CatalogEntry[] = [
       'cartesian coordinates', 'rectangular coordinates', 'xy plane', 'x-y grid', 'xy', 'axes', 'x-axis', 'y-axis',
       'quadrant', 'first quadrant', 'four quadrants', 'origin', 'ordered pairs', 'plot points', 'plotting',
       'graphing', 'linear equations', 'slope', 'grid', 'graph', 'blank graph', 'printable',
-      'graphing inequalities', 'linear inequalities', 'systems of inequalities', 'shaded region', 'shading',
+      'graphing inequalities', 'linear inequalities', 'systems of inequalities', 'shaded region', 'shading', 'bold grid', 'dark gridlines', 'no gridlines', 'thick lines',
     ],
   },
   {

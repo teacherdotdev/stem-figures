@@ -35,3 +35,6 @@ export type ValueStyle = keyof typeof VALUE_STYLES
 export type Endpoints = keyof typeof ENDPOINTS
 export type AsymptoteStyle = keyof typeof ASYMPTOTES
 export type Fill = keyof typeof FILLS
+// How thick a coordinate grid row's line is drawn, with its arrowheads and circles. Medium is how it always was.
+export const THICKNESSES = { thin: 'Thin', medium: 'Medium', thick: 'Thick' }
+export type Thickness = keyof typeof THICKNESSES

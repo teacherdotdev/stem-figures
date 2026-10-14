@@ -3,11 +3,12 @@
   // prints crisply and exports cleanly to PNG/SVG (fonts and colors are
   // inline, no page CSS). What's graphed is drawn by `children`, over the
   // axes and under the numbers and titles; `under`, if given, is drawn under
-  // even the gridlines (a shaded region, which they show through).
+  // even the gridlines (a shaded region, which they show through). `gridlines`
+  // lightens, darkens or hides them; every graph that doesn't choose gets standard.
   import type { Snippet } from 'svelte'
   import type { GridSettings } from './axes'
   import type { Cap } from './caps'
-  import { INK, SANS, SERIF, type GridLayout } from './grid'
+  import { GRIDLINE_STYLES, INK, SANS, SERIF, type GridLayout, type Gridlines } from './grid'
 
   interface Props {
     layout: GridLayout
@@ -19,9 +20,12 @@
     id?: string
     children?: Snippet
     under?: Snippet
+    gridlines?: Gridlines
   }
-  let { layout: g, settings, label, svg = $bindable(), id = 'g', children, under }: Props = $props()
+  let { layout: g, settings, label, svg = $bindable(), id = 'g', children, under, gridlines = 'standard' }: Props = $props()
 
+  const lines = $derived(GRIDLINE_STYLES[gridlines])
+  const TICK = 5 // how far a tick runs each side of an axis, when there are no gridlines
   const cap = (c: Cap) => (c === 'none' ? undefined : `url(#${id}-${c})`)
 </script>
 
@@ -52,19 +56,27 @@
   {@render under?.()}
 
   <!-- Minor gridlines: thin and faint, under the block lines. -->
-  {#if g.minorV.length}
-    <g stroke="#9ca3af" stroke-width="0.5">
-      {#each g.minorV as x}<line x1={x} y1={g.grid.y} x2={x} y2={g.grid.y + g.grid.h} />{/each}
-      {#each g.minorH as y}<line x1={g.grid.x} y1={y} x2={g.grid.x + g.grid.w} y2={y} />{/each}
+  {#if gridlines === 'none'}
+    <!-- No gridlines: a tick across each axis at every block, so the numbers still have a place. -->
+    <g stroke={INK} stroke-width="1.5">
+      {#each g.vLines as x}<line x1={x} y1={g.xAxis.y - TICK} x2={x} y2={g.xAxis.y + TICK} />{/each}
+      {#each g.hLines as y}<line x1={g.yAxis.x - TICK} y1={y} x2={g.yAxis.x + TICK} y2={y} />{/each}
+    </g>
+  {:else}
+    {#if g.minorV.length}
+      <g stroke={lines.minor} stroke-width={lines.minorWidth}>
+        {#each g.minorV as x}<line x1={x} y1={g.grid.y} x2={x} y2={g.grid.y + g.grid.h} />{/each}
+        {#each g.minorH as y}<line x1={g.grid.x} y1={y} x2={g.grid.x + g.grid.w} y2={y} />{/each}
+      </g>
+    {/if}
+
+    <g stroke={lines.block} stroke-width={lines.blockWidth} shape-rendering="crispEdges">
+      {#each g.vLines as x}<line x1={x} y1={g.grid.y} x2={x} y2={g.grid.y + g.grid.h} />{/each}
+      {#each g.hLines as y}<line x1={g.grid.x} y1={y} x2={g.grid.x + g.grid.w} y2={y} />{/each}
     </g>
   {/if}
 
-  <g stroke={INK} stroke-width="1" shape-rendering="crispEdges">
-    {#each g.vLines as x}<line x1={x} y1={g.grid.y} x2={x} y2={g.grid.y + g.grid.h} />{/each}
-    {#each g.hLines as y}<line x1={g.grid.x} y1={y} x2={g.grid.x + g.grid.w} y2={y} />{/each}
-  </g>
-
-  <g stroke={INK} stroke-width="2.4">
+  <g stroke={INK} stroke-width={lines.axisWidth}>
     <line
       x1={g.xAxis.x1} y1={g.xAxis.y} x2={g.xAxis.x2} y2={g.xAxis.y}
       marker-start={cap(settings.xStartCap)} marker-end={cap(settings.xEndCap)}

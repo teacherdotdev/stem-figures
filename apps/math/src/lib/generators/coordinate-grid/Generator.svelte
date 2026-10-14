@@ -143,7 +143,7 @@
       bind:labelMode={s.yLabelMode} bind:label={s.yLabel} bind:startCap={s.yStartCap} bind:endCap={s.yEndCap}
     />
 
-    <GridlineSettings bind:minor={s.minor} />
+    <GridlineSettings bind:minor={s.minor} bind:gridlines={s.gridlines} />
   {/snippet}
 
   {#snippet figure()}

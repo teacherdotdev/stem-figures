@@ -13,8 +13,8 @@ import { FunctionNameNode } from '$lib/shared/functions.js'
 import { splitLabels } from '$lib/shared/pointLabels.js'
 import { divisors, evaluate, type AngleUnit } from './evaluate.js'
 import {
-  ARROWS, ASYMPTOTES, COLORS, ENDPOINTS, FILLS, LINE_STYLES, LABEL_STYLES, POINT_STYLES,
-  type Arrows, type AsymptoteStyle, type Color, type Endpoints, type Fill, type LineStyle, type LabelStyle, type PointStyle,
+  ARROWS, ASYMPTOTES, COLORS, ENDPOINTS, FILLS, LINE_STYLES, LABEL_STYLES, POINT_STYLES, THICKNESSES,
+  type Arrows, type AsymptoteStyle, type Color, type Endpoints, type Fill, type LineStyle, type LabelStyle, type PointStyle, type Thickness,
 } from '$lib/shared/rowStyle.js'
 
 const EXAMPLE = 'Try a line like y = 2x + 1, a curve like y = x^2 − 4, a point like (2, 3), or a list of points like (2, 3), (1, 4).'
@@ -23,25 +23,25 @@ const EPS = 1e-9
 class ReadError extends Error {}
 
 export { splitLabels }
-export { ARROWS, ASYMPTOTES, COLORS, ENDPOINTS, FILLS, LINE_STYLES, LABEL_STYLES, POINT_STYLES }
-export type { Arrows, AsymptoteStyle, Color, Endpoints, Fill, LineStyle, LabelStyle, PointStyle }
+export { ARROWS, ASYMPTOTES, COLORS, ENDPOINTS, FILLS, LINE_STYLES, LABEL_STYLES, POINT_STYLES, THICKNESSES }
+export type { Arrows, AsymptoteStyle, Color, Endpoints, Fill, LineStyle, LabelStyle, PointStyle, Thickness }
 
 /**
  * One equation row: what's typed, and how it's drawn. An inequality's boundary
  * has arrows of its own (barrows), which start off, since its shading shows it
- * goes on, and how its shaded region is filled.
+ * goes on, and how its shaded region is filled. Width is how thick its line is.
  */
 export type Row = {
   text: string; color: Color; line: LineStyle; arrows: Arrows; point: PointStyle; names: LabelStyle; ends: Endpoints; asym: AsymptoteStyle
-  fill: Fill; barrows: Arrows
+  fill: Fill; barrows: Arrows; width: Thickness
 }
 
 export const ROW_DEFAULTS: Row = {
-  text: '', color: 'black', line: 'solid', arrows: 'both', point: 'dot', names: 'name', ends: 'shown', asym: 'hidden', fill: 'tint', barrows: 'none',
+  text: '', color: 'black', line: 'solid', arrows: 'both', point: 'dot', names: 'name', ends: 'shown', asym: 'hidden', fill: 'tint', barrows: 'none', width: 'medium',
 }
 
 const STYLE_KEYS = {
-  color: COLORS, line: LINE_STYLES, arrows: ARROWS, point: POINT_STYLES, names: LABEL_STYLES, ends: ENDPOINTS, asym: ASYMPTOTES, fill: FILLS, barrows: ARROWS,
+  color: COLORS, line: LINE_STYLES, arrows: ARROWS, point: POINT_STYLES, names: LABEL_STYLES, ends: ENDPOINTS, asym: ASYMPTOTES, fill: FILLS, barrows: ARROWS, width: THICKNESSES,
 }
 type StyleKey = keyof typeof STYLE_KEYS
 

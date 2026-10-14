@@ -9,6 +9,7 @@ import {
   type NumberReader, type RangeSettings, type TitleMode,
 } from '$shared/graph/axes'
 import { CAPS, type Cap } from '$shared/graph/caps'
+import { GRIDLINES, type Gridlines } from '$shared/graph/grid'
 import { parseNumber } from '$lib/shared/math.js'
 import { fmt } from '$shared/graph/numbering'
 import { cleanRow, rowFromParam, rowToParam, type Row } from './equations.js'
@@ -23,6 +24,7 @@ export const ANGLE_UNITS = { radians: 'Radians', degrees: 'Degrees' } // what tr
 export type Settings = RangeSettings &
   GridSettings & {
     angle: AngleUnit
+    gridlines: Gridlines
     equations: Row[]
   }
 
@@ -53,6 +55,7 @@ export const DEFAULT_SETTINGS: Settings = {
   yStartCap: 'triangle', // bottom end
   yEndCap: 'triangle', // top end
   minor: 0, // minor gridlines per block
+  gridlines: 'standard', // light, standard, bold or none
   angle: 'radians', // the angle unit: whether sin x reads x in radians or degrees
   labelSize: 'medium', // how big the text is (see labelSize.ts)
   equations: [], // what's graphed, one row each: { text: "y=2x+1", color, line, arrows }
@@ -112,6 +115,7 @@ export function cleanSettings(s: RawSettings): Settings {
     xEvery: EVERY.includes(Number(s.xEvery)) ? Number(s.xEvery) : 1,
     yEvery: EVERY.includes(Number(s.yEvery)) ? Number(s.yEvery) : 1,
     minor: MINOR.includes(Number(s.minor)) ? Number(s.minor) : 0,
+    gridlines: s.gridlines in GRIDLINES ? s.gridlines : d.gridlines,
     angle: s.angle in ANGLE_UNITS ? s.angle : d.angle,
     labelSize: cleanLabelSize(s.labelSize),
     title: String(s.title ?? d.title),
