@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 // Takes a picture of each directory preview a site draws itself, for the
 // other sites to show (see packages/shared/src/catalog/previews.ts). Start the
-// site first, then pass its directory's address:
+// site first, then pass its directory's address. Each picture has the CC0
+// license written in, like every exported figure (packages/shared/src/license.ts):
 //
 //   ./scripts/agent-dev.mjs stemfigures/apps/chemistry     (from the workspace root)
 //   node scripts/snapshot-previews.mjs http://localhost:10003/
 //
 // It uses the Chromium Playwright has installed (`npx playwright install chromium`).
 
-import { mkdir } from 'node:fs/promises'
+import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { chromium } from 'playwright-core'
+import { withLicense } from '../packages/shared/src/license.ts'
 
 const url = process.argv[2]
 if (!url) {
@@ -37,7 +39,8 @@ try {
     const box = await preview.boundingBox()
     const [left, top] = [Math.ceil(box.x), Math.ceil(box.y)]
     const clip = { x: left, y: top, width: Math.floor(box.x + box.width) - left, height: Math.floor(box.y + box.height) - top }
-    await page.screenshot({ path: path.join(out, `${id}.png`), clip, fullPage: true, animations: 'disabled' })
+    const png = await page.screenshot({ clip, fullPage: true, animations: 'disabled' })
+    await writeFile(path.join(out, `${id}.png`), withLicense(png))
     console.log(`${id}.png`)
   }
 } finally {

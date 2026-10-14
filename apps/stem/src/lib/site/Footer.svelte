@@ -1,4 +1,5 @@
-<!-- The footer on every page: the teacher.dev credit and each figure site. -->
+<!-- The footer on every page: the teacher.dev credit, how to reuse the
+     figures, and each figure site. -->
 <script lang="ts">
   import { SITES } from '$lib/sites'
 </script>
@@ -8,6 +9,7 @@
     <img src="/logo.svg" alt="" width="22" height="22" />
     <span>Built by teacher.dev</span>
   </a>
+  <a href="/reuse"><span>Reuse</span></a>
   <!-- No noreferrer on these, so the sites can see the visit came from here. -->
   {#each SITES as site (site.id)}
     <a href={site.url} rel="noopener"><span>{site.name}</span></a>
