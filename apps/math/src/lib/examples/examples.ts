@@ -65,12 +65,54 @@ export const EXAMPLES: Example[] = [
       settings: { xFrom: '-6', xTo: '6', yFrom: '-6', yTo: '6', equations: [{ text: 'y=x^2-2x-3', color: 'blue' }] },
     },
     {
+      slug: 'piecewise-function-graph-with-open-and-closed-circles',
+      title: 'Piecewise function graph with open and closed circles',
+      alt: 'A coordinate grid from −6 to 6 with a two-piece piecewise function: y = x + 2 for x < 1, ending in an open circle at (1, 3), and y = −2x + 4 for x ≥ 1, starting from a closed circle at (1, 2)',
+      caption:
+        'A coordinate grid numbered from −6 to 6 on both axes with a piecewise function drawn in black. For x < 1 it’s the line y = x + 2, which ends in an open circle at (1, 3); for x ≥ 1 it’s the line y = −2x + 4, which starts from a closed circle at (1, 2). Use it for evaluating f(1), domain and range, or the jump at x = 1.',
+      settings: {
+        xFrom: '-6', xTo: '6', yFrom: '-6', yTo: '6',
+        equations: [{ text: 'y=x+2, x<1' }, { text: 'y=-2x+4, x>=1' }],
+      },
+    },
+    {
       slug: 'sine-graph-from-minus-2pi-to-2pi',
       title: 'Graph of y = sin x from −2π to 2π',
       alt: 'The sine curve y = sin x on a grid whose x-axis runs from −2π to 2π, numbered −2π, −π, 0, π and 2π, and whose y-axis runs from −2 to 2',
       caption:
         'The curve y = sin x on a coordinate grid whose x-axis runs from −2π to 2π, with a gridline every π/2 and numbers at −2π, −π, 0, π and 2π, and whose y-axis runs from −2 to 2. The curve rises and falls between 1 and −1, crossing the x-axis at every multiple of π. The equation isn’t written on the figure.',
       settings: { xFrom: '-2pi', xTo: '2pi', xStep: 'pi/2', xEvery: 2, yFrom: '-2', yTo: '2', equations: [{ text: 'y=sin(x)' }] },
+    },
+    {
+      slug: 'trig-graph-y-3-sin-2x-in-degrees',
+      title: 'Graph of y = 3 sin 2x in degrees, from 0° to 360°',
+      alt: 'The curve y = 3 sin 2x on a grid whose x-axis runs from 0° to 360°, with a gridline every 45° and numbers every 90°, and whose y-axis runs from −4 to 4',
+      caption:
+        'The curve y = 3 sin 2x drawn in blue on a coordinate grid whose x-axis runs from 0° to 360°, with a gridline every 45° and numbers at 0°, 90°, 180°, 270° and 360°, and whose y-axis runs from −4 to 4. It goes through two full cycles, reaching 3 at 45° and 225° and −3 at 135° and 315°, so students can read its amplitude of 3 and period of 180°. The equation isn’t written on the figure.',
+      settings: {
+        xFrom: '0°', xTo: '360°', xStep: '45°', xEvery: 2, yFrom: '-4', yTo: '4', angle: 'degrees', equations: [{ text: 'y=3sin(2x)', color: 'blue' }],
+      },
+    },
+    {
+      slug: 'exponential-and-logarithm-graphs-y-2x-and-log2-x',
+      title: 'Graphs of y = 2ˣ and y = log₂ x, reflected in y = x',
+      alt: 'A coordinate grid from −6 to 6 with the exponential curve y = 2^x in blue, the logarithm curve y = log₂ x in red, and the dashed line y = x between them',
+      caption:
+        'A coordinate grid numbered from −6 to 6 on both axes. The exponential curve y = 2ˣ is drawn in blue, passing through (0, 1) and (1, 2) and flattening toward the x-axis on the left; the logarithm y = log₂ x is drawn in red, passing through (1, 0) and (2, 1) and dropping toward the y-axis. The dashed line y = x between them shows that each is the other reflected, as inverse functions. Use it for inverses, domain and range, and asymptotes.',
+      settings: {
+        xFrom: '-6', xTo: '6', yFrom: '-6', yTo: '6',
+        equations: [{ text: 'y=2^x', color: 'blue' }, { text: 'y=log_2(x)', color: 'red' }, { text: 'y=x', line: 'dashed' }],
+      },
+    },
+    {
+      slug: 'rational-function-with-a-hole-and-asymptotes',
+      title: 'Rational function with a hole and dotted asymptotes',
+      alt: 'A coordinate grid from −6 to 6 with the rational function y = (2x² + 3x − 2)/(x² + x − 2) in green, an open circle for its hole at (−2, 5/3), and dotted asymptotes at x = 1 and y = 2',
+      caption:
+        'A coordinate grid numbered from −6 to 6 on both axes with the rational function y = (2x² + 3x − 2)/(x² + x − 2) drawn in green. It factors as (2x − 1)(x + 2)/((x − 1)(x + 2)), so it has a hole at (−2, 5/3), drawn as an open circle, where x + 2 cancels; a vertical asymptote at x = 1 and a horizontal asymptote at y = 2, drawn as dotted lines, with the curve in two branches on either side. Use it for holes versus vertical asymptotes, limits and end behavior.',
+      settings: {
+        xFrom: '-6', xTo: '6', yFrom: '-6', yTo: '6', equations: [{ text: 'y=(2x^2+3x-2)/(x^2+x-2)', color: 'green', asym: 'shown' }],
+      },
     },
     {
       slug: 'system-of-linear-inequalities-graph',

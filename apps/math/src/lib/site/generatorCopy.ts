@@ -27,11 +27,12 @@ export const COPY: Record<string, GeneratorCopy> = {
   'coordinate-grid': {
     heading: 'Coordinate grids and graph paper for graphing',
     intro: [
-      'The Coordinate Grid Generator draws a grid of square blocks with an x-axis and a y-axis, numbered along each axis over the range you set. Leave it blank as graph paper, or type equations and points to graph on it: straight lines like y = 2x + 1, curves like y = x² − 4 or y = sin(x), inequalities like y > 2x + 1, shaded on one side, and labeled points like A(2, 3).',
-      'Teachers use it for plotting points, graphing linear equations, reading slope and intercepts, graphing inequalities and systems of inequalities, and graphing functions in Algebra and beyond. Type a range with fractions or π for a trig graph, or with ° for degrees, and give each axis a title or a blank line for students.',
+      'The Coordinate Grid Generator draws a grid of square blocks with an x-axis and a y-axis, numbered along each axis over the range you set. Leave it blank as graph paper, or type equations and points to graph on it: straight lines like y = 2x + 1, curves like y = x² − 4, y = 2ˣ, y = log₂ x, y = |x − 3| or y = 1/x, trig functions like y = 3 sin(2x), pieces of a piecewise function with open and closed circles, inequalities like y > 2x + 1, shaded on one side, and labeled points like A(2, 3).',
+      'Teachers use it for plotting points, graphing linear equations, reading slope and intercepts, graphing inequalities and systems of inequalities, and graphing functions from Algebra 1 through Precalculus and Calculus: transformations, domain and range, holes and asymptotes, limits and trig graphs. Type a range with fractions or π for a trig graph, or with ° for degrees, and give each axis a title or a blank line for students.',
     ],
     settings: [
       'Equations to graph, one per row: lines, curves, points, pieces of a piecewise function with open or closed endpoints, and inequalities to shade',
+      'Functions to graph with: powers and roots, |x|, sin, cos, tan, sec, csc, cot and their inverses, ln, log and log with any base, and e',
       'Each row’s style: its color, a solid, dashed or dotted line, a thin, medium or thick line, which ends have arrows, endpoints and asymptotes shown or hidden, a dot or cross for points, and a tint or hatching for an inequality’s shading',
       'Each axis’s range (From, To and Count by), typed as whole numbers, decimals, fractions, multiples of π or degrees, and how often it is numbered',
       'A chart title and axis titles, as text or a blank line for students, and the x and y labels at the arrow tips',
@@ -45,7 +46,19 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'What equations can I graph?',
-        a: 'Anything that can be written as y = …, such as y = 2x + 1, 2x + 3y = 6, y = −(x − 2)² + 3, y = 2ˣ or y = |x|, plus up-and-down lines like x = 4. Trig, log and ln functions work too, and any of these can be an inequality to shade. Circles and sideways curves aren’t drawn yet.',
+        a: 'Anything that can be written as y = …, such as y = 2x + 1, 2x + 3y = 6, y = −(x − 2)² + 3, y = 2^x or y = |x|, plus up-and-down lines like x = 4. Trig, log and ln functions work too, and any of these can be an inequality to shade. Circles, sideways curves and polar graphs aren’t drawn yet.',
+      },
+      {
+        q: 'Can I graph trig, log and exponential functions?',
+        a: 'Yes. Type sin, cos, tan, sec, csc or cot, like y = 3sin(2x) or y = tan(x − pi/4), and arcsin, arccos or arctan for their inverses. For logs, type ln(x), log(x) for base 10, or log_2(x) for another base (type _ before the base). Exponentials are typed with ^, like y = 2^x or y = e^(−x). Type ^ for any exponent, / for a fraction and sqrt for a square root.',
+      },
+      {
+        q: 'Can I graph trig functions in degrees?',
+        a: 'Yes. Type the x-axis range with °, like From 0° to 360° counting by 90° (or type deg), and sin, cos and tan read x in degrees. For radians, type the range with pi, like 0 to 2pi counting by pi/4, and the axis is numbered in π.',
+      },
+      {
+        q: 'How do I show a hole or an asymptote?',
+        a: 'A hole is drawn for you as an open circle, as in y = (x² − 1)/(x − 1), and a curve like y = 1/x breaks at its vertical asymptote instead of joining across it. To draw the asymptotes as dotted lines, open the button before the row and choose Show asymptotes; they are hidden at first so students can find them.',
       },
       {
         q: 'How do I plot and label points?',
@@ -61,7 +74,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'Can I graph a piecewise function?',
-        a: 'Yes. Put each piece in its own row with its domain after a comma, like y = 3x, −5 ≤ x < 2. Use ≤ for a closed circle at the end and < for an open one.',
+        a: 'Yes. Put each piece in its own row with its domain after a comma, like y = x + 2, x < 1 and then y = −2x + 4, x ≥ 1 (type <= for ≤ and >= for ≥). Use ≤ for a closed circle at the end and < for an open one; a piece that runs off the grid ends in an arrow. Any equation can be a piece, like y = x², −2 ≤ x ≤ 2, and x = 3, 1 ≤ y < 4 is an up-and-down piece. To leave the circles off, open the button before the row and choose No endpoints.',
       },
       {
         q: 'How do I number the x-axis in π for trig graphs?',

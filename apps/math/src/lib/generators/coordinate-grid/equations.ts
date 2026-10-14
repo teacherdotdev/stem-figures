@@ -484,6 +484,10 @@ export function endAsymptotes(f: (x: number) => number | null, box: Box, sides: 
       return y !== null && Math.abs(y - (line.a * x + line.c)) < h * 1e-6
     })
     if (own) continue
+    // Nor does a curve that is a slant line on this side, like each arm of
+    // y = |x − 3|: far out it doesn't close in on the line, it's already on it.
+    const along = m !== 0 && [[f1, 1], [f2, 2], [f4, 4]].every(([v, k]) => Math.abs(v - (m * side * k * X + b)) < h * 1e-9)
+    if (along) continue
     if (!out.some((l) => Math.abs(l.a - line.a) < 1e-6 && Math.abs(l.c - line.c) < h * 1e-4)) out.push(line)
   }
   return out

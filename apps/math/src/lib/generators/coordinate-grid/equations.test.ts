@@ -222,7 +222,7 @@ describe('asymptotes', () => {
   })
 
   test('curves and lines without any have none', () => {
-    for (const text of ['y = x^2', 'y = 2x + 1', 'y = sin(x)', 'y = x^3 - x', 'y = (x^2 - 1)/(x - 1)', 'y = sqrt(x)']) expect(asym(text)).toEqual([])
+    for (const text of ['y = x^2', 'y = 2x + 1', 'y = sin(x)', 'y = x^3 - x', 'y = (x^2 - 1)/(x - 1)', 'y = sqrt(x)', 'y = |x - 3|', 'y = -2|x| + 1']) expect(asym(text)).toEqual([])
   })
 
   test('only where the domain runs on', () => {
