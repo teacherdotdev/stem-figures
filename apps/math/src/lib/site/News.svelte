@@ -57,6 +57,7 @@
 
 {#if shown.length}
   <Modal title="What’s new on Math Figures" onclose={close} wide>
+    <p class="thanks">Thank you for all your feedback. Here’s what we built with it.</p>
     {#each shown as update (update.id)}
       <section class="update">
         {#if shown.length > 1}<p class="eyebrow">{update.title}</p>{/if}
@@ -75,10 +76,19 @@
         </ul>
       </section>
     {/each}
+    <footer>
+      <a href="https://teacher.dev" target="_blank" rel="noopener noreferrer">
+        <img src="/logo.svg" alt="" width="20" height="20" /><span>Built by teacher.dev</span>
+      </a>
+    </footer>
   </Modal>
 {/if}
 
 <style>
+  .thanks { margin: -0.4rem 0 1rem !important; color: var(--muted); }
+  footer { display: flex; justify-content: center; margin-top: 1.1rem; }
+  footer a { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--muted); font-size: 0.88rem; text-decoration: none; }
+  footer a:hover span { text-decoration: underline; text-underline-offset: 3px; }
   .update + .update { margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
   .eyebrow { margin: 0 0 0.6rem !important; color: var(--blue-dark); font-size: 0.75rem !important; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
   .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; margin: 0; padding: 0; list-style: none; }
