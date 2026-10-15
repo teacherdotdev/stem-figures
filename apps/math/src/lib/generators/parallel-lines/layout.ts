@@ -17,12 +17,12 @@ import { LABEL_SCALE } from '$shared/labelSize'
 import { layoutMath, type MathBox } from '$lib/shared/mathSvg.js'
 import type { PlacedLabel } from '$lib/shapes/layout.js'
 import { roundTo } from '$lib/shapes/parts.js'
+import { add, cross, dot, len, mul, perp, r1, reach, sub, unit, type Vec } from '$lib/shapes/vec.js'
+import { angleMark, parallelArrows, sectorPath } from '$lib/labeling/marks.js'
 import { ANGLE_DEFAULTS, SHADES, angleKey, readAngle, type LineBase, type LineStyle, type Settings } from './settings.js'
 
-export type Vec = [number, number]
-export type { PlacedLabel }
-/** Something on the figure the teacher can point at: an angle, a line or a place for a point, by its key or id. */
-export type Part = { kind: 'angle' | 'line' | 'point'; key: string }
+export type { Part } from '$lib/labeling/pick.js'
+export type { PlacedLabel, Vec }
 
 const BASE_FS = 20 // label font size, at medium labels
 const BASE_NAME_FS = 21
@@ -43,19 +43,6 @@ const ARROW_GAP = 6
 export const DOT = 3.5
 const RAD = Math.PI / 180
 const SAME = 1e-3 // how close two crossings are, in gaps, to count as one
-
-const add = (p: Vec, q: Vec): Vec => [p[0] + q[0], p[1] + q[1]]
-const sub = (p: Vec, q: Vec): Vec => [p[0] - q[0], p[1] - q[1]]
-const mul = (p: Vec, k: number): Vec => [p[0] * k, p[1] * k]
-const dot = (p: Vec, q: Vec) => p[0] * q[0] + p[1] * q[1]
-const cross = (p: Vec, q: Vec) => p[0] * q[1] - p[1] * q[0]
-const len = (p: Vec) => Math.hypot(p[0], p[1])
-const unit = (p: Vec) => mul(p, 1 / (len(p) || 1))
-const perp = (p: Vec): Vec => [-p[1], p[0]]
-const r1 = (v: number) => Math.round(v * 10) / 10
-
-/** How far a label's box reaches from its middle in direction d. */
-const reach = (box: MathBox, d: Vec) => (box.w / 2) * Math.abs(d[0]) + ((box.asc + box.desc) / 2) * Math.abs(d[1])
 
 /** A line of the figure in its own units: a point on it and its "+" direction. */
 type Geo = { id: string; kind: 'p' | 't'; line: LineBase; at: Vec; d: Vec; theta?: number }
@@ -217,31 +204,21 @@ export function buildLines(s: Settings) {
   const arcs: string[] = []
   const shades: { d: string; fill: string }[] = []
   const squares: Vec[][] = []
-  const sectorPath = (v: Vec, e1: Vec, e2: Vec, r: number, closed: boolean) => {
-    const [a, b] = [add(v, mul(e1, r)), add(v, mul(e2, r))]
-    const large = cross(e1, e2) < 0 ? 1 : 0 // more than half a turn
-    const arc = `A${r1(r)},${r1(r)} 0 ${large} 1 ${r1(b[0])},${r1(b[1])}`
-    return closed ? `M${r1(v[0])},${r1(v[1])} L${r1(a[0])},${r1(a[1])} ${arc} Z` : `M${r1(a[0])},${r1(a[1])} ${arc}`
-  }
+  const marks = { arcs, squares }
+  const MARK_SIZES = { arc: ARC, arcGap: ARC_GAP, square: SQUARE }
+  /** A wedge or arc from e1 round to e2, more than half a turn when they cross the other way. */
+  const sector = (v: Vec, e1: Vec, e2: Vec, r: number, closed: boolean) => sectorPath(v, e1, e2, r, closed, cross(e1, e2) < 0)
   const angles = crossings.flatMap((c) =>
     c.angles.map((a) => {
       const style = s.angles[a.key] ?? ANGLE_DEFAULTS
       const room = 0.4 * Math.min(...a.rays.map((ray) => rayRoom(c.v, ray)))
       const radius = Math.max(16, Math.min(WEDGE, room))
       const fill = SHADES[style.shade]?.fill
-      if (fill) shades.push({ d: sectorPath(c.v, a.e1, a.e2, radius, true), fill })
+      if (fill) shades.push({ d: sector(c.v, a.e1, a.e2, radius, true), fill })
       const box = style.label === 'text' ? layoutMath(style.text, FS) : style.label === 'measure' ? layoutMath(rounded(a.measure), FS, { suffix: '°' }) : null
       // Only the mark the teacher set: a square at a right angle, or that many arcs.
       const right = Math.abs(a.measure - 90) < 1e-4
-      let outer = 0
-      if (style.mark === 'right' && right) {
-        squares.push([add(c.v, mul(a.e1, SQUARE)), add(c.v, add(mul(a.e1, SQUARE), mul(a.e2, SQUARE))), add(c.v, mul(a.e2, SQUARE))])
-        outer = SQUARE * Math.SQRT2
-      } else if (style.mark !== 'none') {
-        const count = style.mark === 'right' ? 1 : Number(style.mark)
-        for (let n = 0; n < count; n++) arcs.push(sectorPath(c.v, a.e1, a.e2, ARC + n * ARC_GAP, false))
-        outer = ARC + (count - 1) * ARC_GAP
-      }
+      const outer = angleMark(marks, c.v, a.e1, a.e2, style.mark, right, cross(a.e1, a.e2) < 0, MARK_SIZES)
       // Far enough in to clear the arc, and to fit between the angle's two rays.
       const mid = unit(add(a.e1, a.e2))
       const half = Math.sin((Math.min(a.measure, 179) * RAD) / 2)
@@ -264,7 +241,7 @@ export function buildLines(s: Settings) {
         /** Whether it's 90°, so its mark can be a right-angle square. */
         right,
         /** The wedge that's highlighted, and pointed at to pick the angle. */
-        wedge: sectorPath(c.v, a.e1, a.e2, radius, true),
+        wedge: sector(c.v, a.e1, a.e2, radius, true),
         /** Where its measure is written while it's highlighted. */
         ghost: { at: add(c.v, mul(mid, distance(ghostBox))), text: ghostText },
         /** Where its popup opens. */
@@ -311,12 +288,7 @@ export function buildLines(s: Settings) {
     const { d, along, length } = crossingsOn(g)
     const c = add(g.from, mul(d, (along.length ? Math.min(...along) : length) / 2))
     const t = d[0] < -1e-9 || (Math.abs(d[0]) <= 1e-9 && d[1] < 0) ? mul(d, -1) : d
-    const n = perp(t)
-    for (let a = 0; a < count; a++) {
-      const m = add(c, mul(t, (a - (count - 1) / 2) * ARROW_GAP))
-      const tail = add(m, mul(t, -ARROW))
-      arrows.push([add(tail, mul(n, ARROW_W)), add(m, mul(t, ARROW)), add(tail, mul(n, -ARROW_W))])
-    }
+    arrows.push(...parallelArrows(c, t, perp(t), count, ARROW, ARROW_W, ARROW_GAP))
   }
 
   // Where a point can go near each end of a line: between its outermost

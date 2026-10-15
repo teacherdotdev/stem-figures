@@ -2,17 +2,27 @@
   // A number of degrees the teacher can type, or change by dragging left and
   // right on the ∠ before it, as in Figma: 1° for every 2 pixels, 10° steps
   // with Shift. The up and down arrow keys nudge it by 1° (10° with Shift).
+  // With another `symbol`, `suffix` and `step` it's any measure, like a
+  // length in tenths: a step every 2 pixels, ten steps at a time with Shift.
   // `onactive` hears when it's being changed (dragged or focused), so the
   // figure can show which angle it sets.
   import { parseNumber } from '$lib/shared/math.js'
 
   let {
-    value = $bindable(), id, label, min, max, symbol = '∠', invalid = false, onactive,
-  }: { value: string; id: string; label: string; min: number; max: number; symbol?: string; invalid?: boolean; onactive?: (on: boolean) => void } = $props()
+    value = $bindable(), id, label, min, max, symbol = '∠', suffix = '°', step = 1, invalid = false, onactive,
+  }: {
+    value: string; id: string; label: string; min: number; max: number; symbol?: string; suffix?: string; step?: number; invalid?: boolean
+    onactive?: (on: boolean) => void
+  } = $props()
 
   let dragging = $state(false)
   let focused = $state(false)
   const clamp = (v: number) => Math.max(min, Math.min(max, v))
+  /** Rounded to a whole number of steps (of ten steps with Shift), without float noise. */
+  const snap = (v: number, big: boolean) => {
+    const by = big ? step * 10 : step
+    return Number((Math.round(v / by) * by).toFixed(6))
+  }
   const current = () => parseNumber(value) ?? clamp((min + max) / 2)
   const tell = () => onactive?.(dragging || focused)
 
@@ -27,8 +37,8 @@
   }
   function move(event: PointerEvent) {
     if (!start || event.pointerId !== start.id) return
-    const raw = start.v + (event.clientX - start.x) / 2
-    value = String(clamp(event.shiftKey ? Math.round(raw / 10) * 10 : Math.round(raw)))
+    const raw = start.v + ((event.clientX - start.x) / 2) * step
+    value = String(clamp(snap(raw, event.shiftKey)))
   }
   function up(event: PointerEvent) {
     if (!start || event.pointerId !== start.id) return
@@ -39,8 +49,8 @@
   function key(event: KeyboardEvent) {
     if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return
     event.preventDefault()
-    const step = (event.shiftKey ? 10 : 1) * (event.key === 'ArrowUp' ? 1 : -1)
-    value = String(clamp(Math.round(current()) + step))
+    const by = (event.shiftKey ? 10 : 1) * step * (event.key === 'ArrowUp' ? 1 : -1)
+    value = String(clamp(Number((snap(current(), false) + by).toFixed(6))))
   }
 </script>
 
@@ -53,7 +63,7 @@
     {id} type="text" inputmode="decimal" aria-label={label} aria-invalid={invalid} bind:value onkeydown={key}
     onfocus={() => ((focused = true), tell())} onblur={() => ((focused = false), tell())}
   />
-  <span class="deg" aria-hidden="true">°</span>
+  {#if suffix}<span class="deg" aria-hidden="true">{suffix}</span>{/if}
 </div>
 
 <style>

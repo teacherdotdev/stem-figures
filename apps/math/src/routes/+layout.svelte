@@ -1,5 +1,5 @@
 <script lang="ts">
-  // Every page: the top bar, the page, then the footer (generators go without,
+  // Every page: the top bar (editors go without, having their own way home), the page, then the footer (generators go without,
   // so the figure gets the whole window), plus the Help and request dialogs.
   import type { Snippet } from 'svelte'
   import '../app.css'
@@ -19,6 +19,8 @@
   // Cloudflare Web Analytics beacon; the token is set in Vercel's production env only.
   const beacon = import.meta.env.CF_BEACON_TOKEN
   const onGenerator = $derived(!!findGenerator(page.url.pathname))
+  // An editor fills the whole window, with its own way home.
+  const onEditor = $derived(findGenerator(page.url.pathname)?.kind === 'editor')
 </script>
 
 <svelte:head>
@@ -27,7 +29,7 @@
   {/if}
 </svelte:head>
 
-<TopBar />
+{#if !onEditor}<TopBar />{/if}
 <main>{@render children()}</main>
 {#if !onGenerator}<Footer />{/if}
 <Help />

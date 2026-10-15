@@ -16,6 +16,10 @@ _Avoid_: Graphic, image, visual, resource
 A page that makes one kind of figure from a teacher's settings, named "<Figure> Generator".
 _Avoid_: Maker, tool, builder, app
 
+**Editor**:
+A page where the teacher builds a figure by hand on a canvas, rather than from settings, named "<Figure> Editor". It's listed in the directory like a generator, tagged Editor. Its figure is kept in the teacher's browser, never in the page address, so it has no links to share.
+_Avoid_: Builder, drawing tool, generator (for this kind of page)
+
 **Directory**:
 The home page, which lists every generator with a live preview of its figure.
 _Avoid_: Catalog, gallery, index
@@ -167,8 +171,8 @@ One optional unit for the whole shape, such as cm or ft, added to every length s
 _Avoid_: Scale
 
 **Extra line**:
-A line drawn onto a shape that isn't one of its sides: a height, dropped from a vertex to a side, which is extended when the height lands outside the shape, a quadrilateral's diagonal, joining opposite vertices, or a regular polygon's apothem or radius. The point where a height lands, or where the diagonals cross, can be given a name, such as E. It can be solid, dashed or dotted, like a graphed line.
-_Avoid_: Auxiliary line, segment, construction
+A line drawn onto a shape that isn't one of its sides, shaped as a segment, a ray past one end, or a line past both: a height, dropped from a vertex to a side, which is extended when the height lands outside the shape, a quadrilateral's diagonal, joining opposite vertices, or a regular polygon's apothem or radius. The point where a height lands, or where the diagonals cross, can be given a name, such as E. It can be solid, dashed or dotted, like a graphed line; on a composite shape it can also be thin or thick, or hidden (as can the shape's own sides and curves), when it still splits sides and makes angles that can be labeled but isn't drawn. On a composite shape, the teacher draws one across the inside in lines mode, between two anchor points or from one onto a height's foot, or shows a seam as one; where it meets a side partway along, that spot becomes a corner, splitting the side in two. Each end keeps what it was drawn to, not where it was, so when the shape changes in edit mode a line to a corner still ends at that corner, one to the middle of a side still ends halfway along it, and a height stays square to its side, with a right-angle mark at its foot and the side run on in dots when its foot leaves the side.
+_Avoid_: Auxiliary line, segment, construction, internal line
 
 **Marking**:
 A standard geometry symbol on a part: congruence ticks on sides, parallel arrows on sides, congruence arcs on angles, or a right-angle square. The teacher sets congruence marks and parallel arrows by hand, never from the measures or the kind of shape, so they don't give answers away. An angle gets an arc only when it has a label or congruence arcs. A right-angle square appears on its own at every 90° angle, including where a height meets a side and where diagonals cross at right angles, and can be turned off.
@@ -223,6 +227,54 @@ _Avoid_: Inradius, height
 **Radius**:
 The line from a regular polygon's center to a vertex, and its length; together, the **radii**. The generator draws one to the bottom right vertex, so with the apothem it makes the right triangle used for area.
 _Avoid_: Circumradius
+
+### Composite shapes
+
+**Composite Shape**:
+A flat figure made of simpler shapes joined side to side, such as an L-shape, a rectangle with a semicircle on top, or a circle (two semicircles sharing their diameter), drawn to scale for area and perimeter questions. Unlike a **Shape**, it can have a curved side. Its editor is the Composite Shape Editor.
+_Avoid_: Compound shape, composite figure, irregular shape, L-shape (all fine as search words, not as the name)
+
+**Piece**:
+One of the simpler shapes a composite shape is built from (a rectangle, triangle, semicircle or quarter circle): the first one placed, or one added onto a straight outer side. Pieces are only ever added, never cut out. A piece added onto a side starts by covering all of it, and can then be stretched past either end of it. An inside corner, such as an L-shape's, can be filled with a right triangle or a quarter circle, offered under "Add in this corner" on either side meeting it. A composite shape is always one connected shape: a resize stops before any piece would come apart from the rest (they may meet at just a corner), and deleting a piece also deletes any piece that would be left floating, with everything that would go tinted red first. Pieces that sat on a deleted piece but still touch the rest stay where they are.
+_Avoid_: Part (a part is what carries a label), component, sub-shape
+
+**Seam**:
+Where two pieces of a composite shape meet. It isn't printed, so the outline reads as one shape and students find the split themselves, unless the teacher draws an extra line along it in lines mode. Resizing a piece never moves or resizes another, except across a shared edge.
+_Avoid_: Join, shared side, boundary
+
+**Shared edge**:
+A seam where a triangle, semicircle or quarter circle covers the whole of the side it was added on (or the whole of several lined-up sides it was added across): changing that side's length changes the piece with it, and the other way round. A quarter circle shares only that one side, never the corner's other side, and can't be bigger than it: shrinking the side shrinks it. Two rectangles never share an edge; each resizes on its own.
+_Avoid_: Linked side, parent side
+
+**Selection**:
+The pieces picked in edit mode: a click picks one, Shift-click adds or removes one. Several picked can be deleted together, resized together by dragging a side they line up along (which also moves any other piece's side lying along that line, so nothing comes apart or overlaps), merged when together they make one rectangle, or have a triangle, semicircle or rectangle added across a side they line up along.
+_Avoid_: Group (they don't stay together once unpicked)
+
+**Edit mode**:
+The Composite Shape Editor's mode for building the shape: adding, resizing and deleting pieces. Extra lines, labels and marks are hidden while it's on, leaving just the pieces; copying or downloading still gives the whole figure. It's the first of three modes, picked at the bottom of the canvas: edit, lines, label. Seams show faintly dashed and pieces are tinted on hover, neither of which prints.
+
+**Lines mode**:
+The Composite Shape Editor's mode for drawing extra lines and nothing else: the outline goes pale and labels are hidden, every anchor point is shown, and a line is drawn by dragging from one to another, or onto the small square where a height would meet a side. Clicking a line opens its card, to make it a ray or delete it. A ray runs on to the edge of the canvas here and in edit mode.
+_Avoid_: Draw mode
+
+**Anchor point**:
+A spot an extra line can start or end at: a corner, the middle of a side or of an extra line, where two extra lines cross, or anywhere on a curve (a semicircle's or quarter circle's), where it's pulled onto the curve's ends, middle and quarter points when dropped near one. A straight side offers only its corners and middle, never a spot partway along. Only spots on the outside of the shape or on an extra line count, never a seam inside it, except a semicircle's center, so its radius can be drawn; a line whose end ends up inside the shape (its side became a seam when a piece went on it) is dropped on leaving edit mode. A height's foot, on a side or on another extra line, is one too, offered only while a line is being drawn, since it depends on where the line starts.
+_Avoid_: Snap point, handle, vertex (a corner is only one kind)
+
+**Ray** (on a composite shape):
+An extra line that runs on past one of its ends, or past both, making it a line. While the shape is being built it runs on to the edge of the canvas; in label mode and in print it stops the same distance past the shape's outside edge as every other ray, finished with an end cap (a triangle arrow to start). The run-on part makes no anchor points, corners or labelable points; only the angle where it leaves the shape can be labeled.
+_Avoid_: Extension, run-on line, infinite line
+
+**Label mode**:
+The Composite Shape Editor's mode for labeling and marking sides, angles, points and extra lines (and choosing an extra line's style, or deleting it), including the angles extra lines make with sides and each other, the points inside the shape where they end or cross, and each corner's exterior angle (drawn with the side before it run on dashed past the corner), and each ray's end cap and the angle it makes where it leaves the shape, the same way as in Parallel Lines and Angles. The whole figure can be turned here, up to half a turn either way, with its labels staying upright; edit and lines mode show it unturned, so it's built square to the snap dots. The figure looks exactly as it will print.
+
+**Snap dots**:
+Faint dots one unit apart, shown only in edit mode, that corners and sides snap to while being dragged: a side running straight across or up and down snaps only to lines of dots (the ones shown, five units apart when zoomed far out), whatever lengths the pieces around it have, and a slanted side, which can't line up with them, snaps to whole lengths. Holding Cmd (Ctrl on Windows) while dragging stops the snapping.
+_Avoid_: Grid (a composite shape has no grid)
+
+**Locked part**:
+An angle or side of a triangle piece that the teacher has locked in its popup, so it stays as everything else changes: when another of its measures is typed, when its tip is dragged (which then slides only where the lock allows, along a line or round a circle, shown while dragging), and when a piece it shares a seam with is resized. Two locks that between them fix the tip stop it being dragged. In edit mode each locked part shows its size with a lock beside it.
+_Avoid_: Fixed, pinned, constraint
 
 ### Parallel lines and transversals
 

@@ -1,9 +1,13 @@
 <script lang="ts">
   // Solid, dashed or dotted, for an extra line: a row of buttons, each
-  // showing a short line drawn that way.
+  // showing a short line drawn that way. With `hidden`, a last button hides
+  // the line altogether.
+  import { EyeOff } from '@lucide/svelte'
   import { LINE_STYLES, type LineStyle } from './parts.js'
 
-  let { id, label = 'Line', value = $bindable() }: { id: string; label?: string; value: LineStyle } = $props()
+  let {
+    id, label = 'Line', value = $bindable(), hidden = false,
+  }: { id: string; label?: string; value: LineStyle | 'hidden'; hidden?: boolean } = $props()
 </script>
 
 <div class="field">
@@ -20,6 +24,11 @@
         </svg>
       </button>
     {/each}
+    {#if hidden}
+      <button type="button" role="radio" aria-checked={value === 'hidden'} aria-label="Hidden" title="Hidden" class:on={value === 'hidden'} onclick={() => (value = 'hidden')}>
+        <EyeOff size={15} aria-hidden="true" />
+      </button>
+    {/if}
   </div>
 </div>
 

@@ -27,6 +27,22 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'composite-shape',
+    site: 'math',
+    kind: 'editor',
+    name: 'Composite Shape Editor',
+    path: '/composite-shape',
+    blurb: 'Build an L-shape or any shape from rectangles, triangles and semicircles.',
+    description:
+      'Build composite shapes for area and perimeter problems. Start from a rectangle, triangle or semicircle, add more pieces onto any straight side, drag or type their sizes, label sides, angles and corners, and copy the finished shape into your worksheet or test.',
+    keywords: [
+      'composite shape', 'composite shapes', 'composite figure', 'composite figures', 'compound shape', 'compound shapes',
+      'irregular shape', 'irregular shapes', 'l-shape', 'l shape', 'rectilinear', 'combined shapes', 'area', 'perimeter',
+      'decompose', 'decomposing', 'semicircle', 'rectangle', 'triangle', 'shaded area', 'geometry', 'editor',
+      'draw', 'build', 'printable',
+    ],
+  },
+  {
     id: 'number-line',
     site: 'math',
     name: 'Number Line Generator',
