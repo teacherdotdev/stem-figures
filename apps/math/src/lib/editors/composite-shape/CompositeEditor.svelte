@@ -43,7 +43,7 @@
   import CompositeDrawing from './CompositeDrawing.svelte'
   import MeasureField from './MeasureField.svelte'
   import {
-    ANGLE_DEFAULTS, baseOf, change, clone, describe, emptyComposite, firstPiece, lineEnds, lineTargets, MIN_SIZE, newId,
+    ANGLE_DEFAULTS, heightFoot, baseOf, change, clone, describe, emptyComposite, firstPiece, lineEnds, lineTargets, MIN_SIZE, newId,
     outwardOf, cornerPieces, PIECE_NAMES, SIDE_KINDS, anchorPoints, arcTarget, linesOnShape, onArc, ontoTipPath, outline, pieceOn, placeAll, pointFor, retypeTriangle, tipPath, roundTo, SEMI_DEFAULTS, setBase, SIDE_DEFAULTS, starter,
     STARTER_NAMES, STARTERS, tidyComposite, triangleParts, vec, withoutPieces, deletedBy, linedUpSides, moveLinedUp, acrossEdge, pieceAcross, mergeCheck, mergePieces, type LinedUp,
     type AngleStyle, type Cap, type Composite, type ExtraLine, LINE_WEIGHTS, type LineWeight, type ExtraStyle, NO_RAY, type RayEnds, type Piece, type PieceKind, type Placed, type SemiStyle, type SideStyle,
@@ -609,8 +609,9 @@
         return
       }
       const a = point
-      // A height's foot hangs on the corner it's dropped from as found now.
-      const b = target.point.at === 'foot' ? { ...target.point, from: a } : target.point
+      // A height's foot hangs on the corner it's dropped from as found now. Only a foot offered as one: a corner that's
+      // another height's foot is just that point.
+      const b = target.kind === 'foot' && target.point.at === 'foot' ? { ...target.point, from: a } : target.point
       const line: ExtraLine = { id: newId(), a, b, style: 'dashed', label: 'none', text: '', ticks: 0, right: true }
       edit((c) => c.lines.push(line))
       message = ''
@@ -1690,7 +1691,7 @@
   {@const ends = lineEnds(o.placed, l)}
   {@const runs = [...(ray.a !== null ? ['a' as const] : []), ...(ray.b !== null ? ['b' as const] : [])]}
   <Popover at={popup.at} onclose={() => ((popup = null), (pickedLineId = null), (hoverEnds = []), (previewRuns = null))} label="This line">
-    <div class="pop-head"><span>{l.a.at === 'foot' || l.b.at === 'foot' ? 'Height' : 'Extra line'}</span></div>
+    <div class="pop-head"><span>{heightFoot(l) ? 'Height' : 'Extra line'}</span></div>
     <div class="group">
       <span class="name" id="pop-line-shape">Shape</span>
       <div class="shapes" role="radiogroup" aria-labelledby="pop-line-shape">
@@ -1735,7 +1736,7 @@
     {:else if pickedLine}
       {@const l = pickedLine}
       {@const ends = lineEnds(o.placed, l)}
-      {@const height = l.a.at === 'foot' || l.b.at === 'foot'}
+      {@const height = !!heightFoot(l)}
       <div class="pop-head"><span>{height ? 'Height' : 'Extra line'}</span><span class="measure">{ends ? roundTo(len(sub(ends[1], ends[0])), comp.round) : ''}{unitText}</span></div>
       <div class="group">
         <span class="name" id="pop-line-label">Label</span>

@@ -296,6 +296,17 @@ export function footAlong(placed: Map<string, Placed>, pt: Extract<Point, { at: 
   return dot(sub(f, p), d) / dot(d, d)
 }
 
+/**
+ * A height's foot and the end it's dropped from, or null when the line isn't a height: one end is a foot dropped from
+ * the other. A line that only ends where some other height meets its side isn't one.
+ */
+export function heightFoot(l: ExtraLine): [Extract<Point, { at: 'foot' }>, Point] | null {
+  const same = (p: Point, q: Point) => JSON.stringify(p) === JSON.stringify(q)
+  if (l.b.at === 'foot' && same(l.b.from, l.a)) return [l.b, l.a]
+  if (l.a.at === 'foot' && same(l.a.from, l.b)) return [l.a, l.b]
+  return null
+}
+
 /** Where an extra line ends, or null when what it hangs on is gone. */
 export function lineEnds(placed: Map<string, Placed>, l: ExtraLine): [Vec, Vec] | null {
   const [p, q] = [pointAt(placed, l.a), pointAt(placed, l.b)]

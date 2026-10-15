@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  acrossEdge, anchorPoints, arcTarget, exitAlong, baseOf, change, cornerPieces, linedUpSides, mergePieces, moveLinedUp, pieceAcross, crossesInside, emptyComposite, firstPiece, footAlong, lineTargets, linesOnShape, ontoTipPath, outline, pieceOn, placeAll, pointAt, problem, retypeTriangle,
+  acrossEdge, anchorPoints, arcTarget, exitAlong, heightFoot, baseOf, change, cornerPieces, linedUpSides, mergePieces, moveLinedUp, pieceAcross, crossesInside, emptyComposite, firstPiece, footAlong, lineTargets, linesOnShape, ontoTipPath, outline, pieceOn, placeAll, pointAt, problem, retypeTriangle,
   setBase, setSide, starter, tidyComposite, tipPath, triangleParts, turnedPieces, withoutPiece,
   type Edge, type ExtraLine, type Piece, type Point, type Vec,
 } from './composite'
@@ -382,6 +382,14 @@ describe('extra lines', () => {
     near(dropped(at(31)), at(31).map((v) => Number(v.toFixed(6))) as Vec)
     near(dropped(at(44)), at(45).map((v) => Number(v.toFixed(6))) as Vec)
     near(dropped(at(44), true), at(44).map((v) => Number(v.toFixed(6))) as Vec)
+  })
+
+  it('count as a height only when one end is a foot dropped from the other, not when one just ends at another height’s foot', () => {
+    const foot: Point = { at: 'foot', from: corner('r', 2), p: corner('r', 0), q: corner('r', 1) }
+    const height: ExtraLine = { id: 'h', a: corner('r', 2), b: foot, style: 'dashed', label: 'none', text: '', ticks: 0, right: true }
+    const toItsFoot: ExtraLine = { ...height, id: 'd', a: corner('r', 3) }
+    expect(heightFoot(height)).toEqual([foot, corner('r', 2)])
+    expect(heightFoot(toItsFoot)).toBeNull()
   })
 
   it('offer a height’s foot on another extra line, square to it', () => {
