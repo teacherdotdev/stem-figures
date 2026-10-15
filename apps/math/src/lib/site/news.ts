@@ -26,8 +26,9 @@ export const NEWS: News[] = [
       {
         title: 'Shaded inequalities',
         text: 'Type y > 2x + 1 and the true side is shaded.',
-        image: '/examples/coordinate-grid/system-of-linear-inequalities-graph.png',
-        href: '/coordinate-grid/examples/system-of-linear-inequalities-graph',
+        image: '/news/shaded-inequalities.png',
+        // The same system, cross-hatched, open in the grid.
+        href: '/coordinate-grid?xFrom=-6&xTo=6&yFrom=-6&yTo=6&eq=y%3Ex-2%7Ccolor%3Dblue%7Cfill%3Dhatch&eq=y%3C%3D-x%2B3%7Ccolor%3Dred%7Cfill%3Dhatch',
       },
       {
         title: 'Line thickness and gridlines',
