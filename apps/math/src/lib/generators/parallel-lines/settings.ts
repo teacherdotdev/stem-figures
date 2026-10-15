@@ -21,10 +21,12 @@
 
 import { parseNumber } from '$lib/shared/math.js'
 import { cleanLabelSize, type LabelSize } from '$shared/labelSize'
+import { ANGLE_DEFAULTS, ANGLE_LABELS, MARKS, SHADES, type AngleLabel, type AngleStyle, type Mark } from '$lib/labeling/options.js'
 import { LINE_STYLES, MARKS as COUNTS, ROUNDING, oneOf, type LineStyle, type RawSettings } from '$lib/shapes/parts.js'
 
-export type { LineStyle, RawSettings }
-export { LINE_STYLES }
+export type { AngleLabel, AngleStyle, LineStyle, Mark, RawSettings }
+// What an angle can have is shared with every figure whose parts are labeled by clicking them.
+export { ANGLE_DEFAULTS, ANGLE_LABELS, LINE_STYLES, MARKS, SHADES }
 
 /**
  * How one end of a line finishes, as the Coordinate Grid's axes do: a
@@ -33,19 +35,6 @@ export { LINE_STYLES }
  */
 export const CAPS = { triangle: 'Arrow', line: 'Line arrow', circle: 'Dot', none: 'None' }
 export type Cap = keyof typeof CAPS
-
-/** How an angle is labeled. */
-export const ANGLE_LABELS = ['none', 'measure', 'text'] as const
-export type AngleLabel = (typeof ANGLE_LABELS)[number]
-
-/** Shading for an angle: none, or a light color that still prints in grayscale. */
-export const SHADES = [
-  { name: 'None', fill: '' },
-  { name: 'Blue', fill: '#bfdbfe' },
-  { name: 'Red', fill: '#fecaca' },
-  { name: 'Green', fill: '#bbf7d0' },
-  { name: 'Yellow', fill: '#fde68a' },
-]
 
 export const MAX_LINES = 6
 export const MIN_ANGLE = 10
@@ -56,13 +45,6 @@ export type LineBase = { id: string; name: string; startCap: Cap; endCap: Cap; a
 export type Parallel = LineBase
 /** A transversal: its angle with the parallel lines, as typed, and where it crosses the top one, in gaps between the lines. */
 export type Transversal = LineBase & { angle: string; pos: number }
-/**
- * The mark drawn in an angle: nothing, one to three congruence arcs, or a
- * right-angle square (drawn as one arc if the angle stops being 90°).
- */
-export const MARKS = ['none', '1', '2', '3', 'right'] as const
-export type Mark = (typeof MARKS)[number]
-export type AngleStyle = { label: AngleLabel; text: string; mark: Mark; shade: number }
 
 export type Settings = {
   parallels: Parallel[]
@@ -75,7 +57,6 @@ export type Settings = {
 }
 
 const LINE_DEFAULTS = { startCap: 'triangle' as Cap, endCap: 'triangle' as Cap, arrows: 0, style: 'solid' as LineStyle }
-export const ANGLE_DEFAULTS: AngleStyle = { label: 'none', text: '', mark: 'none', shade: 0 }
 
 /** Names for new lines, in order. */
 const PARALLEL_NAMES = ['m', 'n', 'o', 'p', 'q', 'r']

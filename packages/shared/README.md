@@ -38,7 +38,8 @@ one so far. Its two copies are kept in step by hand (see
 To add a generator: its entry in its site's `catalog/` file, its preview in
 that app's `src/lib/generators/index.ts`, and a snapshot.
 
-An editor (`kind: 'editor'`, so far Chemistry's Organic Structure Editor) is
+An editor (`kind: 'editor'`: Chemistry's Organic Structure Editor and Math's
+Composite Shape Editor) is
 listed the same way, and its directory card is tagged Editor. The teacher
 draws its figure by hand, so there are no settings in its address, and
 Chemistry's link parameter docs (`/linking`, `llms.txt`) leave it out.

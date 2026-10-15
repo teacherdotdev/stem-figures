@@ -10,6 +10,7 @@ export const add = (p: Vec, q: Vec): Vec => [p[0] + q[0], p[1] + q[1]]
 export const sub = (p: Vec, q: Vec): Vec => [p[0] - q[0], p[1] - q[1]]
 export const mul = (p: Vec, k: number): Vec => [p[0] * k, p[1] * k]
 export const dot = (p: Vec, q: Vec) => p[0] * q[0] + p[1] * q[1]
+export const cross = (p: Vec, q: Vec) => p[0] * q[1] - p[1] * q[0]
 export const len = (p: Vec) => Math.hypot(p[0], p[1])
 export const unit = (p: Vec) => mul(p, 1 / (len(p) || 1))
 export const perp = (p: Vec): Vec => [-p[1], p[0]]

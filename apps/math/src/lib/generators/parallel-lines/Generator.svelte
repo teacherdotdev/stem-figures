@@ -10,20 +10,22 @@
   import GeneratorPage from '$shared/GeneratorPage.svelte'
   import { generatorState } from '$shared/generatorState.svelte'
   import HelpTip from '$shared/HelpTip.svelte'
-  import MathInput from '$lib/shared/MathInput.svelte'
   import Section from '$shared/Section.svelte'
   import LineStylePicker from '$lib/shapes/LineStylePicker.svelte'
   import { ROUND_NAMES } from '$lib/shapes/parts.js'
   import { buildLines, readLines, type Part } from './layout.js'
   import LineButton from './LineButton.svelte'
   import LinesFigure from './LinesFigure.svelte'
-  import PickLayer from './PickLayer.svelte'
-  import Popover from './Popover.svelte'
-  import ScrubAngle from './ScrubAngle.svelte'
+  import AngleOptions from '$lib/labeling/AngleOptions.svelte'
+  import CountPicker from '$lib/labeling/CountPicker.svelte'
+  import PickLayer from '$lib/labeling/PickLayer.svelte'
+  import PointOptions from '$lib/labeling/PointOptions.svelte'
+  import Popover from '$lib/labeling/Popover.svelte'
+  import ScrubAngle from '$lib/labeling/ScrubAngle.svelte'
   import {
-    ANGLE_DEFAULTS, MAX_ANGLE, MAX_LINES, MIN_ANGLE, SHADES,
+    ANGLE_DEFAULTS, MAX_ANGLE, MAX_LINES, MIN_ANGLE,
     cleanSettings, freePos, freshName, idsIn, newParallel, newTransversal, nextId, setAngleKey, settingsFromParams, settingsToQuery,
-    type AngleStyle, type LineBase, type Mark, type RawSettings,
+    type LineBase, type RawSettings,
   } from './settings.js'
   import CapPicker from './CapPicker.svelte'
 
@@ -93,9 +95,9 @@
     if (popup?.part.key === id) close()
   }
 
-  function togglePoint(key: string, on: boolean) {
-    if (on && !(key in s.points)) s.points[key] = ''
-    else if (!on) delete s.points[key]
+  function togglePoint(key: string, name: string | undefined) {
+    if (name === undefined) delete s.points[key]
+    else s.points[key] = name
   }
   /** What a point's popup is about: where lines cross, or near which end of which line. */
   function pointTitle(key: string) {
@@ -116,13 +118,6 @@
   /** What a line's two ends are called: left and right, or bottom and top for a transversal. */
   const ENDS_NAMES = (id: string) => (id.startsWith('p') ? { start: 'Left', end: 'Right' } : { start: 'Bottom', end: 'Top' })
 
-  const MARK_NAMES: Record<Mark, string> = { none: 'None', '1': 'One arc', '2': 'Two arcs', '3': 'Three arcs', right: 'Right-angle square' }
-  /** Choosing a label gives an unmarked angle its usual mark, shown in the popup so it can be taken off. */
-  function setLabel(a: AngleStyle, label: AngleStyle['label'], right: boolean) {
-    a.label = label
-    if (label !== 'none' && a.mark === 'none') a.mark = right ? 'right' : '1'
-  }
-
   let svg = $state<SVGSVGElement>()
   // The turn as typed, kept apart from the setting so a half-typed "−" isn't undone; undo and presets still show through.
   let turnText = $state(String(s.turn))
@@ -135,23 +130,6 @@
     untrack(() => Number(turnText) !== t && (turnText = String(t)))
   })
 </script>
-
-{#snippet markIcon(m: Mark)}
-  <!-- An angle with its mark as the figure draws it: nested arcs, or a square at a right angle. -->
-  <svg viewBox="0 0 26 18" width="26" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-    {#if m === 'right'}
-      <path d="M5,16 L24,16 M5,16 L5,1" stroke-width="1.3" />
-      <path d="M5,9 L12,9 L12,16" />
-    {:else}
-      <path d="M3,16 L25,16 M3,16 L20,2" stroke-width="1.3" />
-      {#each Array(m === 'none' ? 0 : Number(m)) as _, i}
-        {@const r = 8 + i * 3.4}
-        <path d="M{3 + r},16 A{r},{r} 0 0 0 {3 + r * 0.772},{16 - r * 0.636}" />
-      {/each}
-      {#if m === 'none'}<line x1="9" y1="5" x2="17" y2="13" stroke-width="1.3" opacity="0.5" />{/if}
-    {/if}
-  </svg>
-{/snippet}
 
 {#snippet lineRow(line: LineBase, kind: 'p' | 't')}
   {@const t = kind === 't' ? s.transversals.find((x) => x.id === line.id) : undefined}
@@ -239,50 +217,10 @@
         <span>Angle between {nameOf(r1.slice(0, -1))} and {nameOf(r2.slice(0, -1))}</span>
         <span class="measure">{popupAngle.ghost.text}</span>
       </div>
-      <div class="group">
-        <span class="name" id="pop-label">Label</span>
-        <div class="segmented" role="radiogroup" aria-labelledby="pop-label">
-          {#each ([['none', 'None'], ['measure', 'Measure'], ['text', 'Text']] as const) as [value, title]}
-            <button type="button" role="radio" aria-checked={a.label === value} class:on={a.label === value} onclick={() => setLabel(a, value, right)}>{title}</button>
-          {/each}
-        </div>
-        {#if a.label === 'text'}<MathInput id="pop-text" aria-label="Label text" placeholder="x" bind:value={a.text} />{/if}
-      </div>
-      <div class="group">
-        <span class="name" id="pop-mark">{right ? 'Right-angle mark' : 'Congruence arcs'}</span>
-        <div class="segmented" role="radiogroup" aria-labelledby="pop-mark">
-          {#each (right ? ['none', 'right'] : ['none', '1', '2', '3']) as Mark[] as m}
-            {@const on = a.mark === m || (!right && a.mark === 'right' && m === '1')}
-            <button type="button" role="radio" aria-checked={on} class:on aria-label={MARK_NAMES[m]} title={MARK_NAMES[m]} onclick={() => (a.mark = m)}>
-              {@render markIcon(m)}
-            </button>
-          {/each}
-        </div>
-      </div>
-      <div class="group">
-        <span class="name" id="pop-shade">Shading</span>
-        <div class="swatches" role="radiogroup" aria-labelledby="pop-shade">
-          {#each SHADES as shade, i}
-            <button
-              type="button" role="radio" aria-checked={a.shade === i} aria-label={shade.name} title={shade.name} class="swatch" class:on={a.shade === i}
-              style="background: {shade.fill || '#fff'}" onclick={() => (a.shade = i)}
-            >{#if !shade.fill}<X size={14} />{/if}</button>
-          {/each}
-        </div>
-      </div>
+      <AngleOptions value={a} {right} onchange={(patch) => Object.assign(a, patch)} />
     {:else if popup.part.kind === 'point'}
       <div class="pop-head"><span>{pointTitle(key)}</span></div>
-      {@const shown = key in s.points}
-      <div class="group">
-        <span class="name" id="pop-point">Point</span>
-        <div class="segmented" role="radiogroup" aria-labelledby="pop-point">
-          <button type="button" role="radio" aria-checked={!shown} class:on={!shown} aria-label="No point" title="No point" onclick={() => togglePoint(key, false)}><X size={15} /></button>
-          <button type="button" role="radio" aria-checked={shown} class:on={shown} onclick={() => togglePoint(key, true)}>Show</button>
-        </div>
-      </div>
-      {#if shown}
-        <label class="group"><span class="name">Label</span><input type="text" maxlength="4" placeholder="A" bind:value={s.points[key]} /></label>
-      {/if}
+      <PointOptions name={s.points[key]} onchange={(name) => togglePoint(key, name)} />
     {:else if popup.part.kind === 'line' && popupLine}
       {@const line = popupLine}
       {@const ends = ENDS_NAMES(line.id)}
@@ -300,11 +238,7 @@
       </div>
       <div class="group">
         <span class="name" id="pop-arrows">Parallel arrows</span>
-        <div class="segmented" role="radiogroup" aria-labelledby="pop-arrows">
-          {#each [0, 1, 2, 3] as n}
-            <button type="button" role="radio" aria-checked={line.arrows === n} class:on={line.arrows === n} onclick={() => (line.arrows = n)}>{n ? '›'.repeat(n) : 'None'}</button>
-          {/each}
-        </div>
+        <CountPicker id="pop-arrows" value={line.arrows} glyph="›" onpick={(n) => (line.arrows = n)} />
       </div>
       <LineStylePicker id="pop-style" bind:value={line.style} />
       <button type="button" class="btn-ghost delete" disabled={line.id.startsWith('p') && s.parallels.length <= 1} onclick={() => removeLine(line.id)}>Delete this line</button>
@@ -336,15 +270,7 @@
   .stage { position: relative; }
   .on-figure { margin-top: 0.35rem; }
 
-  .pop-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; font-weight: 700; font-size: 0.88rem; }
-  .pop-head .measure { font-family: 'Times New Roman', Times, serif; font-weight: 400; font-size: 1.05rem; color: var(--muted); }
-  .group { display: flex; flex-direction: column; gap: 0.35rem; }
-  .group .name { width: auto; height: auto; font-family: inherit; font-style: normal; font-size: 0.75rem; font-weight: 700; color: var(--muted); }
-  .segmented button { flex: 1; display: inline-grid; place-items: center; padding: 0.3rem 0.4rem; }
+  .group .name { width: auto; height: auto; font-family: inherit; font-style: normal; }
   .caps { display: flex; gap: 0.5rem; }
   .sides { font-weight: 400; }
-  .swatches { display: flex; gap: 0.4rem; }
-  .swatch { width: 2rem; height: 2rem; display: grid; place-items: center; border: 1.5px solid var(--border); border-radius: 8px; color: var(--muted); padding: 0; }
-  .swatch.on { border-color: var(--blue); box-shadow: 0 0 0 2px var(--blue-soft); }
-  .delete { color: var(--red); font-size: 0.85rem; padding: 0.45rem 0.8rem; border-radius: 10px; align-self: flex-start; }
 </style>

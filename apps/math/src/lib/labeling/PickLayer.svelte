@@ -1,33 +1,37 @@
 <script lang="ts">
-  // What the teacher can point at on the figure, drawn over LinesFigure.svelte
-  // in an SVG of its own so nothing here reaches a copy or an export. A mouse
-  // hovering an angle, a line or a place for a point lights it ghost blue;
+  // What the teacher can point at on a figure (see pick.ts), drawn over it in
+  // an SVG of its own so nothing here reaches a copy or an export: over
+  // LinesFigure.svelte, or the Composite Shape Editor's page. A mouse
+  // hovering an angle, a line, a curve or a place for a point lights it ghost blue;
   // clicking or tapping one calls onpick with where to open its popup. A
   // point's place (each crossing, and near each end of each line) wins over
   // all; near a crossing the angles win, even right on a line; a line is
   // picked farther out. `ghost` is an
   // angle shown with its measure (the one a transversal's value sets, while
   // it's being changed), and `selected` the part whose popup is open.
-  import type { Drawing, Part, Vec } from './layout.js'
+  import type { Snippet } from 'svelte'
+  import type { Part, Pickable, Vec } from './pick.js'
 
   let {
-    figure, ghost = null, selected = null, onpick,
+    figure, ghost = null, selected = null, onpick, children,
   }: {
-    figure: Drawing
+    figure: Pickable
     ghost?: string | null
     selected?: Part | null
     onpick: (part: Part, at: { x: number; y: number }) => void
+    /** Anything to go over the hit areas, like handles for dragging labels. */
+    children?: Snippet
   } = $props()
 
   const BLUE = '#2563eb'
-  const LINE_NAMES: Record<string, string> = { p: 'Parallel line', t: 'Transversal', r: 'Ray' }
+  const LINE_NAMES: Record<string, string> = { p: 'Parallel line', t: 'Transversal', r: 'Ray', side: 'Side', extra: 'Extra line', seam: 'Where two pieces meet' }
   let svg = $state<SVGSVGElement>()
   let hover = $state<Part | null>(null)
   const f = $derived(figure.frame)
   const lit = (p: Part) => (hover?.kind === p.kind && hover.key === p.key) || (selected?.kind === p.kind && selected.key === p.key)
   const ghostAngle = $derived(ghost ? figure.angles.find((a) => a.key === ghost) : null)
   // Its measure is written over it, unless its own label already says it.
-  const ghostText = $derived(ghostAngle && !figure.labels.some((l) => l.part === `angle:${ghost}`) ? ghostAngle.ghost : null)
+  const ghostText = $derived(ghostAngle?.ghost && !figure.labels.some((l) => l.part === `angle:${ghost}`) ? ghostAngle.ghost : null)
 
   /** A point on the figure, on the screen. */
   function onScreen([x, y]: Vec) {
@@ -58,6 +62,9 @@
     {#if ghostText}
       <text x={ghostText.at[0]} y={ghostText.at[1]} fill={BLUE} font-family="'Times New Roman', Times, serif" font-size="20" text-anchor="middle" dominant-baseline="central" stroke="#fff" stroke-width="4" paint-order="stroke">{ghostText.text}</text>
     {/if}
+    {#each figure.curves ?? [] as c (c.key)}
+      {#if lit({ kind: 'curve', key: c.key })}<path d={c.d} fill="none" stroke={BLUE} stroke-opacity="0.3" stroke-width="9" stroke-linecap="round" />{/if}
+    {/each}
     {#each figure.segments as g (g.id)}
       {#if lit({ kind: 'line', key: g.id })}
         <line x1={g.from[0]} y1={g.from[1]} x2={g.to[0]} y2={g.to[1]} stroke={BLUE} stroke-opacity="0.3" stroke-width="9" stroke-linecap="round" />
@@ -76,9 +83,17 @@
     {@const part = { kind: 'line', key: g.id } as Part}
     <line
       x1={g.from[0]} y1={g.from[1]} x2={g.to[0]} y2={g.to[1]} stroke="transparent" stroke-width="16" stroke-linecap="round"
-      class="hit" role="button" tabindex="0" aria-label={LINE_NAMES[g.kind] ?? 'Line'}
+      class="hit" role="button" tabindex="0" aria-label={g.name ?? LINE_NAMES[g.kind] ?? 'Line'}
       onclick={() => pick(part, mid(g))}
       onpointerenter={(e) => enter(e, part)} onpointerleave={() => leave(part)} onkeydown={(e) => key(e, part, mid(g))}
+    />
+  {/each}
+  {#each figure.curves ?? [] as c (c.key)}
+    {@const part = { kind: 'curve', key: c.key } as Part}
+    <path
+      d={c.d} fill="none" stroke="transparent" stroke-width="16" stroke-linecap="round" class="hit" role="button" tabindex="0" aria-label={c.name ?? 'Curve'}
+      onclick={() => pick(part, c.anchor)}
+      onpointerenter={(e) => enter(e, part)} onpointerleave={() => leave(part)} onkeydown={(e) => key(e, part, c.anchor)}
     />
   {/each}
   {#each figure.angles as a (a.key)}
@@ -94,11 +109,12 @@
     {@const part = { kind: 'point', key: p.key } as Part}
     <circle
       cx={p.at[0]} cy={p.at[1]} r="8" fill="transparent" class="hit" role="button" tabindex="0"
-      aria-label={p.line ? 'Point near the end of a line' : p.key === 'v' ? 'Point at the vertex' : 'Point where lines cross'}
+      aria-label={p.name ?? (p.line ? 'Point near the end of a line' : p.key === 'v' ? 'Point at the vertex' : 'Point where lines cross')}
       onclick={() => pick(part, p.at)}
       onpointerenter={(e) => enter(e, part)} onpointerleave={() => leave(part)} onkeydown={(e) => key(e, part, p.at)}
     />
   {/each}
+  {@render children?.()}
 </svg>
 
 <style>

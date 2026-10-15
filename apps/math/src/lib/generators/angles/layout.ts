@@ -17,8 +17,10 @@ import { LABEL_SCALE } from '$shared/labelSize'
 import { layoutMath, type MathBox } from '$lib/shared/mathSvg.js'
 import type { PlacedLabel } from '$lib/shapes/layout.js'
 import { roundTo } from '$lib/shapes/parts.js'
-import { DOT, WEDGE, type Drawing, type Vec } from '../parallel-lines/layout.js'
-import { SHADES } from '../parallel-lines/settings.js'
+import { add, len, mul, perp, r1, reach, sub, unit, type Vec } from '$lib/shapes/vec.js'
+import { angleMark, sectorPath } from '$lib/labeling/marks.js'
+import { SHADES } from '$lib/labeling/options.js'
+import { DOT, WEDGE, type Drawing } from '../parallel-lines/layout.js'
 import { ANGLE_DEFAULTS, angleKey, readRays, type Ray, type Settings } from './settings.js'
 
 export type { Vec }
@@ -37,17 +39,6 @@ const HEAD = 12 // an arrowhead's length, and
 const HEAD_W = 5.5 // half its width
 const END_SPOT = 0.82 // where a point near a ray's end goes, along the half-ray
 const RAD = Math.PI / 180
-
-const add = (p: Vec, q: Vec): Vec => [p[0] + q[0], p[1] + q[1]]
-const sub = (p: Vec, q: Vec): Vec => [p[0] - q[0], p[1] - q[1]]
-const mul = (p: Vec, k: number): Vec => [p[0] * k, p[1] * k]
-const len = (p: Vec) => Math.hypot(p[0], p[1])
-const unit = (p: Vec) => mul(p, 1 / (len(p) || 1))
-const perp = (p: Vec): Vec => [-p[1], p[0]]
-const r1 = (v: number) => Math.round(v * 10) / 10
-
-/** How far a label's box reaches from its middle in direction d. */
-const reach = (box: MathBox, d: Vec) => (box.w / 2) * Math.abs(d[0]) + ((box.asc + box.desc) / 2) * Math.abs(d[1])
 
 /** The figure laid out for LinesFigure.svelte, with what can be pointed at on it. */
 export type AnglesLayout = ReturnType<typeof buildAngles>
@@ -122,29 +113,19 @@ export function buildAngles(s: Settings) {
   const arcs: string[] = []
   const shades: { d: string; fill: string }[] = []
   const squares: Vec[][] = []
-  const sectorPath = (e1: Vec, e2: Vec, measure: number, r: number, closed: boolean) => {
-    const [a, b] = [add(v, mul(e1, r)), add(v, mul(e2, r))]
-    const arc = `A${r1(r)},${r1(r)} 0 ${measure > 180 ? 1 : 0} 1 ${r1(b[0])},${r1(b[1])}`
-    return closed ? `M${r1(v[0])},${r1(v[1])} L${r1(a[0])},${r1(a[1])} ${arc} Z` : `M${r1(a[0])},${r1(a[1])} ${arc}`
-  }
+  const marks = { arcs, squares }
+  const MARK_SIZES = { arc: ARC, arcGap: ARC_GAP, square: SQUARE }
+  const sector = (e1: Vec, e2: Vec, measure: number, r: number, closed: boolean) => sectorPath(v, e1, e2, r, closed, measure > 180)
   const angles = gaps.map((g) => {
     const style = s.angles[g.key] ?? ANGLE_DEFAULTS
     const [e1, e2] = [toward(g.to.theta), toward(g.from.theta)]
     const radius = Math.min(WEDGE, scale * 0.4)
     const fill = SHADES[style.shade]?.fill
-    if (fill) shades.push({ d: sectorPath(e1, e2, g.measure, radius, true), fill })
+    if (fill) shades.push({ d: sector(e1, e2, g.measure, radius, true), fill })
     const box = style.label === 'text' ? layoutMath(style.text, FS) : style.label === 'measure' ? layoutMath(rounded(g.measure), FS, { suffix: '°' }) : null
     // Only the mark the teacher set: a square at a right angle, or that many arcs.
     const right = Math.abs(g.measure - 90) < 1e-4
-    let outer = 0
-    if (style.mark === 'right' && right) {
-      squares.push([add(v, mul(e1, SQUARE)), add(v, add(mul(e1, SQUARE), mul(e2, SQUARE))), add(v, mul(e2, SQUARE))])
-      outer = SQUARE * Math.SQRT2
-    } else if (style.mark !== 'none') {
-      const count = style.mark === 'right' ? 1 : Number(style.mark)
-      for (let n = 0; n < count; n++) arcs.push(sectorPath(e1, e2, g.measure, ARC + n * ARC_GAP, false))
-      outer = ARC + (count - 1) * ARC_GAP
-    }
+    const outer = angleMark(marks, v, e1, e2, style.mark, right, g.measure > 180, MARK_SIZES)
     // Far enough out to clear the arc, and, in an angle under 180°, to fit between its two rays.
     const half = g.measure < 180 ? Math.sin((g.measure * RAD) / 2) : 1
     const distance = (b: MathBox) => {
@@ -165,7 +146,7 @@ export function buildAngles(s: Settings) {
       /** Whether it's 90°, so its mark can be a right-angle square. */
       right,
       /** The wedge that's highlighted, and pointed at to pick the angle. */
-      wedge: sectorPath(e1, e2, g.measure, radius, true),
+      wedge: sector(e1, e2, g.measure, radius, true),
       /** Where its measure is written while it's highlighted. */
       ghost: { at: add(v, mul(g.mid, distance(ghostBox))), text: `${rounded(g.measure)}°` },
       /** Where its popup opens. */
