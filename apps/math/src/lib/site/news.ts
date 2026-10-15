@@ -8,6 +8,8 @@ export type News = {
   id: string
   /** Heads this news when it's shown along with older news the teacher hasn't seen. */
   title: string
+  /** When it went out, as YYYY-MM-DD, shown above it. */
+  date: string
   /** Each change, as a card: a picture of it (in static/), a title, one short line, and where it is. */
   items: { title: string; text: string; image: string; href: string }[]
 }
@@ -16,6 +18,7 @@ export const NEWS: News[] = [
   {
     id: '2026-10-15-composite-shapes-and-inequalities',
     title: 'Composite shapes and inequalities',
+    date: '2026-10-15',
     items: [
       {
         title: 'Composite Shape Editor',

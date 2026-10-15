@@ -49,6 +49,9 @@
     if (unseen.length) setTimeout(() => (shown = [...unseen].reverse()), 600)
   })
 
+  /** "2026-10-15" as "October 15, 2026", the same wherever the teacher is. */
+  const longDate = (day: string) => new Date(`${day}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+
   function close() {
     markSeen(shown.map((each) => each.id))
     shown = []
@@ -60,7 +63,7 @@
     <p class="thanks">Thanks to everyone that’s emailed us over the past couple of weeks! Here’s what we added based on what everyone said!</p>
     {#each shown as update (update.id)}
       <section class="update">
-        {#if shown.length > 1}<p class="eyebrow">{update.title}</p>{/if}
+        <p class="eyebrow"><time datetime={update.date}>{longDate(update.date)}</time>{#if shown.length > 1} · {update.title}{/if}</p>
         <ul class="cards">
           {#each update.items as item (item.title)}
             <li>
