@@ -2,11 +2,12 @@
   // A small centered dialog. The parent shows it with {#if}; Escape, the close
   // button or a click on the backdrop call onclose. Focus stays inside while
   // it is open, starts on [data-autofocus] (or the first control) and goes
-  // back where it was when it closes.
+  // back where it was when it closes. A `wide` one is for reading, like news,
+  // and scrolls when it's taller than the window.
   import type { Snippet } from 'svelte'
   import { X } from '@lucide/svelte'
 
-  let { title, onclose, children }: { title: string; onclose: () => void; children: Snippet } = $props()
+  let { title, onclose, wide = false, children }: { title: string; onclose: () => void; wide?: boolean; children: Snippet } = $props()
   const titleId = $props.id()
 
   let dialog = $state<HTMLDivElement>()
@@ -46,7 +47,7 @@
   role="presentation"
   onmousedown={(event) => { if (event.target === event.currentTarget) onclose() }}
 >
-  <div bind:this={dialog} class="dialog" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+  <div bind:this={dialog} class="dialog" class:wide role="dialog" aria-modal="true" aria-labelledby={titleId}>
     <header>
       <h2 id={titleId}>{title}</h2>
       <button type="button" class="close" aria-label="Close" onclick={onclose}><X aria-hidden="true" /></button>
@@ -73,6 +74,7 @@
     background: #fff;
     box-shadow: 0 18px 60px rgb(17 24 39 / 24%);
   }
+  .dialog.wide { width: min(760px, calc(100vw - 32px)); max-height: calc(100dvh - 56px); overflow-y: auto; padding: 24px; }
   header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
   h2 { margin: 0; font-size: 20px; }
   .close {
