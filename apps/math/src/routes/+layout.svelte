@@ -1,6 +1,6 @@
 <script lang="ts">
   // Every page: the top bar (editors go without, having their own way home), the page, then the footer (generators go without,
-  // so the figure gets the whole window), plus the Help and request dialogs.
+  // so the figure gets the whole window), plus the Help and request dialogs and any news.
   import type { Snippet } from 'svelte'
   import '../app.css'
   import { page } from '$app/state'
@@ -8,6 +8,7 @@
   import Footer from '$lib/site/Footer.svelte'
   import GeneratorLead from '$lib/site/GeneratorLead.svelte'
   import Help from '$lib/site/Help.svelte'
+  import News from '$lib/site/News.svelte'
   import RequestDialog from '$shared/RequestDialog.svelte'
   import { setGeneratorLead } from '$shared/generatorLead'
   import TopBar from '$lib/site/TopBar.svelte'
@@ -33,4 +34,5 @@
 <main>{@render children()}</main>
 {#if !onGenerator}<Footer />{/if}
 <Help />
+<News />
 <RequestDialog />
