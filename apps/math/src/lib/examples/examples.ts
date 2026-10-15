@@ -65,6 +65,17 @@ export const EXAMPLES: Example[] = [
       settings: { xFrom: '-6', xTo: '6', yFrom: '-6', yTo: '6', equations: [{ text: 'y=x^2-2x-3', color: 'blue' }] },
     },
     {
+      slug: 'piecewise-function-graph-with-open-and-closed-circles',
+      title: 'Piecewise function graph with open and closed circles',
+      alt: 'A coordinate grid from −6 to 6 with a two-piece piecewise function: y = x + 2 for x < 1, ending in an open circle at (1, 3), and y = −2x + 4 for x ≥ 1, starting from a closed circle at (1, 2)',
+      caption:
+        'A coordinate grid numbered from −6 to 6 on both axes with a piecewise function drawn in black. For x < 1 it’s the line y = x + 2, which ends in an open circle at (1, 3); for x ≥ 1 it’s the line y = −2x + 4, which starts from a closed circle at (1, 2). Use it for evaluating f(1), domain and range, or the jump at x = 1.',
+      settings: {
+        xFrom: '-6', xTo: '6', yFrom: '-6', yTo: '6',
+        equations: [{ text: 'y=x+2, x<1' }, { text: 'y=-2x+4, x>=1' }],
+      },
+    },
+    {
       slug: 'sine-graph-from-minus-2pi-to-2pi',
       title: 'Graph of y = sin x from −2π to 2π',
       alt: 'The sine curve y = sin x on a grid whose x-axis runs from −2π to 2π, numbered −2π, −π, 0, π and 2π, and whose y-axis runs from −2 to 2',
