@@ -64,7 +64,7 @@
       Thanks to everyone that’s emailed us over the past couple of weeks! Here’s what we added based on what everyone said! As always, feel
       free to reach out if you have more suggestions.
       <span class="signed">
-        Elliot &amp; Duncan from
+        — Elliot &amp; Duncan from
         <a href="https://teacher.dev" target="_blank" rel="noopener noreferrer"><img src="/logo.svg" alt="" width="16" height="16" /><span>teacher.dev</span></a>
       </span>
     </p>
