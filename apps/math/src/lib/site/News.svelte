@@ -79,19 +79,24 @@
         </ul>
       </section>
     {/each}
-    <footer>
-      <a href="https://teacher.dev" target="_blank" rel="noopener noreferrer">
-        <img src="/logo.svg" alt="" width="20" height="20" /><span>Built by teacher.dev</span>
-      </a>
-    </footer>
+    <!-- Signed, like the note at the top: a letter from the people who built it. -->
+    <div class="signoff">
+      <p>As always, feel free to reach out if you have more suggestions.</p>
+      <p>
+        All the best,<br />
+        Elliot &amp; Duncan from
+        <a href="https://teacher.dev" target="_blank" rel="noopener noreferrer"><img src="/logo.svg" alt="" width="18" height="18" /><span>teacher.dev</span></a>
+      </p>
+    </div>
   </Modal>
 {/if}
 
 <style>
   .thanks { margin: -0.4rem 0 1rem !important; color: var(--muted); }
-  footer { display: flex; justify-content: center; margin-top: 1.1rem; }
-  footer a { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--muted); font-size: 0.88rem; text-decoration: none; }
-  footer a:hover span { text-decoration: underline; text-underline-offset: 3px; }
+  .signoff { margin-top: 1.1rem; color: var(--muted); }
+  .signoff p + p { margin-top: 0.6rem !important; }
+  .signoff a { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--ink); font-weight: 700; text-decoration: none; vertical-align: bottom; }
+  .signoff a:hover span { text-decoration: underline; text-underline-offset: 3px; }
   .update + .update { margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
   .eyebrow { margin: 0 0 0.6rem !important; color: var(--blue-dark); font-size: 0.75rem !important; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
   .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; margin: 0; padding: 0; list-style: none; }
