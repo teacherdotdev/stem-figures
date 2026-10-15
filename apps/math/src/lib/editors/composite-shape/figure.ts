@@ -25,7 +25,7 @@ import { reach } from '$lib/shapes/vec.js'
 import { angleMark, parallelArrows, sectorPath, tickMarks } from '$lib/labeling/marks.js'
 import type { Pickable } from '$lib/labeling/pick.js'
 import {
-  ANGLE_DEFAULTS, edgeAt, exitAlong, footAlong, NO_RAY, lineEnds, onArc, PIECE_NAMES, outline, placeAll, pointAt, roundTo, SEMI_DEFAULTS, turnedPieces, SHADES, SIDE_DEFAULTS, vec,
+  ANGLE_DEFAULTS, heightFoot, edgeAt, exitAlong, footAlong, NO_RAY, lineEnds, onArc, PIECE_NAMES, outline, placeAll, pointAt, roundTo, SEMI_DEFAULTS, turnedPieces, SHADES, SIDE_DEFAULTS, vec,
   type Composite, type Corner, type LineWeight, type Edge, type ExtraLine, type Seam, type LineStyle, type Outline, type Placed, type Vec,
 } from './composite'
 
@@ -149,8 +149,9 @@ export function seamLine(c: Composite, placed: Map<string, Placed>, seam: Seam) 
 
 /** A height's right-angle square where it meets its side, and the side's dotted run on to the foot once the foot has left it (when its triangle leans out), in the shape's units. */
 export function heightMarks(placed: Map<string, Placed>, l: ExtraLine): { foot: Vec; up: Vec; along: Vec; run: [Vec, Vec] | null } | null {
-  const [foot, other] = l.b.at === 'foot' ? [l.b, l.a] : l.a.at === 'foot' ? [l.a, l.b] : [null, null]
-  if (!foot) return null
+  const height = heightFoot(l)
+  if (!height) return null
+  const [foot, other] = height
   const [f, top, p, q] = [pointAt(placed, foot), pointAt(placed, other), pointAt(placed, foot.p), pointAt(placed, foot.q)]
   const t = footAlong(placed, foot)
   if (!f || !top || !p || !q || t === null || len(sub(top, f)) < 1e-6) return null
