@@ -57,7 +57,7 @@
 
 {#if shown.length}
   <Modal title="What’s new on Math Figures" onclose={close} wide>
-    <p class="thanks">Thank you for all your feedback. Here’s what we built with it.</p>
+    <p class="thanks">Thanks to everyone that’s emailed us over the past couple of weeks! Here’s what we added based on what everyone said!</p>
     {#each shown as update (update.id)}
       <section class="update">
         {#if shown.length > 1}<p class="eyebrow">{update.title}</p>{/if}
