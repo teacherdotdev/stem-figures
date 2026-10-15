@@ -6,7 +6,6 @@
   import { browser } from '$app/environment'
   import { page } from '$app/state'
   import Modal from '$shared/Modal.svelte'
-  import { PREVIEWS } from '$lib/generators/index.js'
   import { NEWS, SEEN_KEY, unseenNews, type News } from './news'
 
   let shown = $state<News[]>([])
@@ -58,49 +57,43 @@
 
 {#if shown.length}
   <Modal title="What’s new on Math Figures" onclose={close} wide>
-    <p class="lead">Thank you for all your requests. Here’s what we’ve added.</p>
     {#each shown as update (update.id)}
       <section class="update">
         {#if shown.length > 1}<p class="eyebrow">{update.title}</p>{/if}
-        <ol class="changes">
+        <ul class="cards">
           {#each update.items as item (item.title)}
-            {@const Art = item.art ? PREVIEWS[item.art] : undefined}
-            <li class:compact={!Art}>
-              <div>
-                <h3>{item.title}</h3>
-                <p>
-                  {item.text}
-                  {#if item.link}<a class="go" href={item.link.href} onclick={close}>{item.link.label} →</a>{/if}
-                </p>
-              </div>
-              {#if Art}<div class="art" aria-hidden="true"><Art /></div>{/if}
+            <li>
+              <a class="card" href={item.href} onclick={close}>
+                <span class="shot"><img src={item.image} alt="" loading="lazy" /></span>
+                <span class="words">
+                  <strong>{item.title}</strong>
+                  <span>{item.text}</span>
+                </span>
+              </a>
             </li>
           {/each}
-        </ol>
-        {#if update.also}<p class="also"><strong>Also:</strong> {update.also}</p>{/if}
+        </ul>
       </section>
     {/each}
-    <div class="actions"><button type="button" class="btn-primary" onclick={close} data-autofocus>Got it</button></div>
   </Modal>
 {/if}
 
 <style>
-  .lead { color: var(--muted); }
-  .update + .update { margin-top: 1.2rem; padding-top: 1.2rem; border-top: 2px solid var(--border); }
-  .eyebrow { margin: 0.6rem 0 0 !important; color: var(--blue-dark); font-size: 0.78rem !important; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
-  .changes { display: grid; gap: 0.9rem; margin: 0.9rem 0 0; padding: 0; list-style: none; }
-  .changes li { display: grid; grid-template-columns: 1fr minmax(0, 220px); align-items: center; gap: 1.5rem; padding-top: 0.9rem; border-top: 1px solid var(--border); }
-  /* A change without a picture: a short row, so a long list still fits. */
-  .changes li.compact { grid-template-columns: 1fr; padding-top: 0.7rem; }
-  h3 { margin: 0 0 0.25rem; font-size: 1.05rem; }
-  .compact h3 { font-size: 0.98rem; }
-  .art { display: flex; justify-content: center; align-items: center; height: 9rem; padding: 0.6rem; border: 1px solid var(--border); border-radius: 10px; background: #fff; }
-  .art :global(svg) { max-width: 100%; max-height: 100%; }
-  .go { margin-left: 0.25rem; color: var(--blue-dark); font-weight: 700; text-decoration: none; white-space: nowrap; }
-  .go:hover { text-decoration: underline; }
-  .also { margin-top: 0.8rem !important; color: var(--muted); font-size: 0.9rem !important; }
-  .actions { display: flex; justify-content: flex-end; margin-top: 1.2rem; }
-  @media (max-width: 640px) {
-    .changes li { grid-template-columns: 1fr; gap: 0.75rem; }
+  .update + .update { margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
+  .eyebrow { margin: 0 0 0.6rem !important; color: var(--blue-dark); font-size: 0.75rem !important; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; margin: 0; padding: 0; list-style: none; }
+  .card {
+    display: flex; flex-direction: column; height: 100%; overflow: hidden; border: 1px solid var(--border); border-radius: 12px;
+    color: inherit; text-decoration: none; transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  }
+  .card:hover, .card:focus-visible { border-color: var(--blue-border); transform: translateY(-2px); box-shadow: 0 12px 28px -14px rgb(37 99 235 / 45%); }
+  .shot { flex: none; height: 11rem; padding: 0.75rem; border-bottom: 1px solid var(--border); background: #fff; }
+  .shot img { display: block; width: 100%; height: 100%; object-fit: contain; }
+  .words { display: flex; flex-direction: column; gap: 0.15rem; padding: 0.7rem 0.85rem 0.8rem; font-size: 0.9rem; line-height: 1.4; }
+  .words strong { font-size: 0.98rem; }
+  .words span { color: var(--muted); }
+  @media (max-width: 560px) {
+    .cards { grid-template-columns: 1fr; }
+    .shot { height: 9rem; }
   }
 </style>
