@@ -11,6 +11,12 @@ const HEAD = 12 // length of an arrowhead where a graphed line leaves the grid
 const HEAD_HALF = 5.5 // half its width
 const CIRCLE_R = 5.5 // a hole's or endpoint's circle
 const NAME_GAP = 7 // how far a point name sits up and right of its point
+const TINT = 0.18 // how strongly a shaded region's color shows, so the grid reads through it
+// Hatching's direction for each hatched row in turn (degrees from upright), so overlapping regions stay apart in gray.
+const HATCH_ANGLES = [45, -45, 0, 90]
+// How much thicker or thinner each row thickness draws a line than medium. Its arrowheads,
+// circles and dashes grow half as fast, so a thin line keeps a visible arrow and a thick dashed one still reads as dashed.
+const THICKNESS = { thin: 0.6, medium: 1, thick: 1.6 }
 
 const pathLength = (pts: Point[]) => pts.reduce((sum, p, k) => (k ? sum + Math.hypot(p.x - pts[k - 1].x, p.y - pts[k - 1].y) : 0), 0)
 
@@ -18,11 +24,11 @@ const pathLength = (pts: Point[]) => pts.reduce((sum, p, k) => (k ? sum + Math.h
  * An arrowhead at the last point of a path, pointing along it, and the path
  * cut back to the arrowhead's base so the line doesn't poke through its tip.
  */
-function arrowAt(pts: Point[], heads: string[]): { pts: Point[] } {
+function arrowAt(pts: Point[], heads: string[], size = 1): { pts: Point[] } {
   const tip = pts.at(-1)!
   // Walk back one arrowhead's length along the path to find the base.
   let k = pts.length - 1
-  let left = HEAD
+  let left = HEAD * size
   let base = tip
   while (k > 0) {
     const a = pts[k - 1]
@@ -38,8 +44,9 @@ function arrowAt(pts: Point[], heads: string[]): { pts: Point[] } {
   }
   const len = Math.hypot(tip.x - base.x, tip.y - base.y) || 1
   const u = { x: (tip.x - base.x) / len, y: (tip.y - base.y) / len }
+  const half = HEAD_HALF * size
   heads.push(
-    `M${round(tip.x)},${round(tip.y)} L${round(base.x - u.y * HEAD_HALF)},${round(base.y + u.x * HEAD_HALF)} L${round(base.x + u.y * HEAD_HALF)},${round(base.y - u.x * HEAD_HALF)} z`,
+    `M${round(tip.x)},${round(tip.y)} L${round(base.x - u.y * half)},${round(base.y + u.x * half)} L${round(base.x + u.y * half)},${round(base.y - u.x * half)} z`,
   )
   // Stop the line just inside the arrowhead's base, so they overlap a little.
   const inset = { x: base.x + u.x * 1, y: base.y + u.y * 1 }
@@ -59,14 +66,29 @@ export function buildGraph(settings: Settings) {
   const lines: { d: string; heads: string[]; color: string; dash: string | undefined; cap: 'round' | 'butt'; width: number }[] = []
   const dots: (Point & { color: string; cross: boolean })[] = []
   // Holes and endpoints: open circles (not included) and closed ones (included).
-  const circles: (Point & { color: string; closed: boolean })[] = []
+  const circles: (Point & { color: string; closed: boolean; r: number; width: number })[] = []
   const pointNames: (Point & { name: string; coords: string; color: string })[] = []
   // Asymptotes, when a row shows them: dotted lines in the row's color, under the curves.
   const asymptotes: { d: string; color: string }[] = []
+  // Inequalities' shaded regions, drawn under the gridlines: a tint, or hatching at an angle.
+  const regions: { d: string; color: string; hatch: number | null }[] = []
+  let hatched = 0
   const rows = settings.equations ?? []
   readEquations(rows.map((r) => r.text), box, settings.angle).forEach((read, i) => {
-    const { color, line: style, arrows, point, names, ends, asym } = rows[i]
+    const { color, point, names, ends, asym, fill, width } = rows[i]
     const ink = COLORS[color]
+    const k = THICKNESS[width] ?? 1
+    const size = (1 + k) / 2 // arrowheads, circles and dash spacing
+    // An inequality's boundary has its own arrows, and is dashed or solid by its sign.
+    const inequality = !!read?.regions
+    const arrows = inequality ? rows[i].barrows : rows[i].arrows
+    if (read?.regions?.length) {
+      regions.push({
+        d: read.regions.map((poly) => `${pathOf(poly.map(px))}Z`).join(''),
+        color: ink,
+        hatch: fill === 'hatch' ? HATCH_ANGLES[hatched++ % HATCH_ANGLES.length] : null,
+      })
+    }
     if (asym === 'shown') {
       for (const a of read?.asymptotes ?? []) {
         const seg = clipLine(a, box)
@@ -74,14 +96,15 @@ export function buildGraph(settings: Settings) {
       }
     }
     for (const run of read?.runs ?? []) {
+      const style = run.strict === undefined ? rows[i].line : run.strict ? 'dashed' : 'solid'
       let pts = run.points.map(px)
       const heads: string[] = []
       // Arrows go on ends that leave the grid, if the teacher wants that end.
       const want = [arrows === 'both' || arrows === 'left', arrows === 'both' || arrows === 'right']
-      if (pathLength(pts) > HEAD * 2.5) {
-        if (want[1] && run.edges[1]) ({ pts } = arrowAt(pts, heads))
+      if (pathLength(pts) > HEAD * size * 2.5) {
+        if (want[1] && run.edges[1]) ({ pts } = arrowAt(pts, heads, size))
         if (want[0] && run.edges[0]) {
-          const r = arrowAt([...pts].reverse(), heads)
+          const r = arrowAt([...pts].reverse(), heads, size)
           pts = r.pts.reverse()
         }
       }
@@ -89,12 +112,12 @@ export function buildGraph(settings: Settings) {
         d: pathOf(pts),
         heads,
         color: ink,
-        dash: style === 'dashed' ? '9 6' : style === 'dotted' ? '0.01 6' : undefined,
+        dash: style === 'dashed' ? `${round(9 * size)} ${round(6 * size)}` : style === 'dotted' ? `0.01 ${round(6 * size)}` : undefined,
         cap: style === 'dotted' ? 'round' : 'butt',
-        width: style === 'dotted' ? 3.2 : 2.5, // round dots look lighter than a solid stroke
+        width: round((style === 'dotted' ? 3.2 : 2.5) * k), // round dots look lighter than a solid stroke
       })
     }
-    for (const c of read?.circles ?? []) if (!(c.end && ends === 'hidden')) circles.push({ ...px(c), color: ink, closed: c.closed })
+    for (const c of read?.circles ?? []) if (!(c.end && ends === 'hidden')) circles.push({ ...px(c), color: ink, closed: c.closed, r: round(CIRCLE_R * size), width: round(2.5 * size) })
     for (const pt of read?.points ?? []) {
       const at = px(pt)
       dots.push({ ...at, color: ink, cross: point === 'cross' })
@@ -109,8 +132,9 @@ export function buildGraph(settings: Settings) {
     lines,
     dots,
     circles,
-    r: CIRCLE_R,
     pointNames,
     asymptotes,
+    regions,
+    tint: TINT,
   }
 }

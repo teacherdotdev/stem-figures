@@ -38,6 +38,12 @@ const GRID = [
   `xFrom=-5&xTo=5&yFrom=-5&yTo=5&${eq('y=x^2-4|color=blue', 'y=2^x|arrows=right', 'y=sqrt(x)|color=green', 'y=1/x|color=purple')}`,
   `xFrom=-5&xTo=5&yFrom=-5&yTo=5&${eq('(1, 2), (3, 4)', '(-2, -3)|point=cross|color=orange', '(9, 9)')}`,
   `xFrom=0&xTo=2pi&xStep=pi%2F4&yFrom=-2&yTo=2&yStep=1%2F2&${eq('y=sin(x)')}`,
+  `xFrom=-6&xTo=6&yFrom=-6&yTo=6&${eq('y>x-2|color=blue|fill=hatch', 'y<=-x+3|color=red|fill=hatch|barrows=both', '-1<x<=1|color=green', 'y>1/x|color=purple')}`,
+  // Thickness: thin and thick lines, a thick dashed one with arrows, thick circles at a domain; gridlines light, bold and none.
+  `xFrom=-5&xTo=5&yFrom=-5&yTo=5&gridlines=bold&minor=2&${eq('y=x|width=thin', 'y=-x+1|width=thick|color=red|line=dashed', 'y=2, -3<=x<1|width=thick|color=blue', 'y<x-2|width=thick')}`,
+  `xFrom=-5&xTo=5&yFrom=-5&yTo=5&gridlines=light&minor=4&${eq('y=x^2-3|width=thick')}`,
+  `xFrom=-5&xTo=5&yFrom=-5&yTo=5&gridlines=none&minor=4`,
+  `gridlines=dark`,
   'xFrom=0&xTo=1&xStep=1%2F4&yFrom=-1&yTo=1&yStep=0.25',
   'title=Distance%20over%20time&titleMode=text&xTitle=Time%20(hours)&xTitleMode=text&yTitle=Distance%20(km)&yTitleMode=text',
   'titleMode=blank&xTitleMode=blank&yTitleMode=blank&xLabelMode=none&yLabel=distance',

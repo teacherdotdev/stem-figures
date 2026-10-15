@@ -9,14 +9,21 @@ export const MATH: CatalogEntry[] = [
     alsoOn: ['physics'],
     name: 'Coordinate Grid Generator',
     path: '/coordinate-grid',
-    blurb: 'Square grids with x- and y-axes, for plotting points and lines.',
+    blurb: 'Square grids with x- and y-axes, for graphing lines, curves, piecewise and trig functions, inequalities and points.',
     description:
-      'Make a printable coordinate grid (graph paper) for your class. Graph lines like y = 2x + 1 and plot points, choose the range, titles and axis arrows, then copy it into a worksheet or test.',
+      'Make a printable coordinate grid (graph paper) for your class. Graph lines like y = 2x + 1, parabolas, trig, log and exponential functions, piecewise functions with open and closed circles, shade inequalities and plot labeled points, choose the range in numbers, π or degrees, then copy it into a worksheet or test.',
     keywords: [
       'graph paper', 'grid paper', 'coordinate plane', 'cartesian plane', 'cartesian coordinate plane',
       'cartesian coordinates', 'rectangular coordinates', 'xy plane', 'x-y grid', 'xy', 'axes', 'x-axis', 'y-axis',
       'quadrant', 'first quadrant', 'four quadrants', 'origin', 'ordered pairs', 'plot points', 'plotting',
       'graphing', 'linear equations', 'slope', 'grid', 'graph', 'blank graph', 'printable',
+      'graphing inequalities', 'linear inequalities', 'systems of inequalities', 'shaded region', 'shading', 'bold grid', 'dark gridlines', 'no gridlines', 'thick lines',
+      'function', 'functions', 'graphing functions', 'function graph', 'piecewise', 'piecewise function', 'piecewise functions',
+      'step function', 'domain', 'domain and range', 'open circle', 'closed circle', 'endpoint', 'hole', 'asymptote', 'asymptotes',
+      'limits', 'discontinuity', 'parabola', 'quadratic', 'vertex', 'absolute value', 'square root', 'cube root', 'rational function',
+      'exponential', 'exponential function', 'exponential growth', 'exponential decay', 'logarithm', 'logarithmic', 'log', 'ln',
+      'trig', 'trig graph', 'trig graphs', 'trigonometric functions', 'sine', 'sin', 'cosine', 'cos', 'tangent', 'tan', 'sinusoidal',
+      'radians', 'degrees', 'pi', 'algebra 1', 'algebra 2', 'precalculus', 'calculus',
     ],
   },
   {

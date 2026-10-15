@@ -49,3 +49,17 @@ deployment on the branch.
 `legacy-peer-deps` so npm can install both. `apps/biology/vendor` (Punnett
 Square's cross) holds Physics's build restamped `0.0.0-biology`, so updating
 one site's Caret never changes the other's.
+
+## License
+
+The code is open source under the Apache License 2.0 (`LICENSE.txt`).
+
+The figures are a separate matter. Everything the sites contribute to a
+figure a teacher makes, and every example picture, is dedicated to the public
+domain under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/):
+use it anywhere, without asking or giving credit. We can only waive our own
+rights, so anything original a teacher adds stays theirs. The terms live in
+`packages/shared/src/license.ts`. Exported SVGs and PNGs carry them as
+metadata, and each figure site explains them at `/reuse`. Why CC0:
+`packages/shared/docs/adr/0002-figures-are-cc0.md`. Any new way of saving a
+figure should write the same metadata (`SVG_METADATA`, `withLicense`).

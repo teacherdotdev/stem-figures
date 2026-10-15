@@ -1,11 +1,11 @@
 <script lang="ts">
-  // How teachers may reuse the example figures, for the example images' license
+  // How teachers may reuse the figures, for the figures' license
   // details (see $lib/examples/license.ts).
   import { IMAGE_LICENSE } from '$lib/examples/license'
   import Seo from '$lib/site/Seo.svelte'
 </script>
 
-<Seo title="Reusing our figures" description="Math Figures’ example figures are open source under Apache 2.0: use them in tests, worksheets, slides or anything else." path={IMAGE_LICENSE.page} />
+<Seo title="Reusing our figures" description="Figures you make on Math Figures are free to use in tests, worksheets, slides or anything else: our part is in the public domain (CC0), and anything you add is yours." path={IMAGE_LICENSE.page} />
 
 <div class="page">
   <a class="back" href="/">← All figures</a>
@@ -14,9 +14,19 @@
 
   <section class="card">
     <p>
-      The example figures on this site are free to use in your tests, worksheets, slides, lesson materials or anything
-      else. Copy, print, change and share them however you like. Like everything on STEM Figures, they’re open source
-      under the <a href={IMAGE_LICENSE.url} rel="license">{IMAGE_LICENSE.fullName}</a>.
+      Every figure you make here, and every example figure on this site, is free to use in your tests, worksheets,
+      slides, lesson materials or anything else. Copy, print, change, share and even sell them however you like. You
+      don’t need to ask, and you don’t need to credit us.
+    </p>
+    <p>
+      Everything we contribute to a figure (the drawing, its layout and its style) is dedicated to the public domain
+      under the <a href={IMAGE_LICENSE.url} rel="license">{IMAGE_LICENSE.fullName}</a>. The example figures are
+      entirely ours, so they’re public domain too. Downloaded SVG and PNG files say so in their metadata.
+    </p>
+    <p>
+      Anything original you add yourself, such as your own text or a structure you draw, is yours. The worksheet, test
+      or slides you put a figure in are yours as well. What nobody can own is the figure itself: anyone can make the
+      same one here and use it.
     </p>
     <p>{IMAGE_LICENSE.copyright}.</p>
   </section>

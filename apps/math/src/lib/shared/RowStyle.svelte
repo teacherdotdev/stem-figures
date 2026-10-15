@@ -5,30 +5,38 @@
   // CapPicker's menu, so the scrolling settings column can't clip it.
   import { tick } from 'svelte'
   import {
-    ARROWS, ASYMPTOTES, COLORS, ENDPOINTS, LABEL_STYLES, LINE_STYLES, POINT_STYLES, VALUE_STYLES,
-    type Arrows, type AsymptoteStyle, type Color, type Endpoints, type LabelStyle, type LineStyle, type PointStyle, type ValueStyle,
+    ARROWS, ASYMPTOTES, COLORS, ENDPOINTS, FILLS, LABEL_STYLES, LINE_STYLES, POINT_STYLES, THICKNESSES, VALUE_STYLES,
+    type Arrows, type AsymptoteStyle, type Color, type Endpoints, type Fill, type LabelStyle, type LineStyle, type PointStyle, type Thickness,
+    type ValueStyle,
   } from './rowStyle.js'
 
   // What a row style can hold. The grid keeps its label style in `names` (its
   // links say names=); a number line row keeps it in `labels`, and has `values`.
   type Styled = {
     color: Color; point: PointStyle; line?: LineStyle; arrows?: Arrows; ends?: Endpoints; asym?: AsymptoteStyle
-    names?: LabelStyle; labels?: LabelStyle; values?: ValueStyle
+    names?: LabelStyle; labels?: LabelStyle; values?: ValueStyle; fill?: Fill; barrows?: Arrows; width?: Thickness
   }
 
-  // row: { color, line, arrows, point, … }, edited in place. isPoints: only color, point and labels apply.
+  // row: { color, line, arrows, point, width, … }, edited in place. isPoints: only color, point and labels apply.
   // hasDomain: the row's line stops at a domain, so it can show endpoints. hasAsymptotes: its curve has some to show.
+  // isInequality: a coordinate grid row that shades a region; its boundary's line style follows its sign, its
+  // arrows are its own (barrows), and it picks a fill.
   // colorOnly: a number line's row, whose line, arrows and circles carry meaning, so they can't change.
   // canLabel: its points can have labels (a sequence's terms can't). labelExample: a labeled point
   // with its coordinates, as the label style's second choice shows it.
   let {
     row, label, id, isPoints = false, hasDomain = false, hasAsymptotes = false, colorOnly = false, canLabel = true,
-    labelExample = 'A(2, 3)',
+    labelExample = 'A(2, 3)', isInequality = false,
   }: {
     row: Styled; label: string; id: string; isPoints?: boolean; hasDomain?: boolean; hasAsymptotes?: boolean; colorOnly?: boolean
-    canLabel?: boolean; labelExample?: string
+    canLabel?: boolean; labelExample?: string; isInequality?: boolean
   } = $props()
 
+  const arrowKey = $derived(isInequality ? 'barrows' : 'arrows')
+  const arrows = $derived(row[arrowKey] ?? 'both')
+  // How much the miniature's line thickens or thins, as the figure's does.
+  const WEIGHT: Record<Thickness, number> = { thin: 0.6, medium: 1, thick: 1.6 }
+  const weight = $derived(WEIGHT[row.width ?? 'medium'])
   const labelKey = $derived(row.labels !== undefined ? 'labels' : row.names !== undefined ? 'names' : null)
 
   let open = $state(false)
@@ -88,13 +96,21 @@
       <path d="M22,12 L15,7.5 L15,16.5 z" fill={ink} />
       <circle cx="6" cy="12" r="3.4" fill={ink} />
     {:else}
-      {@const left = row.arrows === 'both' || row.arrows === 'left'}
-      {@const right = row.arrows === 'both' || row.arrows === 'right'}
+      {@const left = arrows === 'both' || arrows === 'left'}
+      {@const right = arrows === 'both' || arrows === 'right'}
+      {#if isInequality}
+        <!-- Its shaded region, below the boundary. -->
+        {#if row.fill === 'hatch'}
+          <path d="M8,20 L20,8 M14,20 L20,14" stroke={ink} stroke-width="1.4" />
+        {:else}
+          <path d="M3,21 L21,3 L21,21 z" fill={ink} fill-opacity="0.25" />
+        {/if}
+      {/if}
       <line
         x1={left ? 7.5 : 4} y1={left ? 16.5 : 20} x2={right ? 16.5 : 20} y2={right ? 7.5 : 4}
-        stroke={ink} stroke-width={row.line === 'dotted' ? 2.6 : 2.2}
-        stroke-dasharray={row.line === 'dashed' ? '4 2.6' : row.line === 'dotted' ? '0.01 3.6' : undefined}
-        stroke-linecap={row.line === 'dotted' ? 'round' : 'butt'}
+        stroke={ink} stroke-width={(!isInequality && row.line === 'dotted' ? 2.6 : 2.2) * weight}
+        stroke-dasharray={isInequality ? undefined : row.line === 'dashed' ? '4 2.6' : row.line === 'dotted' ? '0.01 3.6' : undefined}
+        stroke-linecap={!isInequality && row.line === 'dotted' ? 'round' : 'butt'}
       />
       {#if left}<path d="M3,21 L5.1,13.9 L10.1,18.9 z" fill={ink} />{/if}
       {#if right}<path d="M21,3 L18.9,10.1 L13.9,5.1 z" fill={ink} />{/if}
@@ -109,6 +125,23 @@
       stroke-dasharray={style === 'dashed' ? '6 4' : style === 'dotted' ? '0.01 4.5' : undefined}
       stroke-linecap={style === 'dotted' ? 'round' : 'butt'}
     />
+  </svg>
+{/snippet}
+
+{#snippet widthIcon(width: Thickness)}
+  <svg viewBox="0 0 28 12" width="28" height="12" aria-hidden="true">
+    <line x1="3" y1="6" x2="25" y2="6" stroke="currentColor" stroke-width={2.5 * WEIGHT[width]} />
+  </svg>
+{/snippet}
+
+{#snippet fillIcon(style: Fill)}
+  <svg viewBox="0 0 28 12" width="28" height="12" aria-hidden="true">
+    <rect x="3" y="1" width="22" height="10" fill="none" stroke="currentColor" stroke-width="1" />
+    {#if style === 'hatch'}
+      <path d="M5,11 L15,1 M11,11 L21,1 M17,11 L25,3" stroke="currentColor" stroke-width="1.4" />
+    {:else}
+      <rect x="3" y="1" width="22" height="10" fill="currentColor" fill-opacity="0.3" />
+    {/if}
   </svg>
 {/snippet}
 
@@ -217,6 +250,19 @@
           </div>
         {/if}
       {:else if !colorOnly}
+        {#if isInequality}
+          <div class="group">
+            <span class="name" id="{id}-fill">Shading</span>
+            <div class="segmented" role="radiogroup" aria-labelledby="{id}-fill">
+              {#each (Object.entries(FILLS) as [Fill, string][]) as [v, name]}
+                <button type="button" role="radio" aria-checked={row.fill === v} aria-label={name} title={name} class:on={row.fill === v} onclick={() => (row.fill = v)}>
+                  {@render fillIcon(v)}
+                </button>
+              {/each}
+            </div>
+          </div>
+          <p class="note">The line is dashed for &lt; and &gt;, solid for ≤ and ≥.</p>
+        {:else}
         <div class="group">
           <span class="name" id="{id}-line">Line</span>
           <div class="segmented" role="radiogroup" aria-labelledby="{id}-line">
@@ -227,6 +273,20 @@
             {/each}
           </div>
         </div>
+        {/if}
+
+        {#if row.width !== undefined}
+          <div class="group">
+            <span class="name" id="{id}-width">Thickness</span>
+            <div class="segmented" role="radiogroup" aria-labelledby="{id}-width">
+              {#each (Object.entries(THICKNESSES) as [Thickness, string][]) as [v, name]}
+                <button type="button" role="radio" aria-checked={row.width === v} aria-label={name} title={name} class:on={row.width === v} onclick={() => (row.width = v)}>
+                  {@render widthIcon(v)}
+                </button>
+              {/each}
+            </div>
+          </div>
+        {/if}
 
         {#if hasDomain}
           <div class="group">
@@ -258,7 +318,7 @@
           <span class="name" id="{id}-arrows">Arrows</span>
           <div class="segmented" role="radiogroup" aria-labelledby="{id}-arrows">
             {#each (Object.entries(ARROWS) as [Arrows, string][]) as [v, name]}
-              <button type="button" role="radio" aria-checked={row.arrows === v} aria-label={name} title={name} class:on={row.arrows === v} onclick={() => (row.arrows = v)}>
+              <button type="button" role="radio" aria-checked={arrows === v} aria-label={name} title={name} class:on={arrows === v} onclick={() => (row[arrowKey] = v)}>
                 {@render arrowIcon(v)}
               </button>
             {/each}
@@ -320,4 +380,5 @@
   .segmented button.text { display: inline-block; padding: 0.3rem 0.6rem; font-size: 0.82rem; font-weight: 700; }
   .segmented button.words { display: inline-block; padding: 0.3rem 0.6rem; font: italic 700 0.9rem 'Times New Roman', Times, serif; }
   .name .hint { font-weight: 400; }
+  .note { max-width: 13rem; margin: -0.2rem 0 0; font-size: 0.75rem; color: var(--muted); }
 </style>

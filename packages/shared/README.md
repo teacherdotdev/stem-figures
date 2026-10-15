@@ -9,7 +9,7 @@ Components and helpers used by more than one STEM Figures site, imported as
 | `request.svelte.ts`                                                                         | math, physics, chemistry, biology, engineering |
 | `Modal`                                                                                     | math, chemistry, physics, biology, engineering |
 | `LabelField`                                                                                | math, chemistry, biology, engineering     |
-| `GeneratorPage`, `generatorState`, and through them `FigureCanvas`, `Presets`, `presetStore`, `history`, `exporting` | math, chemistry, physics, biology |
+| `GeneratorPage`, `generatorState`, and through them `FigureCanvas`, `Presets`, `presetStore`, `history`, `exporting`, `license` | math, chemistry, physics, biology (`license` also in each one's `/reuse` page and example pages) |
 | `labelSize`                                                                                 | math, chemistry (Titration Curve, Heating and Cooling Curve), biology (Cell Diagram, Population Growth, Punnett Square, Mitosis & Meiosis, Predator–Prey Cycles), physics (Wave) |
 | `graph/`: `Grid`, `grid`, `axes`, `AxisSettings`, `TitleSettings`, `GridlineSettings`       | math (Coordinate Grid), chemistry (Titration Curve, Heating and Cooling Curve), biology (Population Growth, Predator–Prey Cycles), physics (Wave, all but `Grid`) |
 | `graph/`: `numbering`, `caps`, `CapPicker`, `colors`                                        | math, chemistry (Titration Curve, Heating and Cooling Curve), biology (Population Growth, Predator–Prey Cycles), physics (Wave) |

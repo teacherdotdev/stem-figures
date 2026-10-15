@@ -11,6 +11,7 @@
   </a>
   <a href="/about"><span>About</span></a>
   <a href="/privacy"><span>Privacy</span></a>
+  <a href="/reuse"><span>Reuse</span></a>
   <a href={FAMILY.url} rel="noopener"><span>{FAMILY.name}</span></a>
   {#each SISTER_SITES as site (site.url)}
     <a href={site.url} rel="noopener"><span>{site.name}</span></a>
