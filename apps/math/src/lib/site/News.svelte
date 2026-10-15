@@ -62,8 +62,11 @@
   <Modal title="What’s new on Math Figures" onclose={close} wide>
     <p class="thanks">
       Thanks to everyone that’s emailed us over the past couple of weeks! Here’s what we added based on what everyone said! As always, feel
-      free to reach out if you have more suggestions. All the best, Elliot &amp; Duncan from
-      <a href="https://teacher.dev" target="_blank" rel="noopener noreferrer"><img src="/logo.svg" alt="" width="16" height="16" /><span>teacher.dev</span></a>
+      free to reach out if you have more suggestions.
+      <span class="signed">
+        All the best, Elliot &amp; Duncan from
+        <a href="https://teacher.dev" target="_blank" rel="noopener noreferrer"><img src="/logo.svg" alt="" width="16" height="16" /><span>teacher.dev</span></a>
+      </span>
     </p>
     {#each shown as update (update.id)}
       <section class="update">
@@ -88,6 +91,8 @@
 
 <style>
   .thanks { margin: -0.4rem 0 1rem !important; color: var(--muted); }
+  /* Signed on a line of its own, at the right, as a letter is. */
+  .signed { display: block; margin-top: 0.3rem; text-align: right; }
   .thanks a { display: inline-flex; align-items: center; gap: 0.25rem; color: inherit; text-decoration: none; vertical-align: bottom; }
   .thanks a:hover span { text-decoration: underline; text-underline-offset: 3px; }
   .update + .update { margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
