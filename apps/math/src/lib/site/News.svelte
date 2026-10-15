@@ -88,7 +88,7 @@
 
 <style>
   .thanks { margin: -0.4rem 0 1rem !important; color: var(--muted); }
-  .thanks a { display: inline-flex; align-items: center; gap: 0.25rem; color: var(--ink); font-weight: 700; text-decoration: none; vertical-align: bottom; }
+  .thanks a { display: inline-flex; align-items: center; gap: 0.25rem; color: inherit; text-decoration: none; vertical-align: bottom; }
   .thanks a:hover span { text-decoration: underline; text-underline-offset: 3px; }
   .update + .update { margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
   .eyebrow { margin: 0 0 0.6rem !important; color: var(--blue-dark); font-size: 0.75rem !important; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
