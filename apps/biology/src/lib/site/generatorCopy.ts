@@ -222,6 +222,49 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'AP Biology'],
   },
 
+  'enzyme-activity': {
+    heading: 'Enzyme activity graphs: temperature, pH, substrate concentration and inhibitors',
+    intro: [
+      'Enzyme Activity graphs how fast an enzyme works, the rate of reaction, against temperature, pH or substrate concentration. Against temperature the rate rises to the optimum, then falls steeply as the enzyme denatures; against pH it makes a bell around the optimum pH; against substrate concentration it rises and levels off at Vmax, following Michaelis–Menten. Pick an enzyme for each curve, from a human enzyme and Taq polymerase to pepsin, salivary amylase, trypsin and catalase, or an unknown enzyme with an optimum and width of your own.',
+      'Teachers use it for questions on tests, worksheets and slides. Put up to three curves on one graph, like pepsin, amylase and trypsin against pH, or an enzyme with a competitive and a non-competitive inhibitor, told apart by solid, dashed and dotted lines and a key, so they read in black and white. The graphs show shape only, with no numbers on the axes. Mark the optimum, where the enzyme has denatured, Vmax, and ½Vmax with Km, each labeled, left as a blank line for students, or unlabeled.',
+    ],
+    settings: [
+      'Rate against temperature, pH or substrate concentration',
+      'Up to three curves, each one of the enzymes (human enzyme, Taq polymerase, pepsin, salivary amylase, trypsin or catalase) or an unknown enzyme with its own optimum and width, named in a key',
+      'Against substrate concentration, each curve with no inhibitor, a competitive inhibitor or a non-competitive one, how soon the rate levels off (Km), and how strong the inhibitor is',
+      'The optimum and denaturation marked with dots, or Vmax, ½Vmax and Km with dashed lines to the axes, named for their curve when there’s more than one, each labeled, left as a blank line for students, or unlabeled',
+      'Color or black and white, gridlines, arrows at the axes’ ends, the chart and axis titles (or blank lines), and label size',
+    ],
+    faqs: [
+      {
+        q: 'Why does an enzyme’s rate fall above its optimum temperature?',
+        a: 'Warming speeds up the reaction, because the enzyme and substrate molecules move faster and collide more often, so the rate rises up to the optimum. Past it, the heat breaks the bonds holding the enzyme’s shape, its active site changes shape and the substrate no longer fits. The enzyme is denatured, and the rate falls steeply to zero. The graph shows that as a slow rise and a sharp fall.',
+      },
+      {
+        q: 'What temperatures and pH do the enzymes work best at?',
+        a: 'The human enzyme, pepsin, salivary amylase, trypsin and catalase work best at body temperature, about 37 °C, and Taq polymerase, from bacteria in hot springs, at about 75 °C. Pepsin works best at about pH 2 in the stomach, salivary amylase and catalase at about pH 7, trypsin at about pH 8 in the small intestine, and Taq polymerase at about pH 8.3. For any other optimum, choose Unknown enzyme and type your own.',
+      },
+      {
+        q: 'Why are there no numbers on the axes?',
+        a: 'The graphs show the shapes students learn, like a rise to an optimum and a steep fall, rather than data from one experiment, so they leave the numbers off. Each enzyme’s optimum still sits in the right place along the axis, and the settings panel says where each one works best.',
+      },
+      {
+        q: 'How do competitive and non-competitive inhibitors change the graph?',
+        a: 'A competitive inhibitor fits the active site and competes with the substrate, so with enough substrate the enzyme still reaches the same Vmax, but it takes more substrate to get there: Km is higher. A non-competitive inhibitor binds somewhere else and changes the enzyme’s shape, so adding substrate can’t make up for it: Vmax is lower, and Km stays the same. Choose Substrate, then give the curves no inhibitor, a competitive inhibitor and a non-competitive one.',
+      },
+      {
+        q: 'What are Vmax and Km?',
+        a: 'Vmax is the fastest rate an enzyme reaches when every active site is busy, where the curve levels off. Km, the Michaelis constant, is the substrate concentration at which the rate is half of Vmax; the lower it is, the more easily the enzyme takes up its substrate. Under Marked, Vmax gets a dashed line across, and ½Vmax and Km a dot with dashed lines to both axes, labeled at the axes. With an inhibitor, each label names its curve, like Vmax (non-competitive) or Km (competitive).',
+      },
+      {
+        q: 'How do I make a worksheet where students label the graph?',
+        a: 'Under Marked, set the labels to Blank line, and each mark gets a line for students to write on: the optimum, denaturation, Vmax, ½Vmax or Km. Turn every curve off for blank axes to sketch on, or set the axis titles to blank lines too.',
+      },
+    ],
+    imageAlt: 'A printable enzyme activity graph of pepsin, salivary amylase and trypsin against pH, each curve a bell around its optimum, made with Enzyme Activity',
+    educationalLevel: ['Middle school', 'High school', 'AP Biology'],
+  },
+
   'gel-electrophoresis': {
     heading: 'Gel electrophoresis figures: DNA fingerprinting, PCR and restriction digests',
     intro: [

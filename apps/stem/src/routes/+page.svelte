@@ -6,7 +6,7 @@
 </script>
 
 <Seo
-  description="Free generators for clean, printable math, physics, chemistry, biology and engineering figures. Make one to fit your lesson, then copy it into a test, worksheet or slide."
+  description="Free generators for clean, printable math, physics, chemistry, biology, engineering and economics figures. Make one to fit your lesson, then copy it into a test, worksheet or slide."
   path="/"
 />
 

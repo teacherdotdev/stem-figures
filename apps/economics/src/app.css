@@ -1,0 +1,203 @@
+:root {
+  --blue: #2563eb;
+  --blue-dark: #1d4ed8;
+  --blue-soft: #eff6ff;
+  --blue-border: #bfdbfe;
+  --purple: #7c3aed;
+  --green: #16a34a;
+  --green-soft: #dcfce7;
+  --red: #dc2626;
+  --red-soft: #fee2e2;
+  --amber: #f59e0b;
+  --ink: #1f2937;
+  --muted: #6b7280;
+  --border: #e3e4ea;
+  --card: #ffffff;
+  --bg: #f6f7fb;
+  --radius: 16px;
+  --topbar-h: 3.5rem;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px -12px rgba(16, 24, 40, 0.12);
+
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* Faint economics doodles behind every page, like the margins of an economics
+   notebook: supply and demand crossing at equilibrium, a bar chart, a
+   production possibilities frontier, a pie chart and a rising trend line,
+   repeating every 240px. It fades out toward the middle so the page's content
+   sits on a plain background. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232563eb' stroke-opacity='.13' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 16v74h74M30 28l52 52M30 80l52-52'/%3E%3Cpath d='M56 54v36M56 54H18' stroke-dasharray='2 4'/%3E%3Cpath d='M124 92h88M136 92V64h12v28M156 92V48h12v44M176 92V34h12v58M136 56l20-14 20-12 22-10m-7-1 7 1-3 7'/%3E%3Cpath d='M18 128v90h86M18 142Q96 142 96 218'/%3E%3Ccircle cx='162' cy='166' r='24'/%3E%3Cpath d='M162 166v-24M162 166l20.8 12M162 166l-17 17'/%3E%3Cpath d='M120 228l18-12 14 8 20-18 16 6 24-20m-8 0h8v8'/%3E%3C/g%3E%3Cg fill='%232563eb' fill-opacity='.16'%3E%3Ccircle cx='56' cy='54' r='3'/%3E%3Ccircle cx='46' cy='186' r='2.5'/%3E%3Ccircle cx='74' cy='164' r='2.5'/%3E%3Ccircle cx='222' cy='130' r='2'/%3E%3Ccircle cx='110' cy='112' r='2'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  --fade: linear-gradient(to right, #000 calc(50% - 38rem), transparent calc(50% - 30rem), transparent calc(50% + 30rem), #000 calc(50% + 38rem));
+  -webkit-mask-image: var(--fade);
+  mask-image: var(--fade);
+}
+
+h1, h2, h3 { margin: 0; line-height: 1.2; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Shared buttons */
+.btn-primary, .btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.7rem 1.25rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  border: 1.5px solid transparent;
+  text-decoration: none;
+  line-height: 1;
+  transition: background 0.15s, transform 0.08s;
+}
+.btn-primary:active, .btn-ghost:active { transform: scale(0.97); }
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--blue-dark); }
+.btn-primary:disabled { background: #c3c8d4; cursor: default; }
+.btn-ghost { background: #fff; color: var(--blue-dark); border-color: var(--blue-border); }
+.btn-ghost:hover:not(:disabled) { background: var(--blue-soft); }
+.btn-ghost:disabled { color: #9aa0aa; border-color: var(--border); cursor: default; }
+.btn-big { font-size: 1.2rem; padding: 0.95rem 1.8rem; border-radius: 14px; }
+
+/* Selectable chips, shared by the customizer */
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip {
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: background 0.15s, border-color 0.15s;
+}
+.chip:hover { border-color: var(--blue-border); background: var(--blue-soft); }
+.chip.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+/* Form controls */
+input[type='number'], input[type='text'], select {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 400;
+  background: #fff;
+  color: var(--ink);
+}
+input:focus, select:focus { outline: none; border-color: var(--blue); }
+
+/* A generator's settings: a labeled field, a row of fields, a checkbox, a slider */
+.field { display: flex; flex-direction: column; gap: 0.35rem; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.85rem; }
+.field:last-child { margin-bottom: 0; }
+.field-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: 0.6rem; margin-bottom: 0.85rem; }
+.field-row > .field { margin-bottom: 0; }
+.check { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.6rem; cursor: pointer; }
+.check:last-child { margin-bottom: 0; }
+.check input { width: 1.05rem; height: 1.05rem; accent-color: var(--blue); }
+.slider { display: flex; align-items: center; gap: 0.6rem; }
+.slider input[type='range'] { flex: 1; accent-color: var(--blue); }
+.slider output { min-width: 2.5rem; text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+.note { margin: 0 0 0.85rem; font-size: 0.85rem; color: var(--muted); }
+.subhead { margin: 1rem 0 0.5rem; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.subhead:first-child { margin-top: 0; }
+
+/* Segmented choice (e.g. Text / Blank line / None) */
+.segmented { display: flex; gap: 2px; padding: 3px; border-radius: 11px; background: var(--bg); }
+.segmented button {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.4rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+.segmented button:hover { color: var(--ink); }
+.segmented button.on { background: #fff; color: var(--blue-dark); box-shadow: 0 1px 2px rgba(16, 24, 40, 0.12); }
+
+/* Square icon buttons with a hover/focus tooltip from data-tip */
+.icon-btn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink);
+}
+.icon-btn:hover:not(:disabled) { background: var(--blue-soft); color: var(--blue-dark); }
+.icon-btn:disabled { color: #b5bac4; cursor: default; }
+.icon-btn.primary { background: var(--blue); color: #fff; }
+.icon-btn.primary:hover { background: var(--blue-dark); color: #fff; }
+[data-tip] { position: relative; }
+[data-tip]:hover::after, [data-tip]:focus-visible::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  padding: 0.3rem 0.55rem;
+  border-radius: 6px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; }
+  body::before { display: none; }
+  .card { box-shadow: none; }
+}

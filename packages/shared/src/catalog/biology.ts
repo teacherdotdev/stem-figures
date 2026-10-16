@@ -86,6 +86,20 @@ export const BIOLOGY: CatalogEntry[] = [
     keywords: ['predator', 'prey', 'predator-prey', 'lotka-volterra', 'population', 'cycle', 'hare', 'lynx', 'wolf', 'phase plane', 'census', 'lag', 'ecology', 'graph', 'printable'],
   },
   {
+    id: 'enzyme-activity',
+    site: 'biology',
+    name: 'Enzyme Activity',
+    path: '/enzyme-activity',
+    blurb: 'Rate of reaction against temperature, pH or substrate concentration.',
+    description:
+      'Make printable enzyme activity graphs for biology tests. Graph the rate of reaction against temperature, pH or substrate concentration for enzymes like pepsin and amylase, or with an inhibitor, and mark the optimum, denaturation, Vmax and Km.',
+    keywords: [
+      'enzyme', 'enzymes', 'enzyme activity', 'rate of reaction', 'reaction rate', 'temperature', 'ph', 'optimum', 'optimal',
+      'denature', 'denaturation', 'substrate concentration', 'michaelis-menten', 'vmax', 'km', 'inhibitor', 'inhibition',
+      'competitive', 'non-competitive', 'pepsin', 'amylase', 'trypsin', 'catalase', 'taq polymerase', 'graph', 'printable',
+    ],
+  },
+  {
     id: 'gel-electrophoresis',
     site: 'biology',
     name: 'Gel Electrophoresis',

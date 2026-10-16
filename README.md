@@ -13,6 +13,7 @@ project on its own domain.
 | `apps/chemistry`   | [chemistryfigures.com](https://chemistryfigures.com) | `apps/chemistry`      |
 | `apps/biology`     | [biologyfigures.com](https://biologyfigures.com)     | `apps/biology`        |
 | `apps/engineering` | [engineeringfigures.com](https://engineeringfigures.com) | `apps/engineering` |
+| `apps/economics`   | [econfigures.com](https://econfigures.com) (alias economicsfigures.com) | `apps/economics` |
 
 `packages/shared` holds components and helpers used by more than one site,
 imported as `$shared/...` (an alias set in each app's `svelte.config.js`).
@@ -60,7 +61,7 @@ domain under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/):
 use it anywhere, without asking or giving credit. We can only waive our own
 rights, so anything original a teacher adds stays theirs. The terms live in
 `packages/shared/src/license.ts`. Exported SVGs and PNGs carry them as
-metadata, as do the directory previews, and every site, Engineering and
-STEM Figures included, explains them at `/reuse`. Why CC0:
+metadata, as do the directory previews, and every site, Engineering, Econ
+and STEM Figures included, explains them at `/reuse`. Why CC0:
 `packages/shared/docs/adr/0002-figures-are-cc0.md`. Any new way of saving a
 figure should write the same metadata (`SVG_METADATA`, `withLicense`).

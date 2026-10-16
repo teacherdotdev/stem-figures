@@ -49,4 +49,11 @@ export const SITES: FigureSite[] = [
     blurb: 'Just getting started. Tell us the engineering figure you need and we’ll build it.',
     icon: '/sites/engineering.svg',
   },
+  {
+    id: 'economics',
+    name: 'Econ Figures',
+    url: 'https://econfigures.com',
+    blurb: 'Just getting started. Tell us the economics figure you need and we’ll build it.',
+    icon: '/sites/economics.svg',
+  },
 ]

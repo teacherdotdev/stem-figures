@@ -56,6 +56,17 @@ and `docs/adr/` for decisions.
   or as a phase plane loop; smooth curves or census counts with seeded
   noise; the peaks, lag and period marked, labeled or left blank, and either
   population left off for students to sketch. Built on `$shared/graph`.
+- `/enzyme-activity` **Enzyme Activity**: the rate of reaction against
+  temperature (a rise to the optimum, then a steep fall as the enzyme
+  denatures), pH (a bell around the optimum) or substrate concentration
+  (Michaelis–Menten, levelling off at Vmax), shape only, with no numbers on
+  the axes. Up to three curves, solid, dashed and dotted with a key: a human
+  enzyme, Taq polymerase, pepsin, salivary amylase, trypsin or catalase, an
+  unknown enzyme with its own optimum and width, or against substrate no
+  inhibitor, a competitive one (higher Km) and a non-competitive one (lower
+  Vmax). The optimum and denaturation, or Vmax, ½Vmax and Km, marked with
+  dashed lines to the axes, labeled, blank or unlabeled. Built on
+  `$shared/graph`.
 - `/gel-electrophoresis` **Gel Electrophoresis**: an agarose gel of 2 to 12
   lanes, each a DNA ladder (100 bp, 1 kb or λ/HindIII) or a sample with the
   band sizes typed in. Bands run linearly in log size over the gel's range

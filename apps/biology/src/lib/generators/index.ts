@@ -12,6 +12,7 @@ import PunnettSquarePreview from './punnett-square/Preview.svelte'
 import PedigreePreview from './pedigree/Preview.svelte'
 import CellDivisionPreview from './cell-division/Preview.svelte'
 import PredatorPreyPreview from './predator-prey/Preview.svelte'
+import EnzymeActivityPreview from './enzyme-activity/Preview.svelte'
 import GelElectrophoresisPreview from './gel-electrophoresis/Preview.svelte'
 import MicropipetteReadingPreview from './micropipette-reading/Preview.svelte'
 import MicroscopeFieldOfViewPreview from './microscope-field-of-view/Preview.svelte'
@@ -24,6 +25,7 @@ export const PREVIEWS: Record<string, Component> = {
   pedigree: PedigreePreview,
   'cell-division': CellDivisionPreview,
   'predator-prey': PredatorPreyPreview,
+  'enzyme-activity': EnzymeActivityPreview,
   'gel-electrophoresis': GelElectrophoresisPreview,
   'micropipette-reading': MicropipetteReadingPreview,
   'microscope-field-of-view': MicroscopeFieldOfViewPreview,
