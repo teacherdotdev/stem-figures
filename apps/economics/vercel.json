@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd ../.. && npm ci",
+  "ignoreCommand": "bash ../../scripts/vercel-ignore.sh",
+  "git": {
+    "deploymentEnabled": {
+      "*": false,
+      "main": true,
+      "dev": true
+    }
+  }
+}

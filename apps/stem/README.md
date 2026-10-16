@@ -13,6 +13,7 @@ its own domain:
 - [Chemistry Figures](https://chemistryfigures.com)
 - [Biology Figures](https://biologyfigures.com)
 - [Engineering Figures](https://engineeringfigures.com)
+- [Econ Figures](https://econfigures.com)
 
 ## Pages
 

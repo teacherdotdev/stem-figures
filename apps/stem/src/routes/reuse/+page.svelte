@@ -14,7 +14,7 @@
 
   <section class="card">
     <p>
-      Every figure you make on a STEM Figures site (Math, Physics, Chemistry, Biology and Engineering Figures), and every
+      Every figure you make on a STEM Figures site (Math, Physics, Chemistry, Biology, Engineering and Econ Figures), and every
       example figure on them, is free to use in your tests, worksheets, slides, lesson materials or anything else. Copy, print, change, share and even sell them however you like. You
       don’t need to ask, and you don’t need to credit us.
     </p>

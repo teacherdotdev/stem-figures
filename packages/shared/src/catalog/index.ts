@@ -20,6 +20,7 @@
 
 import { BIOLOGY } from './biology'
 import { CHEMISTRY } from './chemistry'
+import { ECONOMICS } from './economics'
 import { MATH } from './math'
 import { PHYSICS } from './physics'
 
@@ -29,6 +30,7 @@ export const SITES = {
   chemistry: { name: 'Chemistry Figures', url: 'https://chemistryfigures.com' },
   biology: { name: 'Biology Figures', url: 'https://biologyfigures.com' },
   engineering: { name: 'Engineering Figures', url: 'https://engineeringfigures.com' },
+  economics: { name: 'Econ Figures', url: 'https://econfigures.com' },
 }
 
 export type SiteId = keyof typeof SITES
@@ -59,7 +61,7 @@ export interface CatalogEntry {
   off?: true
 }
 
-export const CATALOG: CatalogEntry[] = [...MATH, ...PHYSICS, ...CHEMISTRY, ...BIOLOGY].filter((g) => !g.off)
+export const CATALOG: CatalogEntry[] = [...MATH, ...PHYSICS, ...CHEMISTRY, ...BIOLOGY, ...ECONOMICS].filter((g) => !g.off)
 
 /** The generators living on `site`, each with its preview component from
  *  `previews` (keyed by id). A generator without one fails the build. */
