@@ -5,7 +5,7 @@
   import { SITES } from '$lib/sites'
   import { SITE_NAME } from './config'
 
-  // Biology and Engineering are just getting started, so only the directory
+  // Biology, Engineering and Econ are just getting started, so only the directory
   // links to them for now.
   const LINKED = SITES.filter((site) => ['math', 'physics', 'chemistry'].includes(site.id))
 </script>

@@ -5,9 +5,9 @@ Components and helpers used by more than one STEM Figures site, imported as
 
 | File                                                                                        | Used by                                   |
 | ------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| `catalog/`, `GeneratorDirectory`                                                            | math, physics, chemistry, biology, engineering |
-| `request.svelte.ts`                                                                         | math, physics, chemistry, biology, engineering |
-| `Modal`                                                                                     | math, chemistry, physics, biology, engineering |
+| `catalog/`, `GeneratorDirectory`                                                            | math, physics, chemistry, biology, engineering, economics |
+| `request.svelte.ts`, `RequestDialog`, `EmailDialog`                                        | math, physics, chemistry, biology, engineering, economics |
+| `Modal`                                                                                     | math, chemistry, physics, biology, engineering, economics |
 | `LabelField`                                                                                | math, chemistry, biology, engineering     |
 | `GeneratorPage`, `generatorState`, and through them `FigureCanvas`, `Presets`, `presetStore`, `history`, `exporting`, `license` | math, chemistry, physics, biology (`license` also in each one's `/reuse` page and example pages) |
 | `labelSize`                                                                                 | math, chemistry (Titration Curve, Heating and Cooling Curve), biology (Cell Diagram, Population Growth, Punnett Square, Mitosis & Meiosis, Predator–Prey Cycles, Enzyme Activity), physics (Wave) |
