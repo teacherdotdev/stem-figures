@@ -18,6 +18,8 @@ import { familyOf, pedigreeSettings } from '$lib/generators/pedigree/settings'
 import { buildPredatorPrey, timeText } from '$lib/generators/predator-prey/figure'
 import { pairNamed } from '$lib/generators/predator-prey/pairs'
 import { predatorPreySettings } from '$lib/generators/predator-prey/settings'
+import { readoutOf } from '$lib/generators/enzyme-activity/figure'
+import { enzymeSettings } from '$lib/generators/enzyme-activity/settings'
 import { answerLines as gelAnswer } from '$lib/generators/gel-electrophoresis/figure'
 import { gelSettings } from '$lib/generators/gel-electrophoresis/settings'
 import { answerLine as pipetteAnswerLine, pipetteSettings } from '$lib/generators/micropipette-reading/settings'
@@ -121,6 +123,12 @@ function predatorPreyAnswer(s: SettingsById['predator-prey']): ExampleDetails['a
   }
 }
 
+/** Where each enzyme works best and stops, or how each inhibitor changes Vmax and Km, as the settings panel's readout says. */
+function enzymeActivityAnswer(s: SettingsById['enzyme-activity']): ExampleDetails['answer'] {
+  const lines = readoutOf(s)
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
 /** Gel Electrophoresis's own answer key lines: each sample lane's band sizes, and the ladder's when its sizes are blank. */
 function gelElectrophoresisAnswer(s: SettingsById['gel-electrophoresis']): ExampleDetails['answer'] {
   const lines = gelAnswer(s)
@@ -132,6 +140,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'punnett-square': { definition: punnettSettings, answer: punnettSquareAnswer },
   pedigree: { definition: pedigreeSettings, answer: pedigreeAnswer },
   'predator-prey': { definition: predatorPreySettings, answer: predatorPreyAnswer },
+  'enzyme-activity': { definition: enzymeSettings, answer: enzymeActivityAnswer },
   'gel-electrophoresis': { definition: gelSettings, answer: gelElectrophoresisAnswer },
   'micropipette-reading': { definition: pipetteSettings, answer: (s) => ({ heading: 'Answer key', lines: [pipetteAnswerLine(s)] }) },
 }
