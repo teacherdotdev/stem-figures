@@ -487,7 +487,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'Can I make an isotope that doesn’t exist?',
-        a: 'Yes. Any mass number from the atomic number up to 300 is drawn. For elements from hydrogen to xenon, and platinum, gold, mercury, lead and uranium, the page notes when a mass number isn’t one of the element’s natural isotopes, but draws it anyway. A mass number below the atomic number would mean fewer than 0 neutrons, so it isn’t taken.',
+        a: 'Yes. Any mass number from the atomic number up to 300 is drawn. For elements from hydrogen to xenon, and platinum, gold, mercury, lead and uranium, the page notes when a mass number isn’t one of the element’s naturally abundant isotopes, such as carbon-14, which is only a trace, but draws it anyway. A mass number below the atomic number would mean fewer than 0 neutrons, so it isn’t taken.',
       },
       {
         q: 'Does it write nuclear particles for decay equations?',

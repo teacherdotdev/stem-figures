@@ -79,7 +79,7 @@ describe('picking an element', () => {
 
   it('notes a mass number that isn’t a natural isotope, and still draws it', () => {
     const c14 = { ...d, mass: 14 }
-    expect(unnaturalNote(c14)).toBe('Carbon’s natural isotopes are C-12 and C-13, so C-14 is rare or made in a lab. It’s drawn all the same.')
+    expect(unnaturalNote(c14)).toBe('Carbon’s naturally abundant isotopes are C-12 and C-13. C-14 is drawn all the same.')
     expect(partsOf(c14).mass).toEqual({ text: '14' })
     expect(unnaturalNote({ ...d, mass: 13 })).toBeNull()
     expect(unnaturalNote({ ...d, z: 43, mass: 99 })).toBeNull() // no data for technetium

@@ -122,8 +122,9 @@ export function withElement(s: NuclideSettings, z: number): NuclideSettings {
  *  for the elements Mass Spectrum has data for (H to Xe, Pt, Au, Hg, Pb and U). */
 export const naturalIsotopes = (z: number): number[] | undefined => ISOTOPES[z]?.map(([mass]) => mass)
 
-/** Says when an element's mass number isn't one of its natural isotopes. It
- *  is drawn all the same. */
+/** Says when an element's mass number isn't one of its naturally abundant
+ *  isotopes, such as a trace one (C-14) or one made in a lab. It is drawn all
+ *  the same. */
 export function unnaturalNote(s: NuclideSettings): string | null {
   if (s.kind !== 'element') return null
   const natural = naturalIsotopes(s.z)
@@ -131,7 +132,7 @@ export function unnaturalNote(s: NuclideSettings): string | null {
   if (!natural || !el || natural.includes(s.mass)) return null
   const list = natural.map((m) => `${el.symbol}-${m}`)
   const named = list.length === 1 ? list[0] : `${list.slice(0, -1).join(', ')} and ${list.at(-1)}`
-  return `${el.name}’s natural ${natural.length === 1 ? 'isotope is' : 'isotopes are'} ${named}, so ${el.symbol}-${s.mass} is rare or made in a lab. It’s drawn all the same.`
+  return `${el.name}’s naturally abundant ${natural.length === 1 ? 'isotope is' : 'isotopes are'} ${named}. ${el.symbol}-${s.mass} is drawn all the same.`
 }
 
 /** Whether the figure is hyphen notation alone, both, or the symbol. A
