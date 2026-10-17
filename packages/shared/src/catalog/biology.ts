@@ -100,6 +100,20 @@ export const BIOLOGY: CatalogEntry[] = [
     ],
   },
   {
+    id: 'dna-protein-synthesis',
+    site: 'biology',
+    name: 'DNA and Protein Synthesis',
+    path: '/dna-protein-synthesis',
+    blurb: 'A DNA strand transcribed and translated, base under base, with any row left for students.',
+    description:
+      'Make printable DNA and protein synthesis figures for biology tests. Type a DNA or mRNA sequence and get both DNA strands, the mRNA, the tRNA anticodons and the amino acids lined up base under base, with any row left blank for students, wrong pairings for multiple choice and a codon chart.',
+    keywords: [
+      'dna', 'rna', 'mrna', 'trna', 'protein synthesis', 'transcription', 'translation', 'central dogma', 'gene expression',
+      'base pairing', 'complementary strand', 'template strand', 'coding strand', 'antiparallel', "5' 3'", 'codon', 'anticodon',
+      'amino acids', 'genetic code', 'codon chart', 'codon table', 'start codon', 'stop codon', 'hydrogen bonds', 'worksheet', 'printable',
+    ],
+  },
+  {
     id: 'gel-electrophoresis',
     site: 'biology',
     name: 'Gel Electrophoresis',

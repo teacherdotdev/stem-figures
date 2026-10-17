@@ -318,6 +318,49 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('dna-protein-synthesis', [
+    {
+      slug: 'transcription-translation-template-strand-tac-mrna-trna-amino-acids',
+      title: 'Transcription and translation from a template strand starting TAC',
+      alt: 'Five rows of base boxes lined up base under base, each with its 5′ and 3′ ends: the DNA coding strand 5′ ATG CCT AAG TTC GGC 3′, the DNA template strand 3′ TAC GGA TTC AAG CCG 5′, the mRNA 5′ AUG CCU AAG UUC GGC 3′, the tRNA anticodons UAC GGA UUC AAG CCG, and a chain of amino acid beads Met, Pro, Lys, Phe and Gly, one under each codon',
+      caption:
+        'A gene transcribed and translated, every row lined up base under base. The DNA template strand, written 3′ to 5′, starts TAC; the coding strand above it pairs A with T and G with C, and the mRNA below matches the coding strand with U in place of T. Each tRNA anticodon is complementary to its mRNA codon, and the amino acids methionine, proline, lysine, phenylalanine and glycine are joined in a chain under their codons.',
+      settings: {},
+    },
+    {
+      slug: 'coding-strand-start-codon-stop-codon-leader-bases',
+      title: 'Coding strand with bases before the start codon and a stop codon',
+      alt: 'Rows of base boxes for a 24-base DNA coding strand 5′ GCCA ATG GTT CAC TGG AAA TAA GC 3′, its template strand, the mRNA, the tRNA anticodons and the amino acids, with brackets under each codon of the mRNA from AUG to the stop codon UAA: Met, Val, His, Trp and Lys as a chain of beads, then Stop, and no amino acids under the four bases before AUG or the two after UAA',
+      caption:
+        'A DNA coding strand with four bases before the start codon. Translation starts at the first AUG in the mRNA, so the bases before it get no codons or amino acids, and a bracket marks each codon read after it. It ends at the stop codon UAA, which codes for no amino acid and has no tRNA, so the chain is Met, Val, His, Trp and Lys, and the last two bases are not read.',
+      settings: { seq: 'GCCAATGGTTCACTGGAAATAAGC', typed: 'coding', brackets: true },
+    },
+    {
+      slug: 'dna-complementary-strand-worksheet-draw-the-other-half',
+      title: 'DNA complementary strand worksheet: draw the other half',
+      alt: 'A DNA coding strand 5′ ATG CGT ACC TTA GGC ATA 3′ in boxes, with a row of 18 empty boxes under it labeled DNA template strand, running 3′ to 5′, for students to write the complementary bases in',
+      caption:
+        'Half a DNA molecule for students to complete: the coding strand is written in, 5′ to 3′, and the template strand under it is left as empty boxes. Students pair each base, A with T and G with C, and see from the 5′ and 3′ labels that the two strands run in opposite directions. The answer key gives the template strand, 3′-TAC GCA TGG AAT CCG TAT-5′.',
+      settings: { seq: 'ATGCGTACCTTAGGCATA', typed: 'coding', template: 'blank', mrna: 'off', trna: 'off', amino: 'off' },
+    },
+    {
+      slug: 'transcription-multiple-choice-mrna-wrong-base-pairing',
+      title: 'Transcription multiple choice: spot the wrong base pairing in the mRNA',
+      alt: 'Answer choice B: the DNA coding strand 5′ ATG CCT AAG TTC GGC 3′, the template strand 3′ TAC GGA TTC AAG CCG 5′ and an mRNA row 5′ AUG CCU CAG UUC GGC 3′, where the seventh base, C, does not pair with the T above it',
+      caption:
+        'One answer choice for a transcription question: two DNA strands and the mRNA made from the template strand, with one base deliberately wrong. The seventh mRNA base is C, where the template strand’s T calls for A. Make the other choices with no mistakes or with a different set shuffled, and print each with its letter as the title.',
+      settings: { trna: 'off', amino: 'off', titleMode: 'text', title: 'B.', mistakes: 1, mistakeSeed: 7 },
+    },
+    {
+      slug: 'codon-chart-genetic-code-table-start-stop-codons',
+      title: 'Codon chart: the standard genetic code table',
+      alt: 'A square codon chart with the first base U, C, A, G down the left, the second base across the top and the third base down the right, each of the 16 cells listing four codons with their amino acids, AUG Met (Start) and the stop codons UAA, UAG and UGA in bold on gray',
+      caption:
+        'The standard genetic code as a square table. Find a codon’s first base down the left, its second across the top and its third down the right of the cell. Each of the 64 codons is listed with the amino acid it codes for in three-letter code; AUG, methionine, is the start codon, and UAA, UAG and UGA are the stop codons.',
+      settings: { show: 'chart' },
+    },
+  ]),
+
   ...examplesOf('gel-electrophoresis', [
     {
       slug: 'dna-fingerprinting-gel-crime-scene-suspects',
