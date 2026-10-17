@@ -327,7 +327,7 @@ function uTube(outcome: Outcome | 'start', strength: number): SceneShape {
     drawing: {
       kind: 'utube',
       outer: `M ${CX - R} ${TOP} V ${BY} A ${R} ${R} 0 0 0 ${CX + R} ${BY} V ${TOP}`,
-      inner: `M ${CX - r} ${TOP} V ${BY} A ${r} ${r} 0 0 1 ${CX + r} ${BY} V ${TOP}`,
+      inner: `M ${CX - r} ${TOP} V ${BY} A ${r} ${r} 0 0 0 ${CX + r} ${BY} V ${TOP}`,
       liquidA: pathOf(liquidA),
       liquidB: pathOf(liquidB),
       surfaces: [[[CX - R, yA], [CX - r, yA]], [[CX + r, yB], [CX + R, yB]]],
