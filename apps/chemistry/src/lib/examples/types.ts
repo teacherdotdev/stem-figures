@@ -4,6 +4,7 @@
 
 import type { BohrSettings } from '$lib/generators/bohr-model/settings'
 import type { SyringeSettings } from '$lib/generators/gas-syringe/settings'
+import type { HalfLifeSettings } from '$lib/generators/half-life-graph/settings'
 import type { CurveSettings } from '$lib/generators/heating-cooling-curve/settings'
 import type { LengthSettings } from '$lib/generators/length-reading/settings'
 import type { LewisSettings } from '$lib/generators/lewis-structures/settings'
@@ -37,6 +38,7 @@ export interface SettingsById {
   'line-spectrum': SpectrumSettings
   'photoelectron-spectrum': PesSettings
   'mass-spectrum': MassSpectrumSettings
+  'half-life-graph': HalfLifeSettings
 }
 
 export type ExampleGeneratorId = keyof SettingsById

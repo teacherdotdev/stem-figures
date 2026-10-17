@@ -661,6 +661,49 @@ export const COPY: Record<string, GeneratorCopy> = {
     imageAlt: 'A printable mass spectrum of magnesium with a peak for each isotope and its percent abundance, made with Mass Spectrum',
     educationalLevel: ['High school', 'AP Chemistry'],
   },
+  'half-life-graph': {
+    heading: 'Half-life graphs of radioactive decay',
+    intro: [
+      'Half-Life Graph draws the decay curve of a radioactive isotope: how much is left against time, halving every half-life, so half remains after one half-life, a quarter after two and an eighth after three. Pick carbon-14, hydrogen-3, fluorine-18, phosphorus-32, cobalt-60, strontium-90, technetium-99m, iodine-131, cesium-137, radon-222, radium-226, polonium-210, uranium-238, potassium-40, plutonium-239, americium-241 or a made-up Isotope X, or type your own name and half-life. Show the percent or fraction remaining, the mass from a starting mass, the number of nuclei or the activity in Bq or counts per minute, against time in the unit you choose.',
+      'Teachers use it for reading a half-life off a graph and working out how much is left. The x-axis counts in round steps, so students find the half-life from the curve; add dashed guide lines at the first one to four half-lives, labeled with their times, as T½, 2T½…, or with blank lines. Put up to three isotopes on one graph with their names hidden, for students to identify from their half-lives, draw a stable daughter rising as the parent falls, or leave only the dots for students to draw the curve. The answer key gives each half-life and decay constant.',
+    ],
+    settings: [
+      'Up to three isotopes: 16 real ones with their half-lives, a made-up Isotope X, or your own name, half-life and unit',
+      'Up the side: percent remaining, fraction remaining, mass, number of nuclei, or activity in Bq or counts per minute, from the starting amount you type',
+      'Time in seconds, minutes, hours, days, years, thousand years or billion years, with the axes fitted to five half-lives in round steps',
+      'Dashed guide lines at the first 1 to 4 half-lives, labeled with their times, T½, 2T½…, blank lines or nothing',
+      'Dots at each half-life, the curves hidden for students to plot, a stable daughter curve, and names hidden as Isotope A, B and C',
+      'Color or black and white curves, chart and axis titles (or blank lines), the axis ranges and numbering, gridlines, and label size',
+    ],
+    faqs: [
+      {
+        q: 'How do you find the half-life from a graph?',
+        a: 'Find half the starting amount on the y-axis (50% on a percent graph), go across to the curve and down to the time axis: that time is the half-life. Going from 50% to 25%, or 25% to 12.5%, takes the same time again. The guide lines draw exactly this, for one to four half-lives.',
+      },
+      {
+        q: 'Why is carbon-14’s half-life 5,730 years and not 5,700?',
+        a: 'Most textbooks and exam boards use 5,730 years, so the generator does too. The current evaluated value, in the National Nuclear Data Center’s NuDat 3, is 5,700 ± 30 years. To use it, choose Custom, name it carbon-14 and type 5700 years.',
+      },
+      {
+        q: 'Where do the half-lives come from?',
+        a: 'From NuDat 3, the National Nuclear Data Center’s database, rounded to three significant figures as textbooks give them: iodine-131 8.02 days, cesium-137 30.1 years, uranium-238 4.47 billion years. Carbon-14 uses the textbook 5,730 years.',
+      },
+      {
+        q: 'Can it show the daughter isotope?',
+        a: 'Yes, for one isotope whose daughter is stable, such as carbon-14 to nitrogen-14 or uranium-238 to lead-206, shown as a percent, fraction or number of nuclei. The daughter rises as the parent falls, and the two cross at one half-life. Strontium-90, radon-222, radium-226 and potassium-40 decay to radioactive daughters, so they don’t get one.',
+      },
+      {
+        q: 'Can I compare isotopes on one graph?',
+        a: 'Yes, up to three, drawn solid, dashed and dotted so they read apart in black and white, with a key under the graph. Hide the names and the key calls them Isotope A, B and C, for students to identify from their half-lives; the answer key names them.',
+      },
+      {
+        q: 'Does the curve ever reach zero?',
+        a: 'No. Each half-life leaves half of what was there, so the curve gets closer and closer to zero without reaching it: after ten half-lives about 0.1% is left.',
+      },
+    ],
+    imageAlt: 'A printable half-life graph of carbon-14, percent remaining against time in years, with dashed guide lines at its first three half-lives, made with Half-Life Graph',
+    educationalLevel: ['Middle school', 'High school', 'AP Chemistry', 'AP Physics'],
+  },
 }
 
 /** The copy for a generator; every generator on the site has some. */

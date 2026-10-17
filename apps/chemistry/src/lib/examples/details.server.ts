@@ -10,6 +10,8 @@
 import { chargeOf, bohrSettings } from '$lib/generators/bohr-model/settings'
 import { element } from '$lib/generators/bohr-model/elements'
 import { syringeSettings, answerLine as syringeAnswer } from '$lib/generators/gas-syringe/settings'
+import { answerLines as halfLifeAnswer } from '$lib/generators/half-life-graph/figure'
+import { halfLifeSettings } from '$lib/generators/half-life-graph/settings'
 import { buildCurve, degrees, segmentName } from '$lib/generators/heating-cooling-curve/figure'
 import { curveSettings, temperaturesOf, setupOf } from '$lib/generators/heating-cooling-curve/settings'
 import { lengthSettings, answerLine as lengthAnswer } from '$lib/generators/length-reading/settings'
@@ -184,6 +186,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'line-spectrum': { definition: spectrumSettings, answer: lineSpectrumAnswer },
   'photoelectron-spectrum': { definition: pesSettings, answer: pesAnswerKey },
   'mass-spectrum': { definition: massSpectrumSettings, answer: massSpectrumAnswerKey },
+  'half-life-graph': { definition: halfLifeSettings, answer: (s) => ({ heading: 'Answer key', lines: halfLifeAnswer(s) }) },
 }
 
 function detailsOf<G extends ExampleGeneratorId>(generator: G, example: Example): ExampleDetails {

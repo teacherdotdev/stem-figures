@@ -480,3 +480,48 @@ _Avoid_: Annotation, caption
 **Point label**:
 What's written by the temperature axis just above (or below) a plateau's dashed line: its temperature (78.3 °C), m.p. or b.p. (f.p. and b.p. on a cooling curve), or a blank line for students to write the melting or boiling point on. It goes along the line, inside the grid, as far from the axis as the curve makes it. The temperature by default.
 _Avoid_: Axis label (that's the letter at an axis's end), tick label
+
+### Half-life graphs
+
+**Half-life graph**:
+A graph of how much of a radioactive isotope is left (up the side) against time (along the bottom), falling as N = N₀ · (½)^(t / T½): half is left after one half-life, a quarter after two, and it never reaches zero. One curve serves for the share left, the mass, the number of nuclei and the activity, since all fall alike. The generator is Half-Life Graph, also listed on Physics Figures. The grid, axes and titles are the same as a heating curve's, from `$shared/graph`, the axes always along the grid's left and bottom edges; nothing is drawn before time 0.
+_Avoid_: Decay curve, decay graph, radioactive decay graph (all fine in search keywords), exponential graph
+
+**Half-life**:
+How long it takes half of an isotope's nuclei to decay, written T½. The decay constant, λ = ln 2 / T½, is given in the answer key, not on the figure.
+_Avoid_: Half life (unhyphenated), halving time
+
+**Isotope**:
+One of up to three radioactive isotopes on a graph, each drawn from time 0 in its own line: solid, dashed or dotted, so three read apart in black and white, with a key under the graph naming them when there's more than one line. Each is an **isotope setup** or Custom, a name, half-life and unit the teacher types. The setups are carbon-14, hydrogen-3, fluorine-18, phosphorus-32, cobalt-60, strontium-90, technetium-99m, iodine-131, cesium-137, radon-222, radium-226, polonium-210, uranium-238, potassium-40, plutonium-239, americium-241 and Isotope X (made up: 10 years, decaying to Isotope Y), with half-lives from NNDC NuDat 3 rounded to three significant figures, cited in `isotopes.ts`, except carbon-14's: the textbook 5,730 years, where NuDat 3 gives 5,700 ± 30. Picking a setup for the first isotope sets the time axis to its unit; any change of isotope fits the time axis. Picking Custom copies the isotope already there, so the curve doesn't change until the teacher types.
+_Avoid_: Element, nuclide (fine in help text), sample, preset (that's a teacher's saved settings)
+
+**Hidden names**:
+The isotopes called Isotope A, B and C in the key (one alone with its daughter, Parent isotope and Daughter isotope), for students to identify from the half-lives they read off. The real names are in the answer key only, never on the figure or in its description for screen readers.
+_Avoid_: Mystery isotope, unknown
+
+**Quantity**:
+What's up the side: percent remaining (from 100, the default), fraction remaining (from 1), or the mass in g, the number of nuclei, or the activity in Bq or counts per minute, each from a starting amount the teacher types. The y-axis title follows it ("Percent remaining (%)", "Mass remaining (g)", "Count rate (counts/min)") unless the teacher types their own, as Mass Spectrum's does; the x-axis title follows the time unit ("Time (years)"). Picking a quantity fits the y-axis to it.
+_Avoid_: Y-axis (fine in help text), measure, amount (alone)
+
+**Time unit**:
+The unit along the x-axis: seconds, minutes, hours, days, years, thousand years or billion years. Each isotope's half-life is turned into it, a year being 365.25 days.
+_Avoid_: Scale, x-axis unit
+
+**Fitted axes**:
+The axes the Fit button gives: time from 0 to at least five half-lives of the longest-lived isotope drawn, in up to 16 blocks, and the quantity from 0 to the starting amount in up to 10, both counting in round steps (1, 2, 2.5 or 5 times a power of ten). The steps are round, not the half-life, so students read the half-life off the curve; the guide lines show it when the teacher wants it shown.
+_Avoid_: Auto axes, zoom
+
+**Guide line**:
+A dashed line at one of the first isotope's first one to four half-lives: from 50%, 25%, 12.5% or 6.25% of the starting amount across from the y-axis to the curve, then down to the time axis. Each is labeled by its foot on the time axis, or beside its corner where the curve is in the way, with its time ("5,730 years"), T½, 2T½…, a blank line for students, or nothing. A guide line off the grid is left out, and the page says so. None by default.
+_Avoid_: Marked point, dashed line (fine in help text), drop line
+
+**Half-life dot**:
+A dot at each of a curve's first six half-lives, in its own marker (circle, square or triangle), and at the start when it's the only curve (several isotopes share the start, and a daughter's is on the axis). A curve whose half-lives would sit almost on top of each other on the time axis gets none. With the curves turned off, the dots alone (or an empty grid) are left for students to draw the curve.
+_Avoid_: Data point, marker
+
+**Daughter curve**:
+The first isotope's stable daughter, rising as N₀ − N, dashed and named in the key, so it crosses the parent at one half-life. Offered only for one isotope, as a percent, fraction or number of nuclei (a stable daughter has no activity, and an alpha emitter's daughter is lighter than its parent), and only where the daughter is stable or lives far longer than the parent: strontium-90, radon-222, radium-226 and potassium-40 have none. Uranium-238 is drawn going straight to lead-206, its chain's steps all far shorter than its own half-life. A custom isotope's daughter takes the name the teacher types. The y-axis title then says atoms or nuclei, not "remaining".
+_Avoid_: Product, decay product (fine in help text), daughter isotope (that's the hidden name)
+
+**Answer key** (half-life graphs):
+The lines in the settings panel and on example pages giving each isotope's half-life, decay constant and how it decays and to what, naming each hidden one ("Isotope A is carbon-14"), then what's left of the first isotope at each guide line ("After 3 half-lives (17,190 years): 12.5%").
