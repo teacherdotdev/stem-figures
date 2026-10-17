@@ -319,7 +319,7 @@ export const EXAMPLES: Example[] = [
     {
       slug: 'desert-food-web-herbivores-carnivores-omnivores',
       title: 'Desert food web: herbivores, carnivores and omnivores',
-      alt: 'Desert food web of organism pictures in rows labeled Producers (cactus, grass), Herbivores (grasshopper, mouse, rabbit), Carnivores and omnivores (lizard, scorpion, coyote), Carnivores (snake) and Carnivores (hawk), with arrows from each food to what eats it and bacteria at the side labeled Decomposers',
+      alt: 'Desert food web of organism pictures in rows labeled Producers (cactus, grass), Herbivores (grasshopper, mouse, rabbit), Omnivores and carnivores (scorpion, lizard, coyote), Carnivores (snake) and Top carnivores (hawk), with arrows from each food to what eats it and bacteria at the side labeled Decomposers',
       caption:
         'A desert food web labeled by what each organism eats. Cactus and grass are the producers; grasshoppers, mice and rabbits are herbivores; lizards and scorpions eat grasshoppers; coyotes eat rabbits, mice and cactus fruit, which makes them omnivores; snakes eat mice and lizards; and hawks eat snakes, rabbits and lizards. Bacteria at the side are the decomposers.',
       settings: {

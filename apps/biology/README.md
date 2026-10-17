@@ -56,6 +56,21 @@ and `docs/adr/` for decisions.
   or as a phase plane loop; smooth curves or census counts with seeded
   noise; the peaks, lag and period marked, labeled or left blank, and either
   population left off for students to sketch. Built on `$shared/graph`.
+- `/food-web` **Food Webs and Energy Pyramids**: a food web of up to 14
+  organisms in rows by trophic level, producers at the bottom and
+  decomposers in a column at the side with dashed arrows from every level;
+  a food chain from it, left to right or bottom to top; or an energy
+  pyramid of 3 to 5 levels with the share passed up (10% by default)
+  applied exactly. Arrows always point the way energy flows, routed through
+  the gaps between organisms so none runs through one. Setups for a
+  grassland, forest, pond, ocean, tundra and desert. Each organism is one
+  of 54 pictures of ours (`organisms/`, listed in `organisms/manifest.ts`),
+  a picture the teacher uploads (kept in the browser's IndexedDB, by
+  reference in the address: see `docs/adr/0002`), or a name in a box; its
+  name, picture or both can be blank, and the web is written into the
+  address as text (`web.ts`). Trophic level labels as text or blank lines,
+  by level or by diet. `scripts/test-food-web-uploads.mjs` tests uploads in
+  a real browser.
 - `/enzyme-activity` **Enzyme Activity**: the rate of reaction against
   temperature (a rise to the optimum, then a steep fall as the enzyme
   denatures), pH (a bell around the optimum) or substrate concentration

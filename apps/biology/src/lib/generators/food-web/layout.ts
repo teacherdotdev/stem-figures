@@ -13,7 +13,6 @@
 
 import { textWidth, wrap } from '$lib/generators/cell-diagram/labels'
 import { LABEL_SCALE, type LabelSize } from '$shared/labelSize'
-import { ORGANISM_BY_ID } from './organisms/manifest'
 import { levelsOf, nameOf, type Entry, type Placed, type Web } from './web'
 import type { Direction, LabelMode, Wording } from './settings'
 
@@ -101,8 +100,6 @@ export interface LayoutOptions {
 export const fontOf = (labelSize: LabelSize) => 15 * LABEL_SCALE[labelSize]
 export const lineHeight = (font: number) => font * 1.2
 
-/** The box an organism's picture (or, with none, its name) is drawn in. */
-export const boxOf = (n: Pick<Node, 'x' | 'top' | 'boxWidth' | 'boxHeight'>): Rect => ({ x: n.x - n.boxWidth / 2, y: n.top, width: n.boxWidth, height: n.boxHeight })
 /** Everything an organism takes up: its box and its name. */
 export const extentOf = (n: Node): Rect => ({ x: n.x - n.width / 2, y: n.top, width: n.width, height: n.height })
 
@@ -345,6 +342,10 @@ export function layoutWeb(web: Web, o: LayoutOptions): Layout {
     if (o.wording === 'diet') return dietRowName(row.map((k) => dietOf(web, placed, k)))
     return levelName(levels[r], true)
   })
+  // By diet, rows of carnivores above rows of carnivores: the top one is the top carnivores.
+  if (o.wording === 'diet' && rowLabels.length > 1 && rowLabels[0] === rowLabels[1] && rowLabels[0] === dietName('carnivore', true)) {
+    rowLabels[0] = 'Top carnivores'
+  }
   const decomposerLabel = o.wording === 'diet' ? dietName('decomposer', true) : levelName(null, true)
   const labelWidth =
     o.levelLabels === 'none' ? 0 : o.levelLabels === 'blank' ? BLANK_WIDTH + LABEL_GAP : Math.max(...rowLabels.map((t) => textWidth(t, font))) + LABEL_GAP
@@ -604,6 +605,3 @@ export function layoutChain(web: Web, keys: string[], direction: Direction, o: L
   }
   return { nodes, arrows, lines: [], labels, width, height, font }
 }
-
-/** A picture's size in its box (a krill smaller than a whale), from the manifest; uploads fill it. */
-export const pictureScale = (picture: string) => ORGANISM_BY_ID.get(picture)?.scale ?? 1
