@@ -15,7 +15,7 @@
   import DnaFigure from './DnaFigure.svelte'
   import { buildDna } from './figure'
   import { answerLines, mistakeText } from './rows'
-  import { MAX_BASES, TYPED, TYPED_NAMES, type Typed } from './sequence'
+  import { TYPED, TYPED_NAMES, type Typed } from './sequence'
   import {
     BASE_ROWS, MAX_MISTAKES, ROW_NAMES, ROWS, dnaSettings, newSeed, rowName,
     type BaseRowId, type DnaSettings, type RowId, type RowMode,
@@ -87,10 +87,10 @@
   </div>
 {/snippet}
 
-{#snippet check(label: string, hint: string, value: boolean, set: (v: boolean) => void)}
+{#snippet check(label: string, value: boolean, set: (v: boolean) => void)}
   <label class="check">
     <input type="checkbox" checked={value} onchange={(e) => set(e.currentTarget.checked)} />
-    <span><strong>{label}</strong>{#if hint}<small>{hint}</small>{/if}</span>
+    <span><strong>{label}</strong></span>
   </label>
 {/snippet}
 
@@ -103,9 +103,10 @@
       <div class="head-row">
         <h2 class="card-head">Sequence</h2>
         <HelpTip id="dna-tip" label="How the rows are worked out">
-          A pairs with T in DNA and with U in RNA, and G pairs with C. The template strand is written 3′→5′, so it lines up
-          under the coding strand; the mRNA is the coding strand with U for T. Each anticodon pairs with its codon, and the
-          codons are read with the standard genetic code until a stop codon.
+          Type up to 36 bases: the template strand 3′→5′ (usually starting TAC), or the coding strand or mRNA 5′→3′. A pairs
+          with T in DNA and with U in RNA, and G with C; the mRNA is the coding strand with U for T. Codons are read from
+          the first AUG to the first stop with the standard genetic code. For multiple choice, make choice A with no
+          mistakes, then B to D with mistakes, shuffled.
         </HelpTip>
       </div>
       <label class="field">
@@ -120,24 +121,21 @@
         {@render segmented('Strand typed', TYPED, TYPED_BUTTONS, s.typed, (v: Typed) => (s.typed = v))}
       </div>
       <label class="field">
-        <span>{TYPED_NAMES[clean.typed]} <span class="hint">{clean.typed === 'template' ? '3′→5′, usually starting TAC' : '5′→3′'}</span></span>
+        <span>{TYPED_NAMES[clean.typed]}</span>
         <input
           class="bases" type="text" maxlength="120" spellcheck="false" autocomplete="off" aria-invalid={w.reading.problems.length > 0}
           placeholder={clean.typed === 'mrna' ? 'AUGCCUAAG…' : clean.typed === 'coding' ? 'ATGCCTAAG…' : 'TACGGATTC…'}
           bind:value={s.seq}
         />
       </label>
-      {#each w.reading.problems as problem (problem)}<p class="help problem">{problem}</p>{/each}
-      <p class="help">{bases} of {MAX_BASES} bases{bases ? `, ${w.translation.codons.filter((c) => c.code !== null).length} codons read` : ''}. Spaces, hyphens and 5′ 3′ ends are fine.</p>
+      {#each w.reading.problems as problem (problem)}<p class="problem">{problem}</p>{/each}
 
       <div class="field">
         <span>Reading frame</span>
         {@render segmented('Reading frame', ['aug', 'first'], { aug: 'From the first AUG', first: 'From the first base' }, s.frame, (v) => (s.frame = v))}
       </div>
       {#if noStart}
-        <p class="help problem">There’s no AUG in the mRNA, so nothing is translated. Read it from the first base instead, or add a start codon.</p>
-      {:else if w.translation.start && clean.frame === 'aug'}
-        <p class="help">The first AUG is at base {w.translation.start + 1}; the {w.translation.start === 1 ? 'base' : `${w.translation.start} bases`} before it {w.translation.start === 1 ? 'isn’t' : 'aren’t'} translated.</p>
+        <p class="problem">There’s no AUG in the mRNA, so nothing is translated. Read it from the first base instead, or add a start codon.</p>
       {/if}
       {#if protein}<p class="readout">{protein}</p>{/if}
     </section>
@@ -153,10 +151,9 @@
           </div>
         {/each}
       </div>
-      <p class="help setting">Blank leaves every box empty for students; Some blanks a share of them, picked at random.</p>
       {#if some}
         <label class="range-field setting">
-          <span>Blank in a Some row <span class="hint">{clean.share}% of its boxes</span></span>
+          <span>Blank in a Some row <span class="hint">{clean.share}%</span></span>
           <input type="range" min="10" max="90" step="5" bind:value={s.share} />
         </label>
         <button type="button" class="btn-ghost shuffle setting" onclick={() => (s.seed = newSeed(s.seed))}><Shuffle size={16} aria-hidden="true" /> Shuffle the blanks</button>
@@ -171,8 +168,6 @@
             <input type="text" maxlength="40" aria-label="{ROW_NAMES[r]} row name" placeholder={ROW_NAMES[r]} bind:value={s[`${r}Name`]} />
           {/each}
         </div>
-      {:else if s.rowNames === 'blank'}
-        <p class="help">A line on the left of each row for students to name it.</p>
       {/if}
     </Section>
 
@@ -185,7 +180,6 @@
         <span>Drawn as</span>
         {@render segmented('Amino acids drawn as', ['beads', 'text'], { beads: 'Chain of beads', text: 'Words' }, s.aminoStyle, (v) => (s.aminoStyle = v))}
       </div>
-      <p class="help">Each sits under its codon. A stop codon reads Stop, with no amino acid, and no tRNA brings one.</p>
     </Section>
 
     <Section title="Strands" icon={Dna} summary={strandSummary}>
@@ -193,14 +187,13 @@
         <span>5′ and 3′ ends</span>
         {@render segmented('Strand ends', ['shown', 'blank', 'off'], SBO_NAMES, s.ends, (v) => (s.ends = v))}
       </div>
-      {@render check('Gaps between codons', 'on every row, so the bases still line up', s.gaps, (v) => (s.gaps = v))}
-      {@render check('Bracket under each codon', 'under the mRNA, for each codon that’s read', s.brackets, (v) => (s.brackets = v))}
-      {@render check('Hydrogen bonds', 'between the DNA strands: 2 for A–T, 3 for G–C', s.bonds, (v) => (s.bonds = v))}
-      {@render check('Color the bases', 'A, T or U, G and C tinted to read apart in grayscale too, with the letter always printed', s.color, (v) => (s.color = v))}
+      {@render check('Gaps between codons', s.gaps, (v) => (s.gaps = v))}
+      {@render check('Bracket under each codon', s.brackets, (v) => (s.brackets = v))}
+      {@render check('Hydrogen bonds', s.bonds, (v) => (s.bonds = v))}
+      {@render check('Color the bases', s.color, (v) => (s.color = v))}
     </Section>
 
     <Section title="Mistakes" icon={TriangleAlert} summary={mistakeSummary}>
-      <p class="help first">Wrong pairings for multiple choice: make choice A with none, then B to D with mistakes, shuffled.</p>
       <div class="field setting">
         <span>How many</span>
         {@render segmented(
@@ -219,7 +212,7 @@
           </select>
         </label>
         <button type="button" class="btn-ghost shuffle setting" onclick={() => (s.mistakeSeed = newSeed(s.mistakeSeed))}><Shuffle size={16} aria-hidden="true" /> Shuffle the mistakes</button>
-        {#if w.mistakeNote}<p class="help problem">{w.mistakeNote}</p>{/if}
+        {#if w.mistakeNote}<p class="problem">{w.mistakeNote}</p>{/if}
         {#if w.mistakes.length}
           <ul class="readout">{#each w.mistakes as m (m.col)}<li>{mistakeText(clean, m, w)}</li>{/each}</ul>
         {/if}
@@ -237,7 +230,6 @@
           {@render segmented('Chart beside the strands', ['right', 'below'], { right: 'On the right', below: 'Below' }, s.chartAt, (v) => (s.chartAt = v))}
         </div>
       {/if}
-      <p class="help">The standard genetic code: first base down the left, second across the top, third down the right. The start codon and the stop codons are in bold.</p>
     </Section>
 
     <Section title="Chart title" icon={Type} summary={clean.titleMode === 'text' && clean.title ? `“${clean.title}”` : 'No title'}>
@@ -258,9 +250,7 @@
   .field select, .field input { font-weight: 400; }
   .hint { font-weight: 400; color: var(--muted); }
   .bases { font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; letter-spacing: 0.08em; text-transform: uppercase; }
-  .help { margin: 0; font-size: 0.84rem; color: var(--muted); }
-  .help.first { margin-bottom: 0.75rem; }
-  .problem { color: #b45309; }
+  .problem { margin: 0; font-size: 0.84rem; color: #b45309; }
   .readout { margin: 0; padding: 0.55rem 0.75rem; list-style: none; border-radius: 10px; background: var(--blue-soft); font-size: 0.85rem; font-weight: 600; }
   .readout li + li { margin-top: 0.2rem; }
   .setting { margin-bottom: 0.75rem; }
@@ -276,5 +266,4 @@
   .check:last-child { margin-bottom: 0; }
   .check input { width: 1.1rem; height: 1.1rem; margin: 0.15rem 0 0; flex: none; accent-color: var(--blue); }
   .check span { display: flex; flex-direction: column; }
-  .check small { color: var(--muted); font-size: 0.82rem; }
 </style>
