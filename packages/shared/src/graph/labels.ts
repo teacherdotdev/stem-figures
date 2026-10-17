@@ -2,15 +2,18 @@
 // Each label offers places to go, best first; it takes the first that
 // touches nothing and keeps a little clear of every line (or, if none
 // does, the one touching least). Lines, dots and labels already placed are
-// in its way. A copy of Population Growth's, less the places it offers.
+// in its way. Also the dashes that tell up to three curves apart in black
+// and white, and the key naming them under the graph.
+// Started as Biology's Population Growth's; Physics' Motion Graphs keeps a
+// copy of its own.
 
-import type { Point } from '$shared/graph/grid'
+import type { Point } from './grid'
 
 export type Box = { x0: number; y0: number; x1: number; y1: number }
 export type Anchor = 'start' | 'middle' | 'end'
 /** Where a label could go: its baseline's anchor point. */
 export type Spot = { x: number; y: number; anchor: Anchor }
-type Segment = { x1: number; y1: number; x2: number; y2: number }
+export type Segment = { x1: number; y1: number; x2: number; y2: number }
 
 // How wide each letter of bold Arial is, in thousandths of the font size
 // (its published metrics, which Helvetica and Liberation Sans share).
@@ -105,4 +108,98 @@ export function placer(bounds: Box) {
       boxes.push(b)
     },
   }
+}
+
+/**
+ * Places beside a marked point, whose dashed guides run left and down from
+ * it: below right, then above right and above left (clear of the guide
+ * across), then level, and below left last.
+ */
+export function besidePoint(p: Point, fs: number, gap = 12): Spot[] {
+  return [
+    { x: p.x + gap, y: p.y + fs * 1.3, anchor: 'start' },
+    { x: p.x + gap, y: p.y - fs * 0.85, anchor: 'start' },
+    { x: p.x - gap, y: p.y - fs * 0.85, anchor: 'end' },
+    { x: p.x + gap, y: p.y + fs * 0.35, anchor: 'start' },
+    { x: p.x - gap, y: p.y + fs * 0.35, anchor: 'end' },
+    { x: p.x - gap, y: p.y + fs * 1.3, anchor: 'end' },
+  ]
+}
+
+/**
+ * Places along a drawn curve, from its far end back, each with the label
+ * above left, below right, above right and below left of the curve.
+ */
+export function alongCurve(pts: Point[], fs: number): Spot[] {
+  const spots: Spot[] = []
+  if (pts.length < 2) return spots
+  // Points evenly spaced along the curve's length, about every 24 units.
+  const lengths = [0]
+  for (let k = 1; k < pts.length; k++) lengths.push(lengths[k - 1] + Math.hypot(pts[k].x - pts[k - 1].x, pts[k].y - pts[k - 1].y))
+  const total = lengths.at(-1)!
+  let k = pts.length - 1
+  for (let at = total * 0.97; at >= total * 0.03; at -= 24) {
+    while (k > 0 && lengths[k - 1] > at) k--
+    const p = pts[k]
+    spots.push(
+      { x: p.x - 8, y: p.y - 9, anchor: 'end' },
+      { x: p.x + 8, y: p.y + fs + 4, anchor: 'start' },
+      { x: p.x + 8, y: p.y - 9, anchor: 'start' },
+      { x: p.x - 8, y: p.y + fs + 4, anchor: 'end' },
+    )
+  }
+  return spots
+}
+
+/** Each curve's dashes, so up to three read apart in black and white: solid, dashed, dotted. */
+export const DASHES = [undefined, '12 7', '3 5'] as const
+
+const SAMPLE_W = 30 // the line sample in front of a curve's name in the key
+const KEY_GAP = 28 // between the key's entries
+
+/** A curve in the key: its line sample, and its name after it. */
+export type KeyEntry<I = number> = { index: I; sample: Segment; text: { x: number; y: number; text: string } }
+
+/**
+ * A key naming curves under a graph: each one's line sample and name, in
+ * rows centered on `midX`, a new row when one would be wider than `wrap`,
+ * the first just under `top`. It gives the entries, how far right the
+ * widest row reaches and how far down the last one does.
+ */
+export function layoutKey<I>(
+  curves: { index: I; name: string }[],
+  { midX, wrap, top, left, fs, labelFs }: { midX: number; wrap: number; top: number; left: number; fs: number; labelFs: number },
+) {
+  const entries: KeyEntry<I>[] = []
+  const entryW = (c: { name: string }) => SAMPLE_W + 6 + textWidth(c.name, labelFs)
+  const rows: (typeof curves)[] = [[]]
+  let rowW = 0
+  for (const c of curves) {
+    const w = entryW(c) + (rows.at(-1)!.length ? KEY_GAP : 0)
+    if (rows.at(-1)!.length && rowW + w > wrap) {
+      rows.push([])
+      rowW = 0
+    }
+    rowW += entryW(c) + (rows.at(-1)!.length ? KEY_GAP : 0)
+    rows.at(-1)!.push(c)
+  }
+  let right = -Infinity
+  let bottom = top
+  let y = top + 4 + fs * 0.6
+  for (const row of rows) {
+    const rw = row.reduce((w, c, k) => w + entryW(c) + (k ? KEY_GAP : 0), 0)
+    let x = Math.max(left, midX - rw / 2)
+    for (const c of row) {
+      entries.push({
+        index: c.index,
+        sample: { x1: x, y1: y, x2: x + SAMPLE_W, y2: y },
+        text: { x: x + SAMPLE_W + 6, y: y + labelFs * 0.36, text: c.name },
+      })
+      x += entryW(c) + KEY_GAP
+    }
+    right = Math.max(right, x - KEY_GAP)
+    bottom = y + fs * 0.5
+    y += labelFs * 1.6
+  }
+  return { entries, right, bottom }
 }

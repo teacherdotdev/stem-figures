@@ -311,6 +311,52 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'AP Biology'],
   },
 
+  'photosynthesis-rate': {
+    heading: 'Photosynthesis rate graphs: limiting factors, light intensity, CO₂, temperature and gas exchange',
+    intro: [
+      'Photosynthesis Rate graphs how fast a plant photosynthesizes against light intensity, its distance from the lamp, CO₂ concentration or temperature. Against light the rate rises in a straight line, bends and levels off where CO₂ or temperature limits it; the farther the lamp, the dimmer the light, as 1/d², so the rate falls. Against CO₂ it rises and levels off where light limits it, and against temperature it rises to an optimum and falls as the enzymes denature, flattened in dim light, where light limits it whatever the temperature. It can also follow the CO₂ in a closed chamber over time in the dark, at the compensation point and in bright light, or the CO₂ and O₂ around one plant, over time or against each other.',
+      'Teachers use it for limiting-factor questions on tests, worksheets and slides. Put up to three curves on one graph, like the classic 0.1 % CO₂ at 25 °C, 0.1 % at 15 °C and 0.04 % at 15 °C, told apart by solid, dashed and dotted lines and a key, so they read in black and white. The axes show shape only, or numbers for the pondweed practical. Mark where each curve levels off, what limits the rate on the rise and the plateau, lettered points to ask about, the optimum and the compensation point, each labeled, a blank line for students, or unlabeled.',
+    ],
+    settings: [
+      'Rate against light intensity or distance from the lamp, CO₂ concentration or temperature; the CO₂ in a closed chamber over time; or the CO₂ and O₂ around one plant, over time or against each other',
+      'Up to three curves, each at its own CO₂ concentration, temperature or light intensity, named in a key automatically or as you type',
+      'Gross or net rate (less respiration), in arbitrary units or bubbles a minute; CO₂ in % or ppm',
+      'In a closed chamber, the starting CO₂, the time shown, and the light going off part way, with the dark shaded',
+      'The saturation point with dashed lines to the axes, what limits the rate on the rise and the plateau, lettered points A, B, C, the optimum and the compensation point, each labeled, left as a blank line for students, or unlabeled',
+      'Points measured off the curves, scattered a little, or points alone for students to draw the line',
+      'Shape only, or numbered axes, fitted or typed, with gridlines; color or black and white, the chart and axis titles (or blank lines), and label size',
+      'Setups for the classic limiting-factor graph, pondweed and lamp distance, CO₂ at two light intensities, temperature in high and low light, a closed chamber in dark, dim and bright light, and CO₂ and O₂ in the light then the dark',
+    ],
+    faqs: [
+      {
+        q: 'What is a limiting factor in photosynthesis?',
+        a: 'The factor in shortest supply, which holds the rate back: raising it speeds photosynthesis up, and raising anything else doesn’t. On the rising part of a light intensity graph, light is limiting, so the curves for different CO₂ concentrations and temperatures share one straight line. Where a curve levels off, light is no longer limiting: something else, like CO₂ concentration or temperature, is. That’s why the curve at a higher CO₂ concentration or a better temperature levels off higher. Under Marked, Limiting factors writes this on the graph.',
+      },
+      {
+        q: 'Why does the rate fall as the lamp moves away?',
+        a: 'Light spreads out from the lamp, so its intensity falls with the square of the distance: twice as far away, a quarter as bright. Close to the lamp the light is bright enough that something else limits the rate, so it stays level; farther away light is limiting, and the rate falls with it. Choose Distance from lamp along the x-axis, or the Pondweed and lamp distance setup, which counts bubbles a minute on numbered axes.',
+      },
+      {
+        q: 'What is the compensation point?',
+        a: 'The light intensity at which photosynthesis just keeps up with respiration, so the plant takes in as much CO₂ as it gives off and the net rate is 0. Choose Net rate and the curve starts below 0 in the dark, where the plant only respires, and crosses 0 at the compensation point, which can be marked. In a closed chamber at that light, the CO₂ stays level.',
+      },
+      {
+        q: 'Why does a temperature graph look flat in dim light?',
+        a: 'In dim light, light limits the rate, so warming the plant toward its enzymes’ optimum can’t speed it up much: the curve has a flat top, and only falls away where it’s cold or the enzymes denature. In bright light the rate follows the enzymes, rising to the optimum near 30 °C and falling steeply after it. The Rate against temperature at high and low light setup shows both.',
+      },
+      {
+        q: 'What happens to the CO₂ around a plant in a closed chamber?',
+        a: 'In the dark the plant only respires, so the CO₂ rises in a straight line. In dim light at the compensation point, photosynthesis uses just what respiration gives off, so it stays level. In bright light it falls, until there’s so little CO₂ that photosynthesis only keeps up with respiration, the CO₂ compensation point, and it levels off there. The O₂ does the opposite, rising as the CO₂ falls, about one O₂ for each CO₂, so against each other they make a straight falling line.',
+      },
+      {
+        q: 'Are the numbers real data?',
+        a: 'They’re made to look like a school practical, not measured from one plant, so the axes show shape only unless you choose Numbered. The light-limited rise has the same slope at every CO₂ and temperature, the temperature curve is Enzyme Activity’s, with an optimum at 30 °C, and respiration doubles every 10 °C. The settings panel says where each curve levels off, and the answer key on each example says the same.',
+      },
+    ],
+    imageAlt: 'A printable graph of the rate of photosynthesis against light intensity, three curves rising together then levelling off at different heights for different CO₂ concentrations and temperatures, made with Photosynthesis Rate',
+    educationalLevel: ['Middle school', 'High school', 'AP Biology'],
+  },
+
   'gel-electrophoresis': {
     heading: 'Gel electrophoresis figures: DNA fingerprinting, PCR and restriction digests',
     intro: [

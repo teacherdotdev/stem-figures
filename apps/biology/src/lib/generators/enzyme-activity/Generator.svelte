@@ -17,9 +17,10 @@
   import TitleSettings from '$shared/graph/TitleSettings.svelte'
   import { CAPS } from '$shared/graph/caps'
   import { COLORS } from '$shared/graph/colors'
+  import { DASHES } from '$shared/graph/labels'
   import EnzymeFigure from './EnzymeFigure.svelte'
   import { ENZYMES, UNKNOWN } from './enzymes'
-  import { DASHES, curveName, drawnOf, readoutOf, shapeOf } from './figure'
+  import { curveName, drawnOf, readoutOf, shapeOf } from './figure'
   import { INHIBITORS, type Inhibitor } from './model'
   import {
     CURVES, GRAPHS, GRAPH_NAMES, INHIBITOR_NAMES, autoTitles, curveOf, enzymeSettings, type CurveIndex, type Graph,

@@ -10,8 +10,8 @@
 import { readAxes, type GridSettings } from '$shared/graph/axes'
 import { COLORS } from '$shared/graph/colors'
 import { clipPath, layoutGrid, pathOf, round, type GridLayout, type Point } from '$shared/graph/grid'
+import { DASHES, layoutKey, placer, textWidth, type Anchor, type Box, type KeyEntry, type Spot } from '$shared/graph/labels'
 import { UNKNOWN, enzymeOf, unknownName } from './enzymes'
-import { placer, textWidth, type Anchor, type Box, type Spot } from './labels'
 import {
   denaturedAbove, denaturedPH, kinetics, rateAtPH, rateAtSubstrate, rateAtTemperature,
 } from './model'
@@ -31,10 +31,6 @@ const BLANK_W = 70 // a write-on line for a label left blank
 const SIDE_BLANK_W = 40 // the same, at an axis
 /** How far apart rows of labels under the x-axis are. */
 const X_ROW = (fs: number) => fs * 1.35
-const SAMPLE_W = 30 // the line sample in front of a curve's name in the key
-const KEY_GAP = 28 // between the key's entries
-/** Each curve's dashes, so they read apart in black and white: solid, dashed, dotted. */
-export const DASHES = [undefined, '12 7', '3 5'] as const
 const INKS = ['blue', 'red', 'green'] as const
 
 type Segment = { x1: number; y1: number; x2: number; y2: number }
@@ -45,7 +41,6 @@ export type Run = { text: string; sub?: boolean; dy: number }
 /** A label on the figure: written text, or a write-on line for students. */
 export type Label = { x: number; y: number; anchor: Anchor; runs?: Run[]; blank?: Segment }
 export type Curve = { index: CurveIndex; name: string; color: string; dash?: string; paths: string[] }
-export type KeyEntry = { index: CurveIndex; sample: Segment; text: { x: number; y: number; text: string } }
 
 const SUB = 0.7 // a subscript's size, of the label's
 
@@ -412,36 +407,12 @@ export function buildEnzyme(s: EnzymeSettings) {
 
   // The key: each curve's line and name, in rows centered under the graph,
   // when there's more than one to tell apart.
-  const keyEntries: KeyEntry[] = []
+  let keyEntries: KeyEntry<CurveIndex>[] = []
   if (curves.length > 1) {
-    const entryW = (c: Curve) => SAMPLE_W + 6 + textWidth(c.name, LABEL_FS)
-    const rowsOf: Curve[][] = [[]]
-    let rowW = 0
-    for (const c of curves) {
-      const w = entryW(c) + (rowsOf.at(-1)!.length ? KEY_GAP : 0)
-      if (rowsOf.at(-1)!.length && rowW + w > Math.max(area.w, 360)) {
-        rowsOf.push([])
-        rowW = 0
-      }
-      rowW += entryW(c) + (rowsOf.at(-1)!.length ? KEY_GAP : 0)
-      rowsOf.at(-1)!.push(c)
-    }
-    let y = bottom + 4 + fs * 0.6
-    for (const row of rowsOf) {
-      const rw = row.reduce((w, c, k) => w + entryW(c) + (k ? KEY_GAP : 0), 0)
-      let x = Math.max(PAD, midX - rw / 2)
-      for (const c of row) {
-        keyEntries.push({
-          index: c.index,
-          sample: { x1: x, y1: y, x2: x + SAMPLE_W, y2: y },
-          text: { x: x + SAMPLE_W + 6, y: y + LABEL_FS * 0.36, text: c.name },
-        })
-        x += entryW(c) + KEY_GAP
-      }
-      width = Math.max(width, x - KEY_GAP + PAD)
-      bottom = y + fs * 0.5
-      y += LABEL_FS * 1.6
-    }
+    const key = layoutKey(curves, { midX, wrap: Math.max(area.w, 360), top: bottom, left: PAD, fs, labelFs: LABEL_FS })
+    keyEntries = key.entries
+    width = Math.max(width, key.right + PAD)
+    bottom = key.bottom
   }
 
   const layout: GridLayout = {
