@@ -88,6 +88,7 @@ export const BIOLOGY: CatalogEntry[] = [
   {
     id: 'food-web',
     site: 'biology',
+    off: true,
     name: 'Food Webs and Energy Pyramids',
     path: '/food-web',
     blurb: 'Food webs, food chains and energy pyramids, with pictures of the organisms.',
