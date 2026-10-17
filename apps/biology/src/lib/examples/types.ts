@@ -7,6 +7,7 @@ import type { DnaSettings } from '$lib/generators/dna-protein-synthesis/settings
 import type { GelSettings } from '$lib/generators/gel-electrophoresis/settings'
 import type { PipetteSettings } from '$lib/generators/micropipette-reading/settings'
 import type { PedigreeSettings } from '$lib/generators/pedigree/settings'
+import type { PhotosynthesisSettings } from '$lib/generators/photosynthesis-rate/settings'
 import type { PopulationSettings } from '$lib/generators/population-growth/settings'
 import type { PredatorPreySettings } from '$lib/generators/predator-prey/settings'
 import type { PunnettSettings } from '$lib/generators/punnett-square/settings'
@@ -19,6 +20,7 @@ export interface SettingsById {
   'predator-prey': PredatorPreySettings
   'enzyme-activity': EnzymeSettings
   'dna-protein-synthesis': DnaSettings
+  'photosynthesis-rate': PhotosynthesisSettings
   'gel-electrophoresis': GelSettings
   'micropipette-reading': PipetteSettings
 }

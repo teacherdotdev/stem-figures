@@ -361,6 +361,80 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('photosynthesis-rate', [
+    {
+      slug: 'limiting-factors-photosynthesis-graph-light-intensity-co2-temperature',
+      title: 'Limiting factors in photosynthesis: rate against light intensity at different CO₂ and temperatures',
+      alt: 'Graph of rate of photosynthesis against light intensity with no numbers on the axes: three curves rising together in a straight line, labeled Light is limiting, then levelling off at different heights, 0.1 % CO₂ at 25 °C (solid blue) highest, 0.1 % CO₂ at 15 °C (dashed red) lower and 0.04 % CO₂ at 15 °C (dotted green) lowest, with CO₂ or temperature is limiting written over the top plateau and a key under the graph',
+      caption:
+        'The classic limiting-factor graph: the rate of photosynthesis against light intensity at 0.1 % CO₂ and 25 °C (solid blue), 0.1 % CO₂ and 15 °C (dashed red), and 0.04 % CO₂ and 15 °C (dotted green). At low light the three curves share one straight line, because light is limiting. Each then levels off where CO₂ or temperature limits the rate instead, highest with more CO₂ and the warmer temperature.',
+      settings: { markLimit: true },
+    },
+    {
+      slug: 'pondweed-lamp-distance-bubbles-per-minute-graph',
+      title: 'Pondweed and lamp distance: bubbles of oxygen per minute against distance from the lamp',
+      alt: 'Graph of bubbles of oxygen per minute, 0 to 35, against distance from the lamp, 0 to 50 cm, on a grid: measured points scattered along a curve that stays level at about 27 bubbles a minute up to about 19 cm from the lamp, then falls, steeply at first and then more slowly, to about 4 bubbles a minute at 50 cm',
+      caption:
+        'The pondweed practical: bubbles of oxygen counted each minute with the lamp 5 to 50 cm away, at 20 °C with plenty of CO₂. Close to the lamp the rate stays level, because light isn’t limiting. Farther away the light intensity falls as 1/d², so the rate falls with it, steeply at first and then more slowly. The points are scattered a little around the curve, like real counts.',
+      settings: {
+        graph: 'light', lightAxis: 'distance', rateUnit: 'bubbles', temp1: 20, show2: false, show3: false,
+        axes: 'numbered', gridlines: true, points: 'on', seed: 3,
+        xTitle: 'Distance from lamp (cm)', yTitle: 'Bubbles of oxygen per minute',
+      },
+    },
+    {
+      slug: 'rate-of-photosynthesis-against-co2-concentration-two-light-intensities',
+      title: 'Rate of photosynthesis against CO₂ concentration at high and low light intensity',
+      alt: 'Graph of rate of photosynthesis against CO₂ concentration (%) with no numbers on the axes: two curves rising together, the dashed red low light intensity curve levelling off early and low and the solid blue high light intensity curve rising further and levelling off about twice as high, with a key under the graph',
+      caption:
+        'The rate of photosynthesis against CO₂ concentration at a high light intensity (solid blue) and a low one (dashed red), both at 25 °C. At first more CO₂ speeds photosynthesis up whatever the light, so the curves rise together. Then each levels off where light becomes the limiting factor, the dimly lit plant at a much lower rate and lower CO₂ concentration.',
+      settings: {
+        graph: 'co2', name1: 'High light intensity', name2: 'Low light intensity', light2: 30, temp2: 25, show3: false,
+        xTitle: 'CO₂ concentration (%)',
+      },
+    },
+    {
+      slug: 'rate-of-photosynthesis-against-temperature-high-low-light',
+      title: 'Rate of photosynthesis against temperature at high and low light intensity',
+      alt: 'Graph of rate of photosynthesis against temperature (°C) with no numbers on the axes: a solid blue high light intensity curve rising to a peak marked Optimum with a dot and a dashed line down to the axis, then falling steeply to zero, and a dashed red low light intensity curve with a low flat top that follows it down at both ends',
+      caption:
+        'The rate of photosynthesis against temperature in high light (solid blue) and low light (dashed red), at 0.1 % CO₂. In bright light the rate follows the enzymes: it rises to an optimum near 30 °C, marked, then falls steeply as they denature. In dim light the curve has a low, flat top, because light limits the rate whatever the temperature; only where it is cold or the enzymes denature does it fall away.',
+      settings: {
+        graph: 'temperature', name1: 'High light intensity', light1: 80, name2: 'Low light intensity', light2: 15, show3: false,
+        xTitle: 'Temperature (°C)',
+      },
+    },
+    {
+      slug: 'co2-concentration-closed-chamber-dark-dim-bright-light',
+      title: 'CO₂ concentration in a closed chamber in the dark, dim and bright light',
+      alt: 'Graph of CO₂ concentration (%) against time (minutes) with no numbers on the axes: from one starting point, a solid blue line labeled Dark rises steadily, a dashed red line labeled Dim light (compensation point) stays level, and a dotted green line labeled Bright light falls and levels off near the bottom, with a key under the graph',
+      caption:
+        'The CO₂ around a plant in a closed chamber over an hour, starting from the 0.04 % in air. In the dark (solid blue) the plant only respires, so the CO₂ rises in a straight line. In dim light at the compensation point (dashed red), photosynthesis uses just as much CO₂ as respiration gives off, so it stays level. In bright light (dotted green) it falls, then levels off at the CO₂ compensation point.',
+      settings: {
+        graph: 'chamber', name1: 'Dark', light1: 0, name2: 'Dim light (compensation point)', light2: 6.01, temp2: 25,
+        name3: 'Bright light', light3: 60, temp3: 25, xTitle: 'Time (minutes)', yTitle: 'CO₂ concentration (%)',
+      },
+    },
+    {
+      slug: 'co2-and-o2-concentration-over-time-light-and-dark',
+      title: 'CO₂ and O₂ concentration around a plant in the light and then the dark',
+      alt: 'Graph against time in minutes, 0 to 60, on a grid, with CO₂ concentration (%) on the left axis and O₂ concentration (%) on the right: in the first 30 minutes, unshaded and labeled Light, the solid blue CO₂ line falls from 0.04 % toward 0.01 % while the dashed red O₂ line rises from 21 % to about 21.03 %; in the shaded half labeled Dark, CO₂ rises and O₂ falls in straight lines',
+      caption:
+        'The CO₂ (solid blue, left axis) and O₂ (dashed red, right axis) in a closed chamber around a plant in bright light for 30 minutes, then in the dark, shaded. In the light, photosynthesis takes in CO₂ and gives off O₂ faster than respiration does the opposite, so the CO₂ falls and the O₂ rises by the same amount, both levelling off. In the dark the plant only respires: the CO₂ rises and the O₂ falls in straight lines.',
+      settings: {
+        graph: 'gases', show2: false, show3: false, lightsOff: true, axes: 'numbered', gridlines: true,
+        xTitle: 'Time (minutes)', yTitle: 'CO₂ concentration (%)',
+      },
+    },
+    {
+      slug: 'limiting-factors-worksheet-lettered-points-black-and-white',
+      title: 'Limiting factors worksheet: what limits the rate of photosynthesis at A, B, C and D?',
+      alt: 'Black and white graph of rate of photosynthesis against light intensity with no numbers on the axes: a solid, a dashed and a dotted curve rising together and levelling off at three heights, with point A on the shared straight rise and points B, C and D on the three plateaus at the same light intensity, and a key naming 0.1 % CO₂ at 25 °C, 0.1 % CO₂ at 15 °C and 0.04 % CO₂ at 15 °C',
+      caption:
+        'A black-and-white worksheet graph of the rate of photosynthesis against light intensity at three combinations of CO₂ and temperature. Point A is on the straight rise all three curves share; B, C and D are on their plateaus at the same light intensity, for questions like “What limits the rate at A?” and “Why is the rate at C lower than at B?”',
+      settings: { letters: true, color: false },
+    },
+  ]),
   ...examplesOf('gel-electrophoresis', [
     {
       slug: 'dna-fingerprinting-gel-crime-scene-suspects',
