@@ -14,7 +14,8 @@ import { GRAPH_IDS, populationSettings } from '$lib/generators/population-growth
 import { SETUPS, settingsFor } from '$lib/generators/population-growth/setups'
 import { EXAMPLES } from './examples'
 
-const examples = (generator: string) => EXAMPLES.filter((e) => e.generator === generator).map((e) => [e.slug, e.settings] as const)
+type Case = [string, Record<string, unknown>]
+const examples = (generator: string) => EXAMPLES.filter((e) => e.generator === generator).map((e): Case => [e.slug, e.settings])
 
 const population = (settings: Record<string, unknown>) => {
   const g = buildPopulation(populationSettings.tidy({ ...populationSettings.defaults, ...settings }))
@@ -41,9 +42,9 @@ const pgAll = (base: Record<string, unknown>) => {
   const all = populationSettings.tidy({ ...populationSettings.defaults, ...base, inflection: true, phases: true, kLine: true })
   return { ...all, ...fitAxes(all) }
 }
-const BUSY_PG: [string, Record<string, unknown>][] = [
-  ...SETUPS.map((x) => [`setup ${x.id}`, pgAll(settingsFor(x, populationSettings.defaults, populationSettings.defaults))] as [string, Record<string, unknown>]),
-  ...MODELS.flatMap((model) => GRAPH_IDS.map((graphs) => [`${model} ${graphs}`, pgAll({ model, graphs })] as [string, Record<string, unknown>])),
+const BUSY_PG: Case[] = [
+  ...SETUPS.map((x) => [`setup ${x.id}`, pgAll(settingsFor(x, populationSettings.defaults, populationSettings.defaults))] as Case),
+  ...MODELS.flatMap((model) => GRAPH_IDS.map((graphs) => [`${model} ${graphs}`, pgAll({ model, graphs })] as Case)),
 ]
 const query = (q: string) => enzymeSettings.fromParams(new URLSearchParams(q)) as Record<string, unknown>
 const THREE_PH = 'graph=ph&xTitle=pH&enzyme1=pepsin&show2=1&enzyme2=amylase&show3=1&enzyme3=trypsin'
@@ -51,13 +52,13 @@ const INHIBITORS = 'graph=substrate&xTitle=Substrate+concentration&show2=1&show3
 const BUSY_ENZYME = [
   THREE_PH + '&markDen=1', 'show2=1&markDen=1', INHIBITORS + '&markKm=1', 'graph=substrate&inhibitor1=competitive&show3=1&markKm=1',
   INHIBITORS + '&markKm=1&km=0.4&strength=1.5', 'optLabelMode=blank&markDen=1&labelSize=large',
-].map((q) => [q, query(q)] as [string, Record<string, unknown>])
+].map((q) => [q, query(q)] as Case)
 
 describe('the labels on the graphs’ examples', () => {
   it('are where they were', async () => {
     const record = {
-      'population-growth': Object.fromEntries([...examples('population-growth'), ['preview', PREVIEWS['population-growth']], ...BUSY_PG].map(([slug, s]) => [slug, population(s)])),
-      'enzyme-activity': Object.fromEntries([...examples('enzyme-activity'), ['preview', PREVIEWS['enzyme-activity']], ...BUSY_ENZYME].map(([slug, s]) => [slug, enzyme(s)])),
+      'population-growth': Object.fromEntries([...examples('population-growth'), ['preview', PREVIEWS['population-growth']] as Case, ...BUSY_PG].map(([slug, s]) => [slug, population(s)])),
+      'enzyme-activity': Object.fromEntries([...examples('enzyme-activity'), ['preview', PREVIEWS['enzyme-activity']] as Case, ...BUSY_ENZYME].map(([slug, s]) => [slug, enzyme(s)])),
     }
     expect(Object.keys(record['population-growth']).length).toBeGreaterThan(1)
     expect(Object.keys(record['enzyme-activity']).length).toBeGreaterThan(1)
