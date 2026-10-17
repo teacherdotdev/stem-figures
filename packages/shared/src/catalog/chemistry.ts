@@ -167,6 +167,17 @@ export const CHEMISTRY: CatalogEntry[] = [
     keywords: ['mass', 'spectrum', 'spectra', 'spectrometry', 'spectrometer', 'spec', 'isotope', 'isotopes', 'abundance', 'relative', 'percent', 'average', 'atomic', 'weighted', 'm/z', 'peak', 'peaks', 'amu', 'element', 'AP'],
   },
   {
+    id: 'half-life-graph',
+    site: 'chemistry',
+    alsoOn: ['physics'],
+    name: 'Half-Life Graph',
+    path: '/half-life-graph',
+    blurb: 'Radioactive decay curves for carbon-14, iodine-131 and other isotopes, up to three on one graph.',
+    description:
+      'Make printable half-life graphs for chemistry and physics tests. Pick carbon-14, iodine-131, uranium-238 or another isotope, or type your own half-life, and get its decay curve as percent, mass, nuclei or activity remaining, with guide lines at each half-life, a stable daughter, or up to three isotopes with their names hidden for students.',
+    keywords: ['half-life', 'half', 'life', 'decay', 'radioactive', 'radioactivity', 'exponential', 'nuclear', 'isotope', 'parent', 'daughter', 'carbon', 'dating', 'radiometric', 'activity', 'becquerel', 'Bq', 'count', 'rate', 'remaining', 'iodine', 'uranium', 'curve', 'graph'],
+  },
+  {
     id: 'structure-editor',
     site: 'chemistry',
     off: true,

@@ -916,6 +916,60 @@ export const EXAMPLES: Example[] = [
       settings: { element: 'Zr', scale: 'relative' },
     },
   ]),
+
+  ...examplesOf('half-life-graph', [
+    {
+      slug: 'carbon-14-half-life-graph',
+      title: 'Carbon-14 half-life graph',
+      alt: 'Decay curve of carbon-14, percent remaining against time in years, with dashed guide lines at 5,730, 11,460 and 17,190 years',
+      caption:
+        'The percent of carbon-14 remaining against time in years, from 100% at the start, on an axis numbered every 4,000 years up to 30,000. Dashed guide lines run from 50%, 25% and 12.5% across to the curve and down to the time axis, each labeled with its time: 5,730, 11,460 and 17,190 years, one, two and three half-lives.',
+      settings: { guides: 3 },
+    },
+    {
+      slug: 'identify-the-isotope-from-its-half-life',
+      title: 'Identify the isotope from its half-life: three decay curves',
+      alt: 'Three decay curves, solid, dashed and dotted, named Isotope A, Isotope B and Isotope C in a key, against time in years from 0 to 160',
+      caption:
+        'Three radioactive isotopes decaying on one graph, percent remaining against time in years. The curves are solid, dashed and dotted so they read apart in black and white, and the key calls them only Isotope A, B and C. Students read each half-life off the curve where it crosses 50% and match the isotopes to a table of half-lives.',
+      settings: { count: 3, iso1: 'h3', iso2: 'cs137', iso3: 'co60', names: false, xTo: '160', xStep: '10', xEvery: 2 },
+    },
+    {
+      slug: 'carbon-14-decaying-to-nitrogen-14',
+      title: 'Carbon-14 decaying to nitrogen-14: parent and daughter',
+      alt: 'Carbon-14 falling and nitrogen-14 rising as percent of atoms against time in years, crossing at 50% at one half-life, marked T½',
+      caption:
+        'Carbon-14, the parent, falls from 100% of the atoms while its stable daughter, nitrogen-14, rises from 0%, the daughter dashed and both named in a key. The two always add up to 100%, so they cross at 50% after one half-life, where a dashed guide line labeled T½ runs down to the time axis.',
+      settings: { daughter: true, guides: 1, guideLabels: 'halves' },
+    },
+    {
+      slug: 'iodine-131-mass-remaining',
+      title: 'Iodine-131 decay: mass remaining over 45 days',
+      alt: 'Decay curve of an 80 g sample of iodine-131, mass remaining in grams against time in days, with a dot at the start and at each half-life',
+      caption:
+        'An 80 g sample of iodine-131 decaying over 45 days, its mass remaining in grams against time in days. A dot marks the start and each half-life along the curve, at 80, 40, 20, 10, 5 and 2.5 g, for questions on how much is left after a given time.',
+      settings: { iso1: 'i131', xUnit: 'd', quantity: 'mass', start: 80, dots: true, xTo: '45', xStep: '5', xEvery: 1, yTo: '80' },
+    },
+    {
+      slug: 'technetium-99m-activity-read-the-half-life',
+      title: 'Technetium-99m activity: read the half-life',
+      alt: 'Activity of technetium-99m in becquerels from 800 Bq against time in hours, with dashed guide lines from 400 and 200 Bq and blank lines by the time axis',
+      caption:
+        'The activity of a technetium-99m sample, the medical tracer, falling from 800 Bq, against time in hours. Dashed guide lines run from 400 Bq and 200 Bq across to the curve and down to the time axis, each with a blank line for students to write the time, one and two half-lives.',
+      settings: {
+        iso1: 'tc99m', xUnit: 'h', quantity: 'activity', start: 800, guides: 2, guideLabels: 'blank',
+        xTo: '32', xStep: '2', yTo: '800', yStep: '100',
+      },
+    },
+    {
+      slug: 'plot-the-decay-curve-isotope-x',
+      title: 'Plot the decay curve: Isotope X, half-life 10 years',
+      alt: 'Dots at 100, 50, 25, 12.5, 6.25 and 3.125 percent every 10 years on an empty grid, for students to join into a decay curve',
+      caption:
+        'The points of a made-up Isotope X with a half-life of 10 years, its percent remaining at the start and after each half-life, 100%, 50%, 25%, 12.5% and so on, with the curve left off. Students join the dots with a smooth curve and see that it never reaches zero.',
+      settings: { iso1: 'x', curve: false, dots: true, xTo: '50', xStep: '5', xEvery: 1 },
+    },
+  ]),
 ]
 
 /** A generator's examples, in order; the first is its best. */

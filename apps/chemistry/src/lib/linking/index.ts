@@ -5,6 +5,7 @@ import { CATALOG, type CatalogEntry } from '$shared/catalog/index'
 import { SITE_ID } from '$lib/site/config'
 import { bohrLinking } from '$lib/generators/bohr-model/linking'
 import { syringeLinking } from '$lib/generators/gas-syringe/linking'
+import { halfLifeLinking } from '$lib/generators/half-life-graph/linking'
 import { curveLinking } from '$lib/generators/heating-cooling-curve/linking'
 import { lengthLinking } from '$lib/generators/length-reading/linking'
 import { lewisLinking } from '$lib/generators/lewis-structures/linking'
@@ -39,6 +40,7 @@ const BY_ID: Record<string, GeneratorLinking> = Object.fromEntries(
     spectrumLinking,
     pesLinking,
     massSpectrumLinking,
+    halfLifeLinking,
   ].map((l) => [l.id, l as GeneratorLinking]),
 )
 
