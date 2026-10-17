@@ -98,12 +98,11 @@
     <section class="enzymes">
       <div class="head-row">
         <h2 class="card-head">Enzymes</h2>
-        <HelpTip id="enzyme-tip" label="How the curves are drawn">
-          Shape only, with no numbers on the axes. Warming speeds an enzyme up until it starts to denature, just past
-          its optimum; either side of its optimum pH it slows and denatures. Against substrate concentration it follows
-          Michaelis–Menten, levelling off at Vmax, half as fast at Km. An unknown enzyme's rate doubles every width (°C)
-          as it warms, or it works within ± that many pH units of its optimum. With no curves you get blank axes to
-          sketch on.
+        <HelpTip id="enzyme-tip" label="Where the data comes from">
+          Human enzymes work best at body temperature, about
+          37 °C; pepsin at about pH 2, salivary amylase and catalase near pH 7, and trypsin at about pH 8. Taq
+          polymerase works best at 75–80 °C (Chien, Edgar and Trela, J. Bacteriol., 1976), in a buffer of about pH
+          8.3. Curve widths are estimated, not measured. Substrate curves follow Michaelis–Menten.
         </HelpTip>
       </div>
       <div class="field">
