@@ -591,7 +591,7 @@ export const COPY: Record<string, GeneratorCopy> = {
     heading: 'Dot-and-cross diagrams for covalent and ionic bonding',
     intro: [
       'Dot-and-Cross Diagram draws the bonding diagrams UK, GCSE and Cambridge IGCSE courses use. Each atom’s shell is a circle with its element symbol in the middle, and each electron is a dot or a cross, depending on which atom it came from. Type a molecule like H2O, CH4, CO2 or ethene and the bonded atoms’ circles overlap, with each shared pair in the overlap, one electron from each atom. Type an ionic compound like NaCl, MgCl2 or Al2O3 and each ion is drawn in square brackets with its charge, the electrons the non-metal gained in the metal’s mark. Type one element, like Na or Cl-, for its atom or ion with every shell.',
-      'Teachers use it for “draw the dot-and-cross diagram” questions and their answers: leave the electrons off so students draw them, leave the charges blank, and print an answer key with each atom’s bonding and lone pairs, or the electrons moved and each ion’s arrangement, like Mg²⁺ 2,8 and Cl⁻ 2,8,8.',
+      'Teachers use it for “draw the dot-and-cross diagram” questions and their answers: leave the electrons off so students draw them, leave the charges blank, and print an answer key with each atom’s bonding and lone pairs, or the electrons moved and each ion’s arrangement, like Mg²⁺ 2,8 and Cl⁻ 2,8,8. For a “find the mistake” question, click an electron, symbol or charge in the figure to change it.',
     ],
     settings: [
       'The formula or name: a covalent molecule, a binary ionic compound of Li, Na, K, Rb, Mg, Ca, Sr or Al with N, O, F, S, Cl, Br or I, or one atom or ion from H to Ca',
@@ -599,6 +599,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       'An ionic compound with every ion drawn, or one of each with its number in front, as 2[Cl]⁻',
       'Dots and crosses swapped, and each kind of mark in its own color or all in black',
       'The electrons drawn or left blank, and each ion’s charge shown, blank or left off',
+      'Electrons, symbols and charges changed by clicking them in the figure',
       'A chart title and an answer key',
     ],
     faqs: [
@@ -625,6 +626,10 @@ export const COPY: Record<string, GeneratorCopy> = {
       {
         q: 'Why does it refuse MgCl?',
         a: 'An ionic compound’s charges must balance. Each ion’s charge comes from its group, so Mg²⁺ needs two Cl⁻ ions. The page says what would balance: MgCl₂.',
+      },
+      {
+        q: 'Can I make a diagram with a mistake for students to find?',
+        a: 'Yes. Click an electron in the figure to make it a dot, a cross, an open circle, an open square or nothing, click an element symbol to leave it blank, or click an ion’s charge to show it, leave a blank box or leave it off. Reset edits puts it back. The answer key still describes the correct diagram, with a line saying the figure was edited by hand. Changing the formula, the layout or the shells clears the edits, but Swap and color keep them.',
       },
       {
         q: 'Can it draw a single atom’s electron arrangement?',

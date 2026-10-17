@@ -323,7 +323,7 @@ A UK-style bonding figure of one covalent molecule, one binary ionic compound, o
 _Avoid_: Lewis dot diagram (that's a Lewis structure's), electron dot diagram, Bohr diagram (that's a Bohr model)
 
 **Mark**:
-How one electron is drawn: a dot, a cross, an open circle or an open square, the same for every electron of one atom. In a molecule the central atom's electrons are dots, the outer atoms' crosses, a third kind of atom's open circles (CH₃OH's O, HCN's N) and a fourth's open squares; atoms of one element share a mark unless two of them bond to each other, so Cl₂ is one dots and one crosses and in C₂H₄ the second C has open circles. In an ionic compound the metal's electrons are crosses and the non-metal's dots. An atom on its own has dots, and an anion's gained electrons are crosses. Swap trades dots and crosses. Marks are black unless the teacher gives each kind its own color.
+How one electron is drawn: a dot, a cross, an open circle or an open square, the same for every electron of one atom. In a molecule the central atom's electrons are dots, the outer atoms' crosses, a third kind of atom's open circles (CH₃OH's O, HCN's N) and a fourth's open squares; atoms of one element share a mark unless two of them bond to each other, so Cl₂ is one dots and one crosses and in C₂H₄ the second C has open circles. In an ionic compound the metal's electrons are crosses and the non-metal's dots. An atom on its own has dots, and an anion's gained electrons are crosses. Swap trades dots and crosses. Marks are black unless the teacher gives each kind its own color. An edit can change one electron's mark (see Edit).
 _Avoid_: Symbol (that's the element's), electron (fine in help text), dot (alone)
 
 **Overlap**:
@@ -351,14 +351,18 @@ One element from H to Ca, where shells fill 2, 8, 8, with its electrons on its r
 _Avoid_: Bohr model (that has a nucleus, not a symbol)
 
 **Brackets** (dot-and-cross):
-Square brackets around every ion with its charge at the top right. The charge can be written, left blank (an empty box for students to write it in) or left off; the brackets stay.
+Square brackets around every ion with its charge at the top right. The charge can be written, left blank (an empty box for students to write it in) or left off, for every ion or, by an edit, for one; the brackets stay.
 
 **Blank** (dot-and-cross):
 The circles, overlaps, symbols and brackets with no electrons, for students to draw them. The figure's description for screen readers leaves the electrons out too.
 _Avoid_: Empty rings (that's a Bohr model's), scaffold
 
 **Answer key** (dot-and-cross):
-The lines under the figure: each kind of atom's bonding and lone pairs for a molecule ("O: 2 bonding pairs, 2 lone pairs"); who loses and gains how many electrons and each ion's arrangement for an ionic compound ("Mg loses 2 electrons, one to each Cl." and "Mg²⁺ 2,8; Cl⁻ 2,8,8"); the arrangement for an atom or ion.
+The lines under the figure: each kind of atom's bonding and lone pairs for a molecule ("O: 2 bonding pairs, 2 lone pairs"); who loses and gains how many electrons and each ion's arrangement for an ionic compound ("Mg loses 2 electrons, one to each Cl." and "Mg²⁺ 2,8; Cl⁻ 2,8,8"); the arrangement for an atom or ion. It always describes the correct diagram; when an edit changes what's drawn it ends "This figure was edited by hand, so it may differ from the correct diagram described here."
+
+**Edit** (dot-and-cross):
+A change the teacher makes by clicking the figure, usually for a "find the mistake" question. Clicking an electron cycles what's drawn: dot, cross, open circle, open square, none (not drawn), then a dot again. Clicking an element symbol leaves it blank or shows it again; clicking an ion's charge cycles shown, blank box, left off. An electron, symbol or charge edited away keeps its click target, so it can be clicked back. Swap still trades an edited dot or cross, and with color an edited mark takes the color of the atom whose mark that is in this figure, or black if no atom has it. With the electrons blank they can't be clicked, though their edits are kept. Edits go in the address as one setting, each by the item's place in the figure's lists of electrons, symbols and charges; those places change with the formula, the molecule picked, the layout and the shells, so changing any of them clears the edits, and places the figure doesn't have are ignored. The description for screen readers says what's drawn after edits, counting the marks as drawn and naming no blank symbol (nor the molecule then). Reset edits clears them all.
+_Avoid_: Change (that's an orbital diagram's), mistake (the teacher may edit for other reasons), override
 
 ### Orbital diagrams
 

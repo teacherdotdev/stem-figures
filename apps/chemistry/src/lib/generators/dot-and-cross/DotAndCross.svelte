@@ -2,8 +2,10 @@
   // Dot-and-Cross Diagram: type a molecule, an ionic compound or one element
   // and get its UK-style bonding diagram, each atom's shell a circle around
   // its symbol with its electrons as dots or crosses (CONTEXT.md "Dot-and-
-  // cross diagrams"). The electrons can be left off for students to draw.
-  import { ArrowLeftRight, Atom, KeyRound, Shapes, SquareDashed, Type } from '@lucide/svelte'
+  // cross diagrams"). The electrons can be left off for students to draw,
+  // and the teacher can click electrons, symbols and charges in the figure
+  // to change them for a "find the mistake" question (edits.ts).
+  import { ArrowLeftRight, Atom, KeyRound, RotateCcw, Shapes, SquareDashed, Type } from '@lucide/svelte'
   import GeneratorPage from '$shared/GeneratorPage.svelte'
   import LabelField from '$shared/LabelField.svelte'
   import HelpTip from '$lib/shared/HelpTip.svelte'
@@ -11,8 +13,11 @@
   import { generatorState } from '$shared/generatorState.svelte'
   import { openRequest } from '$shared/request.svelte'
   import DotCrossFigure from './DotCrossFigure.svelte'
+  import { editAfterClick } from './editing'
+  import type { EditTarget } from './edits'
+  import { buildFigure } from './figure'
   import { chargeText, ionCharge, ionName } from './ionic'
-  import { CHARGE_MODES, MAX_FORMULA, SHELLS, allShells, dotCrossSettings, layoutOf, readOnce, type ChargeMode, type Shells } from './settings'
+  import { CHARGE_MODES, MAX_FORMULA, SHELLS, allShells, change, dotCrossSettings, layoutOf, readOnce, type ChargeMode, type Shells } from './settings'
 
   const gen = generatorState(dotCrossSettings, 'dot-and-cross')
   const s = gen.s
@@ -85,14 +90,29 @@
   /** What to type for an element's usual ion: "Na+", "Mg 2+". */
   const ionTyped = (symbol: string, charge: number) => `${symbol}${Math.abs(charge) > 1 ? ' ' : ''}${chargeText(charge).replace('−', '-')}`
 
+  // The edits are kept by their places in the figure's lists, which change
+  // with the formula, the molecule picked, the layout and the shells, so
+  // changing any of those clears them (`change`).
   function setFormula(formula: string) {
-    s.formula = formula
-    s.which = ''
+    change(s, 'formula', formula)
+    change(s, 'which', '')
   }
 
   function setShells(v: Shells) {
-    if (atom) s.atomShells = v
-    else s.shells = v
+    change(s, atom ? 'atomShells' : 'shells', v)
+  }
+
+  /** Picking the layout auto already draws keeps the edits. */
+  function setLayout(v: 'every' | 'numbered') {
+    if (layout === v) s.layout = v
+    else change(s, 'layout', v)
+  }
+
+  const figure = $derived(buildFigure(s))
+  const edits = $derived(figure.edits)
+
+  function edit(target: EditTarget) {
+    s.edits = editAfterClick(s, figure, target)
   }
 
   const whatSummary = $derived(
@@ -109,7 +129,13 @@
       .join(', '),
   )
   const questionSummary = $derived(
-    [s.blank ? 'Electrons blank' : 'Electrons drawn', hasIons && s.charges !== 'show' ? `charges ${CHARGE_NAMES[s.charges].toLowerCase()}` : ''].filter(Boolean).join(', '),
+    [
+      s.blank ? 'Electrons blank' : 'Electrons drawn',
+      hasIons && s.charges !== 'show' ? `charges ${CHARGE_NAMES[s.charges].toLowerCase()}` : '',
+      edits ? `${edits} ${edits === 1 ? 'edit' : 'edits'}` : '',
+    ]
+      .filter(Boolean)
+      .join(', '),
   )
   const keySummary = $derived([s.titleMode === 'text' && s.title ? `“${s.title}”` : 'No title', s.answerKey ? 'answer key' : 'no answer key'].join(', '))
   const filename = $derived(`dot-and-cross-${(r.ok ? s.formula : 'diagram').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'diagram'}`)
@@ -143,7 +169,7 @@
         <p class="field-label">Which one?</p>
         <div class="chips" role="radiogroup" aria-label="Which one">
           {#each choices.list as l (l.id)}
-            <button type="button" role="radio" aria-checked={choices.on === l.id} class="chip small" class:on={choices.on === l.id} onclick={() => (s.which = l.id)}>
+            <button type="button" role="radio" aria-checked={choices.on === l.id} class="chip small" class:on={choices.on === l.id} onclick={() => change(s, 'which', l.id)}>
               {l.names[0]}
             </button>
           {/each}
@@ -199,7 +225,7 @@
             Compounds of up to three ions start with every ion, bigger ones numbered.
           </HelpTip>
         </p>
-        {@render segmented('Ions', ['every', 'numbered'] as const, layout, { every: 'Every ion', numbered: 'Numbered' }, (v) => (s.layout = v))}
+        {@render segmented('Ions', ['every', 'numbered'] as const, layout, { every: 'Every ion', numbered: 'Numbered' }, setLayout)}
       {/if}
       <p class="field-label spaced">
         Marks
@@ -226,6 +252,19 @@
         <p class="field-label spaced">Charges</p>
         {@render segmented('Charges', CHARGE_MODES, s.charges, CHARGE_NAMES, (v) => (s.charges = v))}
       {/if}
+      <p class="field-label spaced">
+        Edits
+        <HelpTip id="dot-cross-edits-tip" label="Changing the figure by hand">
+          Click things in the figure to change them, for a “find the mistake” question. An electron becomes a dot, a cross, an open circle, an
+          open square, then nothing, then a dot again; an element symbol is left blank or shown; an ion’s charge is shown, a blank box or left
+          off. With the electrons blank they can’t be clicked. The answer key still describes the correct diagram. Changing the formula, layout or
+          shells clears the edits.
+        </HelpTip>
+      </p>
+      <button type="button" class="btn-ghost small reset" disabled={!edits} onclick={() => (s.edits = '')}>
+        <RotateCcw size={17} aria-hidden="true" />
+        {edits ? `Reset ${edits} ${edits === 1 ? 'edit' : 'edits'}` : 'Reset edits'}
+      </button>
     </Section>
 
     <Section title="Title and answer key" summary={keySummary} icon={Type}>
@@ -238,7 +277,7 @@
     </Section>
   {/snippet}
   {#snippet figure()}
-    <DotCrossFigure settings={s} bind:svg />
+    <DotCrossFigure settings={s} bind:svg onedit={edit} />
   {/snippet}
 </GeneratorPage>
 
@@ -258,6 +297,7 @@
   .marks { display: flex; }
   .marks .btn-ghost { display: inline-flex; align-items: center; gap: 0.4rem; }
   .marks .btn-ghost[aria-pressed='true'] { background: var(--blue-soft); }
+  .reset { display: inline-flex; align-items: center; gap: 0.4rem; }
   .check { display: flex; align-items: flex-start; gap: 0.6rem; margin-top: 1rem; cursor: pointer; }
   .check input { width: 1.1rem; height: 1.1rem; margin: 0.15rem 0 0; accent-color: var(--blue); }
   .check strong { display: flex; align-items: center; gap: 0.3rem; font-size: 0.9rem; }

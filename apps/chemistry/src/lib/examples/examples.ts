@@ -885,6 +885,14 @@ export const EXAMPLES: Example[] = [
         'A calcium atom, Ca, with every shell drawn as a circle around its symbol and its 20 electrons as dots: 2, 8, 8 and 2 from the inside out. The electrons are paired at the top, right, bottom and left of each ring, as students are taught to draw an electron arrangement.',
       settings: { formula: 'Ca' },
     },
+    {
+      slug: 'dot-and-cross-diagram-mistake-sodium-chloride',
+      title: 'Find the mistake: dot-and-cross diagram of sodium chloride (NaCl)',
+      alt: 'A deliberately wrong dot-and-cross diagram of sodium chloride: a sodium ion with 8 crosses and a chloride ion with only 7 dots, its gained electron missing, each in square brackets with its charge',
+      caption:
+        'A deliberately wrong dot-and-cross diagram of sodium chloride, NaCl, for a “find the mistake” question. The chloride ion is drawn with only its own 7 electrons as dots, so the electron it gained from sodium is missing: Cl⁻ should have 8 electrons on its outer shell, 7 dots and 1 cross, to match its 1− charge.',
+      settings: { formula: 'NaCl', edits: 'e15n' },
+    },
   ]),
   ...examplesOf('orbital-diagram', [
     {
