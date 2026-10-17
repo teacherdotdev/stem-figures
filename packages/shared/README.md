@@ -13,6 +13,7 @@ Components and helpers used by more than one STEM Figures site, imported as
 | `labelSize`                                                                                 | math, chemistry (Titration Curve, Heating and Cooling Curve), biology (Cell Diagram, Population Growth, Punnett Square, Mitosis & Meiosis, Predator–Prey Cycles, Enzyme Activity, DNA and Protein Synthesis), physics (Wave) |
 | `graph/`: `Grid`, `grid`, `axes`, `AxisSettings`, `TitleSettings`, `GridlineSettings`       | math (Coordinate Grid), chemistry (Titration Curve, Heating and Cooling Curve), biology (Population Growth, Predator–Prey Cycles, Enzyme Activity), physics (Wave, all but `Grid`) |
 | `graph/`: `numbering`, `caps`, `CapPicker`, `colors`                                        | math, chemistry (Titration Curve, Heating and Cooling Curve), biology (Population Growth, Predator–Prey Cycles, Enzyme Activity), physics (Wave) |
+| `graph/labels`: the label placer (`placer`, `besidePoint`, `alongCurve`), curve `DASHES` and `layoutKey` | biology (Population Growth, Enzyme Activity) |
 | `Section`                                                                                   | math, physics (Spring Scale), chemistry (Titration Curve, Heating and Cooling Curve), biology (every generator) |
 | `HelpTip`                                                                                   | math, biology (Population Growth, Predator–Prey Cycles, Enzyme Activity) |
 | `FigureFrame`, `figureAlign`, `settings`, `figureText`, `FigureTextSettings`                | physics (Spring Scale), math (Length Reading), biology (`settings` in every generator, `FigureFrame` in all but the two graphs, `FigureTextSettings` in Micropipette Reading) |
@@ -76,6 +77,12 @@ generator's own marks as its children. `AxisSettings`, `TitleSettings` and
 `GridlineSettings` are its settings groups; `AxisSettings` takes a `field` for
 the range boxes (a plain text box unless given) and children for fields of the
 generator's own. `clipPath` cuts a line to the grid.
+`labels` places labels on a graph where they touch no line and no other
+label: each offers places to go, best first (`besidePoint` and `alongCurve`
+make some), and takes the first that's clear. It also has `DASHES`, solid,
+dashed and dotted, which tell up to three curves apart in black and white,
+and `layoutKey`, the key naming them in rows under the graph. Physics'
+Motion Graphs keeps an older copy of the placer of its own.
 
 Every site keeps the rest in its own `src/lib/`, except Physics' Spring Scale,
 Math's Length Reading and Biology's Micropipette Reading, which use the

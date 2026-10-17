@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { textBox, textWidth, type Box } from './labels'
+import { textBox, textWidth, type Box } from '$shared/graph/labels'
 import { buildEnzyme, readoutOf, runsOf, spread, type Label } from './figure'
 import { enzymeSettings } from './settings'
 
