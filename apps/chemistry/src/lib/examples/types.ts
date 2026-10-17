@@ -14,6 +14,7 @@ import type { OrbitalSettings } from '$lib/generators/orbital-diagram/settings'
 import type { ParticleSettings } from '$lib/generators/particle-diagram/settings'
 import type { PhSettings } from '$lib/generators/ph-reading/settings'
 import type { PesSettings } from '$lib/generators/photoelectron-spectrum/settings'
+import type { EnergySettings } from '$lib/generators/potential-energy-diagram/settings'
 import type { TemperatureSettings } from '$lib/generators/temperature-reading/settings'
 import type { TitrationSettings } from '$lib/generators/titration-curve/settings'
 import type { DisplacementSettings } from '$lib/generators/volume-by-displacement/settings'
@@ -30,6 +31,7 @@ export interface SettingsById {
   'ph-reading': PhSettings
   'titration-curve': TitrationSettings
   'heating-cooling-curve': CurveSettings
+  'potential-energy-diagram': EnergySettings
   'particle-diagram': ParticleSettings
   'bohr-model': BohrSettings
   'lewis-structures': LewisSettings

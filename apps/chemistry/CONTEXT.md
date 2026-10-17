@@ -480,3 +480,49 @@ _Avoid_: Annotation, caption
 **Point label**:
 What's written by the temperature axis just above (or below) a plateau's dashed line: its temperature (78.3 °C), m.p. or b.p. (f.p. and b.p. on a cooling curve), or a blank line for students to write the melting or boiling point on. It goes along the line, inside the grid, as far from the axis as the curve makes it. The temperature by default.
 _Avoid_: Axis label (that's the letter at an axis's end), tick label
+
+### Potential energy diagrams
+
+**Potential energy diagram**:
+A graph of the potential energy of the reacting particles (up the side, in kJ/mol, kJ mol⁻¹ or kJ) against the reaction coordinate (along the bottom) as a reaction goes from reactants to products: a smooth curve, flat at the reactants, over each transition state and down to the products. The generator is Potential Energy Diagram, also listed on Biology for activation energy with and without an enzyme. The grid and titles are `$shared/graph`'s, with the axes along the grid's edges as on a heating curve.
+_Avoid_: Reaction energy profile, energy profile, enthalpy profile, reaction coordinate diagram (all fine in search keywords and help text), energy graph, bond energy curve (a different figure)
+
+**Reaction coordinate**:
+The x-axis: how far the reaction has gone, from reactants to products. It isn't a time or any quantity with units, so it's never numbered and has no gridlines; each step takes the same width, with flat runs at both ends.
+_Avoid_: Time, progress axis
+
+**Level**:
+One energy the curve passes through, typed by the teacher: the reactants, a transition state, an intermediate or the products, in order along the reaction. Only the levels are kept (in the address as `levels=50_150_20`); Ea and ΔH are worked out from them, and typing Ea or ΔH moves the transition state or the products to match. The curve between neighboring levels is a smoothstep, so each peak and dip is exactly at its level and nothing overshoots.
+_Avoid_: Point, value
+
+**Transition state**:
+The peak of a step, its highest energy. A transition state must be above the levels either side of it, or the page says so. The usual word, which the teacher can change to "Activated complex".
+_Avoid_: Peak (fine in help text), activated complex (fine as a label)
+
+**Intermediate**:
+The dip between two steps of a mechanism, below the transition states either side of it.
+_Avoid_: Trough
+
+**Step**:
+One rise to a transition state and fall from it. A diagram has one, two or three. Each step's Ea runs from the level before it up to its transition state; its reverse Ea from the level after it. The answer key names the **rate-determining step** only when the step with the highest Ea is also the one whose transition state is highest above the lowest point before it.
+_Avoid_: Stage, hump
+
+**Catalysed path**:
+A second curve, dashed, with the same reactants and products and one lower transition state, so ΔH doesn't change and both activation energies drop by the same amount. Its transition state must be above the reactants and products and below the highest uncatalysed one. A key under the graph names the two paths ("Uncatalysed" and "Catalysed", or the teacher's words, such as "Without enzyme" and "With enzyme").
+_Avoid_: Catalyst curve, second curve
+
+**Arrow**:
+A vertical arrow marking an energy difference: each step's Ea, the catalysed Ea, ΔH (from the reactants to the products, pointing toward the products) and the reverse Ea (of the last step). Each is labeled with its symbol (Eₐ, ΔH), its value ("ΔH = −30 kJ/mol"), a letter or number for "which arrow shows…?" questions, a blank line, or nothing, beside it where there's room, otherwise in the nearest clear spot with a thin line back to it. Dashed lines carry each level across to its arrows.
+_Avoid_: Bracket, dimension line
+
+**Level label**:
+The words on a level: Reactants, Products, Transition state or Intermediate (numbered when there's more than one), the teacher's own text with formulas typed as `N_2 + 3H_2` as in the key of a particle diagram, a blank line, or nothing.
+_Avoid_: Annotation, tag
+
+**Level diagram**:
+The second style: no curve, just the reactants and products as horizontal lines with the ΔH arrow between them, for enthalpy change questions.
+_Avoid_: Enthalpy diagram (fine in search keywords), energy level diagram (fine in help text), Hess cycle (a different figure)
+
+**Shape only**:
+The energy axis with no numbers or gridlines, fitted to the levels, for a diagram where the shape is the point (the enzyme setup). Numbered, with light gridlines, is the default.
+_Avoid_: Unnumbered, qualitative
