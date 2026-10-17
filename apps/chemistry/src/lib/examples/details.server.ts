@@ -22,6 +22,8 @@ import { spectrumSettings } from '$lib/generators/line-spectrum/settings'
 import { stripName } from '$lib/generators/line-spectrum/strips'
 import { massSettings, answerLine as massAnswer } from '$lib/generators/mass-reading/settings'
 import { answerLines as massSpectrumAnswer, massSpectrumSettings, workingLine } from '$lib/generators/mass-spectrum/settings'
+import { answerLines as nuclideAnswer } from '$lib/generators/nuclide-notation/figure'
+import { nuclideSettings } from '$lib/generators/nuclide-notation/settings'
 import { answerLines as orbitalAnswer, orbitalSettings } from '$lib/generators/orbital-diagram/settings'
 import { boxContents, keyKinds, particleSettings } from '$lib/generators/particle-diagram/settings'
 import { answerLines as pesAnswer, pesSettings } from '$lib/generators/photoelectron-spectrum/settings'
@@ -179,6 +181,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'heating-cooling-curve': { definition: curveSettings, answer: curveAnswer },
   'particle-diagram': { definition: particleSettings, answer: particleAnswer },
   'bohr-model': { definition: bohrSettings, answer: bohrAnswer },
+  'nuclide-notation': { definition: nuclideSettings, answer: (s) => ({ heading: 'Answer key', lines: nuclideAnswer(s) }) },
   'lewis-structures': { definition: lewisSettings, answer: lewisAnswer },
   'orbital-diagram': { definition: orbitalSettings, answer: (s) => ({ heading: 'Answer key', lines: orbitalAnswer(s) }) },
   'line-spectrum': { definition: spectrumSettings, answer: lineSpectrumAnswer },

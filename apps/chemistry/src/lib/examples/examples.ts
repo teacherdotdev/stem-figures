@@ -613,6 +613,65 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('nuclide-notation', [
+    {
+      slug: 'carbon-14-nuclide-symbol',
+      title: 'Carbon-14 nuclide symbol (¹⁴₆C)',
+      alt: 'The nuclide symbol for carbon-14: C with mass number 14 at the top left and atomic number 6 at the bottom left, with carbon-14 written under it',
+      caption:
+        'The nuclide symbol for carbon-14, the isotope used in radiocarbon dating: the symbol C with its mass number, 14, at the top left and its atomic number, 6, at the bottom left, right-aligned against the symbol. Its hyphen notation, carbon-14, is written under it.',
+      settings: { mass: 14, notation: 'both' },
+    },
+    {
+      slug: 'chlorine-37-ion-symbol-cl-minus',
+      title: 'Chlorine-37 ion symbol (³⁷Cl⁻)',
+      alt: 'The symbol of the chlorine-37 ion: Cl with mass number 37 at the top left and a minus charge at the top right, with an answer key under it',
+      caption:
+        'The isotope symbol of a chloride ion of chlorine-37: Cl with its mass number, 37, at the top left and its 1− charge, written as a minus sign, at the top right. The atomic number is left off, as many textbooks write it. The answer key under it gives the ion’s protons, neutrons and electrons.',
+      settings: { z: 17, mass: 37, charge: -1, zPart: 'off', answerKey: true },
+    },
+    {
+      slug: 'uranium-235-find-the-atomic-number',
+      title: 'Uranium-235 with the atomic number blank',
+      alt: 'The nuclide symbol for uranium-235: U with mass number 235 at the top left and an empty box at the bottom left for the atomic number',
+      caption:
+        'The nuclide symbol for uranium-235, the isotope used in nuclear reactors, with its atomic number left as an empty box at the bottom left. Students look up uranium’s atomic number, 92, and write it in.',
+      settings: { z: 92, mass: 235, zPart: 'blank' },
+    },
+    {
+      slug: 'alpha-particle-symbol',
+      title: 'Alpha particle symbol (⁴₂He)',
+      alt: 'The symbol for an alpha particle: He with mass number 4 at the top left and 2 at the bottom left',
+      caption:
+        'An alpha particle written as in a nuclear decay equation: the symbol He with a mass number of 4 at the top left and an atomic number of 2 at the bottom left, since an alpha particle is a helium-4 nucleus of 2 protons and 2 neutrons.',
+      settings: { kind: 'particle' },
+    },
+    {
+      slug: 'beta-particle-symbol',
+      title: 'Beta particle symbol (⁰₋₁β)',
+      alt: 'The symbol for a beta particle in a serif font: the Greek letter beta with 0 at the top left and −1 at the bottom left',
+      caption:
+        'A beta particle written with the Greek letter β, in Times New Roman: a mass number of 0 at the top left and −1 at the bottom left, the charge of the electron it is. The bottom numbers balance in a decay equation, so a nucleus that gives off a beta particle goes up one atomic number.',
+      settings: { kind: 'particle', particle: 'beta', particleSymbol: 'beta', font: 'serif' },
+    },
+    {
+      slug: 'identify-the-element-x',
+      title: 'Identify the element: a made-up symbol X',
+      alt: 'A nuclide symbol with the made-up symbol X: mass number 79, atomic number 34 and a 2− charge, with an answer key under it',
+      caption:
+        'A nuclide symbol with the element hidden behind the letter X, for an “identify the element” question: mass number 79, atomic number 34 and a 2− charge. Students find the element with 34 protons and work out its neutrons and electrons, which the answer key under it gives.',
+      settings: { kind: 'custom', z: 34, mass: 79, charge: -2, answerKey: true },
+    },
+    {
+      slug: 'oxygen-18-hyphen-notation-blank',
+      title: 'Hyphen notation with the mass number blank (oxygen-18)',
+      alt: 'The hyphen notation oxygen- followed by a blank line for the mass number',
+      caption:
+        'Hyphen notation for an isotope of oxygen with its mass number left as a line to write on, for students to work out from the protons and neutrons they’re given. The isotope is oxygen-18.',
+      settings: { z: 8, mass: 18, notation: 'hyphen', massPart: 'blank', blank: 'line' },
+    },
+  ]),
+
   ...examplesOf('lewis-structures', [
     {
       slug: 'lewis-structure-of-co2',

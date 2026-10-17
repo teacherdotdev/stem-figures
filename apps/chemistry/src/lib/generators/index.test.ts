@@ -28,6 +28,11 @@ describe('searching the directory', () => {
       expect(ids(query)).toContain('bohr-model')
   })
 
+  it('finds Nuclide Notation the ways teachers ask for it', () => {
+    for (const query of ['nuclide', 'isotope notation', 'nuclear notation', 'atomic notation', 'isotope symbol', 'AZX', 'alpha particle', 'mass number', 'hyphen notation'])
+      expect(ids(query), query).toContain('nuclide-notation')
+  })
+
   it('finds Lewis Structures the ways teachers ask for it', () => {
     for (const query of ['lewis dot', 'electron dot', 'lone pair', 'covalent', 'resonance', 'formal charge'])
       expect(ids(query), query).toContain('lewis-structures')

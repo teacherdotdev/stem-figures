@@ -15,6 +15,7 @@ import LewisStructuresPreview from './lewis-structures/Preview.svelte'
 import LineSpectrumPreview from './line-spectrum/Preview.svelte'
 import MassReadingPreview from './mass-reading/Preview.svelte'
 import MassSpectrumPreview from './mass-spectrum/Preview.svelte'
+import NuclideNotationPreview from './nuclide-notation/Preview.svelte'
 import OrbitalDiagramPreview from './orbital-diagram/Preview.svelte'
 import ParticleDiagramPreview from './particle-diagram/Preview.svelte'
 import PhReadingPreview from './ph-reading/Preview.svelte'
@@ -28,6 +29,7 @@ import StructureEditorPreview from '$lib/editors/structure-editor/Preview.svelte
 /** Each generator's directory preview, by id. */
 export const PREVIEWS: Record<string, Component> = {
   'bohr-model': BohrModelPreview,
+  'nuclide-notation': NuclideNotationPreview,
   'length-reading': LengthReadingPreview,
   'lewis-structures': LewisStructuresPreview,
   'line-spectrum': LineSpectrumPreview,
