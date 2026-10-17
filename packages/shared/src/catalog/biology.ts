@@ -114,6 +114,21 @@ export const BIOLOGY: CatalogEntry[] = [
     ],
   },
   {
+    id: 'photosynthesis-rate',
+    site: 'biology',
+    name: 'Photosynthesis Rate',
+    path: '/photosynthesis-rate',
+    blurb: 'Limiting factors: the rate against light, CO₂ or temperature.',
+    description:
+      'Make printable photosynthesis rate graphs for biology tests. Graph the rate against light intensity, lamp distance, CO₂ concentration or temperature, mark the limiting factors, or show CO₂ and O₂ in a closed chamber.',
+    keywords: [
+      'photosynthesis', 'rate of photosynthesis', 'limiting factor', 'limiting factors', 'light intensity', 'lamp distance',
+      'inverse square', 'pondweed', 'elodea', 'cabomba', 'oxygen bubbles', 'carbon dioxide', 'co2', 'co2 concentration', 'temperature',
+      'compensation point', 'saturation point', 'net photosynthesis', 'respiration', 'oxygen', 'o2', 'closed chamber', 'gas exchange',
+      'graph', 'printable',
+    ],
+  },
+  {
     id: 'gel-electrophoresis',
     site: 'biology',
     name: 'Gel Electrophoresis',

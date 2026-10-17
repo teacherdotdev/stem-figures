@@ -14,6 +14,7 @@ import CellDivisionPreview from './cell-division/Preview.svelte'
 import PredatorPreyPreview from './predator-prey/Preview.svelte'
 import EnzymeActivityPreview from './enzyme-activity/Preview.svelte'
 import DnaProteinSynthesisPreview from './dna-protein-synthesis/Preview.svelte'
+import PhotosynthesisRatePreview from './photosynthesis-rate/Preview.svelte'
 import GelElectrophoresisPreview from './gel-electrophoresis/Preview.svelte'
 import MicropipetteReadingPreview from './micropipette-reading/Preview.svelte'
 import MicroscopeFieldOfViewPreview from './microscope-field-of-view/Preview.svelte'
@@ -28,6 +29,7 @@ export const PREVIEWS: Record<string, Component> = {
   'predator-prey': PredatorPreyPreview,
   'enzyme-activity': EnzymeActivityPreview,
   'dna-protein-synthesis': DnaProteinSynthesisPreview,
+  'photosynthesis-rate': PhotosynthesisRatePreview,
   'gel-electrophoresis': GelElectrophoresisPreview,
   'micropipette-reading': MicropipetteReadingPreview,
   'microscope-field-of-view': MicroscopeFieldOfViewPreview,
