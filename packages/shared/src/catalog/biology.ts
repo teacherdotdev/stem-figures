@@ -86,6 +86,20 @@ export const BIOLOGY: CatalogEntry[] = [
     keywords: ['predator', 'prey', 'predator-prey', 'lotka-volterra', 'population', 'cycle', 'hare', 'lynx', 'wolf', 'phase plane', 'census', 'lag', 'ecology', 'graph', 'printable'],
   },
   {
+    id: 'food-web',
+    site: 'biology',
+    name: 'Food Webs and Energy Pyramids',
+    path: '/food-web',
+    blurb: 'Food webs, food chains and energy pyramids, with pictures of the organisms.',
+    description:
+      'Make printable food webs, food chains and energy pyramids for biology tests. Start from a grassland, forest, pond, ocean, tundra or desert, change what eats what, leave names blank, and show the 10% rule.',
+    keywords: [
+      'food web', 'food chain', 'energy pyramid', 'trophic level', 'trophic levels', 'producer', 'consumer', 'primary consumer',
+      'secondary consumer', 'tertiary consumer', 'decomposer', 'herbivore', 'carnivore', 'omnivore', '10% rule', 'ten percent rule',
+      'energy flow', 'ecosystem', 'ecology', 'food pyramid', 'ecological pyramid', 'predator', 'prey', 'worksheet', 'printable',
+    ],
+  },
+  {
     id: 'enzyme-activity',
     site: 'biology',
     name: 'Enzyme Activity',

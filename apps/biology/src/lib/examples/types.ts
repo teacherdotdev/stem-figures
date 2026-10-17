@@ -11,6 +11,7 @@ import type { PedigreeSettings } from '$lib/generators/pedigree/settings'
 import type { PhotosynthesisSettings } from '$lib/generators/photosynthesis-rate/settings'
 import type { PopulationSettings } from '$lib/generators/population-growth/settings'
 import type { PredatorPreySettings } from '$lib/generators/predator-prey/settings'
+import type { FoodWebSettings } from '$lib/generators/food-web/settings'
 import type { PunnettSettings } from '$lib/generators/punnett-square/settings'
 
 /** Each generator's settings, by generator id. */
@@ -19,6 +20,7 @@ export interface SettingsById {
   'punnett-square': PunnettSettings
   pedigree: PedigreeSettings
   'predator-prey': PredatorPreySettings
+  'food-web': FoodWebSettings
   'enzyme-activity': EnzymeSettings
   'dna-protein-synthesis': DnaSettings
   'photosynthesis-rate': PhotosynthesisSettings

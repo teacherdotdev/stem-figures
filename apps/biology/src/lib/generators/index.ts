@@ -12,6 +12,7 @@ import PunnettSquarePreview from './punnett-square/Preview.svelte'
 import PedigreePreview from './pedigree/Preview.svelte'
 import CellDivisionPreview from './cell-division/Preview.svelte'
 import PredatorPreyPreview from './predator-prey/Preview.svelte'
+import FoodWebPreview from './food-web/Preview.svelte'
 import EnzymeActivityPreview from './enzyme-activity/Preview.svelte'
 import DnaProteinSynthesisPreview from './dna-protein-synthesis/Preview.svelte'
 import PhotosynthesisRatePreview from './photosynthesis-rate/Preview.svelte'
@@ -28,6 +29,7 @@ export const PREVIEWS: Record<string, Component> = {
   pedigree: PedigreePreview,
   'cell-division': CellDivisionPreview,
   'predator-prey': PredatorPreyPreview,
+  'food-web': FoodWebPreview,
   'enzyme-activity': EnzymeActivityPreview,
   'dna-protein-synthesis': DnaProteinSynthesisPreview,
   'photosynthesis-rate': PhotosynthesisRatePreview,

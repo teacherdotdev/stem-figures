@@ -18,6 +18,8 @@ import { familyOf, pedigreeSettings } from '$lib/generators/pedigree/settings'
 import { buildPredatorPrey, timeText } from '$lib/generators/predator-prey/figure'
 import { pairNamed } from '$lib/generators/predator-prey/pairs'
 import { predatorPreySettings } from '$lib/generators/predator-prey/settings'
+import { answerItems as foodWebAnswer } from '$lib/generators/food-web/figure'
+import { foodWebSettings } from '$lib/generators/food-web/settings'
 import { readoutOf } from '$lib/generators/enzyme-activity/figure'
 import { enzymeSettings } from '$lib/generators/enzyme-activity/settings'
 import { answerLines as dnaAnswer } from '$lib/generators/dna-protein-synthesis/rows'
@@ -157,6 +159,8 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'punnett-square': { definition: punnettSettings, answer: punnettSquareAnswer },
   pedigree: { definition: pedigreeSettings, answer: pedigreeAnswer },
   'predator-prey': { definition: predatorPreySettings, answer: predatorPreyAnswer },
+  // Each trophic level and what is at it (so any blank name), the chain in order, or each pyramid level's energy.
+  'food-web': { definition: foodWebSettings, answer: (s) => ({ heading: 'Answer key', lines: foodWebAnswer(s) }) },
   'enzyme-activity': { definition: enzymeSettings, answer: enzymeActivityAnswer },
   'dna-protein-synthesis': { definition: dnaSettings, answer: dnaProteinSynthesisAnswer },
   'photosynthesis-rate': { definition: photosynthesisSettings, answer: photosynthesisRateAnswer },
