@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { LIQUID_GAP, SCATTER_GAP, SOLID_GAP, arrange, pour, scatter, seededRandom, stack } from './layout'
+import { LIQUID_GAP, SCATTER_GAP, SOLID_GAP, arrange, pour, scatter, stack } from './layout'
 import { discBounds, particleDiscs, type Disc, type Look, type ParticleKind } from './particles'
+import { seededRandom } from './random'
 
 const white: Look = { size: 's', shade: 'white', charge: '' }
 const kinds: ParticleKind[] = [

@@ -2,27 +2,15 @@
 // without touching for a gas, settled close together at the bottom for a
 // liquid, or packed in rows at the bottom for a solid. The randomness comes
 // only from a seed kept in the settings, so a link redraws the same figure
-// and the server draws what the browser will (ADR 0002).
+// and the server draws what the browser will (Chemistry's ADR 0002).
 
 import { discBounds, particleDiscs, type Disc, type ParticleKind } from './particles'
+import { seededRandom } from './random'
 
 /** How the particles in a box are arranged: spread out (scattered, as every
  *  box was before states), close and jumbled, or in rows. */
 export const STATES = ['gas', 'liquid', 'solid'] as const
 export type State = (typeof STATES)[number]
-
-/** A small seeded random number generator (mulberry32): the same seed always
- *  gives the same numbers, from 0 up to 1. */
-export function seededRandom(seed: number) {
-  let a = Math.floor(seed) >>> 0
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0
-    let t = a
-    t = Math.imul(t ^ (t >>> 15), t | 1)
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
-}
 
 /** Space kept between separate particles, and between them and the box. */
 export const SCATTER_GAP = 7

@@ -1,8 +1,8 @@
 // What a particle diagram is drawn from: a short list of particle kinds, each
 // a count, a shape and a look (a size, a shade and, for an ion, a charge) for
 // the center or lone disc and another for the outer ones, and the tidying
-// that turns anything stored or linked into valid ones. See CONTEXT.md for
-// atom, ion, molecule, ion cluster and particle.
+// that turns anything stored or linked into valid ones. See Chemistry's
+// CONTEXT.md for atom, ion, molecule, ion cluster and particle.
 
 export const SIZES = ['xs', 's', 'm', 'l', 'xl'] as const
 export type Size = (typeof SIZES)[number]

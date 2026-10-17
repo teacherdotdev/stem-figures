@@ -1,7 +1,7 @@
 <script lang="ts">
   // How a kind's discs are joined: alone, or a center with outer discs
   // around it. Each choice shows a small drawing of the shape.
-  import { SHAPES, SHADE_FILL, SHAPE_NAMES, particleDiscs, type Shape } from './particles'
+  import { SHAPES, SHADE_FILL, SHAPE_NAMES, particleDiscs, type Shape } from '$shared/particles/particles'
 
   let { shape = $bindable(), name }: { shape: Shape; name: string } = $props()
 
