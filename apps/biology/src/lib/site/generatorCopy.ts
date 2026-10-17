@@ -222,6 +222,51 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'AP Biology'],
   },
 
+  'food-web': {
+    heading: 'Food webs, food chains and energy pyramids with pictures of the organisms',
+    intro: [
+      'Food Webs and Energy Pyramids draws a food web of up to 14 organisms, a food chain taken from it, or an energy pyramid. Each organism is a picture in a box with its name under it, and the arrows point the way energy flows, from what is eaten to what eats it. The web is laid out in rows by trophic level, producers along the bottom and top predators at the top, with decomposers at the side, and the arrows are routed so none runs through an organism.',
+      'Teachers use it for ecology questions on tests, worksheets and slides. Start from a grassland, temperate forest, pond, ocean, Arctic tundra or desert, then add organisms, change what each one eats, or upload a picture of your own. Leave any organism’s name or picture blank, label the trophic levels or leave blank lines for them, or take the arrows off for students to draw. The energy pyramid applies the 10% rule (or any share you choose) to the energy at its base.',
+    ],
+    settings: [
+      'The figure: a food web, a food chain from left to right or bottom to top, or an energy pyramid',
+      'Seven setups: grassland, temperate forest, pond, ocean, Arctic tundra and desert webs with a food chain from each, and the 10% energy pyramid',
+      'Up to 14 organisms, each one of 54 pictures (plants and algae, invertebrates, fish, amphibians and reptiles, birds, mammals and decomposers), one you upload, or just a name in a box',
+      'What each organism eats, its trophic level for an omnivore, whether it is a decomposer, and its name, picture or both left blank',
+      'Trophic level labels as text, blank lines or none, worded as producers and primary, secondary and tertiary consumers, or as herbivores, carnivores and omnivores',
+      'For the energy pyramid: 3 to 5 levels, the energy at the base in kcal, kJ or J (per m² per year if wanted), the share passed up, the values written, blank above the base or all blank, level names from the trophic levels, the food chain or typed, pictures beside each level, and the heat lost',
+      'Color or black and white, boxes on or off, arrows on or off, decomposers on or off, the chart title, an answer key, and label size',
+    ],
+    faqs: [
+      {
+        q: 'Which way do the arrows in a food web point?',
+        a: 'From the organism that is eaten to the one that eats it: grass → rabbit → fox. The arrows show the way energy flows through the ecosystem, which is how every textbook and exam draws them, so the generator always draws them that way.',
+      },
+      {
+        q: 'How are the trophic levels worked out?',
+        a: 'Producers eat nothing and sit at level 1, along the bottom. Every other organism sits one level above the highest thing it eats, so its level is the longest food chain from a producer up to it. An omnivore that eats both plants and animals can be put at a lower level by hand: open it and choose its trophic level. Decomposers sit in a column at the side, with dashed arrows from every level.',
+      },
+      {
+        q: 'Can I use the figures freely, pictures and all?',
+        a: 'Yes. Every organism picture was drawn for this site, so the figures are in the public domain like every other figure here: use them for anything, with no credit line. A picture you upload yourself stays yours.',
+      },
+      {
+        q: 'Can I use my own pictures?',
+        a: 'Yes. Open an organism, choose Picture, then My pictures, and upload a PNG, JPEG, WebP, GIF or SVG. Only upload pictures you have the right to use. Pictures stay in your browser on this computer, and downloaded SVG and PNG figures carry them. A link to the figure opened on another computer shows a dashed box where the picture was, with the name kept.',
+      },
+      {
+        q: 'How does the energy pyramid work out its values?',
+        a: 'Each level gets the share you choose of the energy in the level below it, 10% by default, applied exactly: 10,000 kcal of producers gives 1,000 kcal of primary consumers, 100 of secondary consumers and 10 of tertiary consumers. The rest, 90%, is lost at each level, mostly as heat, which the pyramid can show as arrows out of its side. The levels are drawn the same height and not to scale, since at 10% the top level would be too thin to see.',
+      },
+      {
+        q: 'How do I make a worksheet where students fill in the blanks?',
+        a: 'Open an organism and choose Leave blank for its name, its picture or both; set Trophic levels to Blank line under Labels; or turn Arrows off for students to draw them. For an energy pyramid, set Energy written to Producers only, so students work out the rest. Turn on the answer key under Chart title for a copy with the answers.',
+      },
+    ],
+    imageAlt: 'A printable grassland food web of pictures, grass, grasshopper, rabbit, mouse, frog, songbird, snake, fox and hawk, with arrows the way energy flows and a mushroom as decomposer, made with Food Webs and Energy Pyramids',
+    educationalLevel: ['Elementary school', 'Middle school', 'High school', 'AP Biology'],
+  },
+
   'enzyme-activity': {
     heading: 'Enzyme activity graphs: temperature, pH, substrate concentration and inhibitors',
     intro: [

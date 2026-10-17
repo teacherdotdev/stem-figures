@@ -275,6 +275,62 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('food-web', [
+    {
+      slug: 'grassland-food-web-trophic-levels',
+      title: 'Grassland food web with trophic levels',
+      alt: 'Food web of organism pictures in boxes, named underneath, in rows labeled Producers (grass), Primary consumers (grasshopper, rabbit, mouse), Secondary consumers (frog, songbird, fox), Tertiary consumers (snake) and Quaternary consumers (hawk), with arrows from each food up to what eats it, and a mushroom at the side labeled Decomposers with dashed arrows from every row',
+      caption:
+        'A grassland food web, its arrows pointing the way energy flows, from what is eaten to what eats it. Grass is the producer along the bottom. Grasshoppers, rabbits and mice eat the grass; frogs and songbirds eat grasshoppers, and foxes eat rabbits and mice; snakes eat frogs, mice and songbirds; and hawks, at the top, eat snakes, rabbits, mice and songbirds. Each row is labeled with its trophic level, and a mushroom at the side breaks down dead matter from every level.',
+      settings: { levelLabels: 'text' },
+    },
+    {
+      slug: 'pond-food-chain-worksheet-blank-names',
+      title: 'Pond food chain worksheet: name the organisms and trophic levels',
+      alt: 'Food chain of five organism pictures in boxes from left to right, phytoplankton, an unnamed copepod, small fish, an unnamed large fish and a heron, joined by arrows, with a blank line above each for its trophic level and blank lines under the two unnamed organisms',
+      caption:
+        'A pond food chain from left to right: phytoplankton are eaten by zooplankton, which are eaten by small fish, which are eaten by a larger fish, which is eaten by a heron. The zooplankton’s and the large fish’s names are left as blank lines, and a blank line above each organism is for its trophic level, from producer to quaternary consumer.',
+      settings: {
+        figure: 'chain',
+        web: 'algae;phytoplankton;zooplankton!n=phytoplankton;snail=algae;beetle:Water beetle=zooplankton;duck=algae,snail;small-fish=zooplankton,snail;frog=beetle,snail;turtle=algae,small-fish;large-fish!n=small-fish,frog;heron=small-fish,large-fish,frog;bacteria',
+        chain: 'phytoplankton,zooplankton,small-fish,large-fish,heron',
+        levelLabels: 'blank',
+      },
+    },
+    {
+      slug: 'energy-pyramid-10-percent-rule-worksheet',
+      title: 'Energy pyramid worksheet: the 10% rule',
+      alt: 'Energy pyramid of four stacked trapezoids, Producers at the base with 10,000 kcal, then Primary, Secondary and Tertiary consumers with blank lines before kcal, a picture beside each level (grass, grasshopper, frog, snake) and an arrow out of each level’s right side labeled 90% lost as heat',
+      caption:
+        'An energy pyramid for a grassland food chain, with 10,000 kcal in the producers at its base. Each level passes 10% of its energy to the level above and loses 90%, mostly as heat, shown by the arrows out of its side. The values above the base are blank lines for students to work out: 1,000 kcal for the primary consumers, 100 for the secondary consumers and 10 for the tertiary consumers.',
+      settings: { figure: 'pyramid', chain: 'grass,grasshopper,frog,snake', values: 'base', pictures: true, heat: 'text' },
+    },
+    {
+      slug: 'ocean-marine-food-web',
+      title: 'Ocean food web: phytoplankton to orca',
+      alt: 'Marine food web of organism pictures in color: phytoplankton and kelp at the bottom; zooplankton, krill and a crab above them; small fish and a baleen whale; a large fish; a seal; and a shark and an orca at the top, with arrows from each food to what eats it and bacteria at the side as decomposers',
+      caption:
+        'An ocean food web in color. Phytoplankton and kelp are the producers. Zooplankton and krill eat phytoplankton, and crabs eat kelp; small fish eat zooplankton and krill, and baleen whales filter krill and zooplankton; large fish eat small fish and crabs; seals eat fish; and sharks and orcas, at the top, eat seals and large fish. Bacteria at the side break down dead matter from every level.',
+      settings: {
+        web: 'phytoplankton;kelp;zooplankton=phytoplankton;krill=phytoplankton;crab=kelp;small-fish=zooplankton,krill;whale=krill,zooplankton;large-fish=small-fish,crab;seal=small-fish,large-fish;shark=large-fish,seal;orca=seal,large-fish;bacteria',
+        chain: 'phytoplankton,krill,small-fish,seal,orca',
+      },
+    },
+    {
+      slug: 'desert-food-web-herbivores-carnivores-omnivores',
+      title: 'Desert food web: herbivores, carnivores and omnivores',
+      alt: 'Desert food web of organism pictures in rows labeled Producers (cactus, grass), Herbivores (grasshopper, mouse, rabbit), Omnivores and carnivores (scorpion, lizard, coyote), Carnivores (snake) and Top carnivores (hawk), with arrows from each food to what eats it and bacteria at the side labeled Decomposers',
+      caption:
+        'A desert food web labeled by what each organism eats. Cactus and grass are the producers; grasshoppers, mice and rabbits are herbivores; lizards and scorpions eat grasshoppers; coyotes eat rabbits, mice and cactus fruit, which makes them omnivores; snakes eat mice and lizards; and hawks eat snakes, rabbits and lizards. Bacteria at the side are the decomposers.',
+      settings: {
+        web: 'cactus;grass;grasshopper=grass;mouse=cactus,grass;rabbit=cactus,grass;lizard=grasshopper;scorpion=grasshopper;snake=mouse,lizard;hawk=snake,rabbit,lizard;coyote=rabbit,mouse,cactus;bacteria',
+        chain: 'grass,grasshopper,lizard,snake,hawk',
+        levelLabels: 'text',
+        wording: 'diet',
+      },
+    },
+  ]),
+
   ...examplesOf('enzyme-activity', [
     {
       slug: 'enzyme-activity-ph-graph-pepsin-amylase-trypsin',
