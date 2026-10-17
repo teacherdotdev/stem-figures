@@ -24,6 +24,8 @@ import { answerLines as dnaAnswer } from '$lib/generators/dna-protein-synthesis/
 import { dnaSettings } from '$lib/generators/dna-protein-synthesis/settings'
 import { readoutOf as photosynthesisReadout } from '$lib/generators/photosynthesis-rate/figure'
 import { photosynthesisSettings } from '$lib/generators/photosynthesis-rate/settings'
+import { answerLines as osmosisAnswer } from '$lib/generators/osmosis/figure'
+import { osmosisSettings } from '$lib/generators/osmosis/settings'
 import { answerLines as gelAnswer } from '$lib/generators/gel-electrophoresis/figure'
 import { gelSettings } from '$lib/generators/gel-electrophoresis/settings'
 import { answerLine as pipetteAnswerLine, pipetteSettings } from '$lib/generators/micropipette-reading/settings'
@@ -158,6 +160,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'enzyme-activity': { definition: enzymeSettings, answer: enzymeActivityAnswer },
   'dna-protein-synthesis': { definition: dnaSettings, answer: dnaProteinSynthesisAnswer },
   'photosynthesis-rate': { definition: photosynthesisSettings, answer: photosynthesisRateAnswer },
+  osmosis: { definition: osmosisSettings, answer: (s) => ({ heading: 'Answer key', lines: osmosisAnswer(s) }) },
   'gel-electrophoresis': { definition: gelSettings, answer: gelElectrophoresisAnswer },
   'micropipette-reading': { definition: pipetteSettings, answer: (s) => ({ heading: 'Answer key', lines: [pipetteAnswerLine(s)] }) },
 }

@@ -435,6 +435,66 @@ export const EXAMPLES: Example[] = [
       settings: { letters: true, color: false },
     },
   ]),
+
+  ...examplesOf('osmosis', [
+    {
+      slug: 'red-blood-cells-hypotonic-isotonic-hypertonic-solutions',
+      title: 'Red blood cells in hypotonic, isotonic and hypertonic solutions',
+      alt: 'Three red blood cells, each in a box of salt solution with gray NaCl particles and blue water particles: A in a hypotonic 0.45% solution, swollen round, with water arrows pointing in; B in an isotonic 0.9% solution, a normal disc with arrows both ways and the words No net movement; C in a hypertonic 1.8% solution, shrunken with spiky edges, with water arrows pointing out',
+      caption:
+        'The same red blood cell, 0.9% NaCl inside, in three salt solutions. In the hypotonic solution (0.45% NaCl) water moves in and the cell swells; in the isotonic solution (0.9%) water crosses equally both ways, so there is no net movement and it stays a normal biconcave disc; in the hypertonic solution (1.8%) water moves out and the cell shrinks and crenates. Solute particles are drawn as crowded as their concentration, with water particles in the room they leave.',
+      settings: {},
+    },
+    {
+      slug: 'red-blood-cell-in-pure-water-hypotonic-bursts',
+      title: 'Red blood cell in pure water: hypotonic, swells and bursts',
+      alt: 'A red blood cell with a few gray NaCl particles inside, in a box of pure water full of blue water particles, with water arrows pointing into the cell, labeled Hypotonic solution, then an arrow to the same cell swollen and burst open, its membrane torn, labeled Bursts (lysed)',
+      caption:
+        'A red blood cell, 0.9% NaCl inside, put in pure water. The water outside is hypotonic to the cell, so water moves into it by osmosis, shown by the arrows. On the right the cell has swollen until its membrane tears and it bursts, called hemolysis or lysis.',
+      settings: { view: 'both', out1: 0, burst: true },
+    },
+    {
+      slug: 'red-blood-cell-in-isotonic-saline-0-9-percent',
+      title: 'Red blood cell in 0.9% saline: isotonic, no net movement',
+      alt: 'A red blood cell with gray NaCl particles inside in a box of 0.9% NaCl solution with as many particles per space, water arrows going both ways across the membrane labeled No net movement, labeled Isotonic solution, then an arrow to the same normal disc-shaped cell',
+      caption:
+        'A red blood cell, 0.9% NaCl inside, in 0.9% saline, the concentration of normal saline drips. Inside and outside are isotonic, so water crosses the membrane equally both ways: no net movement. The cell keeps its normal biconcave shape, drawn pale in the middle.',
+      settings: { view: 'both', out1: 0.9 },
+    },
+    {
+      slug: 'red-blood-cell-in-salt-solution-hypertonic-crenated',
+      title: 'Red blood cell in 5% salt solution: hypertonic, shrinks and crenates',
+      alt: 'A red blood cell with a few gray NaCl particles inside, in a box crowded with NaCl particles, with water arrows pointing out of the cell, labeled Hypertonic solution, then an arrow to the same cell shrunken with spiky edges, labeled Shrinks (crenated)',
+      caption:
+        'A red blood cell, 0.9% NaCl inside, in a 5% NaCl solution. The solution is hypertonic to the cell, so water moves out of it by osmosis, shown by the arrows. On the right the cell has shrunk and its edge has crinkled into spikes: it is crenated.',
+      settings: { view: 'both' },
+    },
+    {
+      slug: 'plant-cell-plasmolysis-hypertonic-sugar-solution',
+      title: 'Plant cell plasmolysis in a strong sugar solution',
+      alt: 'A plant cell with a nucleus and chloroplasts, its cell wall, vacuole and cell membrane labeled down the left, in a box crowded with gray sucrose particles, with water arrows pointing out across the wall, labeled Hypertonic solution, then an arrow to the same cell plasmolyzed, its membrane and cytoplasm pulled away from the wall into a rounded shape around a small vacuole, with the sugar solution filling the gap',
+      caption:
+        'A plant cell, 5% sucrose in its vacuole, in a 30% sucrose solution. The solution is hypertonic, so water leaves the vacuole and the cytoplasm and crosses the membrane and the cell wall. On the right the cell is plasmolyzed: the vacuole has shrunk, the membrane and cytoplasm have pulled away from the wall, and the sugar solution, which passes through the wall, fills the gap between them.',
+      settings: { scene: 'plant', view: 'both', name1: 'sucrose', in1: 5, out1: 30, partsMode: 'text' },
+    },
+    {
+      slug: 'u-tube-osmosis-sucrose-and-water-before-and-after',
+      title: 'U-tube osmosis: sucrose solution and water, before and after',
+      alt: 'A U-tube with a selectively permeable membrane at the bottom: side A holds 10% sucrose with gray sucrose particles and fewer blue water particles, side B holds pure water, the levels equal, with a water arrow from side B across the membrane to side A; then an arrow to the same U-tube with the level higher on side A and lower on side B',
+      caption:
+        'A U-tube split at the bottom by a selectively permeable membrane, with 10% sucrose on side A and pure water on side B, the levels equal at the start. Sucrose can’t cross the membrane, so side A is hypertonic and water moves by osmosis from side B to side A. On the right the level has risen on side A and fallen on side B.',
+      settings: { scene: 'utube', view: 'both', name1: 'sucrose', in1: 10, out1: 0 },
+    },
+    {
+      slug: 'ap-biology-dialysis-tubing-bag-glucose-starch',
+      title: 'AP Biology dialysis tubing bag with glucose and starch',
+      alt: 'A dialysis tubing bag tied to a rod, in a beaker of pure water, holding white glucose particles and a dark starch particle among blue water particles; water arrows point into the bag and a dashed arrow labeled glucose points out of it; then an arrow to the same bag swollen larger, with glucose particles now on both sides and the starch still inside',
+      caption:
+        'A dialysis tubing bag holding 15% glucose and 3% starch, in a beaker of pure water. Glucose is small enough to cross the tubing, so it moves out of the bag until its concentration is the same on both sides; starch can’t cross, so the beaker is hypotonic to the bag and water moves in. On the right the bag has swollen, with glucose on both sides and the starch still inside.',
+      settings: { scene: 'bag', view: 'both', on1: false, on2: true, in2: 15, on3: true, in3: 3 },
+    },
+  ]),
+
   ...examplesOf('gel-electrophoresis', [
     {
       slug: 'dna-fingerprinting-gel-crime-scene-suspects',
