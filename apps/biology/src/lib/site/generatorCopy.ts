@@ -222,6 +222,186 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'AP Biology'],
   },
 
+  'enzyme-activity': {
+    heading: 'Enzyme activity graphs: temperature, pH, substrate concentration and inhibitors',
+    intro: [
+      'Enzyme Activity graphs how fast an enzyme works, the rate of reaction, against temperature, pH or substrate concentration. Against temperature the rate rises to the optimum, then falls steeply as the enzyme denatures; against pH it makes a bell around the optimum pH; against substrate concentration it rises and levels off at Vmax, following Michaelis–Menten. Pick an enzyme for each curve, from a human enzyme and Taq polymerase to pepsin, salivary amylase, trypsin and catalase, or an unknown enzyme with an optimum and width of your own.',
+      'Teachers use it for questions on tests, worksheets and slides. Put up to three curves on one graph, like pepsin, amylase and trypsin against pH, or an enzyme with a competitive and a non-competitive inhibitor, told apart by solid, dashed and dotted lines and a key, so they read in black and white. The graphs show shape only, with no numbers on the axes. Mark the optimum, where the enzyme has denatured, Vmax, and ½Vmax with Km, each labeled, left as a blank line for students, or unlabeled.',
+    ],
+    settings: [
+      'Rate against temperature, pH or substrate concentration',
+      'Up to three curves, each one of the enzymes (human enzyme, Taq polymerase, pepsin, salivary amylase, trypsin or catalase) or an unknown enzyme with its own optimum and width, named in a key',
+      'Against substrate concentration, each curve with no inhibitor, a competitive inhibitor or a non-competitive one, how soon the rate levels off (Km), and how strong the inhibitor is',
+      'The optimum and denaturation marked with dots, or Vmax, ½Vmax and Km with dashed lines to the axes, named for their curve when there’s more than one, each labeled, left as a blank line for students, or unlabeled',
+      'Color or black and white, gridlines, arrows at the axes’ ends, the chart and axis titles (or blank lines), and label size',
+    ],
+    faqs: [
+      {
+        q: 'Why does an enzyme’s rate fall above its optimum temperature?',
+        a: 'Warming speeds up the reaction, because the enzyme and substrate molecules move faster and collide more often, so the rate rises up to the optimum. Past it, the heat breaks the bonds holding the enzyme’s shape, its active site changes shape and the substrate no longer fits. The enzyme is denatured, and the rate falls steeply to zero. The graph shows that as a slow rise and a sharp fall.',
+      },
+      {
+        q: 'What temperatures and pH do the enzymes work best at?',
+        a: 'The human enzyme, pepsin, salivary amylase, trypsin and catalase work best at body temperature, about 37 °C, and Taq polymerase, from bacteria in hot springs, at about 75 °C. Pepsin works best at about pH 2 in the stomach, salivary amylase and catalase at about pH 7, trypsin at about pH 8 in the small intestine, and Taq polymerase at about pH 8.3. For any other optimum, choose Unknown enzyme and type your own.',
+      },
+      {
+        q: 'Why are there no numbers on the axes?',
+        a: 'The graphs show the shapes students learn, like a rise to an optimum and a steep fall, rather than data from one experiment, so they leave the numbers off. Each enzyme’s optimum still sits in the right place along the axis, and the settings panel says where each one works best.',
+      },
+      {
+        q: 'How do competitive and non-competitive inhibitors change the graph?',
+        a: 'A competitive inhibitor fits the active site and competes with the substrate, so with enough substrate the enzyme still reaches the same Vmax, but it takes more substrate to get there: Km is higher. A non-competitive inhibitor binds somewhere else and changes the enzyme’s shape, so adding substrate can’t make up for it: Vmax is lower, and Km stays the same. Choose Substrate, then give the curves no inhibitor, a competitive inhibitor and a non-competitive one.',
+      },
+      {
+        q: 'What are Vmax and Km?',
+        a: 'Vmax is the fastest rate an enzyme reaches when every active site is busy, where the curve levels off. Km, the Michaelis constant, is the substrate concentration at which the rate is half of Vmax; the lower it is, the more easily the enzyme takes up its substrate. Under Marked, Vmax gets a dashed line across, and ½Vmax and Km a dot with dashed lines to both axes, labeled at the axes. With an inhibitor, each label names its curve, like Vmax (non-competitive) or Km (competitive).',
+      },
+      {
+        q: 'How do I make a worksheet where students label the graph?',
+        a: 'Under Marked, set the labels to Blank line, and each mark gets a line for students to write on: the optimum, denaturation, Vmax, ½Vmax or Km. Turn every curve off for blank axes to sketch on, or set the axis titles to blank lines too.',
+      },
+    ],
+    imageAlt: 'A printable enzyme activity graph of pepsin, salivary amylase and trypsin against pH, each curve a bell around its optimum, made with Enzyme Activity',
+    educationalLevel: ['Middle school', 'High school', 'AP Biology'],
+  },
+
+  'dna-protein-synthesis': {
+    heading: 'DNA and protein synthesis figures: transcription, translation and base pairing',
+    intro: [
+      'DNA and Protein Synthesis draws a gene as flat strands of bases, lined up base under base: the DNA coding strand (5′→3′), the DNA template strand (3′→5′), the mRNA (5′→3′), the tRNA anticodons and the amino acids. Type any one of the strands, the template strand starting TAC as most worksheets print it, the coding strand or the mRNA, and the rest is worked out by base pairing: A with T in DNA and with U in RNA, G with C. The mRNA is read in codons from the first AUG with the standard genetic code, until a stop codon.',
+      'Teachers use it for transcription and translation questions on tests, worksheets and slides. Leave any row blank, or a share of its boxes, for students to fill in, like the template strand for "draw the other half of the DNA", label the 5′ and 3′ ends or leave them blank, and show the amino acids as a chain of beads or as words. For multiple choice, put up to four wrong pairings in one row, then shuffle them for each answer choice. The square codon chart can go beside the strands or print on its own.',
+    ],
+    settings: [
+      'The sequence, up to 36 bases (12 codons), typed as the DNA template strand, the DNA coding strand or the mRNA, in any case, with spaces, hyphens or written 5′ and 3′ ends',
+      'The reading frame: from the first AUG, leaving the bases before it untranslated, or from the first base',
+      'Each row (coding strand, template strand, mRNA, tRNA anticodons, amino acids) shown, blank, partly blank by a share you set and a shuffle, or off',
+      'Row names on the left, as written, in your own words, as blank lines or not at all; the 5′ and 3′ ends shown, blank or off',
+      'Amino acids by three-letter or one-letter code or full name, as a chain of beads or words under each codon',
+      'Gaps between codons, a bracket under each codon, hydrogen bonds between the DNA strands (2 for A–T, 3 for G–C), and bases colored to read apart in grayscale',
+      'Up to four deliberate wrong pairings in one row, for multiple choice, shuffled, and listed in the answer key',
+      'The standard codon chart beside the strands, below them or alone, with the start and stop codons in bold; the chart title, answer key and label size',
+    ],
+    faqs: [
+      {
+        q: 'Which way is the template strand written?',
+        a: 'Left to right from its 3′ end to its 5′ end, so it lines up base under base with the coding strand, which runs 5′ to 3′: the two strands are antiparallel. Written that way, a template strand usually starts TAC, which is transcribed into the start codon AUG. If you type a strand with its ends written the other way round, like 5′-GGCAT-3′ for a template strand, the generator turns it around and says so.',
+      },
+      {
+        q: 'How is the mRNA worked out?',
+        a: 'The mRNA is complementary to the template strand: A on the template gives U in the mRNA, T gives A, G gives C and C gives G. So it matches the coding strand, with U in place of T. It is made 5′ to 3′, and the figure writes it that way, under the template strand.',
+      },
+      {
+        q: 'Where does translation start and stop?',
+        a: 'At the first AUG in the mRNA, the start codon, which codes for methionine (Met). Bases before it get no codons or amino acids. Each codon after it is read in turn until the first stop codon, UAA, UAG or UGA, which reads Stop and codes for no amino acid; codons after it get none either. If there is no AUG, nothing is translated, unless you set the reading frame to start from the first base.',
+      },
+      {
+        q: 'How are the tRNA anticodons written?',
+        a: 'Each anticodon is complementary to its codon and antiparallel to it, so under the codon 5′-AUG-3′ the anticodon reads 3′-UAC-5′, written left to right to line up base under base. There is one under each codon that codes for an amino acid; a stop codon is read by a release factor, not a tRNA, so it has no anticodon. Like all RNA, anticodons have U, never T.',
+      },
+      {
+        q: 'How do I make multiple choice answer choices?',
+        a: 'Under Mistakes, choose how many wrong pairings (up to four) and which row they go in, then Shuffle for a different set. Each mistake is a base that does not pair as it should, or in RNA a T where U belongs. Make choice A with no mistakes, then choices B to D with mistakes, shuffled for each; the Classic setups have a set of four ready. Turn on the answer key and it lists where each mistake is, like "mRNA base 7 should be U, not C".',
+      },
+      {
+        q: 'Can I print it in black and white?',
+        a: 'Yes, it is black and white unless you turn on Color the bases. The colors for A, T or U, G and C go from light to dark, so they still read apart on a grayscale copy, and the letter is always printed in each box.',
+      },
+    ],
+    imageAlt: 'A DNA template strand starting TAC with its coding strand, mRNA, tRNA anticodons and the amino acids Met, Pro, Lys, Phe and Gly lined up base under base, made with DNA and Protein Synthesis',
+    educationalLevel: ['Middle school', 'High school', 'AP Biology'],
+  },
+
+  'photosynthesis-rate': {
+    heading: 'Photosynthesis rate graphs: limiting factors, light intensity, CO₂, temperature and gas exchange',
+    intro: [
+      'Photosynthesis Rate graphs how fast a plant photosynthesizes against light intensity, its distance from the lamp, CO₂ concentration or temperature. Against light the rate rises in a straight line, bends and levels off where CO₂ or temperature limits it; the farther the lamp, the dimmer the light, as 1/d², so the rate falls. Against CO₂ it rises and levels off where light limits it, and against temperature it rises to an optimum and falls as the enzymes denature, flattened in dim light, where light limits it whatever the temperature. It can also follow the CO₂ in a closed chamber over time in the dark, at the compensation point and in bright light, or the CO₂ and O₂ around one plant, over time or against each other.',
+      'Teachers use it for limiting-factor questions on tests, worksheets and slides. Put up to three curves on one graph, like the classic 0.1 % CO₂ at 25 °C, 0.1 % at 15 °C and 0.04 % at 15 °C, told apart by solid, dashed and dotted lines and a key, so they read in black and white. The axes show shape only, or numbers for the pondweed practical. Mark where each curve levels off, what limits the rate on the rise and the plateau, lettered points to ask about, the optimum and the compensation point, each labeled, a blank line for students, or unlabeled.',
+    ],
+    settings: [
+      'Rate against light intensity or distance from the lamp, CO₂ concentration or temperature; the CO₂ in a closed chamber over time; or the CO₂ and O₂ around one plant, over time or against each other',
+      'Up to three curves, each at its own CO₂ concentration, temperature or light intensity, named in a key automatically or as you type',
+      'Gross or net rate (less respiration), in arbitrary units or bubbles a minute; CO₂ in % or ppm',
+      'In a closed chamber, the starting CO₂, the time shown, and the light going off part way, with the dark shaded',
+      'The saturation point with dashed lines to the axes, what limits the rate on the rise and the plateau, lettered points A, B, C, the optimum and the compensation point, each labeled, left as a blank line for students, or unlabeled',
+      'Points measured off the curves, scattered a little, or points alone for students to draw the line',
+      'Shape only, or numbered axes, fitted or typed, with gridlines; color or black and white, the chart and axis titles (or blank lines), and label size',
+      'Setups for the classic limiting-factor graph, pondweed and lamp distance, CO₂ at two light intensities, temperature in high and low light, a closed chamber in dark, dim and bright light, and CO₂ and O₂ in the light then the dark',
+    ],
+    faqs: [
+      {
+        q: 'What is a limiting factor in photosynthesis?',
+        a: 'The factor in shortest supply, which holds the rate back: raising it speeds photosynthesis up, and raising anything else doesn’t. On the rising part of a light intensity graph, light is limiting, so the curves for different CO₂ concentrations and temperatures share one straight line. Where a curve levels off, light is no longer limiting: something else, like CO₂ concentration or temperature, is. That’s why the curve at a higher CO₂ concentration or a better temperature levels off higher. Under Marked, Limiting factors writes this on the graph.',
+      },
+      {
+        q: 'Why does the rate fall as the lamp moves away?',
+        a: 'Light spreads out from the lamp, so its intensity falls with the square of the distance: twice as far away, a quarter as bright. Close to the lamp the light is bright enough that something else limits the rate, so it stays level; farther away light is limiting, and the rate falls with it. Choose Distance from lamp along the x-axis, or the Pondweed and lamp distance setup, which counts bubbles a minute on numbered axes.',
+      },
+      {
+        q: 'What is the compensation point?',
+        a: 'The light intensity at which photosynthesis just keeps up with respiration, so the plant takes in as much CO₂ as it gives off and the net rate is 0. Choose Net rate and the curve starts below 0 in the dark, where the plant only respires, and crosses 0 at the compensation point, which can be marked. In a closed chamber at that light, the CO₂ stays level.',
+      },
+      {
+        q: 'Why does a temperature graph look flat in dim light?',
+        a: 'In dim light, light limits the rate, so warming the plant toward its enzymes’ optimum can’t speed it up much: the curve has a flat top, and only falls away where it’s cold or the enzymes denature. In bright light the rate follows the enzymes, rising to the optimum near 30 °C and falling steeply after it. The Rate against temperature at high and low light setup shows both.',
+      },
+      {
+        q: 'What happens to the CO₂ around a plant in a closed chamber?',
+        a: 'In the dark the plant only respires, so the CO₂ rises in a straight line. In dim light at the compensation point, photosynthesis uses just what respiration gives off, so it stays level. In bright light it falls, until there’s so little CO₂ that photosynthesis only keeps up with respiration, the CO₂ compensation point, and it levels off there. The O₂ does the opposite, rising as the CO₂ falls, about one O₂ for each CO₂, so against each other they make a straight falling line.',
+      },
+      {
+        q: 'Are the numbers real data?',
+        a: 'They’re made to look like a school practical, not measured from one plant, so the axes show shape only unless you choose Numbered. The light-limited rise has the same slope at every CO₂ and temperature, the temperature curve is Enzyme Activity’s, with an optimum at 30 °C, and respiration doubles every 10 °C. The settings panel says where each curve levels off, and the answer key on each example says the same.',
+      },
+    ],
+    imageAlt: 'A printable graph of the rate of photosynthesis against light intensity, three curves rising together then levelling off at different heights for different CO₂ concentrations and temperatures, made with Photosynthesis Rate',
+    educationalLevel: ['Middle school', 'High school', 'AP Biology'],
+  },
+
+  osmosis: {
+    heading: 'Osmosis and tonicity figures: red blood cells, plant cells, U-tubes and dialysis bags',
+    intro: [
+      'Osmosis and Tonicity draws a cell or container, the solution around it or beside it, and the particles in both: a red blood cell or a plant cell in a solution, a beaker split by a selectively permeable membrane, a U-tube with the membrane at the bottom, or a dialysis-tubing bag in a beaker. Type up to three solutes, each with its concentration on each side and whether it can cross the membrane, and it works out which side is hypertonic, which way water moves and what happens: a red blood cell shrinks, stays the same, swells or bursts, a plant cell becomes plasmolyzed, flaccid or turgid, a U-tube’s level rises on one side, and a bag swells or shrinks.',
+      'Teachers use it for tests, worksheets and slides on osmosis, diffusion and cell transport. Show the start for students to predict, the result, or both with an arrow between, or the same cell in a hypotonic, an isotonic and a hypertonic solution side by side, in order or shuffled. Arrows show the net movement of water and of any solute that can cross, like glucose leaving an AP Biology dialysis bag while starch stays in. Any label can be a blank line and any arrow an empty box for students to fill in, and the answer key prints under the figure.',
+    ],
+    settings: [
+      'Scene: a red blood cell or a plant cell in a solution, a split beaker, a U-tube, or a dialysis bag in a beaker',
+      'Show: the start, the result, both with an arrow between, or (for a cell) a three-up in a hypotonic, an isotonic and a hypertonic solution, showing results or starts, in order or shuffled',
+      'Up to three solutes, each with a name (with subscripts, like C_6H_12O_6), its concentration on each side in %, M or mM, whether it can cross the membrane, and its particles’ size, shade and charge',
+      'Water as small discs filling the room the solutes leave, or left off, with a Shuffle button for a new layout',
+      'Labels for the concentrations, each side’s tonicity, the membrane, a plant cell’s wall and vacuole, and the result, each as text, a blank line or none',
+      'Arrows for the net movement of water and of solutes that can cross, shown, left as empty boxes, or left off',
+      'Color or black and white, a key, whether a red blood cell bursts or swells in a hypotonic solution, a chart title and an answer key',
+    ],
+    faqs: [
+      {
+        q: 'How does it decide which solution is hypertonic?',
+        a: 'From the concentrations you type, counting only solutes that cannot cross the membrane. The side with more of them is hypertonic and the other hypotonic; equal totals are isotonic. A solute that can cross, like glucose through dialysis tubing, moves until it is the same on both sides, so it never changes which way water moves. Each solute counts once per unit typed, so NaCl is not split into Na⁺ and Cl⁻.',
+      },
+      {
+        q: 'Which way do the water arrows point?',
+        a: 'Water moves by osmosis from the hypotonic side, with less solute, to the hypertonic side, with more. In a hypertonic solution the arrows point out of the cell; in a hypotonic one they point in. In an isotonic solution there is an arrow each way, labeled no net movement, since water still crosses but equally both ways.',
+      },
+      {
+        q: 'How many particles are drawn?',
+        a: 'Solute particles are drawn as crowded as their concentration, so the same concentration looks the same on both sides. The scale is picked so the busiest side has about 24 particles, and the settings panel says what one particle stands for, like 0.2%. Water particles fill the room the solutes leave, so the side with more solute has fewer water particles.',
+      },
+      {
+        q: 'What happens to red blood cells and plant cells?',
+        a: 'In a hypertonic solution a red blood cell loses water and shrinks into a crenated, spiky shape; in an isotonic one it stays a normal biconcave disc; in a hypotonic one it swells, or bursts (lysis) if you choose that under Look. A plant cell’s wall stops it bursting: in a hypotonic solution it becomes turgid, in an isotonic one flaccid, and in a hypertonic one plasmolyzed, its membrane pulling away from the wall.',
+      },
+      {
+        q: 'How do I make the AP Biology dialysis bag figure?',
+        a: 'Choose Dialysis bag, then give it glucose that can cross and starch that cannot, in the bag, with pure water in the beaker. The beaker is hypotonic to the bag, so water moves in and the bag swells, while glucose moves out until it is equal on both sides. Turn the arrows to Blank boxes for students to draw which way each moves.',
+      },
+      {
+        q: 'How do I make a worksheet where students predict the result?',
+        a: 'Show the start, set the Tonicity label to Blank and the arrows to Blank boxes, and students write which solution is hypertonic and draw which way water moves. For the three-up, choose Starts and Shuffled, so the cells are in a mixed order with letters A to C, and turn on the answer key for your copy.',
+      },
+    ],
+    imageAlt: 'Three red blood cells in a hypotonic, an isotonic and a hypertonic salt solution, swelling, staying the same and shrinking, with solute and water particles and arrows for water movement, made with Osmosis and Tonicity',
+    educationalLevel: ['Middle school', 'High school', 'AP Biology'],
+  },
+
   'gel-electrophoresis': {
     heading: 'Gel electrophoresis figures: DNA fingerprinting, PCR and restriction digests',
     intro: [

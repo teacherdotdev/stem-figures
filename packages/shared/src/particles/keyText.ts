@@ -2,8 +2,7 @@
 // superscripts written the same way typed and in the page address: H_2O,
 // SO_4^{2-}, Na^+. A subscript is _ and one character or _{…}, a superscript
 // ^ and one character or ^{…}, and a superscript's hyphen is a true minus
-// sign. Physics labels are written the same way; this is Chemistry's own
-// copy, so the sites stay independent.
+// sign. Physics labels are written the same way, in its own copy.
 
 export interface Run {
   text: string

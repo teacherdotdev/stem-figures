@@ -5,12 +5,13 @@
   // settings, worked out by whoever shows the figure, since the page also
   // reports what didn't fit.
   import FigureFrame from '$lib/shared/FigureFrame.svelte'
-  import Discs from './Discs.svelte'
-  import KeyDrawing from './KeyDrawing.svelte'
-  import { ARROW_PAD, arrowLayout, boxesSize, figureLayout, keyLabel, keyLayout } from './key'
-  import { plainText } from './keyText'
-  import type { State } from './layout'
-  import { describeKind, describeParticle, type Disc, type ParticleKind } from './particles'
+  import Discs from '$shared/particles/Discs.svelte'
+  import KeyDrawing from '$shared/particles/KeyDrawing.svelte'
+  import { keyLabel, keyLayout } from '$shared/particles/key'
+  import { plainText } from '$shared/particles/keyText'
+  import type { State } from '$shared/particles/layout'
+  import { describeKind, describeParticle, type Disc, type ParticleKind } from '$shared/particles/particles'
+  import { ARROW_PAD, arrowLayout, boxesSize, figureLayout } from './figureLayout'
   import { DOUBLE_INSET, keyKinds, type BoxContents, type ParticleSettings } from './settings'
 
   let { settings, box, svg = $bindable() }: { settings: ParticleSettings; box: BoxContents; svg?: SVGSVGElement } = $props()

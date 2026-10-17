@@ -10,14 +10,16 @@ Components and helpers used by more than one STEM Figures site, imported as
 | `Modal`                                                                                     | math, chemistry, physics, biology, engineering |
 | `LabelField`                                                                                | math, chemistry, biology, engineering     |
 | `GeneratorPage`, `generatorState`, and through them `FigureCanvas`, `Presets`, `presetStore`, `history`, `exporting`, `license` | math, chemistry, physics, biology (`license` also in each one's `/reuse` page and example pages) |
-| `labelSize`                                                                                 | math, chemistry (Titration Curve, Heating and Cooling Curve), biology (Cell Diagram, Population Growth, Punnett Square, Mitosis & Meiosis, Predator–Prey Cycles), physics (Wave) |
-| `graph/`: `Grid`, `grid`, `axes`, `AxisSettings`, `TitleSettings`, `GridlineSettings`       | math (Coordinate Grid), chemistry (Titration Curve, Heating and Cooling Curve), biology (Population Growth, Predator–Prey Cycles), physics (Wave, all but `Grid`) |
-| `graph/`: `numbering`, `caps`, `CapPicker`, `colors`                                        | math, chemistry (Titration Curve, Heating and Cooling Curve), biology (Population Growth, Predator–Prey Cycles), physics (Wave) |
+| `labelSize`                                                                                 | math, chemistry (Titration Curve, Heating and Cooling Curve), biology (Cell Diagram, Population Growth, Punnett Square, Mitosis & Meiosis, Predator–Prey Cycles, Enzyme Activity, DNA and Protein Synthesis, Photosynthesis Rate), physics (Wave) |
+| `graph/`: `Grid`, `grid`, `axes`, `AxisSettings`, `TitleSettings`, `GridlineSettings`       | math (Coordinate Grid), chemistry (Titration Curve, Heating and Cooling Curve), biology (Population Growth, Predator–Prey Cycles, Enzyme Activity, Photosynthesis Rate), physics (Wave, all but `Grid`) |
+| `graph/`: `numbering`, `caps`, `CapPicker`, `colors`                                        | math, chemistry (Titration Curve, Heating and Cooling Curve), biology (Population Growth, Predator–Prey Cycles, Enzyme Activity, Photosynthesis Rate), physics (Wave) |
+| `graph/labels`: the label placer (`placer`, `besidePoint`, `alongCurve`), curve `DASHES` and `layoutKey` | biology (Population Growth, Enzyme Activity, Photosynthesis Rate) |
 | `Section`                                                                                   | math, physics (Spring Scale), chemistry (Titration Curve, Heating and Cooling Curve), biology (every generator) |
-| `HelpTip`                                                                                   | math, biology (Population Growth, Predator–Prey Cycles) |
+| `HelpTip`                                                                                   | math, biology (Population Growth, Predator–Prey Cycles, Enzyme Activity, Photosynthesis Rate, Osmosis and Tonicity) |
 | `FigureFrame`, `figureAlign`, `settings`, `figureText`, `FigureTextSettings`                | physics (Spring Scale), math (Length Reading), biology (`settings` in every generator, `FigureFrame` in all but the two graphs, `FigureTextSettings` in Micropipette Reading) |
 | `Magnifier`, `MagnifierSettings`, `magnify`                                                 | physics (Spring Scale), math (Length Reading), biology (Micropipette Reading: `Magnifier`, `magnify`) |
 | `marks`, `ReadingField`                                                                     | physics (Spring Scale), biology (Microscope Field of View: `ReadingField`) |
+| `particles/`: `particles`, `layout`, `random`, `key`, `keyText`, `Discs`, `KeyDrawing`, `LookSettings` | chemistry (Particle Diagram; Bohr Model's `random`), biology (Osmosis and Tonicity) |
 
 `catalog/` lists every generator on every site. Each lives on one site
 (`site`), the only address it has; `alsoOn` names other sites whose
@@ -76,6 +78,24 @@ generator's own marks as its children. `AxisSettings`, `TitleSettings` and
 `GridlineSettings` are its settings groups; `AxisSettings` takes a `field` for
 the range boxes (a plain text box unless given) and children for fields of the
 generator's own. `clipPath` cuts a line to the grid.
+`labels` places labels on a graph where they touch no line and no other
+label: each offers places to go, best first (`besidePoint` and `alongCurve`
+make some), and takes the first that's clear. It also has `DASHES`, solid,
+dashed and dotted, which tell up to three curves apart in black and white,
+and `layoutKey`, the key naming them in rows under the graph. Physics'
+Motion Graphs keeps an older copy of the placer of its own.
+
+`particles/` is Chemistry's Particle Diagram's particles: particle kinds and
+their looks (`particles`), scattering, pouring and stacking them in a box
+from a seed (`layout`, with `random`'s seeded random numbers, Chemistry's
+ADR 0002), or scattering them into any polygon with holes in it, like a
+cell or the solution around it (`scatterIn`), the bordered key with subscripts in its names (`key`, `keyText`,
+`KeyDrawing`), the discs as drawn (`Discs`) and the look pickers
+(`LookSettings`, which needs the `.chip` class from the app's `app.css`).
+Where the box and key sit in a Particle Diagram figure stays in Chemistry
+(`figureLayout.ts`). A change to how particles are placed moves every
+Particle Diagram example, so Chemistry's `examples-unchanged.test.ts` checks
+each one still draws as it did.
 
 Every site keeps the rest in its own `src/lib/`, except Physics' Spring Scale,
 Math's Length Reading and Biology's Micropipette Reading, which use the

@@ -3,8 +3,8 @@
 // whatever the two sizes; which sites get the second kind comes from the
 // seed, like a scattered layout.
 
-import { seededRandom } from './layout'
-import { RADIUS, type Disc, type Look } from './particles'
+import { RADIUS, type Disc, type Look } from '$shared/particles/particles'
+import { seededRandom } from '$shared/particles/random'
 
 export const LATTICE_PATTERNS = ['pure', 'alternate', 'substitute', 'interstitial'] as const
 export type LatticePattern = (typeof LATTICE_PATTERNS)[number]

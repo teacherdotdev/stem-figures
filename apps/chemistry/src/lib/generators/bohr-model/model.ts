@@ -4,7 +4,7 @@
 // brackets. Nothing here checks the counts; any within the limits draw as
 // given (CONTEXT.md "Bohr models").
 
-import { seededRandom } from '../particle-diagram/layout'
+import { seededRandom } from '$shared/particles/random'
 
 export const MAX_NUCLEONS = 200
 export const MAX_SHELLS = 7

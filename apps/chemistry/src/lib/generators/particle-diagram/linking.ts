@@ -3,7 +3,7 @@
 import { describeLinking } from '$lib/linking/define'
 import { chartTitleDocs } from '$lib/linking/common'
 import { latticeRoom } from './lattice'
-import { CHARGES, MAX_ATOMS, MAX_COUNT, MAX_KINDS, MAX_NAME, SHAPES, SHAPE_NAMES, SHADES, SHADE_NAMES, SIZES } from './particles'
+import { CHARGES, MAX_ATOMS, MAX_COUNT, MAX_KINDS, MAX_NAME, SHAPES, SHAPE_NAMES, SHADES, SHADE_NAMES, SIZES } from '$shared/particles/particles'
 import { particleSettings } from './settings'
 
 const LOOK = `{"size":…,"shade":…,"charge":…}, where size is ${SIZES.join(', ')}; shade is ${SHADES.map((s) => `${s} (${SHADE_NAMES[s].toLowerCase()})`).join(', ')}; and charge is ${CHARGES.map((c) => (c ? c : '"" (none, an atom)')).join(', ')}`

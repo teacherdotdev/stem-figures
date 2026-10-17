@@ -56,6 +56,58 @@ and `docs/adr/` for decisions.
   or as a phase plane loop; smooth curves or census counts with seeded
   noise; the peaks, lag and period marked, labeled or left blank, and either
   population left off for students to sketch. Built on `$shared/graph`.
+- `/enzyme-activity` **Enzyme Activity**: the rate of reaction against
+  temperature (a rise to the optimum, then a steep fall as the enzyme
+  denatures), pH (a bell around the optimum) or substrate concentration
+  (Michaelis–Menten, levelling off at Vmax), shape only, with no numbers on
+  the axes. Up to three curves, solid, dashed and dotted with a key: a human
+  enzyme, Taq polymerase, pepsin, salivary amylase, trypsin or catalase, an
+  unknown enzyme with its own optimum and width, or against substrate no
+  inhibitor, a competitive one (higher Km) and a non-competitive one (lower
+  Vmax). The optimum and denaturation, or Vmax, ½Vmax and Km, marked with
+  dashed lines to the axes, labeled, blank or unlabeled. Built on
+  `$shared/graph`.
+- `/dna-protein-synthesis` **DNA and Protein Synthesis**: one sequence of up
+  to 36 bases, typed as the DNA template strand (3′→5′, starting TAC), the
+  coding strand or the mRNA, drawn as flat strands of boxes lined up base
+  under base: the coding strand, template strand, mRNA, tRNA anticodons and
+  amino acids, each shown, blank, partly blank (a share picked by seed) or
+  off. Read in codons from the first AUG (or the first base) to the first
+  stop codon with the standard genetic code (`code.ts`). Amino acids by one-
+  or three-letter code or full name, as linked beads or words; 5′ and 3′
+  ends and row names shown, blank or off; codon gaps, brackets, hydrogen
+  bonds and greyscale-safe base colors. Up to four deliberate wrong
+  pairings in one row for multiple choice, listed in the answer key, and
+  the square codon chart beside, below or alone.
+- `/photosynthesis-rate` **Photosynthesis Rate**: the rate of photosynthesis
+  against light intensity (or distance from the lamp, as 1/d²), CO₂
+  concentration or temperature: a straight rise while light is limiting,
+  bending and levelling off where CO₂ or temperature limits it (a
+  non-rectangular hyperbola, its temperature curve Enzyme Activity's). Up to
+  three curves, each at its own CO₂, temperature or light, solid, dashed and
+  dotted with a key, gross or net of respiration, in arbitrary units or
+  bubbles a minute. Also the CO₂ in a closed chamber over time in the dark,
+  dim and bright light, or the CO₂ and O₂ around one plant, over time with
+  O₂ on a right-hand axis or against each other, the light going off part
+  way with the dark shaded. The saturation point, what limits the rate on the
+  rise and the plateau, lettered points, the optimum and the compensation
+  point, labeled, blank or unlabeled; scattered data points or points alone;
+  shape-only or numbered axes, and setups to start from. Built on
+  `$shared/graph` and its label placer.
+- `/osmosis` **Osmosis and Tonicity**: a red blood cell or a plant cell in
+  a solution, a beaker split by a selectively permeable membrane, a U-tube
+  with the membrane at the bottom, or a dialysis-tubing bag in a beaker. Up
+  to three solutes, each with its concentration on each side (%, M or mM)
+  and whether it can cross; tonicity is worked out from the ones that can't.
+  Solute particles are scattered as crowded as their concentrations, with
+  water as small discs in the room they leave (`$shared/particles`, from a
+  seed with Shuffle), and arrows for the net movement of water and of each
+  solute that can cross. The start, the result (crenated, swollen or burst;
+  plasmolyzed, flaccid or turgid; a level risen; a bag swollen or shrunk),
+  both, or a cell in a hypotonic, an isotonic and a hypertonic solution side
+  by side, in order or shuffled. Concentrations, tonicity, membrane, cell
+  parts and result as text, blank lines or none; arrows as blank boxes;
+  color or black and white, a key and an answer key.
 - `/gel-electrophoresis` **Gel Electrophoresis**: an agarose gel of 2 to 12
   lanes, each a DNA ladder (100 bp, 1 kb or λ/HindIII) or a sample with the
   band sizes typed in. Bands run linearly in log size over the gel's range
