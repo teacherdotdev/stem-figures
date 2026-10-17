@@ -190,7 +190,7 @@ _Avoid_: Legend
 ### Lewis structures
 
 **Lewis structure**:
-A figure of one molecule or polyatomic ion: element symbols joined by bonds, with each atom's lone electrons drawn as dots around its symbol. A polyatomic ion is drawn inside square brackets with its charge at the top right. It can also be one atom or monatomic ion on its own (N, Cl⁻, Ca²⁺), its Lewis dot diagram: the symbol with its valence electrons, an anion's gained electrons included and a cation's lost ones left off, and an ion in brackets with its charge. With no bonds, it has no bonds-only scaffold and no formal charges. The generator is Lewis Structures. Dot-and-cross diagrams aren't drawn.
+A figure of one molecule or polyatomic ion: element symbols joined by bonds, with each atom's lone electrons drawn as dots around its symbol. A polyatomic ion is drawn inside square brackets with its charge at the top right. It can also be one atom or monatomic ion on its own (N, Cl⁻, Ca²⁺), its Lewis dot diagram: the symbol with its valence electrons, an anion's gained electrons included and a cation's lost ones left off, and an ion in brackets with its charge. With no bonds, it has no bonds-only scaffold and no formal charges. The generator is Lewis Structures. Dot-and-cross diagrams are Dot-and-Cross Diagram's (see **Dot-and-cross diagram**), built from the same correct structures.
 _Avoid_: Lewis dot structure (fine in search keywords), electron dot diagram, dot-and-cross diagram (a different figure)
 
 **Structure**:
@@ -315,6 +315,50 @@ An isotope written as its name or symbol and mass number joined by a hyphen, car
 _Avoid_: Isotope name, dash notation
 
 The figure is in a **sans-serif** (Arial) or **serif** (Times New Roman) font, in small, medium or large text, which is how large it pastes into a document. The **answer key** gives what it is ("Chlorine-37 ion, Cl⁻"), its protons, neutrons and electrons (a particle's mass number and charge), and each blank's value.
+
+### Dot-and-cross diagrams
+
+**Dot-and-cross diagram**:
+A UK-style bonding figure of one covalent molecule, one binary ionic compound, or one atom or ion: each atom's shell drawn as a circle with its element symbol in the middle, and each electron as a mark showing which atom it came from. The generator is Dot-and-Cross Diagram. It draws outer shells only unless the teacher picks all shells; an atom or ion on its own has its own setting and starts with all shells. The teacher types a formula or a name (H2O, ethene, MgCl2, magnesium chloride, Na, Cl-); one element alone is its atom or ion, a formula with a metal is ionic, and anything else is a molecule.
+_Avoid_: Lewis dot diagram (that's a Lewis structure's), electron dot diagram, Bohr diagram (that's a Bohr model)
+
+**Mark**:
+How one electron is drawn: a dot, a cross, an open circle or an open square, the same for every electron of one atom. In a molecule the central atom's electrons are dots, the outer atoms' crosses, a third kind of atom's open circles (CH₃OH's O, HCN's N) and a fourth's open squares; atoms of one element share a mark unless two of them bond to each other, so Cl₂ is one dots and one crosses and in C₂H₄ the second C has open circles. In an ionic compound the metal's electrons are crosses and the non-metal's dots. An atom on its own has dots, and an anion's gained electrons are crosses. Swap trades dots and crosses. Marks are black unless the teacher gives each kind its own color.
+_Avoid_: Symbol (that's the element's), electron (fine in help text), dot (alone)
+
+**Overlap**:
+Where two bonded atoms' outer circles cross, holding their shared pairs: a row for each pair, the electron from each atom on its own side. Bonded atoms are 1.5 outer radii apart, so a triple bond's three pairs fit, and every circle is the same size, hydrogen's too, as Cambridge mark schemes draw them. Atoms that aren't bonded never overlap: where two H circles would (C₂H₆, ethanol, methylamine, hydrazine), every H circle in that molecule shrinks by the same amount, just enough to clear, and moves in along its bond so its overlap keeps room for its pair, its symbol moving out of the way. A molecule that would still overlap with H circles 0.62 of full size (CH₃COOH) isn't drawn. With all shells the circles grow so the inner rings stay clear of every overlap.
+_Avoid_: Intersection, lens
+
+**Shared pair** / **Lone pair**:
+Two electrons in an overlap, one from each atom; or two on an atom's own circle, on its free sides as a Lewis structure places them. A double bond is two shared pairs, a triple bond three.
+_Avoid_: Bond (fine in help text), nonbonding pair
+
+**Drawn molecule**:
+A molecule Lewis Structures builds (octet rule, flat) with no charge, no atom past an octet and every formal charge 0, so each atom gives one electron to each shared pair and keeps its lone electrons. Molecules that need a dative bond (CO, SO₂, O₃), polyatomic ions (NH₄⁺) and expanded octets (SF₆) get a message and the Request it button.
+_Avoid_: Supported molecule
+
+**Ionic compound**:
+A metal (Li, Na, K, Rb, Mg, Ca, Sr or Al) with a non-metal (N, O, F, S, Cl, Br or I), written either way round. Each ion's charge comes from its group (Na⁺, Mg²⁺, Al³⁺, N³⁻, O²⁻, Cl⁻) and the charges must balance: MgCl is refused, and the page says MgCl₂ balances. A metal ion shows the full shell it is left with (Na⁺ is a ring of 8 crosses); a non-metal ion has a full outer shell, its gained electrons taking the last places to fill, turned to face a metal ion beside it. Compounds with polyatomic ions (NaOH) aren't drawn.
+_Avoid_: Salt, ionic molecule, formula unit
+
+**Ion layout**:
+How an ionic compound's ions are arranged: every ion, the single ion in the middle (Cl⁻ Mg²⁺ Cl⁻, Na⁺ O²⁻ Na⁺), the third of three around one below the middle, and 2:3 compounds alternating; or numbered, one of each ion with its number in front, as 2[Al]³⁺ 3[O]²⁻. Compounds of up to three ions start with every ion, bigger ones numbered, and the teacher can pick either.
+_Avoid_: Layout (alone; that's a particle diagram's), arrangement (that's an orbital diagram's)
+
+**Atom or ion** (dot-and-cross):
+One element from H to Ca, where shells fill 2, 8, 8, with its electrons on its rings, paired at the top, right, bottom and left as a Bohr model's paired placement puts them; or the element's usual ion from its group, in brackets with its charge.
+_Avoid_: Bohr model (that has a nucleus, not a symbol)
+
+**Brackets** (dot-and-cross):
+Square brackets around every ion with its charge at the top right. The charge can be written, left blank (an empty box for students to write it in) or left off; the brackets stay.
+
+**Blank** (dot-and-cross):
+The circles, overlaps, symbols and brackets with no electrons, for students to draw them. The figure's description for screen readers leaves the electrons out too.
+_Avoid_: Empty rings (that's a Bohr model's), scaffold
+
+**Answer key** (dot-and-cross):
+The lines under the figure: each kind of atom's bonding and lone pairs for a molecule ("O: 2 bonding pairs, 2 lone pairs"); who loses and gains how many electrons and each ion's arrangement for an ionic compound ("Mg loses 2 electrons, one to each Cl." and "Mg²⁺ 2,8; Cl⁻ 2,8,8"); the arrangement for an atom or ion.
 
 ### Orbital diagrams
 

@@ -3,6 +3,7 @@
 // only, so the gallery on a generator page doesn't pull in every generator.
 
 import type { BohrSettings } from '$lib/generators/bohr-model/settings'
+import type { DotCrossSettings } from '$lib/generators/dot-and-cross/settings'
 import type { SyringeSettings } from '$lib/generators/gas-syringe/settings'
 import type { HalfLifeSettings } from '$lib/generators/half-life-graph/settings'
 import type { CurveSettings } from '$lib/generators/heating-cooling-curve/settings'
@@ -38,6 +39,7 @@ export interface SettingsById {
   'bohr-model': BohrSettings
   'nuclide-notation': NuclideSettings
   'lewis-structures': LewisSettings
+  'dot-and-cross': DotCrossSettings
   'orbital-diagram': OrbitalSettings
   'line-spectrum': SpectrumSettings
   'photoelectron-spectrum': PesSettings
