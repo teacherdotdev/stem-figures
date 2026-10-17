@@ -73,10 +73,10 @@
   )
 </script>
 
-{#snippet check(label: string, hint: string, value: boolean, set: (v: boolean) => void)}
+{#snippet check(label: string, value: boolean, set: (v: boolean) => void)}
   <label class="check">
     <input type="checkbox" checked={value} onchange={(e) => set(e.currentTarget.checked)} />
-    <span><strong>{label}</strong>{#if hint}<small>{hint}</small>{/if}</span>
+    <span><strong>{label}</strong></span>
   </label>
 {/snippet}
 
@@ -101,7 +101,9 @@
         <HelpTip id="enzyme-tip" label="How the curves are drawn">
           Shape only, with no numbers on the axes. Warming speeds an enzyme up until it starts to denature, just past
           its optimum; either side of its optimum pH it slows and denatures. Against substrate concentration it follows
-          Michaelis–Menten, levelling off at Vmax, half as fast at Km.
+          Michaelis–Menten, levelling off at Vmax, half as fast at Km. An unknown enzyme's rate doubles every width (°C)
+          as it warms, or it works within ± that many pH units of its optimum. With no curves you get blank axes to
+          sketch on.
         </HelpTip>
       </div>
       <div class="field">
@@ -152,24 +154,16 @@
               {/if}
             {/if}
             <label class="field">
-              <span>Name <span class="hint">in the key</span></span>
+              <span>Name</span>
               <input type="text" maxlength="40" placeholder={curveName({ ...clean, [key('name', i)]: '' }, i)} bind:value={s[key('name', i)]} />
             </label>
           {/if}
         </div>
       {/each}
-      {#if !drawn.length}<p class="help">No curves: blank axes for students to sketch on.</p>{/if}
-      {#if clean.graph !== 'substrate' && drawn.some((i) => curveOf(clean, i).enzyme === UNKNOWN)}
-        <p class="help">
-          {clean.graph === 'ph'
-            ? 'An unknown enzyme works within this many pH units either side of its optimum.'
-            : 'An unknown enzyme’s rate doubles every width as it warms, then it denatures just past its optimum.'}
-        </p>
-      {/if}
 
       {#if substrate}
         <label class="range-field">
-          <span>Km <span class="hint">how soon the rate levels off</span></span>
+          <span>Km</span>
           <input type="range" min="0.2" max="5" step="0.1" bind:value={s.km} />
         </label>
         {#if inhibited}
@@ -188,13 +182,13 @@
   {#snippet settings()}
     <Section title="Marked" icon={MapPin} summary={markSummary}>
       {#if substrate}
-        {@render check('Vmax', 'a dashed line across at the top rate', s.markVmax, (v) => (s.markVmax = v))}
+        {@render check('Vmax', s.markVmax, (v) => (s.markVmax = v))}
         {#if s.markVmax}
           <div class="field setting">
             <LabelField name="Vmax label" placeholder="Vmax" bind:mode={s.vmaxLabelMode} bind:text={s.vmaxLabel} />
           </div>
         {/if}
-        {@render check('½Vmax and Km', 'a dot at half the top rate, with dashed lines to both axes', s.markKm, (v) => (s.markKm = v))}
+        {@render check('½Vmax and Km', s.markKm, (v) => (s.markKm = v))}
         {#if s.markKm}
           <div class="field setting">
             <span>At the y-axis</span>
@@ -205,15 +199,14 @@
             <LabelField name="Km label" placeholder="Km" bind:mode={s.kmLabelMode} bind:text={s.kmLabel} />
           </div>
         {/if}
-        <p class="help">Vmax and Km are written with their last letters lowered, as textbooks write them.</p>
       {:else}
-        {@render check('Optimum', 'a dot on each peak, with a dashed line down to the x-axis', s.markOpt, (v) => (s.markOpt = v))}
+        {@render check('Optimum', s.markOpt, (v) => (s.markOpt = v))}
         {#if s.markOpt}
           <div class="field setting">
             <LabelField name="Optimum label" placeholder="Optimum" bind:mode={s.optLabelMode} bind:text={s.optLabel} />
           </div>
         {/if}
-        {@render check('Denaturation', clean.graph === 'ph' ? 'a dot where each curve stops, either side' : 'a dot where each curve stops', s.markDen, (v) => (s.markDen = v))}
+        {@render check('Denaturation', s.markDen, (v) => (s.markDen = v))}
         {#if s.markDen}
           <div class="field setting">
             <LabelField name="Denaturation label" placeholder="Denatured" bind:mode={s.denLabelMode} bind:text={s.denLabel} />
@@ -227,8 +220,7 @@
         <button type="button" role="radio" aria-checked={s.color} class:on={s.color} onclick={() => (s.color = true)}>Color</button>
         <button type="button" role="radio" aria-checked={!s.color} class:on={!s.color} onclick={() => (s.color = false)}>Black and white</button>
       </div>
-      <p class="help setting">The curves are solid, dashed and dotted either way, so they read apart printed in black and white.</p>
-      {@render check('Gridlines', '', s.gridlines, (v) => (s.gridlines = v))}
+      {@render check('Gridlines', s.gridlines, (v) => (s.gridlines = v))}
     </Section>
 
     <TitleSettings
@@ -271,7 +263,6 @@
   .curve { display: flex; flex-direction: column; gap: 0.6rem; padding: 0.7rem 0.75rem; border: 1px solid var(--border); border-radius: 10px; }
   .curve.off { padding-block: 0.5rem; }
   .sample { margin-left: auto; flex: none; }
-  .help { margin: 0; font-size: 0.84rem; color: var(--muted); }
   .readout { margin: 0; padding: 0.55rem 0.75rem; list-style: none; border-radius: 10px; background: var(--blue-soft); font-size: 0.85rem; font-weight: 600; }
   .readout li + li { margin-top: 0.2rem; }
   .setting { margin-bottom: 0.75rem; }
@@ -279,7 +270,6 @@
   .check:last-child { margin-bottom: 0; }
   .check input { width: 1.1rem; height: 1.1rem; margin: 0.15rem 0 0; flex: none; accent-color: var(--blue); }
   .check span { display: flex; flex-direction: column; }
-  .check small { color: var(--muted); font-size: 0.82rem; }
   .check.curve-head { align-items: center; margin: 0; }
   .check.curve-head input { margin: 0; }
   .ends { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
