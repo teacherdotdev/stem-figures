@@ -132,7 +132,7 @@ export const smoothstep = (u: number) => {
 
 export type Point = { x: number; y: number }
 
-const SAMPLES = 24 // points along each half step
+const SAMPLES = 60 // points along each half step, enough that a peak shows no corners
 
 /**
  * The curve through the levels, as points of the graph (x in blocks along
