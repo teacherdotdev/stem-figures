@@ -10,8 +10,8 @@
   let { settings, svg = $bindable() }: { settings: NuclideSettings; svg?: SVGSVGElement } = $props()
 
   const fig = $derived(buildFigure(settings))
-  const size = $derived(SYMBOL_SIZE[settings.size])
-  const stroke = $derived(Math.max(1.5, size * 0.022))
+  const size = SYMBOL_SIZE
+  const stroke = Math.max(1.5, size * 0.022)
 </script>
 
 {#snippet placed(p: Placed | undefined)}

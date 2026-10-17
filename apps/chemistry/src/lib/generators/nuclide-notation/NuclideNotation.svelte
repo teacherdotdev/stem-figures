@@ -26,7 +26,6 @@
     MIN_CHARGE,
     NOTATIONS,
     SHOWS,
-    SIZES,
     countsOf,
     fileName,
     fromCounts,
@@ -46,7 +45,7 @@
   const clean = $derived(gen.snapshot())
   let svg = $state<SVGSVGElement>()
 
-  const KIND_NAMES: Record<Kind, string> = { element: 'Element', custom: 'Own symbol', particle: 'Particle' }
+  const KIND_NAMES: Record<Kind, string> = { element: 'Element', custom: 'Custom', particle: 'Particle' }
   const SHOW_NAMES: Record<Show, string> = { shown: 'Shown', blank: 'Blank', off: 'Off' }
   const POSITIONS = [
     { key: 'massPart', position: 'mass', name: 'Mass number' },
@@ -57,7 +56,6 @@
   const NOTATION_NAMES = { symbol: 'Symbol', hyphen: 'Hyphen', both: 'Both' }
   const BLANK_NAMES = { box: 'Box', line: 'Line' }
   const FONT_NAMES = { sans: 'Sans serif', serif: 'Serif' }
-  const SIZE_NAMES = { small: 'Small', medium: 'Medium', large: 'Large' }
 
   const named = $derived(clean.kind === 'element' ? element(clean.z) : undefined)
   const counts = $derived(countsOf(clean))
@@ -65,7 +63,7 @@
   const note = $derived(unnaturalNote(clean))
   const particle = $derived(PARTICLE_INFO[clean.particle])
   const notation = $derived(notationOf(clean))
-  /** It prints at a point per pixel, so the text size sets how big it prints
+  /** It prints at a point per pixel, so it prints at a set size
    *  rather than every symbol filling the page (FigureFrame pads 16 a side). */
   const printWidth = $derived((buildFigure(clean).width + 32) / 72)
 
@@ -113,7 +111,6 @@
     [
       notation === 'both' ? 'Symbol and hyphen' : `${NOTATION_NAMES[notation]} notation`,
       FONT_NAMES[clean.font].toLowerCase(),
-      `${SIZE_NAMES[clean.size].toLowerCase()} text`,
     ].join(', '),
   )
   const textSummary = $derived(
@@ -165,7 +162,7 @@
         <HelpTip id="nuclide-tip" label="How the numbers fit together">
           The atomic number is the protons, the mass number is the protons plus the neutrons, and the charge is the protons
           minus the electrons, so the three particle boxes set the same numbers. A mass number below the atomic number isn’t
-          taken. Your own symbol, such as X, is for “identify the element” questions. A particle’s bottom number is its charge,
+          taken. A custom symbol, such as X, is for “identify the element” questions. A particle’s bottom number is its charge,
           as in decay equations.
         </HelpTip>
       </div>
@@ -273,10 +270,6 @@
             <button type="button" role="radio" class={font} aria-checked={s.font === font} class:on={s.font === font} onclick={() => (s.font = font)}>{FONT_NAMES[font]}</button>
           {/each}
         </div>
-      </div>
-      <div class="field setting">
-        <span>Text size</span>
-        {@render segmented('Text size', SIZES, SIZE_NAMES, s.size, (v) => (s.size = v))}
       </div>
     </Section>
 

@@ -38,7 +38,6 @@ export const nuclideLinking = describeLinking(nuclideSettings, {
     notation: { what: 'How the nuclide is written.', values: 'symbol: the symbol with its numbers; hyphen: hyphen notation alone (carbon-14); both: hyphen notation under the symbol' },
     hyphenName: { what: 'What hyphen notation starts with.', when: 'kind=element and notation=hyphen or both', values: 'name: the element’s name (carbon-14); symbol: its symbol (C-14)' },
     font: { what: 'The font.', values: 'sans: Arial; serif: Times New Roman' },
-    size: { what: 'How big the text is: how large the figure pastes into a document.' },
     ...figureTextDocs(''),
     answerKey: {
       what: 'Prints the answer key under the figure: what it is (e.g. “Chlorine-37 ion, Cl⁻”), its protons, neutrons and electrons (a particle’s numbers), and the value of each blank.',

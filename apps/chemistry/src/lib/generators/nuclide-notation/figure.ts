@@ -72,7 +72,7 @@ export interface NuclideFigure {
 
 /** The figure, centered across the width the chart title and answer key need. */
 export function buildFigure(s: NuclideSettings): NuclideFigure {
-  const size = SYMBOL_SIZE[s.size]
+  const size = SYMBOL_SIZE
   const notation = notationOf(s)
   const parts = partsOf(s)
   const nuclide = notation === 'hyphen' ? undefined : layoutNuclide(parts, { font: s.font, size })

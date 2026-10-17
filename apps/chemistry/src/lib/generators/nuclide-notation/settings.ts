@@ -29,10 +29,8 @@ export type HyphenName = (typeof HYPHEN_NAMES)[number]
 export const FONTS: readonly Font[] = ['sans', 'serif']
 export const BLANKS: readonly BlankStyle[] = ['box', 'line']
 
-export const SIZES = ['small', 'medium', 'large'] as const
-export type Size = (typeof SIZES)[number]
-/** The symbol's font size at each text size. */
-export const SYMBOL_SIZE: Record<Size, number> = { small: 56, medium: 80, large: 112 }
+/** The symbol's font size. */
+export const SYMBOL_SIZE = 80
 
 /** The largest mass number, and the largest atomic number of your own symbol. */
 export const MAX_MASS = 300
@@ -57,7 +55,6 @@ export const nuclideSettings = defineSettings(
     notation: choice(NOTATIONS, 'symbol'),
     hyphenName: choice(HYPHEN_NAMES, 'name'),
     font: choice(FONTS, 'sans'),
-    size: choice(SIZES, 'medium'),
     ...figureTextFields(),
   },
   (s) => {
