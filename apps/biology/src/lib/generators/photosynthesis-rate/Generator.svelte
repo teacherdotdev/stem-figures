@@ -91,6 +91,8 @@
     : (['light', 'temp'] as const),
   )
   const co2Unit = $derived(CO2_UNIT_TEXT[clean.co2Unit])
+  /** How far the CO₂ boxes' arrows step: a tenth of a percent, or 100 ppm. */
+  const co2Step = $derived(clean.co2Unit === 'ppm' ? 100 : 0.1)
   /** A CO₂ concentration typed in the unit shown, kept in %. */
   const setCo2 = (k: `co2${1 | 2 | 3}` | 'co2Start', v: number) => {
     if (Number.isFinite(v)) s[k] = clean.co2Unit === 'ppm' ? v / 10_000 : v
@@ -140,7 +142,7 @@
   {#if field === 'co2'}
     <label class="number-field">
       <span>CO₂ ({co2Unit})</span>
-      <input type="number" step="any" min="0" value={co2In(curveOf(clean, i).co2, clean.co2Unit)} onchange={(e) => setCo2(key('co2', i), e.currentTarget.valueAsNumber)} />
+      <input type="number" step={co2Step} min="0" value={co2In(curveOf(clean, i).co2, clean.co2Unit)} onchange={(e) => setCo2(key('co2', i), e.currentTarget.valueAsNumber)} />
     </label>
   {:else if field === 'temp'}
     <label class="number-field">
@@ -170,7 +172,7 @@
         </HelpTip>
       </div>
       <label class="field">
-        <span>Setups</span>
+        <span>Common setups</span>
         <select value={setupId} onchange={(e) => chooseSetup(e.currentTarget.value)}>
           <option value="" disabled>Choose one…</option>
           {#each SETUPS as setup}<option value={setup.id}>{setup.name}</option>{/each}
@@ -245,7 +247,7 @@
         <div class="fields">
           <label class="number-field">
             <span>Starting CO₂ ({co2Unit})</span>
-            <input type="number" step="any" min="0" value={co2In(clean.co2Start, clean.co2Unit)} onchange={(e) => setCo2('co2Start', e.currentTarget.valueAsNumber)} />
+            <input type="number" step={co2Step} min="0" value={co2In(clean.co2Start, clean.co2Unit)} onchange={(e) => setCo2('co2Start', e.currentTarget.valueAsNumber)} />
           </label>
           <label class="number-field">
             <span>Time shown (minutes)</span>
