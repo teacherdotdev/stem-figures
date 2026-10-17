@@ -357,6 +357,51 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'AP Biology'],
   },
 
+  osmosis: {
+    heading: 'Osmosis and tonicity figures: red blood cells, plant cells, U-tubes and dialysis bags',
+    intro: [
+      'Osmosis and Tonicity draws a cell or container, the solution around it or beside it, and the particles in both: a red blood cell or a plant cell in a solution, a beaker split by a selectively permeable membrane, a U-tube with the membrane at the bottom, or a dialysis-tubing bag in a beaker. Type up to three solutes, each with its concentration on each side and whether it can cross the membrane, and it works out which side is hypertonic, which way water moves and what happens: a red blood cell shrinks, stays the same, swells or bursts, a plant cell becomes plasmolyzed, flaccid or turgid, a U-tube’s level rises on one side, and a bag swells or shrinks.',
+      'Teachers use it for tests, worksheets and slides on osmosis, diffusion and cell transport. Show the start for students to predict, the result, or both with an arrow between, or the same cell in a hypotonic, an isotonic and a hypertonic solution side by side, in order or shuffled. Arrows show the net movement of water and of any solute that can cross, like glucose leaving an AP Biology dialysis bag while starch stays in. Any label can be a blank line and any arrow an empty box for students to fill in, and the answer key prints under the figure.',
+    ],
+    settings: [
+      'Scene: a red blood cell or a plant cell in a solution, a split beaker, a U-tube, or a dialysis bag in a beaker',
+      'Show: the start, the result, both with an arrow between, or (for a cell) a three-up in a hypotonic, an isotonic and a hypertonic solution, showing results or starts, in order or shuffled',
+      'Up to three solutes, each with a name (with subscripts, like C_6H_12O_6), its concentration on each side in %, M or mM, whether it can cross the membrane, and its particles’ size, shade and charge',
+      'Water as small discs filling the room the solutes leave, or left off, with a Shuffle button for a new layout',
+      'Labels for the concentrations, each side’s tonicity, the membrane, a plant cell’s wall and vacuole, and the result, each as text, a blank line or none',
+      'Arrows for the net movement of water and of solutes that can cross, shown, left as empty boxes, or left off',
+      'Color or black and white, a key, whether a red blood cell bursts or swells in a hypotonic solution, a chart title and an answer key',
+    ],
+    faqs: [
+      {
+        q: 'How does it decide which solution is hypertonic?',
+        a: 'From the concentrations you type, counting only solutes that cannot cross the membrane. The side with more of them is hypertonic and the other hypotonic; equal totals are isotonic. A solute that can cross, like glucose through dialysis tubing, moves until it is the same on both sides, so it never changes which way water moves. Each solute counts once per unit typed, so NaCl is not split into Na⁺ and Cl⁻.',
+      },
+      {
+        q: 'Which way do the water arrows point?',
+        a: 'Water moves by osmosis from the hypotonic side, with less solute, to the hypertonic side, with more. In a hypertonic solution the arrows point out of the cell; in a hypotonic one they point in. In an isotonic solution there is an arrow each way, labeled no net movement, since water still crosses but equally both ways.',
+      },
+      {
+        q: 'How many particles are drawn?',
+        a: 'Solute particles are drawn as crowded as their concentration, so the same concentration looks the same on both sides. The scale is picked so the busiest side has about 24 particles, and the settings panel says what one particle stands for, like 0.2%. Water particles fill the room the solutes leave, so the side with more solute has fewer water particles.',
+      },
+      {
+        q: 'What happens to red blood cells and plant cells?',
+        a: 'In a hypertonic solution a red blood cell loses water and shrinks into a crenated, spiky shape; in an isotonic one it stays a normal biconcave disc; in a hypotonic one it swells, or bursts (lysis) if you choose that under Look. A plant cell’s wall stops it bursting: in a hypotonic solution it becomes turgid, in an isotonic one flaccid, and in a hypertonic one plasmolyzed, its membrane pulling away from the wall.',
+      },
+      {
+        q: 'How do I make the AP Biology dialysis bag figure?',
+        a: 'Choose Dialysis bag, then give it glucose that can cross and starch that cannot, in the bag, with pure water in the beaker. The beaker is hypotonic to the bag, so water moves in and the bag swells, while glucose moves out until it is equal on both sides. Turn the arrows to Blank boxes for students to draw which way each moves.',
+      },
+      {
+        q: 'How do I make a worksheet where students predict the result?',
+        a: 'Show the start, set the Tonicity label to Blank and the arrows to Blank boxes, and students write which solution is hypertonic and draw which way water moves. For the three-up, choose Starts and Shuffled, so the cells are in a mixed order with letters A to C, and turn on the answer key for your copy.',
+      },
+    ],
+    imageAlt: 'Three red blood cells in a hypotonic, an isotonic and a hypertonic salt solution, swelling, staying the same and shrinking, with solute and water particles and arrows for water movement, made with Osmosis and Tonicity',
+    educationalLevel: ['Middle school', 'High school', 'AP Biology'],
+  },
+
   'gel-electrophoresis': {
     heading: 'Gel electrophoresis figures: DNA fingerprinting, PCR and restriction digests',
     intro: [

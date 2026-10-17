@@ -2,7 +2,7 @@
 
 import { choice, defineSettings, json, number, text } from '$lib/shared/settings'
 import { LATTICE_PATTERNS, LATTICE_SPACINGS, lattice, latticeRoom } from './lattice'
-import { STATES, arrange, type State } from './layout'
+import { STATES, arrange, type State } from '$shared/particles/layout'
 import {
   DEFAULT_OUTER,
   MAX_NAME,
@@ -16,7 +16,7 @@ import {
   type Disc,
   type Look,
   type ParticleKind,
-} from './particles'
+} from '$shared/particles/particles'
 
 /** Particles in the box, as a gas, liquid or solid (see `state`), or packed
  *  in a lattice. Called scattered from before boxes had states. */

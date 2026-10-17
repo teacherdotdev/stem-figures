@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { lattice, latticeRoom, type LatticeOptions } from './lattice'
-import { RADIUS, type Look } from './particles'
+import { RADIUS, type Look } from '$shared/particles/particles'
 
 const big: Look = { size: 'l', shade: 'light', charge: '-' }
 const small: Look = { size: 's', shade: 'white', charge: '+' }

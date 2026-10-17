@@ -8,11 +8,11 @@
   import LabelField from '$shared/LabelField.svelte'
   import Section from '$lib/shared/Section.svelte'
   import { generatorState } from '$shared/generatorState.svelte'
-  import LookSettings from './LookSettings.svelte'
+  import LookSettings from '$shared/particles/LookSettings.svelte'
   import ParticleFigure from './ParticleFigure.svelte'
   import ShapePicker from './ShapePicker.svelte'
   import { LATTICE_PATTERNS, LATTICE_SPACINGS, latticeRoom, type LatticePattern, type LatticeSpacing } from './lattice'
-  import { STATES, type State } from './layout'
+  import { STATES, type State } from '$shared/particles/layout'
   import {
     DEFAULT_OUTER,
     MAX_COUNT,
@@ -26,7 +26,7 @@
     sameLook,
     type Look,
     type ParticleKind,
-  } from './particles'
+  } from '$shared/particles/particles'
   import {
     BORDERS,
     BOXES,

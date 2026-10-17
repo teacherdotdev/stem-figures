@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { RADIUS } from './particles'
-import { ARROW_GAP, ARROW_PAD, arrowLayout, boxesSize, figureLayout, keyLayout } from './key'
+import { RADIUS } from '$shared/particles/particles'
+import { keyLayout } from '$shared/particles/key'
+import { ARROW_GAP, ARROW_PAD, arrowLayout, boxesSize, figureLayout } from './figureLayout'
 import { BOX_SIDE, boxContents, keyKinds, particleSettings } from './settings'
 
 describe('key settings in the address', () => {

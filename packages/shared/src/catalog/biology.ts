@@ -129,6 +129,21 @@ export const BIOLOGY: CatalogEntry[] = [
     ],
   },
   {
+    id: 'osmosis',
+    site: 'biology',
+    name: 'Osmosis and Tonicity',
+    path: '/osmosis',
+    blurb: 'Cells, U-tubes and dialysis bags in hypotonic, isotonic and hypertonic solutions.',
+    description:
+      'Make printable osmosis and tonicity figures for biology tests. Put a red blood cell, a plant cell, a U-tube or a dialysis bag in solutions you set, with solute and water particles and arrows for which way water moves, before and after.',
+    keywords: [
+      'osmosis', 'tonicity', 'hypertonic', 'hypotonic', 'isotonic', 'diffusion', 'water movement', 'solute', 'solvent',
+      'concentration gradient', 'selectively permeable membrane', 'semipermeable membrane', 'red blood cell', 'crenation', 'lysis',
+      'plant cell', 'plasmolysis', 'turgid', 'flaccid', 'turgor pressure', 'u-tube', 'dialysis tubing', 'dialysis bag', 'starch',
+      'glucose', 'particle diagram', 'cell transport', 'printable',
+    ],
+  },
+  {
     id: 'gel-electrophoresis',
     site: 'biology',
     name: 'Gel Electrophoresis',

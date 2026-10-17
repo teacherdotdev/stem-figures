@@ -2,27 +2,15 @@
 // without touching for a gas, settled close together at the bottom for a
 // liquid, or packed in rows at the bottom for a solid. The randomness comes
 // only from a seed kept in the settings, so a link redraws the same figure
-// and the server draws what the browser will (ADR 0002).
+// and the server draws what the browser will (Chemistry's ADR 0002).
 
 import { discBounds, particleDiscs, type Disc, type ParticleKind } from './particles'
+import { seededRandom } from './random'
 
 /** How the particles in a box are arranged: spread out (scattered, as every
  *  box was before states), close and jumbled, or in rows. */
 export const STATES = ['gas', 'liquid', 'solid'] as const
 export type State = (typeof STATES)[number]
-
-/** A small seeded random number generator (mulberry32): the same seed always
- *  gives the same numbers, from 0 up to 1. */
-export function seededRandom(seed: number) {
-  let a = Math.floor(seed) >>> 0
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0
-    let t = a
-    t = Math.imul(t ^ (t >>> 15), t | 1)
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
-}
 
 /** Space kept between separate particles, and between them and the box. */
 export const SCATTER_GAP = 7
@@ -74,6 +62,121 @@ export function scatter(kinds: ParticleKind[], width: number, height: number, se
     }
   }
   return { discs, missing }
+}
+
+/** A point on the drawing. */
+export interface Point {
+  x: number
+  y: number
+}
+
+/** A region particles are scattered into: a polygon, its corners in order
+ *  around it, either way. A curved outline (a cell, a bag) is given as many
+ *  short sides. */
+export type Region = Point[]
+
+/** Whether a point is inside a polygon, by counting how many of its sides a
+ *  ray to the right crosses. */
+export function insideRegion(p: Point, region: Region) {
+  let inside = false
+  for (let i = 0, j = region.length - 1; i < region.length; j = i++) {
+    const a = region[i]
+    const b = region[j]
+    if (a.y > p.y !== b.y > p.y && p.x < ((b.x - a.x) * (p.y - a.y)) / (b.y - a.y) + a.x) inside = !inside
+  }
+  return inside
+}
+
+/** The squared distance from a point to the nearest side of a polygon, in
+ *  plain arithmetic, so it's the same on the server and in every browser. */
+export function edgeDistance2(p: Point, region: Region) {
+  let best = Infinity
+  for (let i = 0, j = region.length - 1; i < region.length; j = i++) {
+    const a = region[j]
+    const b = region[i]
+    const dx = b.x - a.x
+    const dy = b.y - a.y
+    const length2 = dx * dx + dy * dy
+    const t = length2 ? Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / length2)) : 0
+    const ex = a.x + t * dx - p.x
+    const ey = a.y + t * dy - p.y
+    best = Math.min(best, ex * ex + ey * ey)
+  }
+  return best
+}
+
+export interface ScatterOptions {
+  /** parts of the region particles stay out of, like a cell in the
+   *  solution around it, kept clear by the gap too */
+  holes?: Region[]
+  /** space kept between particles, and between them and every edge;
+   *  SCATTER_GAP unless given */
+  gap?: number
+  /** discs already in the region, scattered before, to keep the gap from */
+  placed?: Disc[]
+}
+
+/** Every particle placed at random inside `region`, as `scatter` places them
+ *  in a box: turned at random, bigger ones first, each disc at least the gap
+ *  from every other disc, from the region's edge and from any hole's, with
+ *  the same rounding. Any that find no room are left out and counted in
+ *  `missing`, and once one of a kind finds none the rest of that kind aren't
+ *  tried. The region's corners are rounded to thousandths first, since a
+ *  curved outline is usually worked out with sin and cos. */
+export function scatterIn(kinds: ParticleKind[], region: Region, seed: number, { holes = [], gap = SCATTER_GAP, placed = [] }: ScatterOptions = {}) {
+  const tidy = (r: Region) => r.map((p) => ({ x: round(p.x), y: round(p.y) }))
+  const outline = tidy(region)
+  const cutouts = holes.map(tidy)
+  const random = seededRandom(seed)
+  const wanted = kinds.flatMap((kind, order) => {
+    const r = reach(kind)
+    return Array.from({ length: kind.count }, () => ({ kind, order, reach: r }))
+  })
+  wanted.sort((a, b) => b.reach - a.reach || a.order - b.order)
+
+  const left = Math.min(...outline.map((p) => p.x))
+  const top = Math.min(...outline.map((p) => p.y))
+  const width = Math.max(...outline.map((p) => p.x)) - left
+  const height = Math.max(...outline.map((p) => p.y)) - top
+  /** A disc is inside the region, out of every hole, and clear of all their edges. */
+  const fits = (d: Disc) =>
+    insideRegion(d, outline) &&
+    edgeDistance2(d, outline) >= (d.r + gap) ** 2 &&
+    cutouts.every((hole) => !insideRegion(d, hole) && edgeDistance2(d, hole) >= (d.r + gap) ** 2)
+
+  const discs: Disc[] = []
+  /** every disc to keep clear of: those placed before, and these */
+  const near: Disc[] = [...placed]
+  const full = new Set<number>()
+  let missing = 0
+  for (const { kind, order } of wanted) {
+    let found: Disc[] | undefined
+    for (let i = 0; outline.length > 2 && !full.has(order) && i < TRIES && !found; i++) {
+      const angle = random() * 2 * Math.PI
+      const x = left + random() * width
+      const y = top + random() * height
+      const candidate = particleDiscs(kind, angle).map((d) => ({ ...d, x: round(d.x + x), y: round(d.y + y) }))
+      const clear =
+        candidate.every(fits) &&
+        candidate.every((c) => near.every((o) => (c.x - o.x) ** 2 + (c.y - o.y) ** 2 >= (c.r + o.r + gap) ** 2))
+      if (clear) found = candidate
+    }
+    if (found) {
+      discs.push(...found)
+      near.push(...found)
+    } else {
+      missing++
+      full.add(order)
+    }
+  }
+  return { discs, missing }
+}
+
+/** A polygon's area, from its corners. */
+export function regionArea(region: Region) {
+  let twice = 0
+  for (let i = 0, j = region.length - 1; i < region.length; j = i++) twice += region[j].x * region[i].y - region[i].x * region[j].y
+  return Math.abs(twice) / 2
 }
 
 /** Every particle of the kinds, one entry each, in an order shuffled by
