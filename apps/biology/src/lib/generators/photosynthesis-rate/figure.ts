@@ -331,7 +331,9 @@ export function buildPhotosynthesis(s: PhotosynthesisSettings) {
   const pageOf: Point[][] = []
   const names = gases ? (against ? ['CO₂ against O₂'] : ['CO₂', 'O₂']) : drawn.map((i) => curveName(s, i))
   const curves: Curve[] = data.map((pts, k) => {
-    const color = s.color ? COLORS[INKS[k]] : COLORS.black
+    // A curve keeps its own ink, dash and marker when the others are turned off.
+    const style = gases ? k : drawn[k]
+    const color = s.color ? COLORS[INKS[style]] : COLORS.black
     const paths: string[] = []
     const onPage: Point[] = []
     if (s.points !== 'only') {
@@ -344,7 +346,7 @@ export function buildPhotosynthesis(s: PhotosynthesisSettings) {
       }
     }
     pageOf.push(onPage.length ? onPage : pts.map((p) => px({ x: p.x, y: onGrid(k, p.y) })))
-    return { index: gases ? k : drawn[k], name: names[k], color, dash: DASHES[k], marker: MARKERS[k], paths, points: [] }
+    return { index: style, name: names[k], color, dash: DASHES[style], marker: MARKERS[style], paths, points: [] }
   })
 
   if (s.points !== 'none' && data.length) {

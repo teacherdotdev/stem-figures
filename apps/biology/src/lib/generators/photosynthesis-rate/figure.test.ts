@@ -30,6 +30,14 @@ describe('a photosynthesis rate graph', () => {
     expect(g.labels.map((l) => l.text)).toEqual(['Light intensity', 'Rate of photosynthesis'])
   })
 
+  it('keeps each curve’s own color, dash and marker when another is turned off', () => {
+    const all = build('color=1')
+    const g = build('color=1&show1=0')
+    expect(g.curves.map((c) => [c.index, c.color, c.dash, c.marker])).toEqual(
+      all.curves.slice(1).map((c) => [c.index, c.color, c.dash, c.marker]),
+    )
+  })
+
   it('draws the curves rising together, then levelling off higher with more CO₂ or warmth', () => {
     const g = build('')
     const [top, middle, low] = g.curves.map((c) => c.paths.flatMap(pathPoints))
