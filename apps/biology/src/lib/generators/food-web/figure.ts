@@ -84,12 +84,19 @@ export function answerText(s: FoodWebSettings, fig: FoodWebFigure = buildFigure(
   return lines.join('\n')
 }
 
-/** What the figure shows, for screen readers. */
+/** What the figure shows, for screen readers, without the answers it leaves blank. */
 export function describeFigure(s: FoodWebSettings, fig: FoodWebFigure): string {
   const web = fig.web
-  const name = (k: string) => nameOf(web.find((e) => e.key === k)!).toLowerCase()
+  const name = (k: string) => {
+    const e = web.find((x) => x.key === k)!
+    return e.blank === 'n' || e.blank === 'b' ? 'a blank' : nameOf(e).toLowerCase()
+  }
   if (fig.pyramid) {
-    return `Energy pyramid of ${fig.pyramid.levels.length} levels, ${fig.pyramid.answer.join('; ')}`
+    const levels = fig.pyramid.levels.map((l) => {
+      const label = l.name === null ? 'a blank' : l.name.join(' ') || `level ${l.index + 1}`
+      return l.value === null ? label : `${label}, ${l.blankValue ? 'a blank' : l.value}`
+    })
+    return `Energy pyramid of ${levels.length} levels, from the base: ${levels.join('; ')}`
   }
   if (s.figure === 'chain') return `Food chain: ${fig.chain.map(name).join(' to ')}`
   const links = web.flatMap((e) => e.eats.map((f) => `${name(f)} to ${name(e.key)}`))
