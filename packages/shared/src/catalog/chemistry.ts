@@ -97,6 +97,17 @@ export const CHEMISTRY: CatalogEntry[] = [
     keywords: ['heating', 'cooling', 'curve', 'graph', 'phase', 'change', 'changes', 'state', 'states', 'matter', 'melting', 'freezing', 'boiling', 'condensation', 'condensing', 'vaporization', 'fusion', 'plateau', 'point', 'temperature', 'time', 'heat', 'energy', 'specific', 'enthalpy', 'supercooling', 'solid', 'liquid', 'gas', 'ice', 'water', 'steam', 'ethanol', 'acetone', 'mercury', 'salt', 'kinetic', 'potential', 'thermochemistry', 'AP'],
   },
   {
+    id: 'potential-energy-diagram',
+    site: 'chemistry',
+    alsoOn: ['biology'],
+    name: 'Potential Energy Diagram',
+    path: '/potential-energy-diagram',
+    blurb: 'A reaction energy profile from the energies you type, with Ea and ΔH, a catalyst or several steps.',
+    description:
+      'Make printable potential energy diagrams for chemistry tests. Type the energies of the reactants, transition states, intermediates and products, or Ea and ΔH, and get the reaction energy profile for an exothermic or endothermic reaction, with or without a catalyst or an enzyme, in up to three steps, its Ea and ΔH arrows labeled, lettered or left blank for students.',
+    keywords: ['potential', 'energy', 'diagram', 'reaction', 'profile', 'enthalpy', 'coordinate', 'progress', 'activation', 'Ea', 'ΔH', 'delta', 'transition', 'state', 'activated', 'complex', 'intermediate', 'catalyst', 'catalysed', 'catalyzed', 'enzyme', 'exothermic', 'endothermic', 'mechanism', 'multistep', 'step', 'rate', 'determining', 'level', 'kinetics', 'thermochemistry', 'AP', 'IB'],
+  },
+  {
     id: 'particle-diagram',
     site: 'chemistry',
     name: 'Particle Diagram',

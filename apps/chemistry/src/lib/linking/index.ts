@@ -17,6 +17,7 @@ import { orbitalLinking } from '$lib/generators/orbital-diagram/linking'
 import { particleLinking } from '$lib/generators/particle-diagram/linking'
 import { phLinking } from '$lib/generators/ph-reading/linking'
 import { pesLinking } from '$lib/generators/photoelectron-spectrum/linking'
+import { energyLinking } from '$lib/generators/potential-energy-diagram/linking'
 import { temperatureLinking } from '$lib/generators/temperature-reading/linking'
 import { titrationLinking } from '$lib/generators/titration-curve/linking'
 import { displacementLinking } from '$lib/generators/volume-by-displacement/linking'
@@ -34,6 +35,7 @@ const BY_ID: Record<string, GeneratorLinking> = Object.fromEntries(
     phLinking,
     titrationLinking,
     curveLinking,
+    energyLinking,
     particleLinking,
     bohrLinking,
     nuclideLinking,

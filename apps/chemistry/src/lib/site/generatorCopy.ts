@@ -366,6 +366,47 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'AP Chemistry'],
   },
 
+  'potential-energy-diagram': {
+    heading: 'Potential energy diagrams and reaction energy profiles',
+    intro: [
+      'Potential Energy Diagram draws a reaction energy profile from the energies you type: the reactants, the transition state and the products, or for a mechanism of two or three steps, each transition state and the intermediates between them. Type Eₐ or ΔH instead and the transition state or the products move to match. The curve runs flat at the reactants, rises to each transition state and falls to the products, its peaks exactly at the energies typed. Add a catalysed path, dashed, with a lower transition state and a key naming both, or draw a level diagram: the reactants and products as lines with the ΔH arrow between them.',
+      'Teachers use it for questions on exothermic and endothermic reactions, activation energy, catalysts and enzymes, and reaction mechanisms. The Eₐ, ΔH and reverse Eₐ arrows can each be labeled with the symbol, the value, a letter or number for “which arrow shows…?” questions, or a blank line for students to work it out. The energy axis is numbered with light gridlines, or shape only, and the answer key gives ΔH, each activation energy and, for a mechanism, the rate-determining step.',
+    ],
+    settings: [
+      'Setups: exothermic, endothermic, exothermic with a catalyst, two steps with an intermediate, and with and without an enzyme for biology',
+      'The energy of each level, or Eₐ and ΔH, for one, two or three steps, in kJ/mol, kJ mol⁻¹ or kJ',
+      'A catalysed path with its own transition state, dashed, and the names in its key',
+      'The energy profile, or a level diagram of the reactants and products alone',
+      'Eₐ, catalysed Eₐ, ΔH and reverse Eₐ arrows, each labeled with the symbol, the value, a letter or number, a blank line or nothing, with arrowheads at one end or both, and dashed lines from the levels',
+      'Labels on the reactants, products, transition states and intermediates: the usual word, your own text with subscripts (N_2 + 3H_2), a blank line or nothing',
+      'The colors, the chart and axis titles (or blank lines), a numbered or shape-only energy axis, gridlines, arrow ends and label size',
+    ],
+    faqs: [
+      {
+        q: 'How do you find ΔH and the activation energy from a potential energy diagram?',
+        a: 'ΔH is the products’ energy less the reactants’: products at 20 kJ/mol and reactants at 50 kJ/mol give ΔH = −30 kJ/mol, an exothermic reaction. The activation energy is the transition state’s energy less the reactants’: a transition state at 150 kJ/mol gives Eₐ = 100 kJ/mol. The reverse reaction’s activation energy is measured from the products, 130 kJ/mol here.',
+      },
+      {
+        q: 'How does a catalyst change a potential energy diagram?',
+        a: 'A catalyst gives the reaction a path with a lower transition state, so the peak is lower. The reactants and products stay where they are, so ΔH doesn’t change, and the forward and reverse activation energies drop by the same amount. Tick Catalysed path and type its transition state or its Eₐ; it is drawn dashed, with a key. An enzyme does the same for a biological reaction, which is what the enzyme setup shows.',
+      },
+      {
+        q: 'Can it draw a reaction mechanism with more than one step?',
+        a: 'Yes, up to three steps. Each step has its own transition state, a peak, with an intermediate in the dip between steps, and each step’s Eₐ arrow runs up from the level before it. The answer key gives each step’s Eₐ and names the rate-determining step when the step with the highest Eₐ is also the one whose transition state is highest above the lowest point before it, as it is in most textbook profiles.',
+      },
+      {
+        q: 'Can I hide values for students to work out?',
+        a: 'Yes. Label any arrow with a blank line, a letter or a number instead of its value, and leave the level labels blank too. Values left off the figure aren’t in its description for screen readers either; they’re only in the answer key.',
+      },
+      {
+        q: 'Why is the reaction coordinate not numbered?',
+        a: 'The reaction coordinate shows how far the reaction has gone, from reactants to products, not a time or any quantity with units, so it has no scale. Only the energy axis has numbers, and you can turn those off for a shape-only diagram.',
+      },
+    ],
+    imageAlt: 'A printable potential energy diagram of an exothermic reaction with its Eₐ and ΔH arrows labeled with their values, made with Potential Energy Diagram',
+    educationalLevel: ['High school', 'AP Chemistry', 'IB Chemistry'],
+  },
+
   'particle-diagram': {
     heading: 'Particle diagrams of atoms, ions and molecules',
     intro: [

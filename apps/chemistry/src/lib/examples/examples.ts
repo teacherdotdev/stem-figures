@@ -429,6 +429,71 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('potential-energy-diagram', [
+    {
+      slug: 'potential-energy-diagram-exothermic-reaction',
+      title: 'Potential energy diagram of an exothermic reaction',
+      alt: 'Potential energy diagram of an exothermic reaction: reactants at 50 kJ/mol, a transition state at 150 kJ/mol and products at 20 kJ/mol, with arrows labeled Ea = 100 kJ/mol and ΔH = −30 kJ/mol',
+      caption:
+        'The potential energy of an exothermic reaction against the reaction coordinate. The curve runs flat at the reactants, 50 kJ/mol, rises to the transition state at 150 kJ/mol and falls to the products at 20 kJ/mol. The activation energy arrow runs up from the reactants to the peak and the ΔH arrow down from the reactants to the products, each labeled with its value, and a dashed line carries the reactants’ energy across to both.',
+      settings: { eaLabel: 'value', dhLabel: 'value' },
+    },
+    {
+      slug: 'potential-energy-diagram-endothermic-reaction',
+      title: 'Potential energy diagram of an endothermic reaction',
+      alt: 'Potential energy diagram of an endothermic reaction: products higher than the reactants, with arrows for Ea, the reverse Ea and ΔH',
+      caption:
+        'The potential energy of an endothermic reaction: the reactants at 20 kJ/mol, the transition state at 150 kJ/mol and the products higher than the reactants, at 80 kJ/mol. Arrows mark the forward activation energy from the reactants, the reverse activation energy from the products, and ΔH, pointing up from the reactants to the products.',
+      settings: { levels: [20, 150, 80], revEaArrow: true },
+    },
+    {
+      slug: 'potential-energy-diagram-with-and-without-a-catalyst',
+      title: 'Potential energy diagram with and without a catalyst',
+      alt: 'Potential energy diagram of an exothermic reaction with a dashed catalysed path over a lower transition state, the activation energies of both paths marked, and a key',
+      caption:
+        'An exothermic reaction with and without a catalyst. The uncatalysed path, solid, rises to a transition state at 150 kJ/mol; the catalysed path, dashed, to one at 100 kJ/mol. Both start at the same reactants and end at the same products, so ΔH is the same, but the catalysed activation energy is 50 kJ/mol lower. A key under the graph names the two paths.',
+      settings: { catalyst: true, catTs: 100 },
+    },
+    {
+      slug: 'two-step-reaction-energy-profile-with-intermediate',
+      title: 'Two-step reaction energy profile with an intermediate',
+      alt: 'Reaction energy profile of a two-step mechanism: two transition states with an intermediate in the dip between them, each step’s Ea marked, and ΔH',
+      caption:
+        'The energy profile of a reaction that happens in two steps. Each step has its own transition state, a peak, at 120 and 100 kJ/mol, with an intermediate in the dip between them at 70 kJ/mol. Each step’s activation energy runs up from the level before it, so the first step, with the larger activation energy, is the rate-determining step. ΔH runs from the reactants to the products.',
+      settings: { levels: [40, 120, 70, 100, 10], yTo: '160' },
+    },
+    {
+      slug: 'activation-energy-with-and-without-an-enzyme',
+      title: 'Activation energy with and without an enzyme',
+      alt: 'Energy diagram with no numbers on its axes: a reaction’s path without an enzyme and a lower dashed path with an enzyme, each activation energy marked',
+      caption:
+        'A reaction with and without an enzyme, as biology courses draw it: the shape matters, so the potential energy axis has no numbers. With the enzyme, dashed, the transition state is lower, so the activation energy is smaller, while the reactants and products stay where they are. A key names the two paths.',
+      settings: {
+        catalyst: true, catTs: 90, uncatName: 'Without enzyme', catName: 'With enzyme', axes: 'shape', dhArrow: false,
+        xEndCap: 'triangle', yEndCap: 'triangle', yTitle: 'Potential energy',
+      },
+    },
+    {
+      slug: 'potential-energy-diagram-worksheet-label-the-arrows',
+      title: 'Potential energy diagram worksheet: which arrow shows ΔH?',
+      alt: 'Potential energy diagram of an exothermic reaction with three arrows lettered A, B and C for the activation energy, ΔH and the reverse activation energy',
+      caption:
+        'An exothermic reaction with its three arrows lettered for a question: A, the activation energy, from the reactants up to the transition state; B, ΔH, from the reactants down to the products; and C, the reverse activation energy, from the products up to the transition state. Students say which arrow shows which energy and read the values from the numbered axis.',
+      settings: { eaLabel: 'mark', dhLabel: 'mark', revEaArrow: true, revEaLabel: 'mark' },
+    },
+    {
+      slug: 'enthalpy-level-diagram-haber-process',
+      title: 'Enthalpy level diagram for the Haber process',
+      alt: 'Energy level diagram with N₂ + 3H₂ on a line at 0 kJ and 2NH₃ on a lower line at −92 kJ, with an arrow labeled ΔH = −92 kJ between them',
+      caption:
+        'An energy level diagram for the Haber process, N₂ + 3H₂ → 2NH₃: no curve, just the reactants and products as lines, with the ΔH arrow pointing down from the reactants at 0 kJ to the products at −92 kJ. The reaction gives out 92 kJ of heat, so it is exothermic.',
+      settings: {
+        style: 'levels', levels: [0, 100, -92], reactantsLabel: 'N_2 + 3H_2', productsLabel: '2NH_3', dhLabel: 'value', unit: 'kj',
+        yFrom: '-100', yTo: '20', yStep: '10', yTitle: 'Potential energy (kJ)',
+      },
+    },
+  ]),
+
   ...examplesOf('particle-diagram', [
     {
       slug: 'particle-diagram-mixture-of-two-elements',
