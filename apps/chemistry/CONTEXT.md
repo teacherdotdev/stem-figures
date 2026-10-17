@@ -284,6 +284,38 @@ Square brackets around an ion's Bohr model with its charge at the top right, as 
 
 A Bohr model can have a **key** like a particle diagram's: one proton, neutron and electron drawn exactly as in the figure, with its name, and a gained and a lost electron when the figure shows them.
 
+### Nuclide notation
+
+**Nuclide symbol**:
+A figure of one isotope, ion or nuclear particle written as it's typeset: the mass number at the top left, the atomic number at the bottom left, both right-aligned against the symbol, and the charge at the top right (²³⁵₉₂U, ³⁷₁₇Cl⁻). The generator is Nuclide Notation. Only the atomic number, mass number and charge are stored; the protons, neutrons and electrons are worked out from them, and typing one sets them (more protons keep the neutrons and electrons, so the mass number and charge go up). Every nuclide symbol in the same font and size is the same height with its symbol on the same baseline, whatever is left off, so a row of them could line up later for decay equations, which aren't drawn yet.
+_Avoid_: Isotope symbol, nuclear notation, AZX notation, complete chemical symbol (all fine in search keywords), element card (a different figure)
+
+**Element** (in nuclide notation):
+Any of the 118 elements, picked by atomic number. Picking one sets its mass number to the usual one, as for a Bohr model (Cl is 35), and keeps the charge. The mass number can then be any whole number from the atomic number to 300, so unlikely isotopes draw; one below the atomic number would mean fewer than 0 neutrons, so the page refuses it with a message and the figure doesn't change. For the elements Mass Spectrum has isotopes for, their natural isotopes are buttons (Cl-35, Cl-37), and a mass number that isn't one of them is noted but still drawn.
+_Avoid_: Atom
+
+**Your own symbol**:
+Up to three characters the teacher types in place of an element's symbol, such as X, Q or ?, with any atomic number from 0, for "identify the element" questions. The answer key names the element it stands for, when there is one ("X is selenium-79 ion, Se²⁻").
+_Avoid_: Custom element, unknown, mystery element
+
+**Nuclear particle**:
+An alpha particle (⁴₂He or ⁴₂α), beta particle (⁰₋₁e or ⁰₋₁β), positron (⁰₊₁e or ⁰₊₁β), neutron (¹₀n), proton (¹₁p or ¹₁H) or gamma ray (⁰₀γ), each a fixed symbol and pair of numbers as written in decay equations. The bottom number is the particle's charge, so a beta particle's is −1 and a positron's is written +1. A particle has no charge position and no hyphen notation.
+_Avoid_: Radiation, decay particle (fine in help text)
+
+**Charge** (in nuclide notation):
+The protons minus the electrons, −8 to 8 and never more than the atomic number (fewer than 0 electrons), written as chemists write it: 2+, − or 3−, never +2 or 1+. It's drawn as a raised tspan straight after the symbol, so it sits where the font ends the symbol; a neutral atom shows none.
+_Avoid_: Oxidation number, ion charge
+
+**Position**:
+One of the four places a nuclide symbol has: the mass number, atomic number, symbol and charge. Each is shown, blank or off (left out, as in ¹⁴C without its atomic number). A **blank** is an empty box by default, or a line to write on, the same size whatever it stands for, so it never hints at the answer. A blank's value is never in the figure or its screen-reader label, only in the answer key.
+_Avoid_: Slot, field, missing number
+
+**Hyphen notation**:
+An isotope written as its name or symbol and mass number joined by a hyphen, carbon-14 or C-14, on its own or as a smaller line under the symbol. It follows the symbol's and mass number's positions, so a blank mass number is carbon-[blank]; it never shows the atomic number or charge.
+_Avoid_: Isotope name, dash notation
+
+The figure is in a **sans-serif** (Arial) or **serif** (Times New Roman) font, in small, medium or large text, which is how large it pastes into a document. The **answer key** gives what it is ("Chlorine-37 ion, Cl⁻"), its protons, neutrons and electrons (a particle's mass number and charge), and each blank's value.
+
 ### Orbital diagrams
 
 **Orbital diagram**:

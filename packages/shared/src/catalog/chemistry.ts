@@ -117,6 +117,17 @@ export const CHEMISTRY: CatalogEntry[] = [
     keywords: ['bohr', 'atom', 'atomic', 'model', 'structure', 'proton', 'protons', 'neutron', 'neutrons', 'electron', 'electrons', 'nucleus', 'shell', 'shells', 'energy', 'level', 'orbit', 'isotope', 'ion', 'ions', 'cation', 'anion', 'charge', 'element', 'periodic', 'gained', 'lost', 'valence', 'diagram'],
   },
   {
+    id: 'nuclide-notation',
+    site: 'chemistry',
+    alsoOn: ['physics'],
+    name: 'Nuclide Notation',
+    path: '/nuclide-notation',
+    blurb: 'An isotope, ion or nuclear particle’s symbol with its mass number, atomic number and charge.',
+    description:
+      'Make printable nuclide symbols for chemistry tests. Pick any element, type your own symbol or pick an alpha, beta or other nuclear particle, and get its mass number, atomic number and charge placed around it, any of them left blank for students, or written in hyphen notation like carbon-14.',
+    keywords: ['nuclide', 'isotope', 'isotopes', 'notation', 'nuclear', 'atomic', 'symbol', 'AZX', 'mass', 'number', 'protons', 'neutrons', 'electrons', 'ion', 'cation', 'anion', 'charge', 'superscript', 'subscript', 'alpha', 'beta', 'positron', 'gamma', 'decay', 'hyphen', 'element', 'complete'],
+  },
+  {
     id: 'lewis-structures',
     site: 'chemistry',
     name: 'Lewis Structures',

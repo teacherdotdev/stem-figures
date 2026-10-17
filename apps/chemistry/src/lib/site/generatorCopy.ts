@@ -461,6 +461,47 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school'],
   },
 
+  'nuclide-notation': {
+    heading: 'Nuclide symbols for isotopes, ions and nuclear particles',
+    intro: [
+      'Nuclide Notation draws an element’s symbol with its mass number at the top left, its atomic number at the bottom left and its charge at the top right, typeset as in a textbook: ²³⁵₉₂U, ³⁷₁₇Cl⁻. Pick any of the 118 elements and set any mass number from its atomic number up to 300, so unusual isotopes are fine, and a charge from −8 to 8, or type the protons, neutrons and electrons and let it work out the numbers. Use your own symbol, such as X, for “identify the element” questions, or pick an alpha, beta, positron, neutron, proton or gamma particle as it is written in decay equations.',
+      'Leave any position as an empty box or a line for students to fill in, or leave it off, as in ¹⁴C. It can also write hyphen notation, carbon-14 or C-14, alone or under the symbol. Copy the picture straight into Google Docs, Slides or Kahoot, where these super- and subscripts are hard to type, and turn on the answer key for the name, the protons, neutrons and electrons, and the value of each blank.',
+    ],
+    settings: [
+      'An element and its mass number and charge, with buttons for its natural isotopes, or the protons, neutrons and electrons',
+      'Your own symbol of up to three characters, with any atomic number, mass number and charge',
+      'An alpha particle (He or α), beta particle (e or β), positron, neutron, proton (p or H) or gamma ray',
+      'The mass number, atomic number, symbol and charge each shown, blank or left off, with blanks as boxes or lines',
+      'Symbol notation, hyphen notation (carbon-14 or C-14), or both',
+      'A sans-serif (Arial) or serif (Times New Roman) font, in small, medium or large text',
+      'A chart title, and an answer key',
+    ],
+    faqs: [
+      {
+        q: 'How do you write nuclide notation?',
+        a: 'Write the element’s symbol with its mass number (protons plus neutrons) at the top left and its atomic number (protons) at the bottom left. An ion’s charge goes at the top right, written 2+ or 3−, with just + or − for a charge of one. Chlorine-37 with one extra electron is ³⁷₁₇Cl⁻: 17 protons, 20 neutrons and 18 electrons.',
+      },
+      {
+        q: 'Can I leave a number blank for students?',
+        a: 'Yes. Under Positions, set the mass number, atomic number, symbol or charge to Blank and it is drawn as an empty box, or as a line if you choose Line. A blank’s value never appears in the figure; it is only in the answer key, if you turn it on.',
+      },
+      {
+        q: 'Can I make an isotope that doesn’t exist?',
+        a: 'Yes. Any mass number from the atomic number up to 300 is drawn. For elements from hydrogen to xenon, and platinum, gold, mercury, lead and uranium, the page notes when a mass number isn’t one of the element’s naturally abundant isotopes, such as carbon-14, which is only a trace, but draws it anyway. A mass number below the atomic number would mean fewer than 0 neutrons, so it isn’t taken.',
+      },
+      {
+        q: 'Does it write nuclear particles for decay equations?',
+        a: 'Yes, one at a time: alpha ⁴₂He or ⁴₂α, beta ⁰₋₁e or ⁰₋₁β, positron ⁰₊₁e, neutron ¹₀n, proton ¹₁p or ¹₁H and gamma ⁰₀γ. Whole equations with arrows and a balance check aren’t drawn yet.',
+      },
+      {
+        q: 'Why use this instead of typing it in Google Docs?',
+        a: 'Docs and Kahoot can’t stack a superscript over a subscript before a symbol, so the numbers end up side by side. This draws them stacked and right-aligned against the symbol in Arial or Times New Roman at the size you pick, and copies as a picture you can paste anywhere.',
+      },
+    ],
+    imageAlt: 'A printable nuclide symbol, carbon-14 with its mass number 14 and atomic number 6, made with Nuclide Notation',
+    educationalLevel: ['Middle school', 'High school'],
+  },
+
   'lewis-structures': {
     heading: 'Lewis dot structures for molecules, ions and single atoms',
     intro: [
