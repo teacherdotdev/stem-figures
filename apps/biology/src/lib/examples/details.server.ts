@@ -20,6 +20,8 @@ import { pairNamed } from '$lib/generators/predator-prey/pairs'
 import { predatorPreySettings } from '$lib/generators/predator-prey/settings'
 import { readoutOf } from '$lib/generators/enzyme-activity/figure'
 import { enzymeSettings } from '$lib/generators/enzyme-activity/settings'
+import { answerLines as dnaAnswer } from '$lib/generators/dna-protein-synthesis/rows'
+import { dnaSettings } from '$lib/generators/dna-protein-synthesis/settings'
 import { answerLines as gelAnswer } from '$lib/generators/gel-electrophoresis/figure'
 import { gelSettings } from '$lib/generators/gel-electrophoresis/settings'
 import { answerLine as pipetteAnswerLine, pipetteSettings } from '$lib/generators/micropipette-reading/settings'
@@ -129,6 +131,11 @@ function enzymeActivityAnswer(s: SettingsById['enzyme-activity']): ExampleDetail
   return lines.length ? { heading: 'Answer key', lines } : null
 }
 
+/** DNA and Protein Synthesis's own answer key: every row written out in full and where each mistake is, or the chart's start and stop codons. */
+function dnaProteinSynthesisAnswer(s: SettingsById['dna-protein-synthesis']): ExampleDetails['answer'] {
+  return { heading: 'Answer key', lines: dnaAnswer(s) }
+}
+
 /** Gel Electrophoresis's own answer key lines: each sample lane's band sizes, and the ladder's when its sizes are blank. */
 function gelElectrophoresisAnswer(s: SettingsById['gel-electrophoresis']): ExampleDetails['answer'] {
   const lines = gelAnswer(s)
@@ -141,6 +148,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   pedigree: { definition: pedigreeSettings, answer: pedigreeAnswer },
   'predator-prey': { definition: predatorPreySettings, answer: predatorPreyAnswer },
   'enzyme-activity': { definition: enzymeSettings, answer: enzymeActivityAnswer },
+  'dna-protein-synthesis': { definition: dnaSettings, answer: dnaProteinSynthesisAnswer },
   'gel-electrophoresis': { definition: gelSettings, answer: gelElectrophoresisAnswer },
   'micropipette-reading': { definition: pipetteSettings, answer: (s) => ({ heading: 'Answer key', lines: [pipetteAnswerLine(s)] }) },
 }
