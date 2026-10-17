@@ -94,6 +94,20 @@ and `docs/adr/` for decisions.
   point, labeled, blank or unlabeled; scattered data points or points alone;
   shape-only or numbered axes, and setups to start from. Built on
   `$shared/graph` and its label placer.
+- `/osmosis` **Osmosis and Tonicity**: a red blood cell or a plant cell in
+  a solution, a beaker split by a selectively permeable membrane, a U-tube
+  with the membrane at the bottom, or a dialysis-tubing bag in a beaker. Up
+  to three solutes, each with its concentration on each side (%, M or mM)
+  and whether it can cross; tonicity is worked out from the ones that can't.
+  Solute particles are scattered as crowded as their concentrations, with
+  water as small discs in the room they leave (`$shared/particles`, from a
+  seed with Shuffle), and arrows for the net movement of water and of each
+  solute that can cross. The start, the result (crenated, swollen or burst;
+  plasmolyzed, flaccid or turgid; a level risen; a bag swollen or shrunk),
+  both, or a cell in a hypotonic, an isotonic and a hypertonic solution side
+  by side, in order or shuffled. Concentrations, tonicity, membrane, cell
+  parts and result as text, blank lines or none; arrows as blank boxes;
+  color or black and white, a key and an answer key.
 - `/gel-electrophoresis` **Gel Electrophoresis**: an agarose gel of 2 to 12
   lanes, each a DNA ladder (100 bp, 1 kb or λ/HindIII) or a sample with the
   band sizes typed in. Bands run linearly in log size over the gel's range
