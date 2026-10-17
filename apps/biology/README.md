@@ -79,6 +79,21 @@ and `docs/adr/` for decisions.
   bonds and greyscale-safe base colors. Up to four deliberate wrong
   pairings in one row for multiple choice, listed in the answer key, and
   the square codon chart beside, below or alone.
+- `/photosynthesis-rate` **Photosynthesis Rate**: the rate of photosynthesis
+  against light intensity (or distance from the lamp, as 1/d²), CO₂
+  concentration or temperature: a straight rise while light is limiting,
+  bending and levelling off where CO₂ or temperature limits it (a
+  non-rectangular hyperbola, its temperature curve Enzyme Activity's). Up to
+  three curves, each at its own CO₂, temperature or light, solid, dashed and
+  dotted with a key, gross or net of respiration, in arbitrary units or
+  bubbles a minute. Also the CO₂ in a closed chamber over time in the dark,
+  dim and bright light, or the CO₂ and O₂ around one plant, over time with
+  O₂ on a right-hand axis or against each other, the light going off part
+  way with the dark shaded. The saturation point, what limits the rate on the
+  rise and the plateau, lettered points, the optimum and the compensation
+  point, labeled, blank or unlabeled; scattered data points or points alone;
+  shape-only or numbered axes, and setups to start from. Built on
+  `$shared/graph` and its label placer.
 - `/gel-electrophoresis` **Gel Electrophoresis**: an agarose gel of 2 to 12
   lanes, each a DNA ladder (100 bp, 1 kb or λ/HindIII) or a sample with the
   band sizes typed in. Bands run linearly in log size over the gel's range
