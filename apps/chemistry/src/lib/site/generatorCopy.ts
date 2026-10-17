@@ -534,7 +534,11 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'Which molecules can it draw?',
-        a: 'Every molecule on the Cambridge IGCSE list, H₂, Cl₂, HCl, H₂O, CH₄, NH₃, O₂, N₂, CO₂, C₂H₄ and CH₃OH, and most others where each atom shares one electron per bond, like HCN, PCl₃, H₂S or BF₃. Molecules that need a dative bond, like CO, SO₂ and O₃, polyatomic ions like NH₄⁺, and atoms with more than eight electrons, like SF₆, aren’t drawn yet; the Request it button asks us to add one. Molecules like ethane, where the H atoms of two neighboring carbons would overlap, can’t be drawn flat with every circle the same size.',
+        a: 'Every molecule on the Cambridge IGCSE list, H₂, Cl₂, HCl, H₂O, CH₄, NH₃, O₂, N₂, CO₂, C₂H₄ and CH₃OH, and most others where each atom shares one electron per bond, like HCN, PCl₃, H₂S or BF₃. Molecules with two carbons, like ethane and ethanol, draw too. Molecules that need a dative bond, like CO, SO₂ and O₃, polyatomic ions like NH₄⁺, and atoms with more than eight electrons, like SF₆, aren’t drawn yet; the Request it button asks us to add one.',
+      },
+      {
+        q: 'Why are the H circles smaller in ethane?',
+        a: 'Every circle is the same size wherever that fits, as mark schemes draw them. In ethane, ethanol and a few others, the H atoms on neighboring atoms would overlap each other, so every H circle in that molecule is drawn a little smaller, just enough to keep them apart, with each shared pair still inside its overlap.',
       },
       {
         q: 'Why does it refuse MgCl?',

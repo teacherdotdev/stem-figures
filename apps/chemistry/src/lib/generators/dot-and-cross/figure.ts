@@ -5,7 +5,7 @@
 // screen readers and the answer key.
 
 import { textWidth as arialWidth } from '../lewis-structures/drawing'
-import { drawMolecule, moleculeReach } from './covalent'
+import { drawMolecule, reachOf } from './covalent'
 import { chargeText, ionName, type Compound, type Ion } from './ionic'
 import { MARK_NAMES, markCount, markOf } from './marks'
 import type { Atom, Read } from './read'
@@ -209,18 +209,15 @@ function numbered(c: Compound, all: boolean, charges: ChargeMode): Part {
 function moleculePart(read: Extract<Read, { ok: true }>, all: boolean): Part {
   if (read.species.kind !== 'covalent') return emptyPart()
   const d = drawMolecule(read.species.molecule, all)
-  const reach = moleculeReach(d)
-  const xs = d.atoms.map((a) => a.x)
-  const ys = d.atoms.map((a) => a.y)
   return {
     ...emptyPart(),
-    circles: [...d.atoms.map((a) => ({ x: a.x, y: a.y, r: d.radius })), ...d.rings],
-    symbols: d.atoms.map((a) => ({ x: a.x, y: a.y, text: a.symbol })),
+    circles: [...d.atoms.map((a) => ({ x: a.x, y: a.y, r: a.r })), ...d.rings],
+    symbols: d.atoms.map((a) => ({ ...a.label, text: a.symbol })),
     marks: d.marks,
-    left: reach - Math.min(...xs),
-    right: Math.max(...xs) + reach,
-    top: reach - Math.min(...ys),
-    bottom: Math.max(...ys) + reach,
+    left: Math.max(...d.atoms.map((a) => reachOf(a) - a.x)),
+    right: Math.max(...d.atoms.map((a) => a.x + reachOf(a))),
+    top: Math.max(...d.atoms.map((a) => reachOf(a) - a.y)),
+    bottom: Math.max(...d.atoms.map((a) => a.y + reachOf(a))),
   }
 }
 

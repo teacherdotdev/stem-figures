@@ -714,6 +714,14 @@ export const EXAMPLES: Example[] = [
       settings: { formula: 'N2' },
     },
     {
+      slug: 'dot-and-cross-diagram-of-ethanol',
+      title: 'Dot-and-cross diagram of ethanol (C₂H₅OH)',
+      alt: 'Dot-and-cross diagram of ethanol: two carbon circles and an oxygen circle in a row, overlapped by six smaller hydrogen circles, each overlap holding one shared pair, with two lone pairs on the oxygen',
+      caption:
+        'A dot-and-cross diagram of ethanol, C₂H₅OH. Each carbon’s electrons and the oxygen’s have their own mark, dots, open circles and open squares, and the hydrogens’ are crosses, so every shared pair shows which atom gave each electron. The hydrogen circles are drawn a little smaller so the hydrogens on the two carbons don’t overlap each other.',
+      settings: { formula: 'C2H5OH' },
+    },
+    {
       slug: 'dot-and-cross-diagram-of-ethene-for-students',
       title: 'Dot-and-cross diagram of ethene (C₂H₄) for students to complete',
       alt: 'The overlapping outer shells of ethene, two carbons and four hydrogens, with no electrons drawn, and an answer key under them',

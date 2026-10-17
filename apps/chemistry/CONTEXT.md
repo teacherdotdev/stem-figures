@@ -295,7 +295,7 @@ How one electron is drawn: a dot, a cross, an open circle or an open square, the
 _Avoid_: Symbol (that's the element's), electron (fine in help text), dot (alone)
 
 **Overlap**:
-Where two bonded atoms' outer circles cross, holding their shared pairs: a row for each pair, the electron from each atom on its own side. Bonded atoms are 1.5 outer radii apart, so a triple bond's three pairs fit, and every circle is the same size, hydrogen's too, as Cambridge mark schemes draw them. Atoms that aren't bonded never overlap, so a molecule whose flat drawing would overlap them, like C₂H₆, isn't drawn. With all shells the circles grow so the inner rings stay clear of every overlap.
+Where two bonded atoms' outer circles cross, holding their shared pairs: a row for each pair, the electron from each atom on its own side. Bonded atoms are 1.5 outer radii apart, so a triple bond's three pairs fit, and every circle is the same size, hydrogen's too, as Cambridge mark schemes draw them. Atoms that aren't bonded never overlap: where two H circles would (C₂H₆, ethanol, methylamine, hydrazine), every H circle in that molecule shrinks by the same amount, just enough to clear, and moves in along its bond so its overlap keeps room for its pair, its symbol moving out of the way. A molecule that would still overlap with H circles 0.62 of full size (CH₃COOH) isn't drawn. With all shells the circles grow so the inner rings stay clear of every overlap.
 _Avoid_: Intersection, lens
 
 **Shared pair** / **Lone pair**:

@@ -38,6 +38,8 @@
         ['CO2', 'CO₂, carbon dioxide'],
         ['C2H4', 'C₂H₄, ethene'],
         ['CH3OH', 'CH₃OH, methanol'],
+        ['C2H6', 'C₂H₆, ethane'],
+        ['C2H5OH', 'C₂H₅OH, ethanol'],
       ],
     },
     {

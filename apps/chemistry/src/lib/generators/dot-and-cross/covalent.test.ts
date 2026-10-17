@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { octetOf } from '../lewis-structures/elements'
 import { neighbours } from '../lewis-structures/structure'
-import { drawMolecule, innerShells, readMolecule, type Molecule } from './covalent'
+import { MIN_HYDROGEN, drawMolecule, innerShells, readMolecule, type Molecule } from './covalent'
 import { markOf } from './marks'
 import { BOND_SPACING, MARK, OUTER_R, ROW_GAP, innerRadius, moleculeRadius } from './shells'
 
 const CAMBRIDGE = ['H2', 'Cl2', 'HCl', 'H2O', 'CH4', 'NH3', 'O2', 'N2', 'CO2', 'C2H4', 'CH3OH']
 const OTHERS = ['HF', 'HCN', 'PCl3', 'H2S', 'BF3', 'CCl4', 'C2H2', 'CH2O', 'NCl3', 'SiH4', 'OF2', 'H2O2', 'CH3OCH3', 'HBr', 'Br2', 'I2', 'CS2']
+/** Molecules whose H circles have to be smaller. */
+const SMALLER_H = ['C2H6', 'C2H5OH', 'CH3NH2', 'N2H4']
 
 function molecule(formula: string): Molecule {
   const r = readMolecule(formula, '')
@@ -24,8 +26,10 @@ function checkDrawing(formula: string, all: boolean) {
   const R = d.radius
   const inner = new Set(d.rings.flatMap((ring) => d.marks.filter((k) => Math.abs(dist(k, ring) - ring.r) < 0.01)))
   const outerMarks = d.marks.filter((k) => !inner.has(k))
-  const onCircle = (k: { x: number; y: number }, i: number) => Math.abs(dist(k, d.atoms[i]) - R) < 0.01
-  const inside = (k: { x: number; y: number }, i: number) => dist(k, d.atoms[i]) + MARK <= R + 0.01
+  const onCircle = (k: { x: number; y: number }, i: number) => Math.abs(dist(k, d.atoms[i]) - d.atoms[i].r) < 0.01
+  const inside = (k: { x: number; y: number }, i: number) => dist(k, d.atoms[i]) + MARK <= d.atoms[i].r + 0.01
+  // one size for every H, and for every other atom
+  for (const [i, a] of s.atoms.entries()) expect(d.atoms[i].r, `${formula} atom ${i}`).toBeCloseTo(a.element === 'H' ? m.hydrogen * R : R, 2)
 
   // each overlap holds its bond order's pairs, each pair one mark from each atom
   for (const b of s.bonds) {
@@ -43,7 +47,7 @@ function checkDrawing(formula: string, all: boolean) {
     if (atom >= 0) expect(k.owner, `${formula}: a lone electron is its atom’s`).toBe(m.owners[atom])
     // and never inside the circle of an atom it doesn't belong to
     s.atoms.forEach((_, i) => {
-      if (atom >= 0 && i !== atom && !neighbours(s, atom).includes(i)) expect(dist(k, d.atoms[i]), `${formula}: lone mark in atom ${i}`).toBeGreaterThan(R + MARK)
+      if (atom >= 0 && i !== atom && !neighbours(s, atom).includes(i)) expect(dist(k, d.atoms[i]), `${formula}: lone mark in atom ${i}`).toBeGreaterThan(d.atoms[i].r + MARK)
     })
   }
   // every atom ends with a full outer shell: its lone electrons and its bonds' pairs
@@ -55,11 +59,21 @@ function checkDrawing(formula: string, all: boolean) {
   // no two unbonded circles overlap
   s.atoms.forEach((_, i) =>
     s.atoms.forEach((__, j) => {
-      if (j > i && !neighbours(s, i).includes(j)) expect(dist(d.atoms[i], d.atoms[j]), `${formula} ${i} and ${j}`).toBeGreaterThan(2 * R)
+      if (j > i && !neighbours(s, i).includes(j)) expect(dist(d.atoms[i], d.atoms[j]), `${formula} ${i} and ${j}`).toBeGreaterThan(d.atoms[i].r + d.atoms[j].r)
     }),
   )
   // inner rings stay clear of every overlap
   for (const ring of d.rings) expect(ring.r + MARK, `${formula} ring ${ring.r}`).toBeLessThan((BOND_SPACING - 1) * R)
+  // no mark comes within 4 of an H symbol, about 18 wide and 17 tall, which stays inside its circle
+  for (const [i, a] of s.atoms.entries())
+    if (a.element === 'H') {
+      const { label } = d.atoms[i]
+      for (const k of outerMarks) {
+        const clear = Math.max(Math.abs(k.x - label.x) - 9, Math.abs(k.y - label.y) - 8.5) - MARK
+        expect(clear, `${formula}: mark by H ${i}’s symbol`).toBeGreaterThan(4)
+      }
+      expect(dist(label, d.atoms[i]) + 13, `${formula}: H ${i}’s symbol in its circle`).toBeLessThan(d.atoms[i].r)
+    }
   return { m, d }
 }
 
@@ -79,6 +93,20 @@ describe('other molecules', () => {
     })
 })
 
+describe('molecules whose H circles would overlap at full size', () => {
+  for (const formula of SMALLER_H)
+    it(`draws ${formula} with smaller H circles`, () => {
+      const { m } = checkDrawing(formula, false)
+      checkDrawing(formula, true)
+      expect(m.hydrogen).toBeLessThan(1)
+      expect(m.hydrogen).toBeGreaterThanOrEqual(MIN_HYDROGEN)
+    })
+
+  it('keeps full-size H circles wherever they fit', () => {
+    for (const formula of [...CAMBRIDGE, ...OTHERS]) expect(molecule(formula).hydrogen, formula).toBe(1)
+  })
+})
+
 describe('molecules that can’t be drawn yet', () => {
   it('give a message for a dative bond, not a wrong drawing', () => {
     for (const formula of ['CO', 'SO2', 'O3', 'N2O', 'HNO3'])
@@ -91,15 +119,13 @@ describe('molecules that can’t be drawn yet', () => {
     expect(readMolecule('PCl5', '')).toMatchObject({ ok: false })
   })
 
-  it('give a message where two circles would overlap in a flat drawing', () => {
-    expect(readMolecule('C2H6', '')).toMatchObject({ ok: false, message: 'In C₂H₆, two H atoms’ circles would overlap, so it can’t be drawn flat yet.' })
+  it('give a message where circles would overlap even with the smallest H circles', () => {
+    expect(readMolecule('CH3COOH', '')).toMatchObject({ ok: false, message: 'In CH₃COOH, two atoms’ circles would overlap, so it can’t be drawn flat yet.' })
   })
 
-  it('pick the first listed molecule sharing a formula that can be drawn, keeping the choice', () => {
-    expect(readMolecule('C2H6O', '')).toMatchObject({ ok: true, molecule: { listed: { id: 'dimethyl-ether' } } })
-    const ethanol = readMolecule('C2H6O', 'ethanol')
-    expect(ethanol).toMatchObject({ ok: false, listed: { id: 'ethanol' } })
-    expect(!ethanol.ok && ethanol.choices?.map((l) => l.id)).toEqual(['ethanol', 'dimethyl-ether'])
+  it('pick between listed molecules sharing a formula', () => {
+    expect(readMolecule('C2H6O', '')).toMatchObject({ ok: true, molecule: { listed: { id: 'ethanol' }, choices: [{ id: 'ethanol' }, { id: 'dimethyl-ether' }] } })
+    expect(readMolecule('C2H6O', 'dimethyl-ether')).toMatchObject({ ok: true, molecule: { listed: { id: 'dimethyl-ether' } } })
   })
 })
 
