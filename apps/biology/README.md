@@ -67,6 +67,18 @@ and `docs/adr/` for decisions.
   Vmax). The optimum and denaturation, or Vmax, ½Vmax and Km, marked with
   dashed lines to the axes, labeled, blank or unlabeled. Built on
   `$shared/graph`.
+- `/dna-protein-synthesis` **DNA and Protein Synthesis**: one sequence of up
+  to 36 bases, typed as the DNA template strand (3′→5′, starting TAC), the
+  coding strand or the mRNA, drawn as flat strands of boxes lined up base
+  under base: the coding strand, template strand, mRNA, tRNA anticodons and
+  amino acids, each shown, blank, partly blank (a share picked by seed) or
+  off. Read in codons from the first AUG (or the first base) to the first
+  stop codon with the standard genetic code (`code.ts`). Amino acids by one-
+  or three-letter code or full name, as linked beads or words; 5′ and 3′
+  ends and row names shown, blank or off; codon gaps, brackets, hydrogen
+  bonds and greyscale-safe base colors. Up to four deliberate wrong
+  pairings in one row for multiple choice, listed in the answer key, and
+  the square codon chart beside, below or alone.
 - `/gel-electrophoresis` **Gel Electrophoresis**: an agarose gel of 2 to 12
   lanes, each a DNA ladder (100 bp, 1 kb or λ/HindIII) or a sample with the
   band sizes typed in. Bands run linearly in log size over the gel's range

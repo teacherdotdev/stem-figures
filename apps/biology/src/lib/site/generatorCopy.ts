@@ -265,6 +265,52 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'AP Biology'],
   },
 
+  'dna-protein-synthesis': {
+    heading: 'DNA and protein synthesis figures: transcription, translation and base pairing',
+    intro: [
+      'DNA and Protein Synthesis draws a gene as flat strands of bases, lined up base under base: the DNA coding strand (5′→3′), the DNA template strand (3′→5′), the mRNA (5′→3′), the tRNA anticodons and the amino acids. Type any one of the strands, the template strand starting TAC as most worksheets print it, the coding strand or the mRNA, and the rest is worked out by base pairing: A with T in DNA and with U in RNA, G with C. The mRNA is read in codons from the first AUG with the standard genetic code, until a stop codon.',
+      'Teachers use it for transcription and translation questions on tests, worksheets and slides. Leave any row blank, or a share of its boxes, for students to fill in, like the template strand for "draw the other half of the DNA", label the 5′ and 3′ ends or leave them blank, and show the amino acids as a chain of beads or as words. For multiple choice, put up to four wrong pairings in one row, then shuffle them for each answer choice. The square codon chart can go beside the strands or print on its own.',
+    ],
+    settings: [
+      'The sequence, up to 36 bases (12 codons), typed as the DNA template strand, the DNA coding strand or the mRNA, in any case, with spaces, hyphens or written 5′ and 3′ ends',
+      'The reading frame: from the first AUG, leaving the bases before it untranslated, or from the first base',
+      'Each row (coding strand, template strand, mRNA, tRNA anticodons, amino acids) shown, blank, partly blank by a share you set and a shuffle, or off',
+      'Row names on the left, as written, in your own words, as blank lines or not at all; the 5′ and 3′ ends shown, blank or off',
+      'Amino acids by three-letter or one-letter code or full name, as a chain of beads or words under each codon',
+      'Gaps between codons, a bracket under each codon, hydrogen bonds between the DNA strands (2 for A–T, 3 for G–C), and bases colored to read apart in grayscale',
+      'Up to four deliberate wrong pairings in one row, for multiple choice, shuffled, and listed in the answer key',
+      'The standard codon chart beside the strands, below them or alone, with the start and stop codons in bold; the chart title, answer key and label size',
+    ],
+    faqs: [
+      {
+        q: 'Which way is the template strand written?',
+        a: 'Left to right from its 3′ end to its 5′ end, so it lines up base under base with the coding strand, which runs 5′ to 3′: the two strands are antiparallel. Written that way, a template strand usually starts TAC, which is transcribed into the start codon AUG. If you type a strand with its ends written the other way round, like 5′-GGCAT-3′ for a template strand, the generator turns it around and says so.',
+      },
+      {
+        q: 'How is the mRNA worked out?',
+        a: 'The mRNA is complementary to the template strand: A on the template gives U in the mRNA, T gives A, G gives C and C gives G. So it matches the coding strand, with U in place of T. It is made 5′ to 3′, and the figure writes it that way, under the template strand.',
+      },
+      {
+        q: 'Where does translation start and stop?',
+        a: 'At the first AUG in the mRNA, the start codon, which codes for methionine (Met). Bases before it get no codons or amino acids. Each codon after it is read in turn until the first stop codon, UAA, UAG or UGA, which reads Stop and codes for no amino acid; codons after it get none either. If there is no AUG, nothing is translated, unless you set the reading frame to start from the first base.',
+      },
+      {
+        q: 'How are the tRNA anticodons written?',
+        a: 'Each anticodon is complementary to its codon and antiparallel to it, so under the codon 5′-AUG-3′ the anticodon reads 3′-UAC-5′, written left to right to line up base under base. There is one under each codon that codes for an amino acid; a stop codon is read by a release factor, not a tRNA, so it has no anticodon. Like all RNA, anticodons have U, never T.',
+      },
+      {
+        q: 'How do I make multiple choice answer choices?',
+        a: 'Under Mistakes, choose how many wrong pairings (up to four) and which row they go in, then Shuffle for a different set. Each mistake is a base that does not pair as it should, or in RNA a T where U belongs. Make choice A with no mistakes, then choices B to D with mistakes, shuffled for each; the Classic setups have a set of four ready. Turn on the answer key and it lists where each mistake is, like "mRNA base 7 should be U, not C".',
+      },
+      {
+        q: 'Can I print it in black and white?',
+        a: 'Yes, it is black and white unless you turn on Color the bases. The colors for A, T or U, G and C go from light to dark, so they still read apart on a grayscale copy, and the letter is always printed in each box.',
+      },
+    ],
+    imageAlt: 'A DNA template strand starting TAC with its coding strand, mRNA, tRNA anticodons and the amino acids Met, Pro, Lys, Phe and Gly lined up base under base, made with DNA and Protein Synthesis',
+    educationalLevel: ['Middle school', 'High school', 'AP Biology'],
+  },
+
   'gel-electrophoresis': {
     heading: 'Gel electrophoresis figures: DNA fingerprinting, PCR and restriction digests',
     intro: [
