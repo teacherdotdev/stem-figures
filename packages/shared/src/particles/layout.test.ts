@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { LIQUID_GAP, SCATTER_GAP, SOLID_GAP, arrange, pour, scatter, stack } from './layout'
+import {
+  LIQUID_GAP, SCATTER_GAP, SOLID_GAP, arrange, edgeDistance2, insideRegion, pour, regionArea, scatter, scatterIn, stack, type Region,
+} from './layout'
 import { discBounds, particleDiscs, type Disc, type Look, type ParticleKind } from './particles'
 import { seededRandom } from './random'
 
@@ -71,6 +73,105 @@ describe('scattering particles in the box', () => {
 
   it('draws nothing for a kind with a count of 0', () => {
     expect(scatter([{ ...kinds[0], count: 0 }], 300, 300, 1)).toEqual({ discs: [], missing: 0 })
+  })
+})
+
+describe('scattering particles into any region', () => {
+  /** A circle as a polygon of many short sides, like a cell's outline. */
+  const circle = (cx: number, cy: number, r: number, sides = 48): Region =>
+    Array.from({ length: sides }, (_, i) => ({ x: cx + r * Math.cos((2 * Math.PI * i) / sides), y: cy + r * Math.sin((2 * Math.PI * i) / sides) }))
+  /** An L shape, so a disc can't just be kept inside the region's bounds. */
+  const ell: Region = [
+    { x: 0, y: 0 }, { x: 120, y: 0 }, { x: 120, y: 200 }, { x: 300, y: 200 }, { x: 300, y: 300 }, { x: 0, y: 300 },
+  ]
+  const square: Region = [{ x: 0, y: 0 }, { x: 300, y: 0 }, { x: 300, y: 300 }, { x: 0, y: 300 }]
+
+  /** Every disc inside the region, at least the gap from its edge, and apart from the others. */
+  function expectPlaced(discs: Disc[], region: Region, gap = SCATTER_GAP) {
+    for (const d of discs) {
+      expect(insideRegion(d, region)).toBe(true)
+      expect(Math.sqrt(edgeDistance2(d, region))).toBeGreaterThanOrEqual(d.r + gap - 1e-9)
+    }
+    for (const [i, a] of discs.entries()) {
+      for (const b of discs.slice(i + 1)) expect(Math.hypot(a.x - b.x, a.y - b.y)).toBeGreaterThanOrEqual(a.r + b.r + gap - 1e-9)
+    }
+  }
+
+  it('tells inside from outside, and how far a point is from the edge', () => {
+    expect(insideRegion({ x: 50, y: 250 }, ell)).toBe(true)
+    expect(insideRegion({ x: 200, y: 100 }, ell)).toBe(false)
+    expect(edgeDistance2({ x: 50, y: 250 }, ell)).toBe(50 ** 2)
+    expect(edgeDistance2({ x: 110, y: 100 }, ell)).toBe(10 ** 2)
+    expect(regionArea(ell)).toBe(120 * 200 + 300 * 100)
+    expect(regionArea([...ell].reverse())).toBe(regionArea(ell))
+  })
+
+  it('keeps every disc inside its region and the gap from its edge, apart from the others', () => {
+    for (const seed of [1, 2, 3]) {
+      const inCircle = scatterIn(kinds, circle(150, 150, 110), seed)
+      expect(inCircle.missing).toBe(0)
+      expect(inCircle.discs).toHaveLength(12)
+      expectPlaced(inCircle.discs, circle(150, 150, 110))
+      const inEll = scatterIn(kinds, ell, seed)
+      expect(inEll.missing).toBe(0)
+      expectPlaced(inEll.discs, ell)
+    }
+  })
+
+  it('keeps joined particles whole inside the region', () => {
+    const water: ParticleKind = { count: 6, shape: 'bent', look: { size: 'm', shade: 'gray', charge: '' }, outer: white }
+    const { discs, missing } = scatterIn([water], ell, 5)
+    expect(missing).toBe(0)
+    expect(discs).toHaveLength(18)
+    for (const d of discs) {
+      expect(insideRegion(d, ell)).toBe(true)
+      expect(Math.sqrt(edgeDistance2(d, ell))).toBeGreaterThanOrEqual(d.r + SCATTER_GAP - 1e-9)
+    }
+  })
+
+  it('stays out of holes, like a cell in the solution around it', () => {
+    const cell = circle(150, 150, 80)
+    const { discs, missing } = scatterIn(kinds, square, 7, { holes: [cell] })
+    expect(missing).toBe(0)
+    expectPlaced(discs, square)
+    for (const d of discs) {
+      expect(insideRegion(d, cell)).toBe(false)
+      expect(Math.sqrt(edgeDistance2(d, cell))).toBeGreaterThanOrEqual(d.r + SCATTER_GAP - 1e-9)
+    }
+  })
+
+  it('keeps clear of discs already placed, so smaller ones can be scattered round them after', () => {
+    const first = scatterIn(kinds, square, 2)
+    const tiny: ParticleKind[] = [{ count: 50, shape: 'single', look: { size: 'xs', shade: 'white', charge: '' }, outer: white }]
+    const then = scatterIn(tiny, square, 3, { placed: first.discs })
+    expect(then.discs).toHaveLength(50)
+    expectPlaced([...first.discs, ...then.discs], square)
+  })
+
+  it('keeps the gap it is given', () => {
+    const many: ParticleKind[] = [{ count: 40, shape: 'single', look: { size: 'xs', shade: 'white', charge: '' }, outer: white }]
+    const { discs } = scatterIn(many, circle(100, 100, 90), 3, { gap: 2 })
+    expect(discs).toHaveLength(40)
+    expectPlaced(discs, circle(100, 100, 90), 2)
+  })
+
+  it('draws the same layout for the same seed, rounded to thousandths, and another for another seed', () => {
+    const a = scatterIn(kinds, circle(150, 150, 110), 11)
+    expect(scatterIn(kinds, circle(150, 150, 110), 11)).toEqual(a)
+    expect(scatterIn(kinds, circle(150, 150, 110), 12)).not.toEqual(a)
+    for (const d of a.discs) {
+      expect(Math.round(d.x * 1000) / 1000).toBe(d.x)
+      expect(Math.round(d.y * 1000) / 1000).toBe(d.y)
+    }
+  })
+
+  it('counts the particles that find no room, and gives up on a region too small for any', () => {
+    const crowd: ParticleKind[] = [{ count: 60, shape: 'single', look: { size: 'xl', shade: 'gray', charge: '' }, outer: white }]
+    const { discs, missing } = scatterIn(crowd, circle(150, 150, 100), 1)
+    expect(missing).toBeGreaterThan(0)
+    expect(discs.length + missing).toBe(60)
+    expect(scatterIn(kinds, circle(10, 10, 8), 1)).toEqual({ discs: [], missing: 12 })
+    expect(scatterIn(kinds, [], 1)).toEqual({ discs: [], missing: 12 })
   })
 })
 

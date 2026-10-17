@@ -88,7 +88,8 @@ Motion Graphs keeps an older copy of the placer of its own.
 `particles/` is Chemistry's Particle Diagram's particles: particle kinds and
 their looks (`particles`), scattering, pouring and stacking them in a box
 from a seed (`layout`, with `random`'s seeded random numbers, Chemistry's
-ADR 0002), the bordered key with subscripts in its names (`key`, `keyText`,
+ADR 0002), or scattering them into any polygon with holes in it, like a
+cell or the solution around it (`scatterIn`), the bordered key with subscripts in its names (`key`, `keyText`,
 `KeyDrawing`), the discs as drawn (`Discs`) and the look pickers
 (`LookSettings`, which needs the `.chip` class from the app's `app.css`).
 Where the box and key sit in a Particle Diagram figure stays in Chemistry
