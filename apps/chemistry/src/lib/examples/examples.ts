@@ -680,6 +680,80 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('dot-and-cross', [
+    {
+      slug: 'dot-and-cross-diagram-of-water',
+      title: 'Dot-and-cross diagram of water (H₂O)',
+      alt: 'Dot-and-cross diagram of water: an oxygen circle overlapping two hydrogen circles, a dot and a cross in each overlap, and two lone pairs of dots on the oxygen',
+      caption:
+        'A dot-and-cross diagram of a water molecule, H₂O, outer shells only. The oxygen atom’s circle overlaps each hydrogen atom’s, and each overlap holds one shared pair: a dot from the oxygen and a cross from the hydrogen. The oxygen’s two lone pairs of dots sit on its own circle, so it has 8 electrons and each hydrogen 2.',
+      settings: { formula: 'H2O' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-methane',
+      title: 'Dot-and-cross diagram of methane (CH₄)',
+      alt: 'Dot-and-cross diagram of methane: a carbon circle overlapped by four hydrogen circles above, below, left and right, each overlap holding a dot and a cross',
+      caption:
+        'A dot-and-cross diagram of methane, CH₄. The carbon atom’s outer shell overlaps the shells of four hydrogen atoms on its four sides, and each overlap holds one shared pair, a dot from the carbon and a cross from the hydrogen. The carbon has no lone pairs and ends with 8 electrons.',
+      settings: { formula: 'CH4' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-carbon-dioxide',
+      title: 'Dot-and-cross diagram of carbon dioxide (CO₂)',
+      alt: 'Dot-and-cross diagram of carbon dioxide: a carbon circle between two oxygen circles, each overlap holding two dots and two crosses, and two lone pairs of crosses on each oxygen',
+      caption:
+        'A dot-and-cross diagram of carbon dioxide, CO₂, with a double bond to each oxygen: each overlap holds two shared pairs, two dots from the carbon and two crosses from the oxygen. Each oxygen also has two lone pairs of crosses on its own circle.',
+      settings: { formula: 'CO2' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-nitrogen-n2',
+      title: 'Dot-and-cross diagram of nitrogen (N₂)',
+      alt: 'Dot-and-cross diagram of a nitrogen molecule: two overlapping circles with three dots and three crosses in the overlap and one lone pair on each atom',
+      caption:
+        'A dot-and-cross diagram of a nitrogen molecule, N₂, with its triple bond: three shared pairs in the overlap, each a dot from one nitrogen and a cross from the other. Each nitrogen has one lone pair on the far side of its circle.',
+      settings: { formula: 'N2' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-ethene-for-students',
+      title: 'Dot-and-cross diagram of ethene (C₂H₄) for students to complete',
+      alt: 'The overlapping outer shells of ethene, two carbons and four hydrogens, with no electrons drawn, and an answer key under them',
+      caption:
+        'The outer shells of ethene, C₂H₄, drawn with no electrons, for students to add them: two overlapping carbon circles, each overlapped by two hydrogen circles. The answer key under it gives each atom’s bonding pairs, four for each carbon, including the double bond, and one for each hydrogen.',
+      settings: { formula: 'C2H4', blank: true, answerKey: true },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-sodium-chloride',
+      title: 'Dot-and-cross diagram of sodium chloride (NaCl)',
+      alt: 'Dot-and-cross diagram of sodium chloride: a sodium ion with 8 crosses and a chloride ion with 7 dots and 1 cross, each in square brackets with its charge',
+      caption:
+        'A dot-and-cross diagram of sodium chloride, NaCl. The sodium ion, Na⁺, is drawn with the full shell it is left with, 8 crosses, and the chloride ion, Cl⁻, with its own 7 electrons as dots and the one it gained from sodium as a cross. Each ion is in square brackets with its charge at the top right.',
+      settings: { formula: 'NaCl' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-magnesium-chloride',
+      title: 'Dot-and-cross diagram of magnesium chloride (MgCl₂)',
+      alt: 'Dot-and-cross diagram of magnesium chloride: a magnesium ion with 8 crosses between two chloride ions, each with 7 dots and 1 cross, in brackets with their charges, and an answer key',
+      caption:
+        'A dot-and-cross diagram of magnesium chloride, MgCl₂, with every ion drawn: Cl⁻ Mg²⁺ Cl⁻, the magnesium ion in the middle. Each chloride ion has the cross it gained from magnesium on the side facing it. The answer key under it says how the electrons moved and gives each ion’s electron arrangement.',
+      settings: { formula: 'MgCl2', answerKey: true },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-aluminum-oxide',
+      title: 'Dot-and-cross diagram of aluminum oxide (Al₂O₃)',
+      alt: 'Dot-and-cross diagram of aluminum oxide: 2 in front of a bracketed Al³⁺ ion with 8 crosses, and 3 in front of a bracketed O²⁻ ion with 6 dots and 2 crosses',
+      caption:
+        'A dot-and-cross diagram of aluminum oxide, Al₂O₃, drawn as one of each ion with its number in front: 2[Al]³⁺ and 3[O]²⁻. Each aluminum ion has 8 crosses on its outer shell, and each oxide ion its own 6 electrons as dots and the 2 it gained as crosses.',
+      settings: { formula: 'Al2O3' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-a-calcium-atom',
+      title: 'Dot-and-cross diagram of a calcium atom (2, 8, 8, 2)',
+      alt: 'A calcium atom drawn as four shells around the symbol Ca, with 2, 8, 8 and 2 electrons as dots',
+      caption:
+        'A calcium atom, Ca, with every shell drawn as a circle around its symbol and its 20 electrons as dots: 2, 8, 8 and 2 from the inside out. The electrons are paired at the top, right, bottom and left of each ring, as students are taught to draw an electron arrangement.',
+      settings: { formula: 'Ca' },
+    },
+  ]),
   ...examplesOf('orbital-diagram', [
     {
       slug: 'orbital-diagram-of-oxygen',

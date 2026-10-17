@@ -505,6 +505,50 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['High school', 'AP Chemistry'],
   },
 
+  'dot-and-cross': {
+    heading: 'Dot-and-cross diagrams for covalent and ionic bonding',
+    intro: [
+      'Dot-and-Cross Diagram draws the bonding diagrams UK, GCSE and Cambridge IGCSE courses use. Each atom’s shell is a circle with its element symbol in the middle, and each electron is a dot or a cross, depending on which atom it came from. Type a molecule like H2O, CH4, CO2 or ethene and the bonded atoms’ circles overlap, with each shared pair in the overlap, one electron from each atom. Type an ionic compound like NaCl, MgCl2 or Al2O3 and each ion is drawn in square brackets with its charge, the electrons the non-metal gained in the metal’s mark. Type one element, like Na or Cl-, for its atom or ion with every shell.',
+      'Teachers use it for “draw the dot-and-cross diagram” questions and their answers: leave the electrons off so students draw them, leave the charges blank, and print an answer key with each atom’s bonding and lone pairs, or the electrons moved and each ion’s arrangement, like Mg²⁺ 2,8 and Cl⁻ 2,8,8.',
+    ],
+    settings: [
+      'The formula or name: a covalent molecule, a binary ionic compound of Li, Na, K, Rb, Mg, Ca, Sr or Al with N, O, F, S, Cl, Br or I, or one atom or ion from H to Ca',
+      'Outer shells only, or every shell',
+      'An ionic compound with every ion drawn, or one of each with its number in front, as 2[Cl]⁻',
+      'Dots and crosses swapped, and each kind of mark in its own color or all in black',
+      'The electrons drawn or left blank, and each ion’s charge shown, blank or left off',
+      'A chart title and an answer key',
+    ],
+    faqs: [
+      {
+        q: 'Which electrons are dots and which are crosses?',
+        a: 'In a molecule the central atom’s electrons are dots and the outer atoms’ crosses; a third kind of atom, like the O in CH₃OH or the N in HCN, gets open circles. When two atoms of one element bond, as in Cl₂ or N₂, one has dots and the other crosses. In an ionic compound the metal’s electrons are crosses and the non-metal’s dots, so the electrons a non-metal gains are crosses. Swap trades dots and crosses if your class does it the other way round.',
+      },
+      {
+        q: 'How is a metal ion drawn?',
+        a: 'With the full shell it’s left with after losing its outer electrons, as most mark schemes draw it: Na⁺ is a ring of 8 crosses, or 2 and 8 with every shell drawn. A non-metal ion has a full outer shell of its own electrons and the ones it gained. Each ion goes in square brackets with its charge at the top right.',
+      },
+      {
+        q: 'How are compounds like MgCl₂ and Al₂O₃ laid out?',
+        a: 'With up to three ions, every ion is drawn, the single ion in the middle: Cl⁻ Mg²⁺ Cl⁻. Bigger compounds are drawn as one of each ion with its number in front, as 2[Al]³⁺ 3[O]²⁻. You can switch either to the other layout.',
+      },
+      {
+        q: 'Which molecules can it draw?',
+        a: 'Every molecule on the Cambridge IGCSE list, H₂, Cl₂, HCl, H₂O, CH₄, NH₃, O₂, N₂, CO₂, C₂H₄ and CH₃OH, and most others where each atom shares one electron per bond, like HCN, PCl₃, H₂S or BF₃. Molecules that need a dative bond, like CO, SO₂ and O₃, polyatomic ions like NH₄⁺, and atoms with more than eight electrons, like SF₆, aren’t drawn yet; the Request it button asks us to add one. Molecules like ethane, where the H atoms of two neighboring carbons would overlap, can’t be drawn flat with every circle the same size.',
+      },
+      {
+        q: 'Why does it refuse MgCl?',
+        a: 'An ionic compound’s charges must balance. Each ion’s charge comes from its group, so Mg²⁺ needs two Cl⁻ ions. The page says what would balance: MgCl₂.',
+      },
+      {
+        q: 'Can it draw a single atom’s electron arrangement?',
+        a: 'Yes. Type an element from H to Ca, like Na, for its atom with every shell (2, 8, 1), or its ion, like Na+ or Cl-, in brackets with its charge. An anion’s gained electrons are crosses.',
+      },
+    ],
+    imageAlt: 'A printable dot-and-cross diagram of a water molecule, with overlapping shells and the electrons as dots and crosses, made with Dot-and-Cross Diagram',
+    educationalLevel: ['Middle school', 'High school', 'GCSE', 'IGCSE'],
+  },
+
   'orbital-diagram': {
     heading: 'Orbital diagrams and electron configurations',
     intro: [

@@ -8,6 +8,7 @@ import type { Component } from 'svelte'
 import { generatorsOn, matches } from '$shared/catalog/index'
 import { SITE_ID } from '$lib/site/config'
 import BohrModelPreview from './bohr-model/Preview.svelte'
+import DotAndCrossPreview from './dot-and-cross/Preview.svelte'
 import GasSyringePreview from './gas-syringe/Preview.svelte'
 import HeatingCoolingCurvePreview from './heating-cooling-curve/Preview.svelte'
 import LengthReadingPreview from './length-reading/Preview.svelte'
@@ -28,6 +29,7 @@ import StructureEditorPreview from '$lib/editors/structure-editor/Preview.svelte
 /** Each generator's directory preview, by id. */
 export const PREVIEWS: Record<string, Component> = {
   'bohr-model': BohrModelPreview,
+  'dot-and-cross': DotAndCrossPreview,
   'length-reading': LengthReadingPreview,
   'lewis-structures': LewisStructuresPreview,
   'line-spectrum': LineSpectrumPreview,

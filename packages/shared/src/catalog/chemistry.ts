@@ -127,6 +127,16 @@ export const CHEMISTRY: CatalogEntry[] = [
     keywords: ['lewis', 'dot', 'electron', 'structure', 'structures', 'diagram', 'lone', 'pair', 'pairs', 'bond', 'bonds', 'bonding', 'covalent', 'molecule', 'polyatomic', 'ion', 'octet', 'formal', 'charge', 'resonance', 'valence', 'VSEPR'],
   },
   {
+    id: 'dot-and-cross',
+    site: 'chemistry',
+    name: 'Dot-and-Cross Diagram',
+    path: '/dot-and-cross',
+    blurb: 'A molecule, ionic compound or atom with its shells as circles and its electrons as dots and crosses.',
+    description:
+      'Make printable dot-and-cross diagrams for GCSE and IGCSE chemistry tests. Type a molecule like H2O or C2H4, an ionic compound like MgCl2 or one atom or ion, and get each shell as a circle around its symbol with every electron a dot or a cross, outer shells or all, with ions in brackets and the electrons left blank for students.',
+    keywords: ['dot', 'cross', 'dot-and-cross', 'bonding', 'ionic', 'covalent', 'shells', 'shell', 'electron', 'electrons', 'shared', 'sharing', 'transfer', 'outer', 'brackets', 'ion', 'molecule', 'configuration', 'arrangement', 'IGCSE', 'GCSE', 'Cambridge'],
+  },
+  {
     id: 'orbital-diagram',
     site: 'chemistry',
     name: 'Orbital Diagram',

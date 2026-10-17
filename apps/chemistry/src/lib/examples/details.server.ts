@@ -9,6 +9,8 @@
 
 import { chargeOf, bohrSettings } from '$lib/generators/bohr-model/settings'
 import { element } from '$lib/generators/bohr-model/elements'
+import { answerLines as dotCrossAnswer } from '$lib/generators/dot-and-cross/figure'
+import { dotCrossSettings, readOnce as readDotCross } from '$lib/generators/dot-and-cross/settings'
 import { syringeSettings, answerLine as syringeAnswer } from '$lib/generators/gas-syringe/settings'
 import { buildCurve, degrees, segmentName } from '$lib/generators/heating-cooling-curve/figure'
 import { curveSettings, temperaturesOf, setupOf } from '$lib/generators/heating-cooling-curve/settings'
@@ -100,6 +102,12 @@ function lewisAnswer(s: SettingsById['lewis-structures']): ExampleDetails['answe
   return { heading: 'Answer key', lines: out }
 }
 
+function dotCrossAnswerKey(s: SettingsById['dot-and-cross']): ExampleDetails['answer'] {
+  const read = readDotCross(s.formula, s.which)
+  if (!read.ok) throw new Error(`Dot-and-Cross Diagram can't draw ${s.formula}: ${read.message}`)
+  return { heading: 'Answer key', lines: dotCrossAnswer(read) }
+}
+
 function bohrAnswer(s: SettingsById['bohr-model']): ExampleDetails['answer'] {
   const charge = chargeOf(s)
   const name = element(s.protons)?.name ?? `${s.protons} protons`
@@ -180,6 +188,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'particle-diagram': { definition: particleSettings, answer: particleAnswer },
   'bohr-model': { definition: bohrSettings, answer: bohrAnswer },
   'lewis-structures': { definition: lewisSettings, answer: lewisAnswer },
+  'dot-and-cross': { definition: dotCrossSettings, answer: dotCrossAnswerKey },
   'orbital-diagram': { definition: orbitalSettings, answer: (s) => ({ heading: 'Answer key', lines: orbitalAnswer(s) }) },
   'line-spectrum': { definition: spectrumSettings, answer: lineSpectrumAnswer },
   'photoelectron-spectrum': { definition: pesSettings, answer: pesAnswerKey },
