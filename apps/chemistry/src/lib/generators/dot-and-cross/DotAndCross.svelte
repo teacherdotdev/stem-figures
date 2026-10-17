@@ -72,6 +72,8 @@
   const species = $derived(r.ok ? r.species : undefined)
   const atom = $derived(species?.kind === 'atom' ? species.atom : undefined)
   const molecule = $derived(species?.kind === 'covalent' ? species.molecule : undefined)
+  /** Listed molecules sharing the typed formula, shown even when the one picked can't be drawn. */
+  const choices = $derived(molecule ? { list: molecule.choices, on: molecule.listed?.id } : !r.ok && r.choices ? { list: r.choices, on: r.listed?.id } : undefined)
   const all = $derived(allShells(s, r))
   const layout = $derived(layoutOf(s, r))
   const hasIons = $derived(species?.kind === 'ionic' || !!atom?.charge)
@@ -90,8 +92,6 @@
     if (atom) s.atomShells = v
     else s.shells = v
   }
-
-  const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`
 
   const whatSummary = $derived(
     !r.ok ? 'Nothing to draw' : atom ? `${r.name}, ${atom.element} ${atom.charge ? 'ion' : 'atom'}` : `${r.name}, ${KIND_NAMES[species!.kind]}`,
@@ -137,27 +137,21 @@
         </span>
         <input type="text" maxlength={MAX_FORMULA} value={s.formula} oninput={(e) => setFormula(e.currentTarget.value)} spellcheck="false" autocomplete="off" />
       </label>
+      {#if choices?.list.length}
+        <p class="field-label">Which one?</p>
+        <div class="chips" role="radiogroup" aria-label="Which one">
+          {#each choices.list as l (l.id)}
+            <button type="button" role="radio" aria-checked={choices.on === l.id} class="chip small" class:on={choices.on === l.id} onclick={() => (s.which = l.id)}>
+              {l.names[0]}
+            </button>
+          {/each}
+        </div>
+      {/if}
       {#if !r.ok}
         <p class="warning" role="status">{r.message}</p>
         {#if r.request}
           <button type="button" class="btn-ghost small request" onclick={() => openRequest(`Dot-and-cross diagram of ${s.formula}`)}>Request it</button>
         {/if}
-      {:else if molecule?.choices.length}
-        <p class="field-label">Which one?</p>
-        <div class="chips" role="radiogroup" aria-label="Which one">
-          {#each molecule.choices as l (l.id)}
-            <button
-              type="button"
-              role="radio"
-              aria-checked={molecule.listed?.id === l.id}
-              class="chip small"
-              class:on={molecule.listed?.id === l.id}
-              onclick={() => (s.which = l.id)}
-            >
-              {l.names[0]}
-            </button>
-          {/each}
-        </div>
       {:else if atom}
         <div class="spaced segmented" role="radiogroup" aria-label="Atom or ion">
           <button type="button" role="radio" aria-checked={!atom.charge} class:on={!atom.charge} onclick={() => setFormula(atom.symbol)}>Atom</button>

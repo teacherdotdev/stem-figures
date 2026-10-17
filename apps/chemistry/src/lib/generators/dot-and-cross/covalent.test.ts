@@ -94,6 +94,13 @@ describe('molecules that can’t be drawn yet', () => {
   it('give a message where two circles would overlap in a flat drawing', () => {
     expect(readMolecule('C2H6', '')).toMatchObject({ ok: false, message: 'In C₂H₆, two H atoms’ circles would overlap, so it can’t be drawn flat yet.' })
   })
+
+  it('pick the first listed molecule sharing a formula that can be drawn, keeping the choice', () => {
+    expect(readMolecule('C2H6O', '')).toMatchObject({ ok: true, molecule: { listed: { id: 'dimethyl-ether' } } })
+    const ethanol = readMolecule('C2H6O', 'ethanol')
+    expect(ethanol).toMatchObject({ ok: false, listed: { id: 'ethanol' } })
+    expect(!ethanol.ok && ethanol.choices?.map((l) => l.id)).toEqual(['ethanol', 'dimethyl-ether'])
+  })
 })
 
 describe('marks', () => {

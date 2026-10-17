@@ -5,6 +5,7 @@
 // "water", "magnesium chloride", "sodium", "chloride ion", "ethene".
 
 import { ELEMENTS as NAMED } from '../bohr-model/elements'
+import type { Listed } from '../lewis-structures/listed'
 import { isListedName, readMolecule, type Molecule } from './covalent'
 import {
   MAX_ATOM_Z,
@@ -34,7 +35,10 @@ export interface Atom {
 
 export type Species = { kind: 'atom'; atom: Atom } | { kind: 'ionic'; compound: Compound } | { kind: 'covalent'; molecule: Molecule }
 
-export type Read = { ok: true; species: Species; name: string } | { ok: false; message: string; request: boolean }
+export type Read =
+  | { ok: true; species: Species; name: string }
+  /** with the listed molecules sharing the formula, when there are several */
+  | { ok: false; message: string; request: boolean; choices?: Listed[]; listed?: Listed }
 
 /** Element names as teachers write them, British spellings included. */
 const ELEMENT_NAMES = new Map<string, string>([

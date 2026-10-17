@@ -29,7 +29,10 @@ export interface Molecule {
   choices: Listed[]
 }
 
-export type ReadMolecule = { ok: true; molecule: Molecule } | { ok: false; message: string; request: boolean }
+export type ReadMolecule =
+  | { ok: true; molecule: Molecule }
+  /** with the listed molecules sharing the formula, when there are several */
+  | { ok: false; message: string; request: boolean; choices?: Listed[]; listed?: Listed }
 
 /** Unbonded atoms must be at least this many bond lengths apart, so their
  *  circles don't touch: atoms at right angles are √2 apart. */
@@ -86,11 +89,25 @@ export function crowdedPair(s: Structure): [number, number] | undefined {
   return undefined
 }
 
-/** A molecule from a formula or a listed name, or why it can't be drawn. */
+/** A molecule from a formula or a listed name, or why it can't be drawn.
+ *  Of several listed molecules sharing a formula, the first that can be
+ *  drawn, unless `which` picks one (C₂H₆O is dimethyl ether, since ethanol
+ *  can't be drawn flat). */
 export function readMolecule(typed: string, which: string): ReadMolecule {
+  const first = checkMolecule(typed, which)
+  if (first.ok || which || !first.choices) return first
+  for (const l of first.choices) {
+    const m = checkMolecule(typed, l.id)
+    if (m.ok) return m
+  }
+  return first
+}
+
+function checkMolecule(typed: string, which: string): ReadMolecule {
   const r = resolve({ formula: typed, which, rule: 'octet', shape: 'flat' })
   if (!r.ok) return { ok: false, message: r.message.replace('a correct Lewis structure', 'a correct structure'), request: r.request }
-  const fail = (message: string, request = true): ReadMolecule => ({ ok: false, message, request })
+  const choices = r.choices.length ? { choices: r.choices, listed: r.listed } : {}
+  const fail = (message: string, request = true): ReadMolecule => ({ ok: false, message, request, ...choices })
   const s = r.correct[0]
   if (s.charge) return fail(`Polyatomic ions like ${r.name} aren’t drawn yet.`)
   const past = s.atoms.findIndex((_, i) => electronsAround(s, i) > octetOf(s.atoms[i].element))
