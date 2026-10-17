@@ -2,6 +2,7 @@
 
 import { figureTextFields } from '$lib/shared/figureText'
 import { bool, choice, defineSettings, text } from '$lib/shared/settings'
+import { editsField } from './edits'
 import { ionCount } from './ionic'
 import { readSpecies, type Read } from './read'
 
@@ -32,6 +33,8 @@ export const dotCrossSettings = defineSettings({
   color: bool(false),
   blank: bool(false),
   charges: choice(CHARGE_MODES, 'show'),
+  /** the teacher's edits by hand (edits.ts), cleared when what's drawn changes */
+  edits: editsField(),
   ...figureTextFields(),
 })
 
@@ -54,6 +57,17 @@ export function readOnce(formula: string, which: string) {
 /** Whether every shell is drawn: an atom or ion on its own has its own
  *  setting, all shells to start with. */
 export const allShells = (s: DotCrossSettings, r: Read) => (r.ok && r.species.kind === 'atom' ? s.atomShells : s.shells) === 'all'
+
+/** The settings an edit's place in the figure depends on: changing one of
+ *  them clears the edits (edits.ts). */
+export const EDIT_KEYS = ['formula', 'which', 'layout', 'shells', 'atomShells'] as const
+
+/** Changes one setting, clearing the edits when it's one they depend on. */
+export function change<K extends keyof DotCrossSettings>(s: DotCrossSettings, key: K, value: DotCrossSettings[K]) {
+  if (s[key] === value) return
+  s[key] = value
+  if ((EDIT_KEYS as readonly string[]).includes(key)) s.edits = ''
+}
 
 /** How an ionic compound's ions are laid out, auto worked out. */
 export function layoutOf(s: DotCrossSettings, r: Read): Exclude<Layout, 'auto'> {

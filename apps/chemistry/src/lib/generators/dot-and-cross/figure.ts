@@ -1,13 +1,15 @@
 // Everything a dot-and-cross figure draws, worked out from its settings: a
 // molecule's overlapping circles, or each ion in its square brackets with
 // its charge (every ion, or one of each with its number in front), or one
-// atom or ion on its own; the electrons on them as marks; and the words for
-// screen readers and the answer key.
+// atom or ion on its own; the electrons on them as marks; the teacher's
+// edits by hand applied (edits.ts); and the words for screen readers and the
+// answer key.
 
 import { textWidth as arialWidth } from '../lewis-structures/drawing'
 import { drawMolecule, reachOf } from './covalent'
+import { readEdits, swapped } from './edits'
 import { chargeText, ionName, type Compound, type Ion } from './ionic'
-import { MARK_NAMES, markCount, markOf } from './marks'
+import { INK, MARK_COLORS, MARK_KINDS, MARK_NAMES, markCount, markOf, type MarkKind } from './marks'
 import type { Atom, Read } from './read'
 import { MARK, brackets as bracketsAround, ionRadii, ringMarks, textWidth, type Mark } from './shells'
 import { allShells, layoutOf, readOnce, type ChargeMode, type DotCrossSettings } from './settings'
@@ -24,12 +26,33 @@ export interface Label {
   text: string
 }
 
-export interface BracketBox {
+/** An element symbol, which the teacher can leave blank. */
+export interface SymbolLabel extends Label {
+  blank: boolean
+}
+
+/** An electron as drawn: its mark after Swap and the teacher's edits, or
+ *  none when edited away, and its ink. */
+export interface DrawnMark extends Mark {
+  kind: MarkKind | null
+  color: string
+}
+
+/** An ion's brackets, as worked out before its charge is shown or not. */
+interface Brackets {
   /** the ion's middle */
   x: number
   y: number
   half: number
-  /** where its charge goes: written, or a blank box for students */
+  /** where its charge goes, shown or not, and what it says */
+  chargeAt: { x: number; y: number }
+  chargeText: string
+}
+
+export interface BracketBox extends Brackets {
+  /** how its charge is shown, after the teacher's edits */
+  mode: ChargeMode
+  /** its charge as drawn: written, or a blank box for students */
   charge?: Label & { blank: boolean }
 }
 
@@ -42,15 +65,24 @@ export interface DotCrossFigure {
   width: number
   height: number
   circles: Circle[]
-  symbols: Label[]
-  marks: Mark[]
+  symbols: SymbolLabel[]
+  /** every electron, edited away or not, in a fixed order; none when blank */
+  marks: DrawnMark[]
   brackets: BracketBox[]
   /** the number in front of an ion, in the numbered layout */
   counts: Label[]
+  /** how many of the teacher's edits change something, the electrons' too
+   *  while they're blank */
+  edits: number
+  /** whether any edit changes what's drawn */
+  edited: boolean
   /** the figure for screen readers */
   label: string
   /** the answer key's lines */
   answer: string[]
+  /** the answer key as printed under the figure, the edited line wrapped
+   *  rather than widening a small figure */
+  keyLines: string[]
 }
 
 export const COUNT_FONT = 30
@@ -58,6 +90,8 @@ const COUNT_GAP = 3
 const ION_GAP = 18
 /** The box left for a charge, for students to write it in. */
 export const BLANK_CHARGE = 22
+/** The answer key's last line when the teacher has edited the figure. */
+export const EDITED_LINE = 'This figure was edited by hand, so it may differ from the correct diagram described here.'
 /** Text sizes as FigureFrame draws them. */
 const TITLE_FONT = 22
 const KEY_FONT = 18
@@ -68,7 +102,7 @@ interface Part {
   circles: Circle[]
   symbols: Label[]
   marks: Mark[]
-  brackets: BracketBox[]
+  brackets: Brackets[]
   counts: Label[]
   left: number
   right: number
@@ -82,7 +116,7 @@ const emptyPart = (): Part => ({ circles: [], symbols: [], marks: [], brackets: 
  *  each with its electrons, `owners` giving a shell's marks in the order
  *  they fill it; an ion in brackets, with `count` in front when it's more
  *  than 1. */
-function ionPart(symbol: string, shells: number[], owners: (shell: number, count: number) => number[], all: boolean, charge: number, charges: ChargeMode, count = 1): Part {
+function ionPart(symbol: string, shells: number[], owners: (shell: number, count: number) => number[], all: boolean, charge: number, count = 1): Part {
   const p = emptyPart()
   const radii = ionRadii(shells.length, all)
   const first = all ? 0 : shells.length - 1
@@ -97,9 +131,7 @@ function ionPart(symbol: string, shells: number[], owners: (shell: number, count
   Object.assign(p, { left: reach, right: reach, top: reach, bottom: reach })
   if (charge) {
     const b = bracketsAround(outer)
-    const box: BracketBox = { x: 0, y: 0, half: b.half }
-    if (charges !== 'none') box.charge = { ...b.charge, text: chargeText(charge), blank: charges === 'blank' }
-    p.brackets.push(box)
+    p.brackets.push({ x: 0, y: 0, half: b.half, chargeAt: b.charge, chargeText: chargeText(charge) })
     Object.assign(p, { left: b.left, right: b.right, top: b.top, bottom: b.bottom })
   }
   if (count > 1) {
@@ -111,7 +143,7 @@ function ionPart(symbol: string, shells: number[], owners: (shell: number, count
 
 /** An ion of a compound: the metal's electrons are all its own, the
  *  non-metal's own and the ones it gained from the metal. */
-function compoundIon(ion: Ion, ownOwner: number, gainedOwner: number, all: boolean, charges: ChargeMode, count = 1) {
+function compoundIon(ion: Ion, ownOwner: number, gainedOwner: number, all: boolean, count = 1) {
   const last = ion.shells.length - 1
   const gained = Math.max(0, -ion.charge)
   return ionPart(
@@ -120,7 +152,6 @@ function compoundIon(ion: Ion, ownOwner: number, gainedOwner: number, all: boole
     (shell, n) => (shell === last && gained ? [...Array(n - gained).fill(ownOwner), ...Array(gained).fill(gainedOwner)] : Array(n).fill(ownOwner)),
     all,
     ion.charge,
-    charges,
     count,
   )
 }
@@ -130,8 +161,8 @@ function compoundIon(ion: Ion, ownOwner: number, gainedOwner: number, all: boole
 const METAL = 1
 const NON_METAL = 0
 
-function atomPart(a: Atom, all: boolean, charges: ChargeMode) {
-  return compoundIon({ symbol: a.symbol, charge: a.charge, count: 1, shells: a.shells, atomShells: a.atomShells }, 0, 1, all, charges)
+function atomPart(a: Atom, all: boolean) {
+  return compoundIon({ symbol: a.symbol, charge: a.charge, count: 1, shells: a.shells, atomShells: a.atomShells }, 0, 1, all)
 }
 
 /** Parts placed with their middles at the given points, as one part. */
@@ -144,7 +175,7 @@ function combine(placed: { part: Part; x: number; y: number }[]): Part {
     out.symbols.push(...part.symbols.map(move))
     out.marks.push(...part.marks.map(move))
     out.counts.push(...part.counts.map(move))
-    out.brackets.push(...part.brackets.map((b) => ({ ...move(b), ...(b.charge ? { charge: move(b.charge) } : {}) })))
+    out.brackets.push(...part.brackets.map((b) => ({ ...move(b), chargeAt: move(b.chargeAt) })))
     minX = Math.min(minX, x - part.left)
     maxX = Math.max(maxX, x + part.right)
     minY = Math.min(minY, y - part.top)
@@ -177,9 +208,9 @@ const turned = (p: Part, how: 'mirror' | 'up'): Part => ({
  *  one kind around one of the other, the third goes below the middle; and
  *  2:3 or 3:2 alternate, the more numerous at both ends. An anion's gained
  *  electrons face a metal ion beside it. */
-function everyIon(c: Compound, all: boolean, charges: ChargeMode): Part {
-  const m = compoundIon(c.metal, METAL, METAL, all, charges)
-  const x = compoundIon(c.nonMetal, NON_METAL, METAL, all, charges)
+function everyIon(c: Compound, all: boolean): Part {
+  const m = compoundIon(c.metal, METAL, METAL, all)
+  const x = compoundIon(c.nonMetal, NON_METAL, METAL, all)
   const anionsMore = c.nonMetal.count > c.metal.count
   const [few, many] = anionsMore ? [m, x] : [x, m]
   // the first of a row of the more numerous ion, on the left of a metal ion
@@ -200,10 +231,8 @@ function everyIon(c: Compound, all: boolean, charges: ChargeMode): Part {
 }
 
 /** One of each ion, metal first, each with its number in front. */
-function numbered(c: Compound, all: boolean, charges: ChargeMode): Part {
-  return combine(
-    row([compoundIon(c.metal, METAL, METAL, all, charges, c.metal.count), compoundIon(c.nonMetal, NON_METAL, METAL, all, charges, c.nonMetal.count)]),
-  )
+function numbered(c: Compound, all: boolean): Part {
+  return combine(row([compoundIon(c.metal, METAL, METAL, all, c.metal.count), compoundIon(c.nonMetal, NON_METAL, METAL, all, c.nonMetal.count)]))
 }
 
 function moleculePart(read: Extract<Read, { ok: true }>, all: boolean): Part {
@@ -221,6 +250,40 @@ function moleculePart(read: Extract<Read, { ok: true }>, all: boolean): Part {
   }
 }
 
+/** The teacher's edits applied to a figure's parts, before they're placed:
+ *  each electron's mark (Swap still trading dots and crosses, and an edited
+ *  mark in the color of the atom that has that mark here, or black when none
+ *  has), the symbols left blank, and how each charge is shown. Edits to
+ *  items the figure doesn't have are ignored. */
+function applyEdits(part: Part, s: DotCrossSettings) {
+  const e = readEdits(s.edits)
+  let edits = 0
+  let edited = false
+  const used = new Set(part.marks.map((m) => markOf(m.owner, s.swap)))
+  const marks: DrawnMark[] = part.marks.map((m, i) => {
+    const edit = e.electrons.get(i)
+    const own = MARK_KINDS[m.owner]
+    if (edit === undefined || edit === own) return { ...m, kind: markOf(m.owner, s.swap), color: s.color ? MARK_COLORS[markOf(m.owner, s.swap)] : INK }
+    edits++
+    edited ||= !s.blank
+    const kind = edit === 'gone' ? null : swapped(edit, s.swap)
+    return { ...m, kind, color: s.color && kind && used.has(kind) ? MARK_COLORS[kind] : INK }
+  })
+  const symbols: SymbolLabel[] = part.symbols.map((t, i) => ({ ...t, blank: e.symbols.has(i) }))
+  const blanked = symbols.filter((t) => t.blank).length
+  edits += blanked
+  edited ||= blanked > 0
+  const brackets = part.brackets.map((b, i) => {
+    const edit = e.charges.get(i)
+    if (edit !== undefined && edit !== s.charges) {
+      edits++
+      edited = true
+    }
+    return { ...b, mode: edit ?? s.charges }
+  })
+  return { marks: s.blank ? [] : marks, symbols, brackets, edits, edited }
+}
+
 /** The whole figure for these settings. Its drawing is at least as wide as
  *  the chart title and answer key lines, so they always fit. */
 export function buildFigure(s: DotCrossSettings): DotCrossFigure {
@@ -230,35 +293,61 @@ export function buildFigure(s: DotCrossSettings): DotCrossFigure {
   let part = emptyPart()
   if (read.ok) {
     const { species } = read
-    if (species.kind === 'atom') part = combine([{ part: atomPart(species.atom, all, s.charges), x: 0, y: 0 }])
-    else if (species.kind === 'ionic') part = layout === 'numbered' ? numbered(species.compound, all, s.charges) : everyIon(species.compound, all, s.charges)
+    if (species.kind === 'atom') part = combine([{ part: atomPart(species.atom, all), x: 0, y: 0 }])
+    else if (species.kind === 'ionic') part = layout === 'numbered' ? numbered(species.compound, all) : everyIon(species.compound, all)
     else part = moleculePart(read, all)
   }
-  const answer = s.answerKey ? answerLines(read) : []
+  const drawn = applyEdits(part, s)
+  const correct = s.answerKey ? answerLines(read) : []
+  const answer = drawn.edited && correct.length ? [...correct, EDITED_LINE] : correct
   const drawnW = part.left + part.right
+  const keyLines = drawn.edited && correct.length ? [...correct, ...wrap(EDITED_LINE, Math.max(drawnW, EDITED_WIDTH, ...correct.map((l) => arialWidth(l, KEY_FONT))))] : correct
   const textW = Math.max(
     s.titleMode === 'text' && s.title ? arialWidth(s.title, TITLE_FONT) * 1.08 : 0,
-    ...answer.map((line) => arialWidth(line, KEY_FONT)),
+    ...keyLines.map((line) => arialWidth(line, KEY_FONT)),
   )
   const width = Math.ceil(Math.max(drawnW, textW, read.ok ? 0 : 240))
   const height = Math.ceil(read.ok ? part.top + part.bottom : 120)
   const dx = part.left + (width - drawnW) / 2
   const dy = part.top
   const move = <T extends { x: number; y: number }>(t: T): T => ({ ...t, x: round2(t.x + dx), y: round2(t.y + dy) })
-  return {
+  const brackets: BracketBox[] = drawn.brackets.map((b) => {
+    const chargeAt = move(b.chargeAt)
+    const box: BracketBox = { ...move(b), chargeAt }
+    if (b.mode !== 'none') box.charge = { ...chargeAt, text: b.chargeText, blank: b.mode === 'blank' }
+    return box
+  })
+  const f = {
     read,
     allShells: all,
     layout,
     width,
     height,
     circles: part.circles.map(move),
-    symbols: part.symbols.map(move),
-    marks: s.blank ? [] : part.marks.map(move),
-    brackets: part.brackets.map((b) => ({ ...move(b), ...(b.charge ? { charge: move(b.charge) } : {}) })),
+    symbols: drawn.symbols.map(move),
+    marks: drawn.marks.map(move),
+    brackets,
     counts: part.counts.map(move),
-    label: describe(s, read, all, layout),
+    edits: drawn.edits,
+    edited: drawn.edited,
     answer,
+    keyLines,
   }
+  return { ...f, label: describe(s, f) }
+}
+
+/** The edited line is wrapped to fit the drawing, but not narrower than this. */
+const EDITED_WIDTH = 380
+
+/** A line in as few lines as fit `width` at the answer key's size, broken between words. */
+function wrap(line: string, width: number): string[] {
+  const out: string[] = []
+  for (const word of line.split(' ')) {
+    const last = out.at(-1)
+    if (last !== undefined && arialWidth(`${last} ${word}`, KEY_FONT) <= width) out[out.length - 1] = `${last} ${word}`
+    else out.push(word)
+  }
+  return out
 }
 
 const round2 = (n: number) => Math.round(n * 100) / 100
@@ -360,17 +449,60 @@ function describeAtom(a: Atom, s: DotCrossSettings, all: boolean) {
   return `${what}: ${rings}${marks}`
 }
 
-function describe(s: DotCrossSettings, read: Read, all: boolean, layout: 'every' | 'numbered') {
+/** Items of a list in words: "a, b and c". */
+const listed = (items: string[]) => (items.length > 1 ? `${items.slice(0, -1).join(', ')} and ${items.at(-1)}` : (items[0] ?? ''))
+
+/** What an edited figure draws, as drawn: its symbols (a blank one not
+ *  named, nor the molecule then), its charges and its electrons counted by
+ *  mark. */
+function describeEdited(read: Extract<Read, { ok: true }>, f: Omit<DotCrossFigure, 'label'>) {
+  const { species } = read
+  const anyBlank = f.symbols.some((t) => t.blank)
+  const what = `A dot-and-cross diagram${anyBlank ? '' : ` of ${read.name}`}${f.allShells ? ' with every shell drawn' : ''}, changed by hand`
+  const parts: string[] = []
+  if (species.kind === 'covalent') parts.push(`the circles of ${plural(f.symbols.length, 'atom')} overlapping where they bond`)
+  else if (species.kind === 'ionic')
+    parts.push(f.layout === 'numbered' ? 'one of each ion in square brackets, with its number in front' : `${plural(f.brackets.length, 'ion')}, each in square brackets`)
+  else parts.push(`${plural(f.circles.length, 'ring')}${f.brackets.length ? ' in square brackets' : ''}`)
+  const shown = new Map<string, number>()
+  for (const t of f.symbols) if (!t.blank) shown.set(t.text, (shown.get(t.text) ?? 0) + 1)
+  const named = [...shown.values()].reduce((a, b) => a + b, 0)
+  const blanks = f.symbols.length - named
+  if (!named) parts.push(f.symbols.length > 1 ? 'every symbol left blank' : 'its symbol left blank')
+  else {
+    const names = [...shown].map(([sym, n]) => (n > 1 ? `${n} ${sym}` : sym))
+    parts.push(`${named > 1 ? 'symbols' : 'symbol'} ${listed(names)}${blanks ? `, and ${plural(blanks, 'symbol')} left blank` : ''}`)
+  }
+  if (f.brackets.length) {
+    const written = f.brackets.filter((b) => b.mode === 'show').map((b) => b.chargeText)
+    const boxes = f.brackets.filter((b) => b.mode === 'blank').length
+    const off = f.brackets.filter((b) => b.mode === 'none').length
+    const charges = [
+      written.length ? `${written.length > 1 ? 'charges' : 'charge'} ${listed(written)}` : '',
+      boxes ? `${plural(boxes, 'blank box', 'blank boxes')} for ${boxes > 1 ? 'charges' : 'a charge'}` : '',
+      off ? `${plural(off, 'charge')} left off` : '',
+    ].filter(Boolean)
+    parts.push(listed(charges))
+  }
+  const marks = new Map<MarkKind, number>()
+  for (const m of f.marks) if (m.kind) marks.set(m.kind, (marks.get(m.kind) ?? 0) + 1)
+  const kinds = MARK_KINDS.filter((k) => marks.has(k)).map((k) => markCount(k, marks.get(k)!))
+  parts.push(kinds.length ? `electrons drawn as ${listed(kinds)}` : 'no electrons drawn')
+  return `${what}: ${parts.join('; ')}`
+}
+
+function describe(s: DotCrossSettings, f: Omit<DotCrossFigure, 'label'>) {
+  const { read } = f
   if (!read.ok) return 'No dot-and-cross diagram'
   const { species } = read
-  const base =
-    species.kind === 'atom'
-      ? describeAtom(species.atom, s, all)
+  const base = f.edited
+    ? describeEdited(read, f)
+    : species.kind === 'atom'
+      ? describeAtom(species.atom, s, f.allShells)
       : species.kind === 'ionic'
-        ? describeCompound(species.compound, s, all, layout)
-        : describeMolecule(read, s, all)
-  const answer = s.answerKey ? answerLines(read) : []
-  return base + (answer.length ? `. Answer key: ${answer.join('; ')}` : '')
+        ? describeCompound(species.compound, s, f.allShells, f.layout)
+        : describeMolecule(read, s, f.allShells)
+  return base + (f.answer.length ? `. Answer key: ${f.answer.join('; ')}` : '')
 }
 
 // ---- The answer key -----------------------------------------------------------

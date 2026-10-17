@@ -9,7 +9,7 @@
 
 import { chargeOf, bohrSettings } from '$lib/generators/bohr-model/settings'
 import { element } from '$lib/generators/bohr-model/elements'
-import { answerLines as dotCrossAnswer } from '$lib/generators/dot-and-cross/figure'
+import { buildFigure as buildDotCross } from '$lib/generators/dot-and-cross/figure'
 import { dotCrossSettings, readOnce as readDotCross } from '$lib/generators/dot-and-cross/settings'
 import { syringeSettings, answerLine as syringeAnswer } from '$lib/generators/gas-syringe/settings'
 import { answerLines as halfLifeAnswer } from '$lib/generators/half-life-graph/figure'
@@ -111,7 +111,8 @@ function lewisAnswer(s: SettingsById['lewis-structures']): ExampleDetails['answe
 function dotCrossAnswerKey(s: SettingsById['dot-and-cross']): ExampleDetails['answer'] {
   const read = readDotCross(s.formula, s.which)
   if (!read.ok) throw new Error(`Dot-and-Cross Diagram can't draw ${s.formula}: ${read.message}`)
-  return { heading: 'Answer key', lines: dotCrossAnswer(read) }
+  // the correct diagram's, with a line saying so when the figure was edited by hand
+  return { heading: 'Answer key', lines: buildDotCross({ ...s, answerKey: true }).answer }
 }
 
 function bohrAnswer(s: SettingsById['bohr-model']): ExampleDetails['answer'] {
