@@ -11,6 +11,7 @@ import MoneyMarkets from './money-markets/Preview.svelte'
 import BusinessCycle from './business-cycle/Preview.svelte'
 import PhillipsCurve from './phillips-curve/Preview.svelte'
 import ProductionPossibilities from './production-possibilities/Preview.svelte'
+import AdAs from './ad-as/Preview.svelte'
 
 export const PREVIEWS: Record<string, Component> = {
   'supply-demand': SupplyDemand,
@@ -18,6 +19,7 @@ export const PREVIEWS: Record<string, Component> = {
   'business-cycle': BusinessCycle,
   'phillips-curve': PhillipsCurve,
   'production-possibilities': ProductionPossibilities,
+  'ad-as': AdAs,
 }
 
 export const GENERATORS = generatorsOn(SITE_ID, PREVIEWS)

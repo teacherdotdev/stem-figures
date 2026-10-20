@@ -47,6 +47,15 @@ decisions.
   and two countries' straight-line curves for comparative advantage, on one
   graph or side by side with where each meets the axes written there.
   Schematic or numbered. Common setups to start from.
+- `/ad-as` **AD–AS Model**: aggregate demand, short-run aggregate supply
+  and the vertical LRAS at full-employment output (Y_f), starting in
+  long-run equilibrium or with a recessionary or inflationary gap braced
+  under the axis; AD, SRAS and LRAS shifts, or a shift just far enough to
+  bring output to Y_f (policy closing a gap, self-adjustment, growth). A
+  straight or three-range (Keynesian) aggregate supply curve, or numbered
+  from a typed schedule of price levels and real GDP with potential GDP,
+  and a callout with a leader arrow giving the equilibrium. Common setups
+  to start from.
 - `/about`, `/privacy`, `/reuse`, `/sitemap.xml`, `/robots.txt`
 
 Every page has the top bar: the site name, the current generator, and links
