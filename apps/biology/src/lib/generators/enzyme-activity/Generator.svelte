@@ -4,7 +4,7 @@
   // pepsin, amylase and trypsin, or unknown ones with an optimum of the
   // teacher's own, or an enzyme with a competitive and a non-competitive
   // inhibitor. Shape only by default, or numbered axes, the rate in
-  // arbitrary units; the optimum, denaturation, Vmax and Km are marked if
+  // arbitrary units or as a percentage of the fastest; the optimum, denaturation, Vmax and Km are marked if
   // wanted. The grid and axes are $shared/graph's, the same as
   // Photosynthesis Rate's.
   import { Axis3d, ChartLine, MapPin } from '@lucide/svelte'
@@ -27,6 +27,7 @@
   import { INHIBITORS, type Inhibitor } from './model'
   import {
     CURVES, GRAPHS, GRAPH_NAMES, INHIBITOR_NAMES, autoTitles, curveOf, enzymeSettings, retitled, type Axes, type CurveIndex, type Graph,
+    type RateUnit,
   } from './settings'
 
   const gen = generatorState(enzymeSettings, 'enzyme-activity')
@@ -92,7 +93,7 @@
   const markSummary = $derived(marks.filter(Boolean).join(', ').replace(/^./, (c) => c.toUpperCase()) || 'Nothing marked')
   const lineSummary = $derived([clean.color ? 'Color' : 'Black and white', clean.gridlines ? 'gridlines' : 'no gridlines'].join(' · '))
   const axesSummary = $derived(
-    numbered ? 'Numbered'
+    numbered ? (clean.rateUnit === 'percent' ? 'Numbered, rate in %' : 'Numbered')
     : clean.xEndCap === 'none' && clean.yEndCap === 'none' ? 'Shape only, plain ends'
     : `Shape only, ${CAPS[clean.xEndCap]} / ${CAPS[clean.yEndCap]}`.toLowerCase().replace(/^./, (c) => c.toUpperCase()),
   )
@@ -262,7 +263,15 @@
         <button type="button" role="radio" aria-checked={!numbered} class:on={!numbered} onclick={() => chooseAxes('shape')}>Shape only</button>
         <button type="button" role="radio" aria-checked={numbered} class:on={numbered} onclick={() => chooseAxes('numbered')}>Numbered</button>
       </div>
-      {#if !numbered}
+      {#if numbered}
+        <label class="field">
+          <span>Rate in</span>
+          <select value={s.rateUnit} onchange={(e) => { const v = e.currentTarget.value as RateUnit; retitle(() => (s.rateUnit = v)) }}>
+            <option value="au">Arbitrary units</option>
+            <option value="percent">% of maximum</option>
+          </select>
+        </label>
+      {:else}
         <div class="ends">
           <div class="field">
             <span>x-axis right end</span>

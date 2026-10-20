@@ -1,8 +1,8 @@
 // Lays out an enzyme activity graph for EnzymeFigure.svelte to draw: up to
 // three curves of rate against temperature, pH or substrate concentration
 // on a $shared/graph grid, shape only with no numbers or numbered (the rate
-// in arbitrary units, 10 at its fastest), told apart by their dashes and a
-// key under the graph. Marked on them: each optimum and where the enzyme
+// in arbitrary units, 10 at its fastest, or as a percentage of the fastest),
+// told apart by their dashes and a key under the graph. Marked on them: each optimum and where the enzyme
 // has denatured, or Vmax, ½Vmax and Km, with dashed lines to the axes.
 // Vmax, ½Vmax and Km are written at the axes, where the numbers would be
 // (or past them, on numbered axes), each named for its curve when there's
@@ -27,6 +27,8 @@ const Y_BLOCKS = 10
 const TOP = 8
 /** The fastest rate, in the arbitrary units numbered axes count in. */
 export const PEAK = 10
+/** The fastest rate in the units the y-axis counts in: 10 arbitrary units, or 100%. */
+export const peakOf = (s: EnzymeSettings) => (s.axes === 'numbered' && s.rateUnit === 'percent' ? 100 : PEAK)
 /** The substrate concentration axis runs from 0 to this, in the units Km is typed in. */
 export const SUBSTRATE_END = 10
 const SAMPLES = 400
@@ -116,7 +118,7 @@ export function rangeOf(s: EnzymeSettings) {
 export function fittedOf(s: EnzymeSettings): RangeSettings {
   const r = rangeOf(s)
   const x = niceAxis(r.from, r.to, 12)
-  const y = niceAxis(0, PEAK * 1.12, 10)
+  const y = niceAxis(0, peakOf(s) * 1.12, 10)
   return { xFrom: x.from, xTo: x.to, xStep: x.step, yFrom: y.from, yTo: y.to, yStep: y.step }
 }
 
@@ -288,10 +290,11 @@ export function buildEnzyme(s: EnzymeSettings) {
     return { x: q.x + dx, y: q.y + dy }
   }
   /** A point of a curve, from x in the graph's units and a rate from 0 to 1, in the axes' numbers. */
-  const toGrid = (v: number, rate: number): Point => ({ x: v, y: rate * PEAK })
+  const peak = peakOf(s)
+  const toGrid = (v: number, rate: number): Point => ({ x: v, y: rate * peak })
   const inRange = (v: number) => v >= range.from - 1e-9 && v <= range.to + 1e-9
   /** Whether a rate, from 0 to 1, is on the y-axis. */
-  const onY = (rate: number) => rate * PEAK >= box.y0 - 1e-9 && rate * PEAK <= box.y1 + 1e-9
+  const onY = (rate: number) => rate * peak >= box.y0 - 1e-9 && rate * peak <= box.y1 + 1e-9
 
   const bounds: Box = { x0: area.x + INSET, y0: area.y + INSET, x1: area.x + area.w - INSET, y1: area.y + area.h - INSET }
   const place = placer(bounds)
@@ -391,7 +394,8 @@ export function buildEnzyme(s: EnzymeSettings) {
     else markLabels.push({ x: spot.x, y: spot.y, anchor: spot.anchor, blank: { x1: spot.box.x0, y1: spot.y, x2: spot.box.x1, y2: spot.y } })
   }
   const rows = [12, 12 + LABEL_FS * 1.25, 12 + LABEL_FS * 2.5]
-  // Over a peak, centered, then to either side and higher up, then beside it.
+  // Over a peak, centered, then to either side and higher up, then beside
+  // it, then below it to either side, for a peak at the top of a typed axis.
   const overPeak = (p: Point): Spot[] => [
     ...rows.flatMap((up) => [
       { x: p.x, y: p.y - up, anchor: 'middle' as const },
@@ -400,6 +404,10 @@ export function buildEnzyme(s: EnzymeSettings) {
     ]),
     { x: p.x + 12, y: p.y + LABEL_FS * 0.35, anchor: 'start' },
     { x: p.x - 12, y: p.y + LABEL_FS * 0.35, anchor: 'end' },
+    ...[1.4, 2.6, 3.8].flatMap((down) => [24, 48].flatMap((side) => [
+      { x: p.x + side, y: p.y + LABEL_FS * down, anchor: 'start' as const },
+      { x: p.x - side, y: p.y + LABEL_FS * down, anchor: 'end' as const },
+    ])),
   ]
   // Just above the axis, outside the curve it ends first, then higher.
   const offAxis = (p: Point): Spot[] =>
