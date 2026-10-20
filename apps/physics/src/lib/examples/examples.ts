@@ -381,6 +381,62 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('motion-map', [
+    {
+      slug: 'motion-map-cart-speeding-up-constant-velocity-slowing-down-stopping',
+      title: 'Motion map of a cart that speeds up, moves at a constant velocity, slows down and stops',
+      alt: 'A motion map with a dot every second from t = 0 s to 11 s along a number line from 0 to 35 m, the dots spreading out, then evenly spaced, then closing up, and one last dot labeled 12–15 s, each moving dot with a dashed velocity arrow',
+      caption:
+        'A cart speeds up from rest for 4 s, moves at a constant 4 m/s for 4 s, slows down to a stop over 4 s and stays at rest for 3 s, drawn as a dot every second along a number line in meters. The dots spread out, are evenly spaced, then close up, and the stop is one dot labeled 12–15 s. Each moving dot has a dashed velocity arrow above it, on one scale, so the arrows grow and shrink with the speed.',
+      settings: { labels: 'times' },
+    },
+    {
+      slug: 'motion-map-constant-velocity',
+      title: 'Motion map at a constant velocity',
+      alt: 'A motion map of seven evenly spaced dots, 3 m apart from 0 to 18 m, labeled t = 0 s to 6 s, each with an equal dashed velocity arrow, and a = 0 written above them',
+      caption:
+        'An object moving at a constant 3 m/s for 6 s, as a dot every second along a number line from 0 to 18 m. The dots are evenly spaced, 3 m apart, and every velocity arrow is the same length. Above the dots, a = 0: the velocity doesn’t change.',
+      settings: { segments: [segment('forward', 3, 6)], labels: 'times', acceleration: true },
+    },
+    {
+      slug: 'motion-map-speeding-up-from-rest',
+      title: 'Motion map of an object speeding up from rest',
+      alt: 'A motion map of seven dots lettered A to G, the gaps between them growing from left to right, with dashed velocity arrows getting longer and an acceleration arrow labeled a pointing right above them',
+      caption:
+        'An object speeding up steadily from rest to 6 m/s over 6 s, as a dot every second, lettered A to G. Each gap is 1 m longer than the one before, and the velocity arrows get longer from dot to dot; the first dot, at rest, has none. The acceleration arrow above the dots points the way it moves.',
+      settings: { segments: [segment('faster', 6, 6)], labels: 'letters', acceleration: true },
+    },
+    {
+      slug: 'motion-map-slowing-down-to-a-stop',
+      title: 'Motion map of an object slowing down to a stop',
+      alt: 'A motion map of dots closing up from left to right, labeled t = 0 s to 4 s, then one dot labeled 5–7 s, with dashed velocity arrows getting shorter, and the total displacement Δx drawn under the number line',
+      caption:
+        'An object moving at 6 m/s for 1 s, then slowing down steadily to a stop over 4 s and staying at rest for 2 s, as a dot every second. The gaps shrink by 1.5 m each second and the velocity arrows get shorter, until the dots meet at one spot, labeled 5–7 s, with no arrow. An arrow under the number line shows the total displacement, Δx.',
+      settings: { segments: [segment('forward', 6, 1), segment('slower', 0, 4), segment('rest', 0, 2)], labels: 'times', displacement: true },
+    },
+    {
+      slug: 'motion-map-there-and-back-lettered-to-match-motion-graph',
+      title: 'Motion map of a cart going out and back, lettered to match its motion graph',
+      alt: 'A motion map of a cart drawn on two lines: on the lower one it speeds up, moves steadily and slows to a stop at D, lettered A to D at the segment ends; on the line above it speeds up back toward the start and slows to a stop at F, with acceleration arrows above each segment',
+      caption:
+        'A cart speeds up forward from A to B, moves at 4 m/s from B to C and slows to a stop at D; then it speeds up backward from D to E and slows to a stop again at F. The way back is drawn above the way there, so no dots overlap. The letters at the segment ends are the same as on the matching Motion Graph example, and an acceleration arrow, or a = 0, sits above each segment.',
+      settings: {
+        labels: 'ends',
+        acceleration: true,
+        object: text('cart'),
+        segments: [segment('faster', 4, 2), segment('forward', 4, 3), segment('slower', 0, 2), segment('faster', 4, 2, 'back'), segment('slower', 0, 2)],
+      },
+    },
+    {
+      slug: 'motion-map-dots-only-draw-the-velocity-arrows',
+      title: 'Dots-only motion map: draw the velocity arrows',
+      alt: 'A motion map with dots only, no arrows, lettered A to I along a number line from 0 to 22 m: evenly spaced at first, then spreading out, then closing up to a stop',
+      caption:
+        'A motion map with no arrows, for students to draw the velocity arrow at each dot. The object moves at 2 m/s for 3 s, speeds up to 5 m/s over 3 s, then slows to a stop over 2 s, a dot every second, lettered A to I. The answer key lists what it does in each segment.',
+      settings: { dotsOnly: true, labels: 'letters', segments: [segment('forward', 2, 3), segment('faster', 5, 3), segment('slower', 0, 2)] },
+    },
+  ]),
+
   ...examplesOf('spring-scale', [
     {
       slug: 'spring-scale-reading-6-25-n',

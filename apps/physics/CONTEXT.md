@@ -184,7 +184,7 @@ A figure of one motion along a line: its position–time, velocity–time or acc
 _Avoid_: Kinematics graph, x–t graph, distance–time graph (all fine as search words)
 
 **Segment**:
-One stretch of the motion, up to six in a row: at rest, constant velocity forward or back, speeding up or slowing down, with its speed (the one it moves at, or speeds up or slows down to) and how long it lasts typed in. It is a straight line on the velocity–time graph. Speeding up and slowing down carry on from the velocity before them, and slowing down stops at rest rather than turning around.
+One stretch of the motion, up to six in a row: at rest, constant velocity forward or back, speeding up or slowing down, with its speed (the one it moves at, or speeds up or slows down to) and how long it lasts typed in. It is a straight line on the velocity–time graph. Speeding up and slowing down carry on from the velocity before them, and slowing down stops at rest rather than turning around. The Motion Graph and the Motion Map share segments: the same editor, the same motion worked out from them, and the same page address, so each page opens the other's motion with a plain link. A change to segments changes both generators.
 _Avoid_: Section, phase, interval
 
 **Segment end**:
@@ -198,6 +198,22 @@ _Avoid_: Slope line
 **Ranges**:
 Each axis's From, To and Count by. They are fitted to the motion unless the teacher sets them, to make several graphs on a worksheet match. Stacked graphs share the time axis's range; each has its own up its side.
 _Avoid_: Scale, window, zoom
+
+### Motion Map
+
+**Motion Map**:
+A figure of one motion along a line as a dot at equal times along a number line in meters, with a velocity arrow above each moving dot. Its generator is the Motion Map Generator. Its motion is built from the Motion Graph's segments and worked out by the same code, so a motion map and a motion graph from the same segments always show the same motion. Vertical motion, two objects on one map and motion on a plane are not drawn.
+_Avoid_: Motion diagram, dot diagram, ticker tape, strobe diagram (all fine as search words)
+
+**Dot**:
+Where the object is at one of the equal times, 0.5 s, 1 s or 2 s apart (the time between dots, Δt). Dots at one spot while it's at rest are drawn as one dot, with the times it's there (t = 12–15 s) and no arrow. At a segment end a dot takes the later segment's velocity. A segment end that falls between dots has no dot, and the settings panel says so.
+_Avoid_: Point (that's a circuit's), position, mark, time step (that's a Projectile Motion's)
+
+**Run**:
+The dots from where the motion starts or turns back to where it next turns back. Each run is drawn on its own line, the next above the last, so the way there and the way back never overlap.
+_Avoid_: Row (that's an Inclined Plane's), leg, trip
+
+On a Motion Map, every velocity arrow is on one scale, so equal speeds are drawn equal: the fastest is 0.8 of the widest gap between dots, or shorter if that would take an arrow up to the next dot ahead of it (as happens just before a stop). The **acceleration arrow** of a segment is one dashed arrow above its dots pointing the way the acceleration points, or a = 0. **Dots only** leaves off every velocity and acceleration arrow, for students to draw them. The **total displacement** is a solid arrow under the number line from where the motion starts to where it ends, labeled Δx; a motion that ends where it started has none. The letters at segment ends are the Motion Graph's. A motion map's arrows are short, so their heads are smaller than other figures'.
 
 ### Circuit Diagram
 

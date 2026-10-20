@@ -296,6 +296,50 @@ export const COPY: Record<string, GeneratorCopy> = {
     imageAlt: 'A printable position–time graph of a cart that speeds up, moves at a constant velocity, slows down and stops, with its segment ends lettered A to E, made with the Motion Graph Generator',
     educationalLevel: ['Middle school', 'High school', 'AP Physics'],
   },
+  'motion-map': {
+    heading: 'Motion maps with velocity arrows, built segment by segment',
+    intro: [
+      'The Motion Map Generator draws an object moving along a line as a dot at equal times, 0.5 s, 1 s or 2 s apart, along a number line in meters, with a velocity arrow above each dot. You build the motion from up to six segments, at rest, moving at a constant velocity forward or back, speeding up or slowing down, the same way as on the Motion Graph Generator, so the dots are exactly where the object is at each moment: evenly spaced at a constant velocity, spreading out as it speeds up and closing up as it slows down.',
+      'When the motion turns back, the way back is drawn above the way there, so no dots sit on top of each other, and a stop is one dot labeled with the times it’s there. A button opens the same motion on the Motion Graph Generator, and back, so a worksheet can pair a motion map with its graphs, with the same letters at the segment ends on both.',
+    ],
+    settings: [
+      'Up to six segments, each at rest, constant velocity forward or back, speeding up or slowing down, at a speed and for a time you type, and where the motion starts',
+      'A dot every 0.5 s, 1 s or 2 s',
+      'Times, a letter on every dot, or the motion graph’s letters at the segment ends, under the dots',
+      'Velocity arrows on one scale, an acceleration arrow (or a = 0) above each segment, or dots only for students to add the arrows',
+      'The total displacement as an arrow under the number line, with its label written, a blank line, or left off',
+      'Numbers on the number line or just the shape, and a mark at the origin',
+      'A label for the object, a chart title, an answer key, label size, and color for slides',
+    ],
+    faqs: [
+      {
+        q: 'How are the dots placed?',
+        a: 'Each dot is where the object is at that moment, worked out from the segments exactly as the Motion Graph Generator works out its position–time graph. At a constant velocity the dots are evenly spaced; speeding up or slowing down steadily, the spacing grows or shrinks by the same amount from one gap to the next.',
+      },
+      {
+        q: 'How long are the velocity arrows?',
+        a: 'Every arrow is on the same scale, so equal speeds draw equal arrows and twice the speed draws twice the length. The fastest arrow is about 0.8 of the widest gap between dots, or shorter if that would take an arrow up to the next dot, as happens just before the object stops. Velocity and acceleration arrows are dashed, as on every Physics Figures generator, so they’re never read as forces.',
+      },
+      {
+        q: 'What happens when the object stops or turns back?',
+        a: 'While it’s at rest, its dots all sit at one spot, so they’re drawn as one dot with no arrow, labeled with the times it’s there, such as 12–15 s. Each time it turns back, the dots carry on above the ones before, so the way there and the way back don’t overlap.',
+      },
+      {
+        q: 'Can I make a motion map and a motion graph of the same motion?',
+        a: 'Yes. See it as a motion graph opens the Motion Graph Generator with the same segments and starting position, and See it as a motion map comes back. With letters at the segment ends on both, the letters match: the cart does the same thing between B and C on the map and on the graph.',
+      },
+      {
+        q: 'What if a segment doesn’t last a whole number of dots?',
+        a: 'Any duration works: the dots are still exactly where the object is at each moment. A segment end that falls between two dots has no dot to mark it, so the settings panel says so, and its letter is left off the map.',
+      },
+      {
+        q: 'Can students draw the arrows themselves?',
+        a: 'Yes. Turn on Dots only to leave just the dots on the number line, for questions like “draw the velocity arrows” or “describe the motion”. The answer key lists what each segment does, the total displacement and the distance traveled.',
+      },
+    ],
+    imageAlt: 'A printable motion map of a cart that speeds up, moves at a constant velocity, slows down and stops, as dots one second apart along a number line in meters with dashed velocity arrows, made with the Motion Map Generator',
+    educationalLevel: ['Middle school', 'High school', 'AP Physics'],
+  },
 
   'spring-scale': {
     heading: 'Spring scale (newton meter) figures for reading force',

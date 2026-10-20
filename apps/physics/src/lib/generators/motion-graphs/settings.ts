@@ -17,8 +17,12 @@ export const KIND_NAMES: Record<Kind, string> = {
   slower: 'Slowing down',
 }
 
-/** One segment of the motion. New fields go at the end, so old links keep working (see `list`). */
-const segment = {
+/**
+ * One segment of the motion. New fields go at the end, so old links keep
+ * working (see `list`). The Motion Map Generator's segments are these too, so
+ * a link's segments mean the same on both pages.
+ */
+export const segment = {
   kind: choice('forward', KINDS),
   /** Its speed in m/s: the one it moves at, or speeds up or slows down to. */
   speed: number(4, 0, 100),
@@ -37,6 +41,14 @@ export const speedFor = (kind: Kind) => (kind === 'slower' ? 0 : 4)
 
 /** A segment with every setting at its default but these. */
 export const newSegment = (over: Partial<Segment> = {}): Segment => ({ kind: 'forward', speed: speedFor(over.kind ?? 'forward'), duration: 3, dir: 'forward', ...over })
+
+/** The motion both pages start with: a cart that speeds up, cruises, slows down and stops. */
+export const DEFAULT_SEGMENTS: Segment[] = [
+  newSegment({ kind: 'faster', duration: 4 }),
+  newSegment({ duration: 4 }),
+  newSegment({ kind: 'slower', duration: 4 }),
+  newSegment({ kind: 'rest' }),
+]
 
 /** The graphs teachers can pick: one, or all three stacked on the same time axis. */
 export const GRAPHS = {
@@ -64,11 +76,7 @@ function rangeFields<K extends AxisKey>(key: K, from: number, to: number, step: 
 }
 
 export const motionSettings = defineSettings({
-  segments: list(
-    segment,
-    [newSegment({ kind: 'faster', duration: 4 }), newSegment({ duration: 4 }), newSegment({ kind: 'slower', duration: 4 }), newSegment({ kind: 'rest' })],
-    MAX_SEGMENTS,
-  ),
+  segments: list(segment, DEFAULT_SEGMENTS, MAX_SEGMENTS),
   /** Where it starts, in meters. */
   start: int(0, -50, 50),
   graphs: choice('xt', Object.keys(GRAPHS) as Graphs[]),

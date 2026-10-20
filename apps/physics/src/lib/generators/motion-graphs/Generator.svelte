@@ -1,25 +1,27 @@
 <script lang="ts">
-  // The Motion Graph Generator: the motion segment by segment, the graphs, marks, titles
-  // and grid on the left, the figure on the right. Settings live in the page
-  // address. The grids and axes are $shared/graph's, the same as Chemistry's
-  // titration curve and Biology's population growth.
-  import { ArrowDown, ArrowUp, ChartLine, Grid3x3, Heading, MapPin, Plus, Route, SlidersHorizontal, Trash2 } from '@lucide/svelte'
-  import Choice from '$lib/shared/Choice.svelte'
+  // The Motion Graph Generator: the motion segment by segment (SegmentList,
+  // shared with the Motion Map Generator, which a button opens with the same
+  // motion), the graphs, marks, titles and grid on the left, the figure on the
+  // right. Settings live in the page address. The grids and axes are
+  // $shared/graph's, the same as Chemistry's titration curve and Biology's
+  // population growth.
+  import { ChartLine, GitCommitHorizontal, Grid3x3, Heading, MapPin, Route, SlidersHorizontal } from '@lucide/svelte'
   import { createGenerator } from '$lib/shared/generator.svelte'
   import GeneratorPage from '$shared/GeneratorPage.svelte'
   import LabelField from '$lib/shared/LabelField.svelte'
   import type { Label } from '$lib/shared/label'
   import Section from '$lib/shared/Section.svelte'
   import { buildMotion, fittedRanges } from './figure'
-  import { motionOf, numberText, segmentLines, tangentAt, velocityAt } from './motion'
+  import { motionOf, numberText, tangentAt, velocityAt } from './motion'
   import MotionGraphs from './MotionGraphs.svelte'
   import RangeFields from './RangeFields.svelte'
-  import { GRAPHS, KIND_NAMES, KINDS, MAX_SEGMENTS, motionSettings, newSegment, speedFor, viewsOf, type Graphs, type Kind, type Segment } from './settings'
+  import SegmentList from './SegmentList.svelte'
+  import { GRAPHS, motionSettings, viewsOf, type Graphs, type Kind } from './settings'
+  import { mapLink } from '../motion-map/settings'
 
   const gen = createGenerator(motionSettings, 'motion-graphs')
   const s = $derived(gen.snapshot())
   const m = $derived(motionOf(s.segments, s.start))
-  const lines = $derived(segmentLines(m))
   const views = $derived(viewsOf(s))
 
   const shown = (l: Label) => (l.mode === 'text' ? `“${l.text}”` : l.mode === 'blank' ? 'blank' : '')
@@ -59,33 +61,6 @@
     { id: 'a', name: 'Acceleration', unit: 'm/s²' },
   ] as const
 
-  const full = $derived(s.segments.length >= MAX_SEGMENTS)
-  const add = (kind: Kind) => {
-    if (!full) gen.s.segments.push(newSegment({ kind }))
-  }
-  const remove = (i: number) => gen.s.segments.splice(i, 1)
-  function move(i: number, by: -1 | 1) {
-    const [seg] = gen.s.segments.splice(i, 1)
-    gen.s.segments.splice(i + by, 0, seg)
-  }
-  const SPEED_NAMES: Record<Exclude<Kind, 'rest'>, string> = { forward: 'Speed', back: 'Speed', faster: 'Speeds up to', slower: 'Slows down to' }
-  // Slowing down starts out to a stop, and the others at a speed, so a new
-  // kind of segment draws something rather than a warning.
-  function setKind(seg: Segment, kind: Kind) {
-    if (kind === 'slower' || seg.kind === 'slower') seg.speed = speedFor(kind)
-    seg.kind = kind
-  }
-  function unreachedNote(i: number) {
-    const was = Math.abs(m.pieces[i - 1]?.v1 ?? 0)
-    const to = numberText(s.segments[i].speed)
-    const faster = s.segments[i].kind === 'faster'
-    if (was === 0) return faster ? 'It starts at rest, so speeding up to 0 m/s leaves it at rest.' : 'It starts at rest, so there’s nothing to slow down: it stays at rest.'
-    return faster
-      ? `It’s already going ${numberText(was)} m/s, so it can’t speed up to ${to} m/s: it keeps going ${numberText(was)} m/s.`
-      : `It’s only going ${numberText(was)} m/s, so it can’t slow down to ${to} m/s: it keeps going ${numberText(was)} m/s.`
-  }
-  // Which way a segment speeding up goes is only asked when it starts at rest.
-  const fromRest = (i: number) => s.segments[i]?.kind === 'faster' && (i === 0 ? true : m.pieces[i - 1]?.v1 === 0)
   const tangentNote = $derived.by(() => {
     const t = tangentAt(m, s.tangentAt)
     const piece = m.pieces.find((p) => t.t >= p.t0 && t.t <= p.t1)
@@ -97,64 +72,9 @@
 <GeneratorPage name="Motion Graph Generator" filename="motion-graphs" {gen} settingsWidth={26} bind:labelSize={gen.s.labelSize}>
   {#snippet settings()}
     <Section title="Motion" icon={Route} summary={motionSummary}>
-      {#each gen.s.segments as seg, i (seg)}
-        <div class="segment">
-          <div class="segment-head">
-            <span>Segment {i + 1}</span>
-            <span class="moves">
-              <button type="button" class="icon-btn" aria-label="Move segment {i + 1} earlier" data-tip="Earlier" disabled={i === 0} onclick={() => move(i, -1)}>
-                <ArrowUp size={17} />
-              </button>
-              <button type="button" class="icon-btn" aria-label="Move segment {i + 1} later" data-tip="Later" disabled={i === s.segments.length - 1} onclick={() => move(i, 1)}>
-                <ArrowDown size={17} />
-              </button>
-              <button type="button" class="icon-btn" aria-label="Remove segment {i + 1}" data-tip="Remove" onclick={() => remove(i)}>
-                <Trash2 size={17} />
-              </button>
-            </span>
-          </div>
-          <label class="field">
-            What it does
-            <select value={seg.kind} onchange={(e) => setKind(seg, e.currentTarget.value as Kind)}>
-              {#each KINDS as k}<option value={k}>{KIND_NAMES[k]}</option>{/each}
-            </select>
-          </label>
-          <div class="field-row">
-            {#if seg.kind !== 'rest'}
-              <label class="field">
-                {SPEED_NAMES[seg.kind]} (m/s)
-                <input type="number" min="0" max="100" step="any" bind:value={seg.speed} />
-              </label>
-            {/if}
-            <label class="field">
-              Lasts (s)
-              <input type="number" min="0.1" max="60" step="any" bind:value={seg.duration} />
-            </label>
-          </div>
-          {#if fromRest(i)}
-            <div class="field">
-              Which way
-              <Choice name="Segment {i + 1} direction" options={[['forward', 'Forward'], ['back', 'Back']]} bind:value={seg.dir} />
-            </div>
-          {/if}
-          {#if lines[i]}<p class="note numbers">{lines[i]}</p>{/if}
-          {#if m.unreached.includes(i)}<p class="note warning" role="status">{unreachedNote(i)}</p>{/if}
-        </div>
-      {/each}
-
-      <div class="field add">
-        {full ? `A motion has up to ${MAX_SEGMENTS} segments.` : 'Add a segment'}
-        <div class="starters">
-          {#each KINDS as k}
-            <button type="button" class="btn-ghost" disabled={full} onclick={() => add(k)}><Plus size={15} aria-hidden="true" /> {KIND_NAMES[k]}</button>
-          {/each}
-        </div>
-      </div>
-      <label class="field">
-        Starting position (m)
-        <input type="number" min="-50" max="50" step="1" bind:value={gen.s.start} />
-      </label>
+      <SegmentList bind:segments={gen.s.segments} bind:start={gen.s.start} clean={s.segments} {m} />
       <p class="note">Speeding up and slowing down carry on from the velocity before them.</p>
+      <a class="btn-ghost small" href={mapLink(s)}><GitCommitHorizontal size={16} aria-hidden="true" /> See it as a motion map</a>
     </Section>
 
     <Section title="Graphs" icon={ChartLine} summary={GRAPHS[s.graphs].name}>
@@ -223,12 +143,5 @@
 </GeneratorPage>
 
 <style>
-  .segment { border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; margin-bottom: 0.75rem; }
-  .segment-head { display: flex; align-items: center; justify-content: space-between; font-weight: 800; margin-bottom: 0.25rem; }
-  .moves { display: flex; gap: 0.15rem; }
-  .numbers { margin: 0; }
-  .warning { color: var(--ink); background: #fffbeb; border-left: 3px solid var(--amber); border-radius: 6px; padding: 0.5rem 0.7rem; margin: 0.5rem 0 0; }
-  .starters { display: flex; flex-wrap: wrap; gap: 0.4rem; }
   .small { padding: 0.4rem 0.75rem; font-size: 0.86rem; border-radius: 10px; }
-  .starters button { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.35rem 0.65rem; font-size: 0.85rem; border-radius: 9px; }
 </style>

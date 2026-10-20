@@ -13,6 +13,8 @@ import { fbdSettings } from '$lib/generators/free-body-diagram/settings'
 import { inclineSettings } from '$lib/generators/inclined-plane/settings'
 import { motionOf, numberText, segmentLines, tangentAt } from '$lib/generators/motion-graphs/motion'
 import { motionSettings, viewsOf } from '$lib/generators/motion-graphs/settings'
+import { mapAnswer } from '$lib/generators/motion-map/map'
+import { mapSettings } from '$lib/generators/motion-map/settings'
 import { projectileSettings } from '$lib/generators/projectile-motion/settings'
 import { pulleySettings } from '$lib/generators/pulley/settings'
 import { answerLines as rayAnswer, raySettings } from '$lib/generators/ray-diagram/settings'
@@ -101,6 +103,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'pulley': { definition: physics(pulleySettings), answer: none },
   'projectile-motion': { definition: physics(projectileSettings), answer: none },
   'motion-graphs': { definition: physics(motionSettings), answer: motionAnswer },
+  'motion-map': { definition: physics(mapSettings), answer: (s) => ({ heading: 'Answer key', lines: mapAnswer(s) }) },
   'spring-scale': { definition: springScaleSettings, answer: (s) => ({ heading: 'Answer key', lines: springScaleAnswer(s).split('\n') }) },
   'waves': { definition: waveSettings, answer: (s) => ({ heading: 'Answer key', lines: waveAnswer(s) }) },
   'circuit-diagram': {
