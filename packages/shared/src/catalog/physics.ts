@@ -129,7 +129,7 @@ export const PHYSICS: CatalogEntry[] = [
     path: '/length-reading',
     blurb: 'A ruler, caliper or micrometer at any reading, with close-ups of its scales.',
     description:
-      'Make printable length measurement figures for physics tests. Pick a ruler, a caliper to 0.1, 0.05 or 0.02 mm, or a micrometer to 0.01 mm, set the reading and any zero error, and students read it.',
+      'Make printable length measurement figures for physics tests. Pick a ruler, a caliper to 0.1, 0.05 or 0.02 mm, or a micrometer to 0.01 mm or an estimated 0.001 mm, set the reading and any zero error, and students read it.',
     keywords: [
       'length', 'measure', 'measuring', 'measurement', 'measuring instruments', 'ruler', 'meter stick', 'metre rule', 'cm', 'mm',
       'millimetre', 'millimeter', 'inches', 'caliper', 'calliper', 'calipers', 'callipers', 'vernier', 'vernier caliper',

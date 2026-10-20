@@ -3,6 +3,7 @@
 // of the drawn micrometer sits.
 
 import { objectShape, type Instrument, type JawObject } from './instrument'
+import type { Read } from './ruler'
 
 /** The spindle moves half a mm a turn, and the thimble has 50 marks round it, 0.01 mm each. */
 export const PITCH = 0.5
@@ -10,13 +11,21 @@ export const DIVISIONS = 50
 
 export const MICROMETER: Instrument = { leastCount: 0.01, decimals: 2, range: 25, maxZero: 0.05 }
 
+/** Read one digit past the thimble's marks, to 0.001 mm: how far the datum
+ *  line is between two marks, in tenths, estimated by eye. */
+export const MICROMETER_ESTIMATED: Instrument = { ...MICROMETER, leastCount: 0.001, decimals: 3 }
+
+/** The micrometer's readings, to its marks or one estimated digit past them. */
+export const micrometerScale = (read: Read) => (read === 'estimate' ? MICROMETER_ESTIMATED : MICROMETER)
+
 /** How a reading is read: the last sleeve mark showing, to the half mm, and
- *  the thimble mark on the datum line, worth 0.01 mm each. Closed below zero
+ *  the thimble mark on the datum line, worth 0.01 mm each, with the tenths of
+ *  a mark past it when the reading is estimated (38.4). Closed below zero
  *  the sleeve's last mark is −0.5: the thimble's zero has turned past the
  *  datum line. */
 export function readingOf(reading: number) {
   const sleeve = Math.floor(reading / PITCH + 1e-9) * PITCH
-  const thimble = Math.round((reading - sleeve) / MICROMETER.leastCount)
+  const thimble = Math.round(((reading - sleeve) / MICROMETER.leastCount) * 10) / 10
   return { sleeve, thimble }
 }
 

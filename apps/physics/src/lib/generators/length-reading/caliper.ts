@@ -24,21 +24,14 @@ export interface CaliperScale extends Instrument {
   numberEvery: number
   /** drawing units per mm in the close-up of the whole sliding scale */
   strip: number
-  /** drawing units per mm in the detail of where the marks line up, for a
-   *  sliding scale too fine to tell its lined-up mark from its neighbours in the
-   *  strip; 0 for none */
-  detail: number
 }
 
 // Each sliding scale fits n divisions in n × g − 1 mm, g being 1 or 2, so each is
 // one least count short of g mm: 10 in 9 mm, 20 in 39 mm, 50 in 49 mm.
-// A mark next to the lined-up one is a least count off: in the strip that is
-// 2.2 drawing units on the 0.1 mm sliding scale, but under one on the others, so
-// they get a detail where it is 3.5 or 3.2, several times a mark's width.
-const SCALES: Record<LeastCount, { divisions: number; length: number; decimals: number; strip: number; detail: number }> = {
-  '0.1': { divisions: 10, length: 9, decimals: 1, strip: 22, detail: 0 },
-  '0.05': { divisions: 20, length: 39, decimals: 2, strip: 18, detail: 70 },
-  '0.02': { divisions: 50, length: 49, decimals: 2, strip: 16, detail: 160 },
+const SCALES: Record<LeastCount, { divisions: number; length: number; decimals: number; strip: number }> = {
+  '0.1': { divisions: 10, length: 9, decimals: 1, strip: 22 },
+  '0.05': { divisions: 20, length: 39, decimals: 2, strip: 18 },
+  '0.02': { divisions: 50, length: 49, decimals: 2, strip: 16 },
 }
 
 export function caliperScale(lc: LeastCount): CaliperScale {
@@ -140,8 +133,6 @@ export interface Rect {
   height: number
 }
 
-const DETAIL_WIDTH = 880
-
 /** The sizes of the scales' marks and numbers at `zoom`, in drawing units.
  *  Inside a close-up they grow more gently than the drawing, and stop
  *  growing, so the strip stays a strip and lines stay thin enough to show a
@@ -190,17 +181,4 @@ export function stripSource(v: CaliperScale, at: CaliperLayout, reading: number,
   const r = nearNumber(right)
   if (r !== null) right = r - 1.4
   return band(at, v.strip / PX, at.xOf(left), at.xOf(right))
-}
-
-/** The detail's region: 880 units wide once enlarged, enough for at least
- *  one of the sliding scale's numbers, around where the marks line up, though not
- *  centred on it, so its middle doesn't give the answer away. Null for a
- *  sliding scale that needs none. */
-export function detailSource(v: CaliperScale, at: CaliperLayout, reading: number): Rect | null {
-  if (!v.detail) return null
-  const width = DETAIL_WIDTH / v.detail
-  const { main, k } = readingOf(v, reading)
-  const shift = (((k * 37 + Math.abs(main) * 11) % 7) - 3) / 10
-  const middle = reading + k * v.spacing + shift * width
-  return band(at, v.detail / PX, at.xOf(middle - width / 2), at.xOf(middle + width / 2))
 }

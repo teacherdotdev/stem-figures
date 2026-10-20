@@ -290,7 +290,7 @@ A figure of the instrument a length is read from: a ruler with an object lying a
 _Avoid_: Measuring instruments generator, caliper generator
 
 **Caliper**:
-A 150 mm instrument for length, drawn with its outside jaws holding an object, and its inside jaws, depth rod, lock screw and thumb rest drawn but not used. It is read from its main scale and sliding scale to its least count. Its figure has a close-up strip of the scales below it, and on a 0.05 or 0.02 mm caliper a larger detail of where the marks line up below that, never centered on the lined-up mark.
+A 150 mm instrument for length, drawn with its outside jaws holding an object, and its inside jaws, depth rod, lock screw and thumb rest drawn but not used. It is read from its main scale and sliding scale to its least count. Its figure has a close-up strip of the scales below it.
 _Avoid_: Vernier, vernier caliper, calliper, slide caliper (all fine in search keywords; the generator never says "vernier")
 
 **Main scale**:
@@ -306,7 +306,7 @@ The smallest length an instrument reads: 0.1, 0.05 or 0.02 mm on the caliper, on
 _Avoid_: Precision (fine in help text), resolution
 
 **Micrometer**:
-A 0–25 mm instrument for length, drawn with its U-shaped frame and insulating pad, anvil, spindle, lock lever, sleeve, thimble and ratchet. It reads to 0.01 mm: the last sleeve mark showing, to the half mm, plus the thimble mark on the datum line. Its figure has a round magnifier on the sleeve and thimble.
+A 0–25 mm instrument for length, drawn with its U-shaped frame and insulating pad, anvil, spindle, lock lever, sleeve, thimble and ratchet. It reads to 0.01 mm: the last sleeve mark showing, to the half mm, plus the thimble mark on the datum line. Read to one estimated digit, the default, it reads to 0.001 mm: how far the datum line is past that thimble mark, in tenths of a mark. Its figure has a round magnifier on the sleeve and thimble.
 _Avoid_: Micrometer screw gauge, screw gauge (fine in search keywords)
 
 **Sleeve**:

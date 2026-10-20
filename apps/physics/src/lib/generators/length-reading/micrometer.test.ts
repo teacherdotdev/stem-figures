@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { corrected, tidyReading, tidyZero } from './instrument'
-import { AT, DIVISIONS, MICROMETER, PX, magnifierSource, micrometerLayout, readingOf, thimbleMarks } from './micrometer'
+import { AT, DIVISIONS, MICROMETER, MICROMETER_ESTIMATED, PX, magnifierSource, micrometerLayout, readingOf, thimbleMarks } from './micrometer'
 import { answerLine, figureLabel, lengthSettings, workingLines } from './settings'
 
 const round2 = (n: number) => Math.round(n * 100) / 100
@@ -23,6 +23,24 @@ describe('micrometers', () => {
     expect(readingOf(5.49)).toEqual({ sleeve: 5, thimble: 49 })
     expect(readingOf(5.51)).toEqual({ sleeve: 5.5, thimble: 1 })
     expect(readingOf(5.5)).toEqual({ sleeve: 5.5, thimble: 0 })
+  })
+
+  it('estimate the tenths of a mark past the thimble mark below the datum line', () => {
+    for (let n = 0; n <= 25000; n += 7) {
+      const reading = n / 1000
+      const { sleeve, thimble } = readingOf(reading)
+      expect(sleeve, `${reading}`).toBe(Math.floor(n / 500) * 0.5)
+      expect(thimble, `${reading}`).toBe(((n % 500) / 10))
+    }
+    expect(readingOf(7.384)).toEqual({ sleeve: 7, thimble: 38.4 })
+    expect(readingOf(5.499)).toEqual({ sleeve: 5, thimble: 49.9 })
+    expect(readingOf(5.501)).toEqual({ sleeve: 5.5, thimble: 0.1 })
+    // the datum line 0.4 of the way from mark 38 to mark 39
+    const marks = thimbleMarks(7.384)
+    const at = (j: number) => marks.find((m) => m.j === j)!.angle
+    expect(at(38)).toBeLessThan(0)
+    expect(at(39)).toBeGreaterThan(0)
+    expect(-at(38) / (at(39) - at(38))).toBeCloseTo(0.4, 9)
   })
 
   it('read a negative zero error as the thimble turned past zero', () => {
@@ -93,7 +111,11 @@ describe('Length Reading’s caliper and micrometer settings', () => {
     expect(read('caliper=23.47').caliper).toBe(23.45)
     expect(read('caliper=400').caliper).toBe(150)
     expect(read('leastCount=0.1&caliper=12.345&caliperZero=0.22')).toMatchObject({ caliper: 12.3, caliperZero: 0.2 })
-    expect(read('micrometer=7.384').micrometer).toBe(7.38)
+    expect(read('micrometer=7.384').micrometer).toBe(7.384)
+    expect(read('micrometer=7.3846').micrometer).toBe(7.385)
+    expect(read('micrometerRead=mark&micrometer=7.384').micrometer).toBe(7.38)
+    expect(read('micrometerZero=0.013').micrometerZero).toBe(0.013)
+    expect(read('micrometerRead=mark&micrometerZero=0.013').micrometerZero).toBe(0.01)
     expect(read('micrometer=40').micrometer).toBe(25)
     expect(read('micrometerZero=0.3').micrometerZero).toBe(0.05)
     expect(read('micrometerZero=0.04&micrometer=0.01').micrometer).toBe(0.04)
@@ -105,6 +127,8 @@ describe('Length Reading’s caliper and micrometer settings', () => {
     expect(tidyReading(MICROMETER, 0, 5.505)).toBe(5.51)
     expect(corrected(MICROMETER, 5.51, -0.02)).toBe(5.53)
     expect(corrected(MICROMETER, 5.51, 0.03)).toBe(5.48)
+    expect(tidyReading(MICROMETER_ESTIMATED, 0, 5.5054)).toBe(5.505)
+    expect(corrected(MICROMETER_ESTIMATED, 7.384, -0.012)).toBe(7.396)
   })
 
   it('write the answer key and its working', () => {
@@ -117,7 +141,7 @@ describe('Length Reading’s caliper and micrometer settings', () => {
       'Zero error (jaws closed): sliding scale mark 7 lines up, so −(10 − 7) × 0.1 mm = −0.3 mm',
       'Corrected reading: 12.3 mm − (−0.3 mm) = 12.6 mm',
     ])
-    const micrometer = { ...d, instrument: 'micrometer' as const, micrometer: 5.51, micrometerZero: -0.03 }
+    const micrometer = { ...d, instrument: 'micrometer' as const, micrometerRead: 'mark' as const, micrometer: 5.51, micrometerZero: -0.03 }
     expect(answerLine(micrometer)).toBe('Reading: 5.51 mm, zero error: −0.03 mm\nCorrected reading: 5.54 mm')
     expect(workingLines(micrometer)).toEqual([
       'Reading: sleeve 5.5 mm + thimble mark 1 × 0.01 mm = 5.51 mm',
@@ -125,5 +149,14 @@ describe('Length Reading’s caliper and micrometer settings', () => {
       'Corrected reading: 5.51 mm − (−0.03 mm) = 5.54 mm',
     ])
     expect(figureLabel(micrometer)).toBe('A micrometer reading 5.51 mm, holding a block, below the same micrometer closed, reading −0.03 mm')
+    const estimated = { ...d, instrument: 'micrometer' as const, micrometer: 7.384, micrometerZero: -0.012 }
+    expect(answerLine(estimated)).toBe('Reading: 7.384 mm, zero error: −0.012 mm\nCorrected reading: 7.396 mm')
+    expect(workingLines(estimated)).toEqual([
+      'Reading: sleeve 7.0 mm + thimble 38.4 marks × 0.01 mm = 7.384 mm',
+      'Zero error (closed): the thimble’s 0 is 1.2 marks above the datum line, so −1.2 × 0.01 mm = −0.012 mm',
+      'Corrected reading: 7.384 mm − (−0.012 mm) = 7.396 mm',
+    ])
+    // on a mark, the estimated digit is a 0
+    expect(answerLine({ ...d, instrument: 'micrometer' as const, micrometer: 7.38 })).toBe('Reading: 7.380 mm')
   })
 })

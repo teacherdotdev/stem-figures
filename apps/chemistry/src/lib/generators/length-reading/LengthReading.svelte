@@ -16,13 +16,13 @@
   import { MAGNIFIER_VIEWS, type MagnifierView } from '$lib/shared/magnify'
   import { CALIPER_RANGE, LEAST_COUNTS, caliperScale, readingOf as caliperReadingOf, type LeastCount } from './caliper'
   import { JAW_OBJECTS, JAW_OBJECT_NAMES, minReading, mmText, randomReading, tidyReading, tidyZero } from './instrument'
-  import { MICROMETER, readingOf as micrometerReadingOf } from './micrometer'
+  import { MICROMETER, micrometerScale, readingOf as micrometerReadingOf } from './micrometer'
   import { MARBLE_COUNTS, OBJECTS, OBJECT_NAMES } from '../volume-by-displacement/objects'
   import LengthField from './LengthField.svelte'
   import LengthFigure from './LengthFigure.svelte'
   import {
     CM_PER_INCH, CM_SIZES, IMPERIAL_MARKS, INCH_SIZES, METRIC_MARKS, METRIC_MARK_NAMES, READS, READ_NAMES, SYSTEMS, SYSTEM_NAMES, UNITS,
-    formatLength, marksFit, nearestSize, randomLength, rulerScale, shortest, type System,
+    formatLength, marksFit, nearestSize, randomLength, rulerScale, shortest, type Read, type System,
   } from './ruler'
   import {
     INSTRUMENTS, INSTRUMENT_NAMES, LENGTH_VIEWS, LENGTH_VIEW_NAMES, answerLine, endOf, gauge, lengthSettings, lengthText, type LengthSettings,
@@ -59,8 +59,13 @@
   const g = $derived(gauge(s))
   const isCaliper = $derived(s.instrument === 'caliper')
   const caliper = $derived(caliperScale(s.leastCount))
+  const micrometer = $derived(micrometerScale(s.micrometerRead))
   const instrumentSummary = $derived(
-    s.instrument === 'ruler' ? 'Ruler' : isCaliper ? `Caliper, ${s.leastCount} mm least count` : 'Micrometer, 0.01 mm least count',
+    s.instrument === 'ruler'
+      ? 'Ruler'
+      : isCaliper
+        ? `Caliper, ${s.leastCount} mm least count`
+        : `Micrometer, read to ${s.micrometerRead === 'estimate' ? '0.001' : '0.01'} mm`,
   )
   const readingSummary = $derived(
     mmText(g.reading, g.instrument.decimals) + (g.zero ? `, zero error ${mmText(g.zero, g.instrument.decimals, true)}` : ''),
@@ -78,12 +83,14 @@
       return `Main scale ${main} mm, sliding scale mark ${k} lines up`
     }
     const { sleeve, thimble } = micrometerReadingOf(s.micrometer)
-    return `Sleeve ${mmText(sleeve, 1)}, thimble mark ${thimble} on the datum line`
+    if (Number.isInteger(thimble)) return `Sleeve ${mmText(sleeve, 1)}, thimble mark ${thimble} on the datum line`
+    const below = Math.floor(thimble)
+    return `Sleeve ${mmText(sleeve, 1)}, datum line 0.${Math.round((thimble - below) * 10)} of the way from thimble mark ${below} to ${(below + 1) % 50}`
   })
 
   function setReading(reading: number) {
     if (isCaliper) s.caliper = tidyReading(caliper, s.caliperZero, reading)
-    else s.micrometer = tidyReading(MICROMETER, s.micrometerZero, reading)
+    else s.micrometer = tidyReading(micrometer, s.micrometerZero, reading)
   }
 
   function setZero(zero: number) {
@@ -91,9 +98,16 @@
       s.caliperZero = tidyZero(caliper, zero)
       s.caliper = tidyReading(caliper, s.caliperZero, s.caliper)
     } else {
-      s.micrometerZero = tidyZero(MICROMETER, zero)
-      s.micrometer = tidyReading(MICROMETER, s.micrometerZero, s.micrometer)
+      s.micrometerZero = tidyZero(micrometer, zero)
+      s.micrometer = tidyReading(micrometer, s.micrometerZero, s.micrometer)
     }
+  }
+
+  function changeMicrometerRead(read: Read) {
+    const next = micrometerScale(read)
+    s.micrometerZero = tidyZero(next, s.micrometerZero)
+    s.micrometer = tidyReading(next, s.micrometerZero, s.micrometer)
+    s.micrometerRead = read
   }
 
   function changeLeastCount(lc: LeastCount) {
@@ -133,6 +147,23 @@
           {#each LEAST_COUNTS as lc (lc)}
             <button type="button" role="radio" aria-checked={s.leastCount === lc} class:on={s.leastCount === lc} onclick={() => changeLeastCount(lc)}>
               {lc} mm
+            </button>
+          {/each}
+        </div>
+      {/if}
+      {#if s.instrument === 'micrometer'}
+        <div class="head-row">
+          <p class="field-label">Read to</p>
+          <HelpTip id="length-micrometer-read-tip" label="How far readings go">
+            {s.micrometerRead === 'estimate'
+              ? 'Readings go one digit past the thimble’s marks, to 0.001 mm: students estimate how far the datum line is between two marks, in tenths of a mark.'
+              : 'Readings land on a thimble mark, to 0.01 mm.'}
+          </HelpTip>
+        </div>
+        <div class="segmented" role="radiogroup" aria-label="Read to">
+          {#each READS as read (read)}
+            <button type="button" role="radio" aria-checked={s.micrometerRead === read} class:on={s.micrometerRead === read} onclick={() => changeMicrometerRead(read)}>
+              {READ_NAMES[read]}
             </button>
           {/each}
         </div>
@@ -281,6 +312,7 @@
           label="Reading"
           value={g.reading}
           decimals={g.instrument.decimals}
+          step={g.instrument.leastCount}
           min={minReading(g.zero)}
           max={isCaliper ? CALIPER_RANGE : MICROMETER.range}
           unit="mm"
@@ -303,6 +335,7 @@
             label={isCaliper ? 'Reading with the jaws closed' : 'Reading when closed'}
             value={g.zero}
             decimals={g.instrument.decimals}
+            step={g.instrument.leastCount}
             min={-g.instrument.maxZero}
             max={g.instrument.maxZero}
             unit="mm"

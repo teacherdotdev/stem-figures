@@ -12,8 +12,8 @@ export const lengthLinking = describeLinking(lengthSettings, {
   summary:
     'A ruler, a caliper or a micrometer, picked by instrument. On a metric (cm) or imperial (inch) ruler an object lies along its top edge: length is the object’s length and start is where its left end sits, both in the ruler’s unit; start=0 lines it up with the 0 mark. A caliper or micrometer holds an object in its jaws at the reading caliper or micrometer, in mm.',
   notes: [
-    'The ruler parameters (system to span) apply only when instrument=ruler; leastCount, caliper and caliperZero only when instrument=caliper; micrometer and micrometerZero only when instrument=micrometer; closed, jaws, jawsLabel, printed and closeUp to both the caliper and the micrometer.',
-    'caliper is rounded to its leastCount (0.1, 0.05 or 0.02 mm) and kept from 0 to 150 mm; micrometer is rounded to 0.01 mm and kept from 0 to 25 mm. A zero error (caliperZero up to ±0.5 mm, micrometerZero up to ±0.05 mm) is rounded the same way, and the reading is never below it. The jaws are the reading minus the zero error apart, and the answer key gives the reading, the zero error and the corrected reading.',
+    'The ruler parameters (system to span) apply only when instrument=ruler; leastCount, caliper and caliperZero only when instrument=caliper; micrometerRead, micrometer and micrometerZero only when instrument=micrometer; closed, jaws, jawsLabel, printed and closeUp to both the caliper and the micrometer.',
+    'caliper is rounded to its leastCount (0.1, 0.05 or 0.02 mm) and kept from 0 to 150 mm; micrometer is rounded to 0.001 mm with micrometerRead=estimate (one digit past the thimble’s marks) or 0.01 mm with micrometerRead=mark, and kept from 0 to 25 mm. A zero error (caliperZero up to ±0.5 mm, micrometerZero up to ±0.05 mm) is rounded the same way, and the reading is never below it. The jaws are the reading minus the zero error apart, and the answer key gives the reading, the zero error and the corrected reading.',
     'cm, metricMarks and read apply only when system=metric; inches and imperialMarks only when system=imperial.',
     '5 cm and 10 cm marks (metricMarks=five or ten) are only for the 50 and 100 cm rulers; on a shorter ruler they become 1 cm marks.',
     'length and start are rounded to what the ruler reads: with read=estimate, one digit past the smallest mark (1 mm marks to 0.01 cm; 1 cm and 0.5 cm marks to 0.1 cm; 5 and 10 cm marks to 1 cm); with read=mark, to the nearest mark. Imperial lengths always land on a mark: write them as decimals (3.375 for 3 3/8 in).',
@@ -54,7 +54,11 @@ export const lengthLinking = describeLinking(lengthSettings, {
     },
     caliper: { what: 'The caliper’s reading in mm: where the zero of its sliding scale sits on the main scale.', when: 'instrument=caliper' },
     caliperZero: { what: 'What the caliper reads with its jaws closed, in mm; 0 for no zero error.', when: 'instrument=caliper' },
-    micrometer: { what: 'The micrometer’s reading in mm: the sleeve to the half mm plus the thimble in 0.01 mm.', when: 'instrument=micrometer' },
+    micrometerRead: {
+      what: 'How far the micrometer is read: one estimated digit past the thimble’s marks, to 0.001 mm (estimate), or to the nearest mark, 0.01 mm (mark).',
+      when: 'instrument=micrometer',
+    },
+    micrometer: { what: 'The micrometer’s reading in mm: the sleeve to the half mm plus the thimble in 0.01 mm, and an estimated 0.001 mm with micrometerRead=estimate.', when: 'instrument=micrometer' },
     micrometerZero: { what: 'What the micrometer reads closed, in mm; 0 for no zero error.', when: 'instrument=micrometer' },
     closed: { what: 'With a zero error, also draws the instrument closed above the measuring one, with its own close-up.', when: 'instrument=caliper or micrometer' },
     jaws: {
@@ -65,7 +69,7 @@ export const lengthLinking = describeLinking(lengthSettings, {
     jawsLabel: { what: 'A short label by the object in the jaws.', when: 'instrument=caliper or micrometer, and jaws is not none' },
     printed: { what: 'Prints the least count on the caliper’s slider or the micrometer’s frame, as on real ones.', when: 'instrument=caliper or micrometer' },
     closeUp: {
-      what: 'Whether close-ups of the scales are drawn: on a caliper a strip of the main and sliding scales (and on a 0.05 or 0.02 mm one a larger detail of where the marks line up); on a micrometer a magnified circle of the sleeve and thimble.',
+      what: 'Whether close-ups of the scales are drawn: on a caliper a strip of the main and sliding scales; on a micrometer a magnified circle of the sleeve and thimble.',
       when: 'instrument=caliper or micrometer',
       values: 'both: the instrument and its close-up; magnifier: the close-up alone; whole: the instrument alone',
     },

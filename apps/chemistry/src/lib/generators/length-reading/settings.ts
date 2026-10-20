@@ -7,8 +7,8 @@ import { figureTextFields } from '$lib/shared/figureText'
 import { MAGNIFIER_VIEWS } from '$lib/shared/magnify'
 import { bool, choice, defineSettings, number, text } from '$lib/shared/settings'
 import { CALIPER_MAX_ZERO, CALIPER_RANGE, LEAST_COUNTS, caliperScale, readingOf as caliperReadingOf } from './caliper'
-import { JAW_OBJECTS, JAW_OBJECT_NAMES, answerLines as instrumentAnswer, corrected, mmText, tidyReading, tidyZero, type Instrument } from './instrument'
-import { MICROMETER, readingOf as micrometerReadingOf } from './micrometer'
+import { JAW_OBJECTS, JAW_OBJECT_NAMES, answerLines as instrumentAnswer, corrected, mmText, roundTo, tidyReading, tidyZero, type Instrument } from './instrument'
+import { MICROMETER, micrometerScale, readingOf as micrometerReadingOf } from './micrometer'
 import { OBJECTS, objectName } from '../volume-by-displacement/objects'
 import {
   CM_SIZES, IMPERIAL_MARKS, INCH_SIZES, METRIC_MARKS, READS, SYSTEMS, UNITS, formatLength, marksFit, rulerName, rulerScale, shortest, snap,
@@ -52,6 +52,8 @@ export const lengthSettings = defineSettings(
     caliperZero: number({ min: -CALIPER_MAX_ZERO, max: CALIPER_MAX_ZERO, fallback: 0 }),
     /** where the micrometer's thimble edge is on the sleeve, in mm */
     micrometer: number({ min: 0, max: MICROMETER.range, fallback: 7.38 }),
+    /** the micrometer read to its marks, 0.01 mm, or one estimated digit past them, 0.001 mm */
+    micrometerRead: choice(READS, 'estimate'),
     /** what the micrometer reads closed, in mm */
     micrometerZero: number({ min: -MICROMETER.maxZero, max: MICROMETER.maxZero, fallback: 0 }),
     /** with a zero error, draw the caliper or micrometer closed beside it too */
@@ -73,7 +75,8 @@ export const lengthSettings = defineSettings(
     const start = snap(scale, s.start, 0, scale.size - length)
     const c = caliperScale(s.leastCount)
     const caliperZero = tidyZero(c, s.caliperZero)
-    const micrometerZero = tidyZero(MICROMETER, s.micrometerZero)
+    const m = micrometerScale(s.micrometerRead)
+    const micrometerZero = tidyZero(m, s.micrometerZero)
     return {
       ...s,
       length,
@@ -83,7 +86,7 @@ export const lengthSettings = defineSettings(
       caliperZero,
       caliper: tidyReading(c, caliperZero, s.caliper),
       micrometerZero,
-      micrometer: tidyReading(MICROMETER, micrometerZero, s.micrometer),
+      micrometer: tidyReading(m, micrometerZero, s.micrometer),
     }
   },
 )
@@ -98,7 +101,7 @@ export const lengthText = (s: LengthSettings, value: number) => `${formatLength(
 
 /** The caliper's or micrometer's scales, reading and zero error. */
 export function gauge(s: LengthSettings): { instrument: Instrument; reading: number; zero: number } {
-  if (s.instrument === 'micrometer') return { instrument: MICROMETER, reading: s.micrometer, zero: s.micrometerZero }
+  if (s.instrument === 'micrometer') return { instrument: micrometerScale(s.micrometerRead), reading: s.micrometer, zero: s.micrometerZero }
   return { instrument: caliperScale(s.leastCount), reading: s.caliper, zero: s.caliperZero }
 }
 
@@ -127,8 +130,10 @@ export function workingLines(s: LengthSettings) {
     if (s.instrument === 'micrometer') {
       const { sleeve, thimble } = micrometerReadingOf(r)
       // Closed below zero, the thimble's 0 has turned past the datum line.
-      if (r < 0) return `the thimble’s 0 is ${50 - thimble} marks above the datum line, so −${50 - thimble} × 0.01 mm = ${result}`
-      return `sleeve ${mmText(sleeve, 1)} + thimble mark ${thimble} × 0.01 mm = ${result}`
+      const above = roundTo(50 - thimble, 1)
+      if (r < 0) return `the thimble’s 0 is ${above} marks above the datum line, so −${above} × 0.01 mm = ${result}`
+      const read = Number.isInteger(thimble) ? `thimble mark ${thimble}` : `thimble ${thimble} marks`
+      return `sleeve ${mmText(sleeve, 1)} + ${read} × 0.01 mm = ${result}`
     }
     const c = caliperScale(s.leastCount)
     const { main, k } = caliperReadingOf(c, r)

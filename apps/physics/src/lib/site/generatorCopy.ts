@@ -386,13 +386,14 @@ export const COPY: Record<string, GeneratorCopy> = {
     heading: 'Ruler, caliper and micrometer figures for measuring length',
     intro: [
       'The Length Reading Generator draws the instrument a length is read from: a centimeter or inch ruler with an object lying along it, a 150 mm caliper with its jaws open to the reading you type, or a 0–25 mm micrometer. Close-ups of the scales keep every mark readable in print.',
-      'The caliper reads to 0.1, 0.05 or 0.02 mm, and exactly one mark on its sliding scale lines up with the main scale. The micrometer reads to 0.01 mm, with its thimble’s marks bunching toward its edges as on a real one. Hold a block, cylinder, ball or wire in the jaws, give the instrument a zero error for a correction question, and turn on the answer key to print the reading.',
+      'The caliper reads to 0.1, 0.05 or 0.02 mm, and exactly one mark on its sliding scale lines up with the main scale. The micrometer reads to 0.01 mm at its marks, or to an estimated 0.001 mm between them, with its thimble’s marks bunching toward its edges as on a real one. Hold a block, cylinder, ball or wire in the jaws, give the instrument a zero error for a correction question, and turn on the answer key to print the reading.',
     ],
     settings: [
       'The instrument: a ruler, a caliper or a micrometer',
       'A metric ruler, 15 to 100 cm long, or an inch ruler, 6 to 20 in long, how finely it is marked, and lengths read to one estimated digit or to the nearest mark',
       'The object on the ruler, its length and where its left end sits, with magnifiers on its ends',
       'The caliper’s least count: 0.1 mm (10 divisions over 9 mm), 0.05 mm (20 over 39 mm) or 0.02 mm (50 over 49 mm), printed on the slider or left off',
+      'The micrometer read to its marks, 0.01 mm, or to one estimated digit past them, 0.001 mm',
       'The caliper or micrometer reading, typed or picked at random, and a zero error, with the instrument also drawn closed',
       'In the jaws: nothing, a block, a cylinder, a ball or a wire, drawn to size, with a short label',
       'The instrument with its close-up, the close-up alone, or the instrument alone',
@@ -408,12 +409,8 @@ export const COPY: Record<string, GeneratorCopy> = {
         a: 'The smallest length it can read: one main-scale division less one division of the sliding scale. Ten divisions over 9 mm are 0.9 mm each, so the least count is 1 − 0.9 = 0.1 mm. Twenty over 39 mm (1.95 mm each, against 2 mm on the main scale) give 0.05 mm, and fifty over 49 mm give 0.02 mm.',
       },
       {
-        q: 'Why does a fine caliper get a second close-up?',
-        a: 'On a 0.05 or 0.02 mm caliper, the marks beside the one that lines up are only 0.05 or 0.02 mm off, too little to see in print. A second, larger close-up of the part of the scales where the marks line up shows clearly which one does. It isn’t centered on that mark, so it doesn’t give the answer away.',
-      },
-      {
         q: 'How do you read a micrometer?',
-        a: 'Read the last mark showing on the sleeve: whole millimeters above the datum line, and the half-millimeter mark below it if it has appeared. Then add the thimble mark on the datum line, 0.01 mm each. A sleeve showing 7 mm and thimble mark 38 read 7.38 mm; with the 7.5 mark showing as well, 7.88 mm.',
+        a: 'Read the last mark showing on the sleeve: whole millimeters above the datum line, and the half-millimeter mark below it if it has appeared. Then add the thimble mark on the datum line, 0.01 mm each. A sleeve showing 7 mm and thimble mark 38 read 7.38 mm; with the 7.5 mark showing as well, 7.88 mm. When the datum line falls between two thimble marks, estimate how far, in tenths of a mark, for one more digit: 0.4 of the way from mark 38 to mark 39 reads 7.384 mm.',
       },
       {
         q: 'What is a zero error?',

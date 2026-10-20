@@ -149,7 +149,7 @@ export const COPY: Record<string, GeneratorCopy> = {
     heading: 'Ruler, caliper and micrometer figures for measuring length',
     intro: [
       'Length Reading draws the instrument a length is read from: a centimeter or inch ruler with an object lying along it (marbles, a rock, a cube or a metal cylinder), a 150 mm caliper with its jaws open to the reading you type, or a 0–25 mm micrometer. On the ruler, students measure the object lined up with 0 or starting partway along, so they read both ends and subtract.',
-      'Metric ruler lengths can go one estimated digit past the smallest mark, for significant figures practice. The caliper reads to 0.1, 0.05 or 0.02 mm, with exactly one mark on its sliding scale lined up with the main scale, and the micrometer reads to 0.01 mm. Give a caliper or micrometer a zero error for a correction question. Close-ups of the scales keep the marks readable in print, and the answer key prints the reading.',
+      'Metric ruler lengths can go one estimated digit past the smallest mark, for significant figures practice. The caliper reads to 0.1, 0.05 or 0.02 mm, with exactly one mark on its sliding scale lined up with the main scale, and the micrometer reads to 0.01 mm at its marks, or to an estimated 0.001 mm between them. Give a caliper or micrometer a zero error for a correction question. Close-ups of the scales keep the marks readable in print, and the answer key prints the reading.',
     ],
     settings: [
       'The instrument: a ruler, a caliper or a micrometer',
@@ -157,6 +157,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       'An inch ruler, 6, 8, 12 or 20 in long, marked every 1, 1/2, 1/4, 1/8 or 1/16 in',
       'The object on the ruler, its length and left end, typed, picked at random, or set by dragging it along the ruler, with dashed lines down from its ends if you like',
       'The caliper’s least count: 0.1 mm (10 divisions over 9 mm), 0.05 mm (20 over 39 mm) or 0.02 mm (50 over 49 mm), printed on the slider or left off',
+      'The micrometer read to its marks, 0.01 mm, or to one estimated digit past them, 0.001 mm',
       'The caliper or micrometer reading, typed or picked at random, and a zero error, with the instrument also drawn closed',
       'In the jaws: nothing, a block, a cylinder, a ball or a wire, drawn to size, with a short label',
       'Magnifiers or close-ups of the scales, a chart title, and an answer key line',
@@ -176,11 +177,11 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'How do you read a caliper?',
-        a: 'Read the main scale at the sliding scale’s zero: the last millimeter mark before it. Then find the one mark on the sliding scale that lines up exactly with a main-scale mark, and add that many least counts. With the zero just past 23 mm and the 9th mark of a 0.05 mm scale lined up, the reading is 23 + 9 × 0.05 = 23.45 mm. On a 0.05 or 0.02 mm caliper a second, larger close-up shows the part of the scales where the marks line up, off-center so it doesn’t give the answer away.',
+        a: 'Read the main scale at the sliding scale’s zero: the last millimeter mark before it. Then find the one mark on the sliding scale that lines up exactly with a main-scale mark, and add that many least counts. With the zero just past 23 mm and the 9th mark of a 0.05 mm scale lined up, the reading is 23 + 9 × 0.05 = 23.45 mm.',
       },
       {
         q: 'How do you read a micrometer?',
-        a: 'Read the last mark showing on the sleeve: whole millimeters above the datum line, and the half-millimeter mark below it if it has appeared. Then add the thimble mark on the datum line, 0.01 mm each. A sleeve showing 7 mm and thimble mark 38 read 7.38 mm; with the 7.5 mark showing as well, 7.88 mm.',
+        a: 'Read the last mark showing on the sleeve: whole millimeters above the datum line, and the half-millimeter mark below it if it has appeared. Then add the thimble mark on the datum line, 0.01 mm each. A sleeve showing 7 mm and thimble mark 38 read 7.38 mm; with the 7.5 mark showing as well, 7.88 mm. When the datum line falls between two thimble marks, estimate how far, in tenths of a mark, for one more digit: 0.4 of the way from mark 38 to mark 39 reads 7.384 mm.',
       },
       {
         q: 'What is a zero error?',

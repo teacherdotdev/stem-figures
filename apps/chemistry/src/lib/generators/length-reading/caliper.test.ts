@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { answerLines as instrumentAnswer, corrected, randomReading, tidyReading, tidyZero } from './instrument'
-import { LEAST_COUNTS, PX, caliperLayout, caliperScale, detailSource, mainScaleEnd, readingOf, slideMarks, stripSource } from './caliper'
+import { LEAST_COUNTS, PX, caliperLayout, caliperScale, mainScaleEnd, readingOf, slideMarks, stripSource } from './caliper'
 
 const near = (x: number) => Math.abs(x - Math.round(x)) < 1e-6
 
@@ -113,7 +113,7 @@ describe('the drawn caliper', () => {
     expect(at.height).toBeGreaterThanOrEqual(at.object.bottom)
   })
 
-  it('shows the whole sliding scale in its strip, and the lined-up mark in its detail', () => {
+  it('shows the whole sliding scale in its strip', () => {
     for (const lc of LEAST_COUNTS) {
       const v = caliperScale(lc)
       for (const reading of [0.35, 23.46, 99.9, 150]) {
@@ -122,15 +122,6 @@ describe('the drawn caliper', () => {
         const strip = stripSource(v, at, r, true)
         expect(strip.x).toBeLessThan(at.xOf(r))
         expect(strip.x + strip.width).toBeGreaterThan(at.xOf(r + v.length))
-        const detail = detailSource(v, at, r)
-        if (lc === '0.1') expect(detail).toBeNull()
-        else {
-          const lined = at.xOf(r + readingOf(v, r).k * v.spacing)
-          expect(detail!.x).toBeLessThan(lined)
-          expect(detail!.x + detail!.width).toBeGreaterThan(lined)
-          // wide enough for one of the sliding scale's numbers
-          expect(detail!.width).toBeGreaterThan(v.numberEvery * v.spacing * PX)
-        }
       }
     }
   })

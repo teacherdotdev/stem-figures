@@ -484,9 +484,9 @@ export const EXAMPLES: Example[] = [
     {
       slug: 'caliper-reading-23-45-mm',
       title: 'Caliper reading 23.45 mm',
-      alt: 'A caliper holding a block, reading 23.45 mm on its 0.05 mm sliding scale, with a close-up strip of its scales and a larger close-up of where the marks line up',
+      alt: 'A caliper holding a block, reading 23.45 mm on its 0.05 mm sliding scale, with a close-up strip of its scales',
       caption:
-        'A 150 mm caliper with a block held between its outside jaws. The close-up strip below it shows the sliding scale’s zero just past 23 mm on the main scale, and the larger close-up below that shows its 9th mark, between the 4 and the 5, lined up with a main-scale mark: 23 + 9 × 0.05 = 23.45 mm. The least count, 0.05 mm, is printed on the slider.',
+        'A 150 mm caliper with a block held between its outside jaws. The close-up strip below it shows the sliding scale’s zero just past 23 mm on the main scale, and its 9th mark, between the 4 and the 5, lined up with a main-scale mark: 23 + 9 × 0.05 = 23.45 mm. The least count, 0.05 mm, is printed on the slider.',
       settings: { instrument: 'caliper' },
     },
     {
@@ -500,9 +500,9 @@ export const EXAMPLES: Example[] = [
     {
       slug: 'caliper-0-02-mm-reading-41-38-mm',
       title: '0.02 mm caliper reading 41.38 mm',
-      alt: 'A caliper with a 0.02 mm sliding scale holding a ball, reading 41.38 mm, with a close-up strip of its scales and a larger close-up of where the marks line up',
+      alt: 'A caliper with a 0.02 mm sliding scale holding a ball, reading 41.38 mm, with a close-up strip of its scales',
       caption:
-        'A caliper whose sliding scale has 50 divisions over 49 mm, so it reads to 0.02 mm, holding a ball. The close-up strip shows the sliding scale’s zero just past 41 mm, and the larger close-up shows its 19th mark, four marks past the 3, lined up with a main-scale mark: 41 + 19 × 0.02 = 41.38 mm.',
+        'A caliper whose sliding scale has 50 divisions over 49 mm, so it reads to 0.02 mm, holding a ball. The close-up strip shows the sliding scale’s zero just past 41 mm, and its 19th mark, four marks past the 3, lined up with a main-scale mark: 41 + 19 × 0.02 = 41.38 mm.',
       settings: { instrument: 'caliper', leastCount: '0.02', caliper: 41.38, jaws: 'ball' },
     },
     {
@@ -519,7 +519,7 @@ export const EXAMPLES: Example[] = [
       alt: 'A micrometer holding a ball bearing, reading 7.38 mm, with a magnified view of its sleeve and thimble',
       caption:
         'A 0–25 mm micrometer with a ball between its anvil and spindle. The magnifier shows the 7 mm mark showing on the sleeve, but not the 7.5 mm mark below the datum line, and the thimble’s 38th mark on the datum line, so the reading is 7 + 0.38 = 7.38 mm. The thimble’s marks bunch together toward its top and bottom edges, as on a real one.',
-      settings: { instrument: 'micrometer', jaws: 'ball' },
+      settings: { instrument: 'micrometer', micrometerRead: 'mark', jaws: 'ball' },
     },
     {
       slug: 'micrometer-reading-just-past-half-a-millimeter',
@@ -527,7 +527,15 @@ export const EXAMPLES: Example[] = [
       alt: 'A micrometer holding a wire, reading 5.51 mm, with a magnified view showing the 5.5 mm mark just uncovered on the sleeve',
       caption:
         'A micrometer measuring a wire, with the thimble’s edge just past the 5.5 mm mark below the sleeve’s datum line, and the thimble’s 1st mark on the datum line. The reading is 5.5 + 0.01 = 5.51 mm. Missing the half-millimeter mark would give 5.01 mm, the common mistake.',
-      settings: { instrument: 'micrometer', micrometer: 5.51, jaws: 'wire' },
+      settings: { instrument: 'micrometer', micrometerRead: 'mark', micrometer: 5.51, jaws: 'wire' },
+    },
+    {
+      slug: 'micrometer-reading-estimated-to-0-001-mm',
+      title: 'Micrometer reading estimated to 0.001 mm: 6.847 mm',
+      alt: 'A micrometer holding a cylinder, reading 6.847 mm, with a magnified view showing the datum line between the thimble’s 34th and 35th marks',
+      caption:
+        'A micrometer read one digit past its marks. The magnifier shows the 6.5 mm mark uncovered below the sleeve’s datum line, and the datum line about 0.7 of the way from the thimble’s 34th mark to its 35th, so the reading is 6.5 + 0.347 = 6.847 mm. The last digit is estimated, so 6.846 or 6.848 mm is as good an answer.',
+      settings: { instrument: 'micrometer', micrometer: 6.847, jaws: 'cylinder' },
     },
     {
       slug: 'micrometer-with-a-negative-zero-error',
@@ -535,14 +543,14 @@ export const EXAMPLES: Example[] = [
       alt: 'Two micrometers: above, closed, its thimble’s 0 three marks above the datum line, reading −0.03 mm; below, holding a wire, reading 3.27 mm, each with a magnified view',
       caption:
         'The same micrometer twice. Above, closed, the thimble’s 0 has turned three marks past the datum line, so it reads −0.03 mm: a negative zero error. Below, holding a wire, it reads 3.27 mm. Taking off the zero error gives 3.27 − (−0.03) = 3.30 mm.',
-      settings: { instrument: 'micrometer', micrometer: 3.27, micrometerZero: -0.03, jaws: 'wire' },
+      settings: { instrument: 'micrometer', micrometerRead: 'mark', micrometer: 3.27, micrometerZero: -0.03, jaws: 'wire' },
     },
     {
       slug: 'caliper-scales-close-up-62-35-mm',
       title: 'Caliper scales close-up: 62.35 mm',
-      alt: 'A close-up strip of a caliper’s main scale and 0.05 mm sliding scale reading 62.35 mm, with a larger close-up of where the marks line up below it',
+      alt: 'A close-up strip of a caliper’s main scale and 0.05 mm sliding scale reading 62.35 mm',
       caption:
-        'The scales alone, without the caliper: the main scale from 6 to 11 cm and the 0.05 mm sliding scale below it, its zero just past 62 mm. A larger close-up below shows its 7th mark, between the 3 and the 4, lined up with a main-scale mark, so the reading is 62 + 7 × 0.05 = 62.35 mm.',
+        'The scales alone, without the caliper: the main scale from 6 to 11 cm and the 0.05 mm sliding scale below it, its zero just past 62 mm, and its 7th mark, between the 3 and the 4, lined up with a main-scale mark, so the reading is 62 + 7 × 0.05 = 62.35 mm.',
       settings: { instrument: 'caliper', caliper: 62.35, closeUp: 'magnifier' },
     },
     {
