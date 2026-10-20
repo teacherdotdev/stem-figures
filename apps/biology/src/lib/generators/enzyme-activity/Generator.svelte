@@ -3,26 +3,31 @@
   // or substrate concentration, up to three curves at once: enzymes like
   // pepsin, amylase and trypsin, or unknown ones with an optimum of the
   // teacher's own, or an enzyme with a competitive and a non-competitive
-  // inhibitor. Shape only, with no numbers on the axes; the optimum,
-  // denaturation, Vmax and Km are marked if wanted. The grid and axes are
-  // $shared/graph's, the same as Chemistry's titration curve.
+  // inhibitor. Shape only by default, or numbered axes, the rate in
+  // arbitrary units or as a percentage of the fastest; the optimum, denaturation, Vmax and Km are marked if
+  // wanted. The grid and axes are $shared/graph's, the same as
+  // Photosynthesis Rate's.
   import { Axis3d, ChartLine, MapPin } from '@lucide/svelte'
   import GeneratorPage from '$shared/GeneratorPage.svelte'
   import HelpTip from '$shared/HelpTip.svelte'
   import LabelField from '$shared/LabelField.svelte'
   import Section from '$shared/Section.svelte'
   import { generatorState } from '$shared/generatorState.svelte'
+  import AxisSettings from '$shared/graph/AxisSettings.svelte'
   import CapPicker from '$shared/graph/CapPicker.svelte'
   import GridlineSettings from '$shared/graph/GridlineSettings.svelte'
   import TitleSettings from '$shared/graph/TitleSettings.svelte'
+  import { readAxes } from '$shared/graph/axes'
   import { CAPS } from '$shared/graph/caps'
   import { COLORS } from '$shared/graph/colors'
+  import { DASHES } from '$shared/graph/labels'
   import EnzymeFigure from './EnzymeFigure.svelte'
   import { ENZYMES, UNKNOWN } from './enzymes'
-  import { DASHES, curveName, drawnOf, readoutOf, shapeOf } from './figure'
+  import { curveName, drawnOf, fittedOf, rangesOf, readoutOf, shapeOf } from './figure'
   import { INHIBITORS, type Inhibitor } from './model'
   import {
-    CURVES, GRAPHS, GRAPH_NAMES, INHIBITOR_NAMES, autoTitles, curveOf, enzymeSettings, type CurveIndex, type Graph,
+    CURVES, GRAPHS, GRAPH_NAMES, INHIBITOR_NAMES, autoTitles, curveOf, enzymeSettings, retitled, type Axes, type CurveIndex, type Graph,
+    type RateUnit,
   } from './settings'
 
   const gen = generatorState(enzymeSettings, 'enzyme-activity')
@@ -31,15 +36,38 @@
   let svg = $state<SVGSVGElement>()
 
   const substrate = $derived(clean.graph === 'substrate')
+  const numbered = $derived(clean.axes === 'numbered')
   const drawn = $derived(drawnOf(clean))
 
-  /** A new graph swaps the axis titles this page wrote for the new graph's, leaving ones the teacher typed. */
-  function chooseGraph(graph: Graph) {
-    const before = autoTitles(s.graph)
-    const after = autoTitles(graph)
-    if (s.xTitle.trim() === before.xTitle) s.xTitle = after.xTitle
-    if (s.yTitle.trim() === before.yTitle) s.yTitle = after.yTitle
-    s.graph = graph
+  /** A change that keeps the axis titles this page wrote in step with it, leaving ones the teacher typed. */
+  function retitle(change: () => void) {
+    const before = gen.snapshot()
+    change()
+    Object.assign(s, retitled(before, s))
+  }
+
+  const chooseGraph = (graph: Graph) => retitle(() => (s.graph = graph))
+
+  /** Numbers come with graph paper; shape only goes back to plain axes. */
+  function chooseAxes(axes: Axes) {
+    if (axes === s.axes) return
+    retitle(() => {
+      s.gridlines = axes === 'numbered'
+      s.axes = axes
+    })
+  }
+
+  // While an axis is fitted, its boxes show the fitted range; typing in one
+  // takes over for that axis.
+  const fitted = $derived(fittedOf(clean))
+  const shown = $derived(rangesOf(clean, fitted))
+  const shownAxes = $derived(readAxes(shown))
+  type RangeKey = 'xFrom' | 'xTo' | 'xStep' | 'yFrom' | 'yTo' | 'yStep'
+  function typeRange(key: RangeKey, v: string) {
+    const f = fitted
+    if (key.startsWith('x') && s.xFit) Object.assign(s, { xFrom: f.xFrom, xTo: f.xTo, xStep: f.xStep, xFit: false })
+    if (key.startsWith('y') && s.yFit) Object.assign(s, { yFrom: f.yFrom, yTo: f.yTo, yStep: f.yStep, yFit: false })
+    s[key] = v
   }
 
   const key = <K extends string>(name: K, i: CurveIndex) => `${name}${i + 1}` as `${K}${1 | 2 | 3}`
@@ -65,7 +93,9 @@
   const markSummary = $derived(marks.filter(Boolean).join(', ').replace(/^./, (c) => c.toUpperCase()) || 'Nothing marked')
   const lineSummary = $derived([clean.color ? 'Color' : 'Black and white', clean.gridlines ? 'gridlines' : 'no gridlines'].join(' · '))
   const axesSummary = $derived(
-    clean.xEndCap === 'none' && clean.yEndCap === 'none' ? 'Plain ends' : `${CAPS[clean.xEndCap]} / ${CAPS[clean.yEndCap]}`.toLowerCase().replace(/^./, (c) => c.toUpperCase()),
+    numbered ? (clean.rateUnit === 'percent' ? 'Numbered, rate in %' : 'Numbered')
+    : clean.xEndCap === 'none' && clean.yEndCap === 'none' ? 'Shape only, plain ends'
+    : `Shape only, ${CAPS[clean.xEndCap]} / ${CAPS[clean.yEndCap]}`.toLowerCase().replace(/^./, (c) => c.toUpperCase()),
   )
   const filename = $derived(
     (clean.titleMode === 'text' && clean.title.trim() ? clean.title.trim() : `enzyme-activity-${clean.graph}`)
@@ -73,10 +103,10 @@
   )
 </script>
 
-{#snippet check(label: string, hint: string, value: boolean, set: (v: boolean) => void)}
+{#snippet check(label: string, value: boolean, set: (v: boolean) => void)}
   <label class="check">
     <input type="checkbox" checked={value} onchange={(e) => set(e.currentTarget.checked)} />
-    <span><strong>{label}</strong>{#if hint}<small>{hint}</small>{/if}</span>
+    <span><strong>{label}</strong></span>
   </label>
 {/snippet}
 
@@ -98,10 +128,11 @@
     <section class="enzymes">
       <div class="head-row">
         <h2 class="card-head">Enzymes</h2>
-        <HelpTip id="enzyme-tip" label="How the curves are drawn">
-          Shape only, with no numbers on the axes. Warming speeds an enzyme up until it starts to denature, just past
-          its optimum; either side of its optimum pH it slows and denatures. Against substrate concentration it follows
-          Michaelis–Menten, levelling off at Vmax, half as fast at Km.
+        <HelpTip id="enzyme-tip" label="Where the data comes from">
+          Human enzymes work best at body temperature, about
+          37 °C; pepsin at about pH 2, salivary amylase and catalase near pH 7, and trypsin at about pH 8. Taq
+          polymerase works best at 75–80 °C (Chien, Edgar and Trela, J. Bacteriol., 1976), in a buffer of about pH
+          8.3. Curve widths are estimated, not measured. Substrate curves follow Michaelis–Menten.
         </HelpTip>
       </div>
       <div class="field">
@@ -152,24 +183,16 @@
               {/if}
             {/if}
             <label class="field">
-              <span>Name <span class="hint">in the key</span></span>
+              <span>Name</span>
               <input type="text" maxlength="40" placeholder={curveName({ ...clean, [key('name', i)]: '' }, i)} bind:value={s[key('name', i)]} />
             </label>
           {/if}
         </div>
       {/each}
-      {#if !drawn.length}<p class="help">No curves: blank axes for students to sketch on.</p>{/if}
-      {#if clean.graph !== 'substrate' && drawn.some((i) => curveOf(clean, i).enzyme === UNKNOWN)}
-        <p class="help">
-          {clean.graph === 'ph'
-            ? 'An unknown enzyme works within this many pH units either side of its optimum.'
-            : 'An unknown enzyme’s rate doubles every width as it warms, then it denatures just past its optimum.'}
-        </p>
-      {/if}
 
       {#if substrate}
         <label class="range-field">
-          <span>Km <span class="hint">how soon the rate levels off</span></span>
+          <span>Km</span>
           <input type="range" min="0.2" max="5" step="0.1" bind:value={s.km} />
         </label>
         {#if inhibited}
@@ -188,13 +211,13 @@
   {#snippet settings()}
     <Section title="Marked" icon={MapPin} summary={markSummary}>
       {#if substrate}
-        {@render check('Vmax', 'a dashed line across at the top rate', s.markVmax, (v) => (s.markVmax = v))}
+        {@render check('Vmax', s.markVmax, (v) => (s.markVmax = v))}
         {#if s.markVmax}
           <div class="field setting">
             <LabelField name="Vmax label" placeholder="Vmax" bind:mode={s.vmaxLabelMode} bind:text={s.vmaxLabel} />
           </div>
         {/if}
-        {@render check('½Vmax and Km', 'a dot at half the top rate, with dashed lines to both axes', s.markKm, (v) => (s.markKm = v))}
+        {@render check('½Vmax and Km', s.markKm, (v) => (s.markKm = v))}
         {#if s.markKm}
           <div class="field setting">
             <span>At the y-axis</span>
@@ -205,15 +228,14 @@
             <LabelField name="Km label" placeholder="Km" bind:mode={s.kmLabelMode} bind:text={s.kmLabel} />
           </div>
         {/if}
-        <p class="help">Vmax and Km are written with their last letters lowered, as textbooks write them.</p>
       {:else}
-        {@render check('Optimum', 'a dot on each peak, with a dashed line down to the x-axis', s.markOpt, (v) => (s.markOpt = v))}
+        {@render check('Optimum', s.markOpt, (v) => (s.markOpt = v))}
         {#if s.markOpt}
           <div class="field setting">
             <LabelField name="Optimum label" placeholder="Optimum" bind:mode={s.optLabelMode} bind:text={s.optLabel} />
           </div>
         {/if}
-        {@render check('Denaturation', clean.graph === 'ph' ? 'a dot where each curve stops, either side' : 'a dot where each curve stops', s.markDen, (v) => (s.markDen = v))}
+        {@render check('Denaturation', s.markDen, (v) => (s.markDen = v))}
         {#if s.markDen}
           <div class="field setting">
             <LabelField name="Denaturation label" placeholder="Denatured" bind:mode={s.denLabelMode} bind:text={s.denLabel} />
@@ -227,28 +249,63 @@
         <button type="button" role="radio" aria-checked={s.color} class:on={s.color} onclick={() => (s.color = true)}>Color</button>
         <button type="button" role="radio" aria-checked={!s.color} class:on={!s.color} onclick={() => (s.color = false)}>Black and white</button>
       </div>
-      <p class="help setting">The curves are solid, dashed and dotted either way, so they read apart printed in black and white.</p>
-      {@render check('Gridlines', '', s.gridlines, (v) => (s.gridlines = v))}
+      {@render check('Gridlines', s.gridlines, (v) => (s.gridlines = v))}
     </Section>
 
     <TitleSettings
       bind:title={s.title} bind:titleMode={s.titleMode} bind:xTitle={s.xTitle} bind:xTitleMode={s.xTitleMode}
       bind:yTitle={s.yTitle} bind:yTitleMode={s.yTitleMode}
-      placeholders={{ title: 'Effect of pH on enzyme activity', ...autoTitles(clean.graph) }}
+      placeholders={{ title: 'Effect of pH on enzyme activity', ...autoTitles(clean) }}
     />
 
     <Section title="Axes" icon={Axis3d} summary={axesSummary}>
-      <div class="ends">
-        <div class="field">
-          <span>x-axis right end</span>
-          <CapPicker options={CAPS} label="x-axis right end" direction="right" bind:value={s.xEndCap} />
-        </div>
-        <div class="field">
-          <span>y-axis top end</span>
-          <CapPicker options={CAPS} label="y-axis top end" direction="up" bind:value={s.yEndCap} />
-        </div>
+      <div class="segmented setting" role="radiogroup" aria-label="Axes">
+        <button type="button" role="radio" aria-checked={!numbered} class:on={!numbered} onclick={() => chooseAxes('shape')}>Shape only</button>
+        <button type="button" role="radio" aria-checked={numbered} class:on={numbered} onclick={() => chooseAxes('numbered')}>Numbered</button>
       </div>
+      {#if numbered}
+        <label class="field">
+          <span>Rate in</span>
+          <select value={s.rateUnit} onchange={(e) => { const v = e.currentTarget.value as RateUnit; retitle(() => (s.rateUnit = v)) }}>
+            <option value="au">Arbitrary units</option>
+            <option value="percent">% of maximum</option>
+          </select>
+        </label>
+      {:else}
+        <div class="ends">
+          <div class="field">
+            <span>x-axis right end</span>
+            <CapPicker options={CAPS} label="x-axis right end" direction="right" bind:value={s.xEndCap} />
+          </div>
+          <div class="field">
+            <span>y-axis top end</span>
+            <CapPicker options={CAPS} label="y-axis top end" direction="up" bind:value={s.yEndCap} />
+          </div>
+        </div>
+      {/if}
     </Section>
+    {#if numbered}
+      <AxisSettings
+        axis="x" read={shownAxes.x} problems={shownAxes.problems}
+        bind:from={() => shown.xFrom, (v) => typeRange('xFrom', v)}
+        bind:to={() => shown.xTo, (v) => typeRange('xTo', v)}
+        bind:step={() => shown.xStep, (v) => typeRange('xStep', v)}
+        bind:every={s.xEvery} bind:labelMode={s.xLabelMode} bind:label={s.xLabel} bind:startCap={s.xStartCap} bind:endCap={s.xEndCap}
+        extras={[clean.xFit ? 'fitted' : '']}
+      >
+        {@render check('Fit to the curves', s.xFit, (v) => (s.xFit = v))}
+      </AxisSettings>
+      <AxisSettings
+        axis="y" read={shownAxes.y} problems={shownAxes.problems}
+        bind:from={() => shown.yFrom, (v) => typeRange('yFrom', v)}
+        bind:to={() => shown.yTo, (v) => typeRange('yTo', v)}
+        bind:step={() => shown.yStep, (v) => typeRange('yStep', v)}
+        bind:every={s.yEvery} bind:labelMode={s.yLabelMode} bind:label={s.yLabel} bind:startCap={s.yStartCap} bind:endCap={s.yEndCap}
+        extras={[clean.yFit ? 'fitted' : '']}
+      >
+        {@render check('Fit to the curves', s.yFit, (v) => (s.yFit = v))}
+      </AxisSettings>
+    {/if}
     {#if s.gridlines}<GridlineSettings bind:minor={s.minor} />{/if}
   {/snippet}
 
@@ -271,7 +328,6 @@
   .curve { display: flex; flex-direction: column; gap: 0.6rem; padding: 0.7rem 0.75rem; border: 1px solid var(--border); border-radius: 10px; }
   .curve.off { padding-block: 0.5rem; }
   .sample { margin-left: auto; flex: none; }
-  .help { margin: 0; font-size: 0.84rem; color: var(--muted); }
   .readout { margin: 0; padding: 0.55rem 0.75rem; list-style: none; border-radius: 10px; background: var(--blue-soft); font-size: 0.85rem; font-weight: 600; }
   .readout li + li { margin-top: 0.2rem; }
   .setting { margin-bottom: 0.75rem; }
@@ -279,7 +335,6 @@
   .check:last-child { margin-bottom: 0; }
   .check input { width: 1.1rem; height: 1.1rem; margin: 0.15rem 0 0; flex: none; accent-color: var(--blue); }
   .check span { display: flex; flex-direction: column; }
-  .check small { color: var(--muted); font-size: 0.82rem; }
   .check.curve-head { align-items: center; margin: 0; }
   .check.curve-head input { margin: 0; }
   .ends { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }

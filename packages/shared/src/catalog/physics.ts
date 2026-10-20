@@ -92,6 +92,21 @@ export const PHYSICS: CatalogEntry[] = [
     ],
   },
   {
+    id: 'motion-map',
+    site: 'physics',
+    name: 'Motion Map Generator',
+    path: '/motion-map',
+    blurb: 'Dots at equal times with velocity arrows, built segment by segment.',
+    description:
+      'Make printable motion maps for physics tests. Build a motion from segments and draw a dot every second with its velocity arrow, ready to pair with its motion graph.',
+    keywords: [
+      'motion map', 'motion maps', 'motion diagram', 'motion diagrams', 'dot diagram', 'oil drop diagram', 'ticker tape',
+      'ticker tape diagram', 'strobe diagram', 'velocity arrows', 'velocity vectors', 'acceleration', 'displacement',
+      'distance', 'constant velocity', 'at rest', 'speeding up', 'slowing down', 'turning around', 'number line',
+      'kinematics', 'segments', 'cart', 'modeling physics', 'mechanics', 'printable',
+    ],
+  },
+  {
     id: 'spring-scale',
     site: 'physics',
     alsoOn: ['chemistry'],
@@ -104,6 +119,23 @@ export const PHYSICS: CatalogEntry[] = [
       'spring scale', 'spring balance', 'newton meter', 'newtonmeter', 'force meter', 'forcemeter', 'force', 'weight',
       'newton', 'newtons', 'grams', 'mass', 'hooke', "hooke's law", 'spring', 'reading', 'measuring', 'measurement',
       'scale', 'zero error', 'zero offset', 'magnifier', 'slotted masses', 'hanging mass', 'mechanics', 'printable',
+    ],
+  },
+  {
+    // Also on Math and Chemistry Figures, as their own copies: see docs/adr/0001-a-generator-on-two-sites.md.
+    id: 'length-reading',
+    site: 'physics',
+    name: 'Length Reading Generator',
+    path: '/length-reading',
+    blurb: 'A ruler, caliper or micrometer at any reading, with close-ups of its scales.',
+    description:
+      'Make printable length measurement figures for physics tests. Pick a ruler, a caliper to 0.1, 0.05 or 0.02 mm, or a micrometer to 0.01 mm or an estimated 0.001 mm, set the reading and any zero error, and students read it.',
+    keywords: [
+      'length', 'measure', 'measuring', 'measurement', 'measuring instruments', 'ruler', 'meter stick', 'metre rule', 'cm', 'mm',
+      'millimetre', 'millimeter', 'inches', 'caliper', 'calliper', 'calipers', 'callipers', 'vernier', 'vernier caliper',
+      'vernier calliper', 'vernier scale', 'slide caliper', 'main scale', 'micrometer', 'micrometer screw gauge', 'screw gauge',
+      'sleeve', 'thimble', 'least count', 'precision', 'zero error', 'diameter', 'thickness', 'wire', 'estimated', 'digit',
+      'practical', 'printable',
     ],
   },
   {
@@ -133,6 +165,21 @@ export const PHYSICS: CatalogEntry[] = [
       'circuit', 'circuits', 'circuit diagram', 'schematic', 'electric', 'electricity', 'series', 'parallel', 'resistor',
       'resistance', 'ohm', "ohm's law", 'battery', 'cell', 'emf', 'bulb', 'lamp', 'switch', 'ammeter', 'voltmeter',
       'current', 'voltage', 'potential difference', 'equivalent resistance', 'symbols', 'iec', 'gcse', 'printable',
+    ],
+  },
+  {
+    id: 'ray-diagram',
+    site: 'physics',
+    name: 'Ray Diagram Generator',
+    path: '/ray-diagram',
+    blurb: 'Lenses and mirrors with their principal rays and image, to scale.',
+    description:
+      'Make printable ray diagrams for physics tests. Pick a lens or mirror, set its focal length and the object, and draw the principal rays and the image, or a blank setup for students.',
+    keywords: [
+      'ray diagram', 'ray diagrams', 'optics', 'light', 'lens', 'lenses', 'converging lens', 'convex lens', 'diverging lens',
+      'concave lens', 'mirror', 'mirrors', 'concave mirror', 'convex mirror', 'plane mirror', 'curved mirror', 'focal point',
+      'focal length', 'principal axis', 'principal rays', 'image', 'real image', 'virtual image', 'magnification',
+      'thin lens equation', 'lens equation', 'mirror equation', 'magnifying glass', 'reflection', 'refraction', 'printable',
     ],
   },
 ]

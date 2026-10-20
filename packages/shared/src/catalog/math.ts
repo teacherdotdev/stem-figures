@@ -275,7 +275,8 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
-    // Also on Chemistry Figures, as its own copy: see docs/adr/0001-a-generator-on-two-sites.md.
+    // Also on Chemistry and Physics Figures, as their own copies, which add a caliper and a micrometer:
+    // see docs/adr/0001-a-generator-on-two-sites.md.
     id: 'length-reading',
     site: 'math',
     name: 'Length Reading Generator',

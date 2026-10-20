@@ -1,11 +1,12 @@
 <script lang="ts">
   // The first card in a generator's settings column: what it makes, in one
-  // sentence, and a button that opens its example figures to start from.
+  // sentence, a button that opens its example figures to start from, and
+  // any other way to start that generator has (STARTS).
   // Physics Figures' layout sets it for every generator (see $shared/generatorLead).
   import { Images } from '@lucide/svelte'
   import { page } from '$app/state'
   import { examplesFor } from '$lib/examples/examples'
-  import { figureName, findGenerator } from '$lib/generators/index'
+  import { STARTS, figureName, findGenerator } from '$lib/generators/index'
   import ExamplesDialog from './ExamplesDialog.svelte'
 
   let { apply }: { apply: (settings: object) => void } = $props()
@@ -14,6 +15,7 @@
   /** The catalog description's first sentence: "Make printable … for physics tests." */
   const summary = $derived(generator?.description.split(/(?<=\.)\s/)[0] ?? '')
   const examples = $derived(generator ? examplesFor(generator.id) : [])
+  const Start = $derived(generator && STARTS[generator.id])
   let open = $state(false)
 </script>
 
@@ -24,6 +26,7 @@
       <Images size={18} aria-hidden="true" />Start from an example
     </button>
   {/if}
+  {#if Start}<Start {apply} />{/if}
 </div>
 
 {#if open && generator}

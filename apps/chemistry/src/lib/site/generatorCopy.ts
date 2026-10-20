@@ -146,18 +146,21 @@ export const COPY: Record<string, GeneratorCopy> = {
   },
 
   'length-reading': {
-    heading: 'Ruler figures for measuring length',
+    heading: 'Ruler, caliper and micrometer figures for measuring length',
     intro: [
-      'Length Reading draws a centimeter or inch ruler with an object lying along it: marbles, a rock, a cube or a metal cylinder. You type the object’s length and where its left end sits, and students measure it from the ruler, either lined up with 0 or starting partway along so they have to read both ends and subtract.',
-      'On a metric ruler, lengths can go one estimated digit past the smallest mark, for significant figures practice, or land on the nearest mark. An inch ruler is read in fractions of an inch. Magnifiers on the object’s ends keep the marks readable in print, and the answer key prints the length, and both ends when the object doesn’t start at 0.',
+      'Length Reading draws the instrument a length is read from: a centimeter or inch ruler with an object lying along it (marbles, a rock, a cube or a metal cylinder), a 150 mm caliper with its jaws open to the reading you type, or a 0–25 mm micrometer. On the ruler, students measure the object lined up with 0 or starting partway along, so they read both ends and subtract.',
+      'Metric ruler lengths can go one estimated digit past the smallest mark, for significant figures practice. The caliper reads to 0.1, 0.05 or 0.02 mm, with exactly one mark on its sliding scale lined up with the main scale, and the micrometer reads to 0.01 mm at its marks, or to an estimated 0.001 mm between them. Give a caliper or micrometer a zero error for a correction question. Close-ups of the scales keep the marks readable in print, and the answer key prints the reading.',
     ],
     settings: [
-      'A metric ruler, 15, 20, 30, 50 or 100 cm long, marked every 1 mm, 0.5 cm or 1 cm (or 5 or 10 cm on the long ones)',
+      'The instrument: a ruler, a caliper or a micrometer',
+      'A metric ruler, 15, 20, 30, 50 or 100 cm long, marked every 1 mm, 0.5 cm or 1 cm (or 5 or 10 cm on the long ones), read to one estimated digit or to the nearest mark',
       'An inch ruler, 6, 8, 12 or 20 in long, marked every 1, 1/2, 1/4, 1/8 or 1/16 in',
-      'Metric lengths read to one estimated digit or to the nearest mark',
-      'The object’s length and left end, typed, picked at random, or set by dragging the object along the ruler',
-      'The object: 1 to 5 marbles in a row, a rock, a cube or a metal cylinder, with dashed lines down from its ends if you like',
-      'Magnifiers on its ends, a chart title, and an answer key line',
+      'The object on the ruler, its length and left end, typed, picked at random, or set by dragging it along the ruler, with dashed lines down from its ends if you like',
+      'The caliper’s least count: 0.1 mm (10 divisions over 9 mm), 0.05 mm (20 over 39 mm) or 0.02 mm (50 over 49 mm), printed on the slider or left off',
+      'The micrometer read to its marks, 0.01 mm, or to one estimated digit past them, 0.001 mm',
+      'The caliper or micrometer reading, typed or picked at random, and a zero error, with the instrument also drawn closed',
+      'In the jaws: nothing, a block, a cylinder, a ball or a wire, drawn to size, with a short label',
+      'Magnifiers or close-ups of the scales, a chart title, and an answer key line',
     ],
     faqs: [
       {
@@ -171,6 +174,18 @@ export const COPY: Record<string, GeneratorCopy> = {
       {
         q: 'What are the dashed lines at the object’s ends for?',
         a: 'A marble or a rock touches the ruler below its widest point, so its ends sit above the marks they line up with. The dashed lines drop from each end down to the ruler to show where to read.',
+      },
+      {
+        q: 'How do you read a caliper?',
+        a: 'Read the main scale at the sliding scale’s zero: the last millimeter mark before it. Then find the one mark on the sliding scale that lines up exactly with a main-scale mark, and add that many least counts. With the zero just past 23 mm and the 9th mark of a 0.05 mm scale lined up, the reading is 23 + 9 × 0.05 = 23.45 mm.',
+      },
+      {
+        q: 'How do you read a micrometer?',
+        a: 'Read the last mark showing on the sleeve: whole millimeters above the datum line, and the half-millimeter mark below it if it has appeared. Then add the thimble mark on the datum line, 0.01 mm each. A sleeve showing 7 mm and thimble mark 38 read 7.38 mm; with the 7.5 mark showing as well, 7.88 mm. When the datum line falls between two thimble marks, estimate how far, in tenths of a mark, for one more digit: 0.4 of the way from mark 38 to mark 39 reads 7.384 mm.',
+      },
+      {
+        q: 'What is a zero error?',
+        a: 'With its jaws closed, a caliper or micrometer should read zero. If it doesn’t, the reading it shows closed is the zero error, positive or negative, and you subtract it from every reading: an instrument that reads +0.10 mm closed and 23.45 mm on a block measures 23.35 mm.',
       },
       {
         q: 'Can I make inch ruler questions with fractions?',
@@ -366,6 +381,47 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'AP Chemistry'],
   },
 
+  'potential-energy-diagram': {
+    heading: 'Potential energy diagrams and reaction energy profiles',
+    intro: [
+      'Potential Energy Diagram draws a reaction energy profile from the energies you type: the reactants, the transition state and the products, or for a mechanism of two or three steps, each transition state and the intermediates between them. Type Eₐ or ΔH instead and the transition state or the products move to match. The curve runs flat at the reactants, rises to each transition state and falls to the products, its peaks exactly at the energies typed. Add a catalysed path, dashed, with a lower transition state and a key naming both, or draw a level diagram: the reactants and products as lines with the ΔH arrow between them.',
+      'Teachers use it for questions on exothermic and endothermic reactions, activation energy, catalysts and enzymes, and reaction mechanisms. The Eₐ, ΔH and reverse Eₐ arrows can each be labeled with the symbol, the value, a letter or number for “which arrow shows…?” questions, or a blank line for students to work it out. The energy axis is numbered with light gridlines, or shape only, and the answer key gives ΔH, each activation energy and, for a mechanism, the rate-determining step.',
+    ],
+    settings: [
+      'Setups: exothermic, endothermic, exothermic with a catalyst, two steps with an intermediate, and with and without an enzyme for biology',
+      'The energy of each level, or Eₐ and ΔH, for one, two or three steps, in kJ/mol, kJ mol⁻¹ or kJ',
+      'A catalysed path with its own transition state, dashed, and the names in its key',
+      'The energy profile, or a level diagram of the reactants and products alone',
+      'Eₐ, catalysed Eₐ, ΔH and reverse Eₐ arrows, each labeled with the symbol, the value, a letter or number, a blank line or nothing, with arrowheads at one end or both, and dashed lines from the levels',
+      'Labels on the reactants, products, transition states and intermediates: the usual word, your own text with subscripts (N_2 + 3H_2), a blank line or nothing',
+      'The colors, the chart and axis titles (or blank lines), a numbered or shape-only energy axis, gridlines, arrow ends and label size',
+    ],
+    faqs: [
+      {
+        q: 'How do you find ΔH and the activation energy from a potential energy diagram?',
+        a: 'ΔH is the products’ energy less the reactants’: products at 20 kJ/mol and reactants at 50 kJ/mol give ΔH = −30 kJ/mol, an exothermic reaction. The activation energy is the transition state’s energy less the reactants’: a transition state at 150 kJ/mol gives Eₐ = 100 kJ/mol. The reverse reaction’s activation energy is measured from the products, 130 kJ/mol here.',
+      },
+      {
+        q: 'How does a catalyst change a potential energy diagram?',
+        a: 'A catalyst gives the reaction a path with a lower transition state, so the peak is lower. The reactants and products stay where they are, so ΔH doesn’t change, and the forward and reverse activation energies drop by the same amount. Tick Catalysed path and type its transition state or its Eₐ; it is drawn dashed, with a key. An enzyme does the same for a biological reaction, which is what the enzyme setup shows.',
+      },
+      {
+        q: 'Can it draw a reaction mechanism with more than one step?',
+        a: 'Yes, up to three steps. Each step has its own transition state, a peak, with an intermediate in the dip between steps, and each step’s Eₐ arrow runs up from the level before it. The answer key gives each step’s Eₐ and names the rate-determining step when the step with the highest Eₐ is also the one whose transition state is highest above the lowest point before it, as it is in most textbook profiles.',
+      },
+      {
+        q: 'Can I hide values for students to work out?',
+        a: 'Yes. Label any arrow with a blank line, a letter or a number instead of its value, and leave the level labels blank too. Values left off the figure aren’t in its description for screen readers either; they’re only in the answer key.',
+      },
+      {
+        q: 'Why is the reaction coordinate not numbered?',
+        a: 'The reaction coordinate shows how far the reaction has gone, from reactants to products, not a time or any quantity with units, so it has no scale. Only the energy axis has numbers, and you can turn those off for a shape-only diagram.',
+      },
+    ],
+    imageAlt: 'A printable potential energy diagram of an exothermic reaction with its Eₐ and ΔH arrows labeled with their values, made with Potential Energy Diagram',
+    educationalLevel: ['High school', 'AP Chemistry', 'IB Chemistry'],
+  },
+
   'particle-diagram': {
     heading: 'Particle diagrams of atoms, ions and molecules',
     intro: [
@@ -461,6 +517,47 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school'],
   },
 
+  'nuclide-notation': {
+    heading: 'Nuclide symbols for isotopes, ions and nuclear particles',
+    intro: [
+      'Nuclide Notation draws an element’s symbol with its mass number at the top left, its atomic number at the bottom left and its charge at the top right, typeset as in a textbook: ²³⁵₉₂U, ³⁷₁₇Cl⁻. Pick any of the 118 elements and set any mass number from its atomic number up to 300, so unusual isotopes are fine, and a charge from −8 to 8, or type the protons, neutrons and electrons and let it work out the numbers. Use your own symbol, such as X, for “identify the element” questions, or pick an alpha, beta, positron, neutron, proton or gamma particle as it is written in decay equations.',
+      'Leave any position as an empty box or a line for students to fill in, or leave it off, as in ¹⁴C. It can also write hyphen notation, carbon-14 or C-14, alone or under the symbol. Copy the picture straight into Google Docs, Slides or Kahoot, where these super- and subscripts are hard to type, and turn on the answer key for the name, the protons, neutrons and electrons, and the value of each blank.',
+    ],
+    settings: [
+      'An element and its mass number and charge, with buttons for its natural isotopes, or the protons, neutrons and electrons',
+      'Your own symbol of up to three characters, with any atomic number, mass number and charge',
+      'An alpha particle (He or α), beta particle (e or β), positron, neutron, proton (p or H) or gamma ray',
+      'The mass number, atomic number, symbol and charge each shown, blank or left off, with blanks as boxes or lines',
+      'Symbol notation, hyphen notation (carbon-14 or C-14), or both',
+      'A sans-serif (Arial) or serif (Times New Roman) font, in small, medium or large text',
+      'A chart title, and an answer key',
+    ],
+    faqs: [
+      {
+        q: 'How do you write nuclide notation?',
+        a: 'Write the element’s symbol with its mass number (protons plus neutrons) at the top left and its atomic number (protons) at the bottom left. An ion’s charge goes at the top right, written 2+ or 3−, with just + or − for a charge of one. Chlorine-37 with one extra electron is ³⁷₁₇Cl⁻: 17 protons, 20 neutrons and 18 electrons.',
+      },
+      {
+        q: 'Can I leave a number blank for students?',
+        a: 'Yes. Under Positions, set the mass number, atomic number, symbol or charge to Blank and it is drawn as an empty box, or as a line if you choose Line. A blank’s value never appears in the figure; it is only in the answer key, if you turn it on.',
+      },
+      {
+        q: 'Can I make an isotope that doesn’t exist?',
+        a: 'Yes. Any mass number from the atomic number up to 300 is drawn. For elements from hydrogen to xenon, and platinum, gold, mercury, lead and uranium, the page notes when a mass number isn’t one of the element’s naturally abundant isotopes, such as carbon-14, which is only a trace, but draws it anyway. A mass number below the atomic number would mean fewer than 0 neutrons, so it isn’t taken.',
+      },
+      {
+        q: 'Does it write nuclear particles for decay equations?',
+        a: 'Yes, one at a time: alpha ⁴₂He or ⁴₂α, beta ⁰₋₁e or ⁰₋₁β, positron ⁰₊₁e, neutron ¹₀n, proton ¹₁p or ¹₁H and gamma ⁰₀γ. Whole equations with arrows and a balance check aren’t drawn yet.',
+      },
+      {
+        q: 'Why use this instead of typing it in Google Docs?',
+        a: 'Docs and Kahoot can’t stack a superscript over a subscript before a symbol, so the numbers end up side by side. This draws them stacked and right-aligned against the symbol in Arial or Times New Roman at the size you pick, and copies as a picture you can paste anywhere.',
+      },
+    ],
+    imageAlt: 'A printable nuclide symbol, carbon-14 with its mass number 14 and atomic number 6, made with Nuclide Notation',
+    educationalLevel: ['Middle school', 'High school'],
+  },
+
   'lewis-structures': {
     heading: 'Lewis dot structures for molecules, ions and single atoms',
     intro: [
@@ -503,6 +600,59 @@ export const COPY: Record<string, GeneratorCopy> = {
     ],
     imageAlt: 'A printable Lewis dot structure of a molecule, with bonds and lone electrons, made with Lewis Structures',
     educationalLevel: ['High school', 'AP Chemistry'],
+  },
+
+  'dot-and-cross': {
+    heading: 'Dot-and-cross diagrams for covalent and ionic bonding',
+    intro: [
+      'Dot-and-Cross Diagram draws the bonding diagrams UK, GCSE and Cambridge IGCSE courses use. Each atom’s shell is a circle with its element symbol in the middle, and each electron is a dot or a cross, depending on which atom it came from. Type a molecule like H2O, CH4, CO2 or ethene and the bonded atoms’ circles overlap, with each shared pair in the overlap, one electron from each atom. Type an ionic compound like NaCl, MgCl2 or Al2O3 and each ion is drawn in square brackets with its charge, the electrons the non-metal gained in the metal’s mark. Type one element, like Na or Cl-, for its atom or ion with every shell.',
+      'Teachers use it for “draw the dot-and-cross diagram” questions and their answers: leave the electrons off so students draw them, leave the charges blank, and print an answer key with each atom’s bonding and lone pairs, or the electrons moved and each ion’s arrangement, like Mg²⁺ 2,8 and Cl⁻ 2,8,8. For a “find the mistake” question, click an electron, symbol or charge in the figure to change it.',
+    ],
+    settings: [
+      'The formula or name: a covalent molecule, a binary ionic compound of Li, Na, K, Rb, Mg, Ca, Sr or Al with N, O, F, S, Cl, Br or I, or one atom or ion from H to Ca',
+      'Outer shells only, or every shell',
+      'An ionic compound with every ion drawn, or one of each with its number in front, as 2[Cl]⁻',
+      'Dots and crosses swapped, and each kind of mark in its own color or all in black',
+      'The electrons drawn or left blank, and each ion’s charge shown, blank or left off',
+      'Electrons, symbols and charges changed by clicking them in the figure',
+      'A chart title and an answer key',
+    ],
+    faqs: [
+      {
+        q: 'Which electrons are dots and which are crosses?',
+        a: 'In a molecule the central atom’s electrons are dots and the outer atoms’ crosses; a third kind of atom, like the O in CH₃OH or the N in HCN, gets open circles. When two atoms of one element bond, as in Cl₂ or N₂, one has dots and the other crosses. In an ionic compound the metal’s electrons are crosses and the non-metal’s dots, so the electrons a non-metal gains are crosses. Swap trades dots and crosses if your class does it the other way round.',
+      },
+      {
+        q: 'How is a metal ion drawn?',
+        a: 'With the full shell it’s left with after losing its outer electrons, as most mark schemes draw it: Na⁺ is a ring of 8 crosses, or 2 and 8 with every shell drawn. A non-metal ion has a full outer shell of its own electrons and the ones it gained. Each ion goes in square brackets with its charge at the top right.',
+      },
+      {
+        q: 'How are compounds like MgCl₂ and Al₂O₃ laid out?',
+        a: 'With up to three ions, every ion is drawn, the single ion in the middle: Cl⁻ Mg²⁺ Cl⁻. Bigger compounds are drawn as one of each ion with its number in front, as 2[Al]³⁺ 3[O]²⁻. You can switch either to the other layout.',
+      },
+      {
+        q: 'Which molecules can it draw?',
+        a: 'Every molecule on the Cambridge IGCSE list, H₂, Cl₂, HCl, H₂O, CH₄, NH₃, O₂, N₂, CO₂, C₂H₄ and CH₃OH, and most others where each atom shares one electron per bond, like HCN, PCl₃, H₂S or BF₃. Molecules with two carbons, like ethane and ethanol, draw too. Molecules that need a dative bond, like CO, SO₂ and O₃, polyatomic ions like NH₄⁺, and atoms with more than eight electrons, like SF₆, aren’t drawn yet; the Request it button asks us to add one.',
+      },
+      {
+        q: 'Why are the H circles smaller in ethane?',
+        a: 'Every circle is the same size wherever that fits, as mark schemes draw them. In ethane, ethanol and a few others, the H atoms on neighboring atoms would overlap each other, so every H circle in that molecule is drawn a little smaller, just enough to keep them apart, with each shared pair still inside its overlap.',
+      },
+      {
+        q: 'Why does it refuse MgCl?',
+        a: 'An ionic compound’s charges must balance. Each ion’s charge comes from its group, so Mg²⁺ needs two Cl⁻ ions. The page says what would balance: MgCl₂.',
+      },
+      {
+        q: 'Can I make a diagram with a mistake for students to find?',
+        a: 'Yes. Click an electron in the figure to make it a dot, a cross, an open circle, an open square or nothing, click an element symbol to leave it blank, or click an ion’s charge to show it, leave a blank box or leave it off. Reset edits puts it back. The answer key still describes the correct diagram, with a line saying the figure was edited by hand. Changing the formula, the layout or the shells clears the edits, but Swap and color keep them.',
+      },
+      {
+        q: 'Can it draw a single atom’s electron arrangement?',
+        a: 'Yes. Type an element from H to Ca, like Na, for its atom with every shell (2, 8, 1), or its ion, like Na+ or Cl-, in brackets with its charge. An anion’s gained electrons are crosses.',
+      },
+    ],
+    imageAlt: 'A printable dot-and-cross diagram of a water molecule, with overlapping shells and the electrons as dots and crosses, made with Dot-and-Cross Diagram',
+    educationalLevel: ['Middle school', 'High school', 'GCSE', 'IGCSE'],
   },
 
   'orbital-diagram': {
@@ -660,6 +810,49 @@ export const COPY: Record<string, GeneratorCopy> = {
     ],
     imageAlt: 'A printable mass spectrum of magnesium with a peak for each isotope and its percent abundance, made with Mass Spectrum',
     educationalLevel: ['High school', 'AP Chemistry'],
+  },
+  'half-life-graph': {
+    heading: 'Half-life graphs of radioactive decay',
+    intro: [
+      'Half-Life Graph draws the decay curve of a radioactive isotope: how much is left against time, halving every half-life, so half remains after one half-life, a quarter after two and an eighth after three. Pick carbon-14, hydrogen-3, fluorine-18, phosphorus-32, cobalt-60, strontium-90, technetium-99m, iodine-131, cesium-137, radon-222, radium-226, polonium-210, uranium-238, potassium-40, plutonium-239, americium-241 or a made-up Isotope X, or type your own name and half-life. Show the percent or fraction remaining, the mass from a starting mass, the number of nuclei or the activity in Bq or counts per minute, against time in the unit you choose.',
+      'Teachers use it for reading a half-life off a graph and working out how much is left. The x-axis counts in round steps, so students find the half-life from the curve; add dashed guide lines at the first one to four half-lives, labeled with their times, as T½, 2T½…, or with blank lines. Put up to three isotopes on one graph with their names hidden, for students to identify from their half-lives, draw a stable daughter rising as the parent falls, or leave only the dots for students to draw the curve. The answer key gives each half-life and decay constant.',
+    ],
+    settings: [
+      'Up to three isotopes: 16 real ones with their half-lives, a made-up Isotope X, or your own name, half-life and unit',
+      'Up the side: percent remaining, fraction remaining, mass, number of nuclei, or activity in Bq or counts per minute, from the starting amount you type',
+      'Time in seconds, minutes, hours, days, years, thousand years or billion years, with the axes fitted to five half-lives in round steps',
+      'Dashed guide lines at the first 1 to 4 half-lives, labeled with their times, T½, 2T½…, blank lines or nothing',
+      'Dots at each half-life, the curves hidden for students to plot, a stable daughter curve, and names hidden as Isotope A, B and C',
+      'Color or black and white curves, chart and axis titles (or blank lines), the axis ranges and numbering, gridlines, and label size',
+    ],
+    faqs: [
+      {
+        q: 'How do you find the half-life from a graph?',
+        a: 'Find half the starting amount on the y-axis (50% on a percent graph), go across to the curve and down to the time axis: that time is the half-life. Going from 50% to 25%, or 25% to 12.5%, takes the same time again. The guide lines draw exactly this, for one to four half-lives.',
+      },
+      {
+        q: 'Why is carbon-14’s half-life 5,730 years and not 5,700?',
+        a: 'Most textbooks and exam boards use 5,730 years, so the generator does too. The current evaluated value, in the National Nuclear Data Center’s NuDat 3, is 5,700 ± 30 years. To use it, choose Custom, name it carbon-14 and type 5700 years.',
+      },
+      {
+        q: 'Where do the half-lives come from?',
+        a: 'From NuDat 3, the National Nuclear Data Center’s database, rounded to three significant figures as textbooks give them: iodine-131 8.02 days, cesium-137 30.1 years, uranium-238 4.47 billion years. Carbon-14 uses the textbook 5,730 years.',
+      },
+      {
+        q: 'Can it show the daughter isotope?',
+        a: 'Yes, for one isotope whose daughter is stable, such as carbon-14 to nitrogen-14 or uranium-238 to lead-206, shown as a percent, fraction or number of nuclei. The daughter rises as the parent falls, and the two cross at one half-life. Strontium-90, radon-222, radium-226 and potassium-40 decay to radioactive daughters, so they don’t get one.',
+      },
+      {
+        q: 'Can I compare isotopes on one graph?',
+        a: 'Yes, up to three, drawn solid, dashed and dotted so they read apart in black and white, with a key under the graph. Hide the names and the key calls them Isotope A, B and C, for students to identify from their half-lives; the answer key names them.',
+      },
+      {
+        q: 'Does the curve ever reach zero?',
+        a: 'No. Each half-life leaves half of what was there, so the curve gets closer and closer to zero without reaching it: after ten half-lives about 0.1% is left.',
+      },
+    ],
+    imageAlt: 'A printable half-life graph of carbon-14, percent remaining against time in years, with dashed guide lines at its first three half-lives, made with Half-Life Graph',
+    educationalLevel: ['Middle school', 'High school', 'AP Chemistry', 'AP Physics'],
   },
 }
 

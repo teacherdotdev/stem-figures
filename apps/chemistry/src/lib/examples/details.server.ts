@@ -9,10 +9,14 @@
 
 import { chargeOf, bohrSettings } from '$lib/generators/bohr-model/settings'
 import { element } from '$lib/generators/bohr-model/elements'
+import { buildFigure as buildDotCross } from '$lib/generators/dot-and-cross/figure'
+import { dotCrossSettings, readOnce as readDotCross } from '$lib/generators/dot-and-cross/settings'
 import { syringeSettings, answerLine as syringeAnswer } from '$lib/generators/gas-syringe/settings'
+import { answerLines as halfLifeAnswer } from '$lib/generators/half-life-graph/figure'
+import { halfLifeSettings } from '$lib/generators/half-life-graph/settings'
 import { buildCurve, degrees, segmentName } from '$lib/generators/heating-cooling-curve/figure'
 import { curveSettings, temperaturesOf, setupOf } from '$lib/generators/heating-cooling-curve/settings'
-import { lengthSettings, answerLine as lengthAnswer } from '$lib/generators/length-reading/settings'
+import { lengthSettings, workingLines as lengthWorking } from '$lib/generators/length-reading/settings'
 import { chargeText } from '$lib/generators/lewis-structures/formula'
 import { electronGroups } from '$lib/generators/lewis-structures/layout'
 import { figureOf, lewisSettings } from '$lib/generators/lewis-structures/settings'
@@ -22,19 +26,23 @@ import { spectrumSettings } from '$lib/generators/line-spectrum/settings'
 import { stripName } from '$lib/generators/line-spectrum/strips'
 import { massSettings, answerLine as massAnswer } from '$lib/generators/mass-reading/settings'
 import { answerLines as massSpectrumAnswer, massSpectrumSettings, workingLine } from '$lib/generators/mass-spectrum/settings'
+import { answerLines as nuclideAnswer } from '$lib/generators/nuclide-notation/figure'
+import { nuclideSettings } from '$lib/generators/nuclide-notation/settings'
 import { answerLines as orbitalAnswer, orbitalSettings } from '$lib/generators/orbital-diagram/settings'
-import { keyLabel } from '$lib/generators/particle-diagram/key'
-import { plainText } from '$lib/generators/particle-diagram/keyText'
-import { afterCount, describeKind, describeParticle } from '$lib/generators/particle-diagram/particles'
 import { boxContents, keyKinds, particleSettings } from '$lib/generators/particle-diagram/settings'
 import { answerLines as pesAnswer, pesSettings } from '$lib/generators/photoelectron-spectrum/settings'
 import { energyText, peaksOf } from '$lib/generators/photoelectron-spectrum/spectrum'
+import { answerLines as energyAnswer } from '$lib/generators/potential-energy-diagram/figure'
+import { energySettings } from '$lib/generators/potential-energy-diagram/settings'
 import { phSettings, answerLine as phAnswer } from '$lib/generators/ph-reading/settings'
 import { temperatureSettings, answerLine as temperatureAnswer } from '$lib/generators/temperature-reading/settings'
 import { buildTitration } from '$lib/generators/titration-curve/figure'
 import { titrationSettings } from '$lib/generators/titration-curve/settings'
 import { displacementSettings, answerLine as displacementAnswer } from '$lib/generators/volume-by-displacement/settings'
 import { volumeSettings, answerLine as volumeAnswer } from '$lib/generators/volume-reading/settings'
+import { keyLabel } from '$shared/particles/key'
+import { plainText } from '$shared/particles/keyText'
+import { afterCount, describeKind, describeParticle } from '$shared/particles/particles'
 import type { Example, ExampleGeneratorId, SettingsById } from './types'
 
 export interface ExampleDetails {
@@ -98,6 +106,13 @@ function lewisAnswer(s: SettingsById['lewis-structures']): ExampleDetails['answe
     )
   }
   return { heading: 'Answer key', lines: out }
+}
+
+function dotCrossAnswerKey(s: SettingsById['dot-and-cross']): ExampleDetails['answer'] {
+  const read = readDotCross(s.formula, s.which)
+  if (!read.ok) throw new Error(`Dot-and-Cross Diagram can't draw ${s.formula}: ${read.message}`)
+  // the correct diagram's, with a line saying so when the figure was edited by hand
+  return { heading: 'Answer key', lines: buildDotCross({ ...s, answerKey: true }).answer }
 }
 
 function bohrAnswer(s: SettingsById['bohr-model']): ExampleDetails['answer'] {
@@ -171,19 +186,23 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'volume-reading': { definition: volumeSettings, answer: (s) => lines(volumeAnswer(s)) },
   'volume-by-displacement': { definition: displacementSettings, answer: (s) => lines(displacementAnswer(s)) },
   'gas-syringe': { definition: syringeSettings, answer: (s) => lines(syringeAnswer(s)) },
-  'length-reading': { definition: lengthSettings, answer: (s) => lines(lengthAnswer(s)) },
+  'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthWorking(s) }) },
   'mass-reading': { definition: massSettings, answer: (s) => lines(massAnswer(s)) },
   'temperature-reading': { definition: temperatureSettings, answer: (s) => lines(temperatureAnswer(s)) },
   'ph-reading': { definition: phSettings, answer: (s) => lines(phAnswer(s)) },
   'titration-curve': { definition: titrationSettings, answer: titrationAnswer },
   'heating-cooling-curve': { definition: curveSettings, answer: curveAnswer },
+  'potential-energy-diagram': { definition: energySettings, answer: (s) => ({ heading: 'Answer key', lines: energyAnswer(s) }) },
   'particle-diagram': { definition: particleSettings, answer: particleAnswer },
   'bohr-model': { definition: bohrSettings, answer: bohrAnswer },
+  'nuclide-notation': { definition: nuclideSettings, answer: (s) => ({ heading: 'Answer key', lines: nuclideAnswer(s) }) },
   'lewis-structures': { definition: lewisSettings, answer: lewisAnswer },
+  'dot-and-cross': { definition: dotCrossSettings, answer: dotCrossAnswerKey },
   'orbital-diagram': { definition: orbitalSettings, answer: (s) => ({ heading: 'Answer key', lines: orbitalAnswer(s) }) },
   'line-spectrum': { definition: spectrumSettings, answer: lineSpectrumAnswer },
   'photoelectron-spectrum': { definition: pesSettings, answer: pesAnswerKey },
   'mass-spectrum': { definition: massSpectrumSettings, answer: massSpectrumAnswerKey },
+  'half-life-graph': { definition: halfLifeSettings, answer: (s) => ({ heading: 'Answer key', lines: halfLifeAnswer(s) }) },
 }
 
 function detailsOf<G extends ExampleGeneratorId>(generator: G, example: Example): ExampleDetails {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
+import { crosses, textWidth } from '$shared/graph/labels'
 import { buildPopulation, numberBox, type Panel } from './figure'
 import { fitAxes, niceRange } from './fit'
 import { MODELS } from './growth'
-import { crosses, textWidth } from './labels'
 import { GRAPH_IDS, populationSettings, type PopulationSettings } from './settings'
 import { SETUPS, settingsFor } from './setups'
 
@@ -31,16 +31,6 @@ const segmentsOf = (d: string) => {
   const pts = [...d.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map((m) => ({ x: Number(m[1]), y: Number(m[2]) }))
   return pts.slice(1).map((b, k) => ({ x1: pts[k].x, y1: pts[k].y, x2: b.x, y2: b.y }))
 }
-
-describe('measuring labels', () => {
-  it('matches bold Arial, as Chromium draws it', () => {
-    // Widths measured in Chromium with Liberation Sans Bold (Arial's metrics), per letter at size 1.
-    expect(textWidth('Inflection point (N = K/2)', 1)).toBeCloseTo(0.443 * 26, 1)
-    expect(textWidth('Fastest growth (N = K/2)', 1)).toBeCloseTo(0.478 * 24, 1)
-    expect(textWidth('Carrying capacity (K)', 1)).toBeCloseTo(0.479 * 21, 1)
-    expect(textWidth('1000', 1)).toBeCloseTo(0.556 * 4, 2)
-  })
-})
 
 describe('round axis ranges', () => {
   it('counts in 1s, 2s, 2.5s (as 25s) and 5s, close to the squares wanted', () => {

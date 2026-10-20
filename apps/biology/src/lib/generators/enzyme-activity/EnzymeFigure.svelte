@@ -2,7 +2,7 @@
   // An enzyme activity graph on the shared graph grid: the dashed lines to
   // the axes, the curves (solid, dashed and dotted, so they read apart in
   // black and white), the marked points and their labels, Vmax, ½Vmax and Km
-  // written at the axes, and a key naming the curves under the graph.
+  // written at shape-only axes, and a key naming the curves under the graph.
   import Grid from '$shared/graph/Grid.svelte'
   import { INK, SANS } from '$shared/graph/grid'
   import { buildEnzyme, type Label } from './figure'
@@ -23,7 +23,7 @@
   {#if l.runs}<text x={l.x} y={l.y} text-anchor={l.anchor}>{#each l.runs as r}<tspan dy={r.dy || undefined} font-size={r.sub ? g.labelFs * 0.7 : undefined}>{r.text}</tspan>{/each}</text>{/if}
 {/snippet}
 
-<Grid layout={g} settings={g.gridSettings} {id} bind:svg {label}>
+<Grid layout={g} settings={g.gridSettings} {id} bind:svg {label} gridlines={g.gridlines}>
   <!-- White under the dashes, so a line along a gridline still reads as dashed. -->
   <g stroke="#fff" stroke-width="4">
     {#each [...g.lines, ...g.guides] as l}<line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />{/each}

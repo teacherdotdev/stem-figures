@@ -19,7 +19,8 @@
 // static/ (e.g. static/examples/volume-reading/buret-reading-12-35-ml.png),
 // and its size goes in src/lib/examples/sizes.json for the pages' <img> tags.
 // A generator's first example is also drawn centered on a 1200×630 card,
-// saved as static/og/<generator>.png.
+// saved as static/og/<generator>.png, unless CARD_COLUMNS gives it a card of
+// several figures side by side.
 //
 // It uses the Chromium Playwright has installed (`npx playwright install chromium`).
 
@@ -44,6 +45,17 @@ const sizesFile = path.join(app, 'src/lib/examples/sizes.json')
 const LONGEST = 1600
 /** The social card, and the white space kept around the figure on it. */
 const CARD = { width: 1200, height: 630, padX: 80, padY: 50 }
+
+/** Social cards drawn as columns, one figure each, instead of the generator's
+ *  first example, by site and generator: each column's settings, as the
+ *  query of the generator's address. Length Reading shows its three
+ *  instruments (Math's copy has only the ruler, so it keeps its example). */
+const CARD_COLUMNS = {
+  physics: { 'length-reading': ['view=whole', 'instrument=caliper&closeUp=whole', 'instrument=micrometer&closeUp=whole'] },
+  chemistry: { 'length-reading': ['view=whole', 'instrument=caliper&closeUp=whole', 'instrument=micrometer&closeUp=whole'] },
+}[appName] ?? {}
+/** The white space around and between a columned card's figures. */
+const COLUMNS = { padX: 40, padY: 50, gap: 30 }
 
 // The example pages and their pictures, from the sitemap: each <url> whose
 // address has /examples/ in it, and its one <image:loc>.
@@ -84,82 +96,103 @@ async function open(page, address, waitUntil = 'load') {
   }
 }
 
+/** Open a generator and catch the exact SVG its Download SVG button exports,
+ *  as text less anything marked data-no-export, with its size. Clicked until
+ *  the page has hydrated and the button works, and the page opened again if
+ *  a dev server reloads it meanwhile. */
+async function figureAt(page, address) {
+  for (let tries = 1; ; tries++) {
+    await open(page, address, 'networkidle')
+    await page.evaluate(() => document.fonts.ready)
+    await page.evaluate(() => {
+      const serialize = XMLSerializer.prototype.serializeToString
+      XMLSerializer.prototype.serializeToString = function (node) {
+        if (node instanceof SVGSVGElement) window.__figure ??= node
+        return serialize.call(this, node)
+      }
+    })
+    const caught = async () => page.evaluate(() => !!window.__figure).catch(() => false)
+    for (let i = 0; i < 20 && !(await caught()); i++) {
+      await page.getByRole('button', { name: 'Download SVG' }).click({ timeout: 5000 }).catch(() => {})
+      await page.waitForTimeout(250)
+    }
+    if (await caught()) break
+    if (tries >= 3) throw new Error(`${address} never exported its figure`)
+  }
+  // As exporting.ts does: the SVG as text, less anything marked data-no-export.
+  return page.evaluate(() => {
+    const svg = window.__figure
+    const copy = svg.cloneNode(true)
+    for (const el of copy.querySelectorAll('[data-no-export]')) el.remove()
+    return { svg: new XMLSerializer().serializeToString(copy), w: svg.viewBox.baseVal.width, h: svg.viewBox.baseVal.height }
+  })
+}
+
+/** A PNG (as a data: URL) of figures drawn on white, each at [x, y, width, height]. */
+const drawOn = (page, width, height, placed) =>
+  page.evaluate(
+    async ({ width, height, placed }) => {
+      const canvas = document.createElement('canvas')
+      canvas.width = width
+      canvas.height = height
+      const ctx = canvas.getContext('2d')
+      ctx.fillStyle = '#fff'
+      ctx.fillRect(0, 0, width, height)
+      for (const { svg, at } of placed) {
+        const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }))
+        const img = new Image()
+        img.src = url
+        await img.decode()
+        ctx.drawImage(img, ...at)
+        URL.revokeObjectURL(url)
+      }
+      return canvas.toDataURL('image/png')
+    },
+    { width, height, placed },
+  )
+
+/** A figure fitted into a box and centered in it, as [x, y, width, height]. */
+function fitted({ w, h }, x, y, boxW, boxH) {
+  const fit = Math.min(boxW / w, boxH / h)
+  return [x + (boxW - w * fit) / 2, y + (boxH - h * fit) / 2, w * fit, h * fit]
+}
+
+async function saveCard(generator, dataUrl) {
+  await save(`/og/${generator}.png`, dataUrl)
+  console.log(`/og/${generator}.png  ${CARD.width}×${CARD.height}`)
+}
+
 const browser = await chromium.launch()
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } })
   for (const example of chosen) {
     await open(page, example.page)
     const edit = await page.getByRole('link', { name: 'Edit this figure' }).getAttribute('href')
+    // The generator, with the example's settings.
+    const figure = await figureAt(page, edit)
 
-    // The generator, with the example's settings. Its Download SVG button
-    // serializes the exact element it exports; catch that element. Clicked
-    // until the page has hydrated and the button works, and the page opened
-    // again if a dev server reloads it meanwhile.
-    for (let tries = 1; ; tries++) {
-      await open(page, edit, 'networkidle')
-      await page.evaluate(() => document.fonts.ready)
-      await page.evaluate(() => {
-        const serialize = XMLSerializer.prototype.serializeToString
-        XMLSerializer.prototype.serializeToString = function (node) {
-          if (node instanceof SVGSVGElement) window.__figure ??= node
-          return serialize.call(this, node)
-        }
-      })
-      const caught = async () => page.evaluate(() => !!window.__figure).catch(() => false)
-      for (let i = 0; i < 20 && !(await caught()); i++) {
-        await page.getByRole('button', { name: 'Download SVG' }).click({ timeout: 5000 }).catch(() => {})
-        await page.waitForTimeout(250)
-      }
-      if (await caught()) break
-      if (tries >= 3) throw new Error(`${edit} never exported its figure`)
+    const scale = LONGEST / Math.max(figure.w, figure.h)
+    const width = Math.round(figure.w * scale)
+    const height = Math.round(figure.h * scale)
+    await save(example.image, await drawOn(page, width, height, [{ svg: figure.svg, at: [0, 0, width, height] }]))
+    sizes[example.image] = [width, height]
+    console.log(`${example.image}  ${width}×${height}`)
+
+    if (!firsts.has(example)) continue
+    const columns = CARD_COLUMNS[example.generator]
+    if (!columns) {
+      const at = fitted(figure, CARD.padX, CARD.padY, CARD.width - 2 * CARD.padX, CARD.height - 2 * CARD.padY)
+      await saveCard(example.generator, await drawOn(page, CARD.width, CARD.height, [{ svg: figure.svg, at }]))
+      continue
     }
-
-    const drawn = await page.evaluate(
-      async ({ longest, card, og }) => {
-        const svg = window.__figure
-        const w = svg.viewBox.baseVal.width
-        const h = svg.viewBox.baseVal.height
-        // As exporting.ts does: the SVG as text, less anything marked
-        // data-no-export, drawn on white.
-        const copy = svg.cloneNode(true)
-        for (const el of copy.querySelectorAll('[data-no-export]')) el.remove()
-        const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(copy)], { type: 'image/svg+xml' }))
-        const img = new Image()
-        img.src = url
-        await img.decode()
-        const draw = (width, height, x, y, dw, dh) => {
-          const canvas = document.createElement('canvas')
-          canvas.width = width
-          canvas.height = height
-          const ctx = canvas.getContext('2d')
-          ctx.fillStyle = '#fff'
-          ctx.fillRect(0, 0, width, height)
-          ctx.drawImage(img, x, y, dw, dh)
-          return canvas.toDataURL('image/png')
-        }
-        const scale = longest / Math.max(w, h)
-        const width = Math.round(w * scale)
-        const height = Math.round(h * scale)
-        const picture = draw(width, height, 0, 0, width, height)
-        let social = null
-        if (og) {
-          const fit = Math.min((card.width - 2 * card.padX) / w, (card.height - 2 * card.padY) / h)
-          const [dw, dh] = [w * fit, h * fit]
-          social = draw(card.width, card.height, (card.width - dw) / 2, (card.height - dh) / 2, dw, dh)
-        }
-        URL.revokeObjectURL(url)
-        return { picture, width, height, social }
-      },
-      { longest: LONGEST, card: CARD, og: firsts.has(example) },
-    )
-
-    await save(example.image, drawn.picture)
-    sizes[example.image] = [drawn.width, drawn.height]
-    console.log(`${example.image}  ${drawn.width}×${drawn.height}`)
-    if (drawn.social) {
-      await save(`/og/${example.generator}.png`, drawn.social)
-      console.log(`/og/${example.generator}.png  ${CARD.width}×${CARD.height}`)
-    }
+    const figures = []
+    for (const query of columns) figures.push(await figureAt(page, `/${example.generator}?${query}`))
+    const colW = (CARD.width - 2 * COLUMNS.padX - (columns.length - 1) * COLUMNS.gap) / columns.length
+    const placed = figures.map((f, i) => ({
+      svg: f.svg,
+      at: fitted(f, COLUMNS.padX + i * (colW + COLUMNS.gap), COLUMNS.padY, colW, CARD.height - 2 * COLUMNS.padY),
+    }))
+    await saveCard(example.generator, await drawOn(page, CARD.width, CARD.height, placed))
   }
 } finally {
   await browser.close()

@@ -296,6 +296,50 @@ export const COPY: Record<string, GeneratorCopy> = {
     imageAlt: 'A printable position–time graph of a cart that speeds up, moves at a constant velocity, slows down and stops, with its segment ends lettered A to E, made with the Motion Graph Generator',
     educationalLevel: ['Middle school', 'High school', 'AP Physics'],
   },
+  'motion-map': {
+    heading: 'Motion maps with velocity arrows, built segment by segment',
+    intro: [
+      'The Motion Map Generator draws an object moving along a line as a dot at equal times, 0.5 s, 1 s or 2 s apart, along a number line in meters, with a velocity arrow above each dot. You build the motion from up to six segments, at rest, moving at a constant velocity forward or back, speeding up or slowing down, the same way as on the Motion Graph Generator, so the dots are exactly where the object is at each moment: evenly spaced at a constant velocity, spreading out as it speeds up and closing up as it slows down.',
+      'When the motion turns back, the way back is drawn above the way there, so no dots sit on top of each other, and a stop is one dot labeled with the times it’s there. A button opens the same motion on the Motion Graph Generator, and back, so a worksheet can pair a motion map with its graphs, with the same letters at the segment ends on both.',
+    ],
+    settings: [
+      'Up to six segments, each at rest, constant velocity forward or back, speeding up or slowing down, at a speed and for a time you type, and where the motion starts',
+      'A dot every 0.5 s, 1 s or 2 s',
+      'Times, a letter on every dot, or the motion graph’s letters at the segment ends, under the dots',
+      'Velocity arrows on one scale, an acceleration arrow (or a = 0) above each segment, or dots only for students to add the arrows',
+      'The total displacement as an arrow under the number line, with its label written, a blank line, or left off',
+      'Numbers on the number line or just the shape, and a mark at the origin',
+      'A label for the object, a chart title, an answer key, label size, and color for slides',
+    ],
+    faqs: [
+      {
+        q: 'How are the dots placed?',
+        a: 'Each dot is where the object is at that moment, worked out from the segments exactly as the Motion Graph Generator works out its position–time graph. At a constant velocity the dots are evenly spaced; speeding up or slowing down steadily, the spacing grows or shrinks by the same amount from one gap to the next.',
+      },
+      {
+        q: 'How long are the velocity arrows?',
+        a: 'Every arrow is on the same scale, so equal speeds draw equal arrows and twice the speed draws twice the length. The fastest arrow is about 0.8 of the widest gap between dots, or shorter if that would take an arrow up to the next dot, as happens just before the object stops. Velocity and acceleration arrows are dashed, as on every Physics Figures generator, so they’re never read as forces.',
+      },
+      {
+        q: 'What happens when the object stops or turns back?',
+        a: 'While it’s at rest, its dots all sit at one spot, so they’re drawn as one dot with no arrow, labeled with the times it’s there, such as 12–15 s. Each time it turns back, the dots carry on above the ones before, so the way there and the way back don’t overlap.',
+      },
+      {
+        q: 'Can I make a motion map and a motion graph of the same motion?',
+        a: 'Yes. See it as a motion graph opens the Motion Graph Generator with the same segments and starting position, and See it as a motion map comes back. To turn a graph you already made into a motion map, copy its link with Share link and paste it into Start from a motion graph, at the top of the settings. With letters at the segment ends on both, the letters match: the cart does the same thing between B and C on the map and on the graph.',
+      },
+      {
+        q: 'What if a segment doesn’t last a whole number of dots?',
+        a: 'Any duration works: the dots are still exactly where the object is at each moment. A segment end that falls between two dots has no dot to mark it, so the settings panel says so, and its letter is left off the map.',
+      },
+      {
+        q: 'Can students draw the arrows themselves?',
+        a: 'Yes. Turn on Dots only to leave just the dots on the number line, for questions like “draw the velocity arrows” or “describe the motion”. The answer key lists what each segment does, the total displacement and the distance traveled.',
+      },
+    ],
+    imageAlt: 'A printable motion map of a cart that speeds up, moves at a constant velocity, slows down and stops, as dots one second apart along a number line in meters with dashed velocity arrows, made with the Motion Map Generator',
+    educationalLevel: ['Middle school', 'High school', 'AP Physics'],
+  },
 
   'spring-scale': {
     heading: 'Spring scale (newton meter) figures for reading force',
@@ -336,6 +380,49 @@ export const COPY: Record<string, GeneratorCopy> = {
     ],
     imageAlt: 'A printable 10 N spring scale figure with a block on its hook and a magnified view of the pointer, made with the Spring Scale Generator',
     educationalLevel: ['Middle school', 'High school'],
+  },
+
+  'length-reading': {
+    heading: 'Ruler, caliper and micrometer figures for measuring length',
+    intro: [
+      'The Length Reading Generator draws the instrument a length is read from: a centimeter or inch ruler with an object lying along it, a 150 mm caliper with its jaws open to the reading you type, or a 0–25 mm micrometer. Close-ups of the scales keep every mark readable in print.',
+      'The caliper reads to 0.1, 0.05 or 0.02 mm, and exactly one mark on its sliding scale lines up with the main scale. The micrometer reads to 0.01 mm at its marks, or to an estimated 0.001 mm between them, with its thimble’s marks bunching toward its edges as on a real one. Hold a block, cylinder, ball or wire in the jaws, give the instrument a zero error for a correction question, and turn on the answer key to print the reading.',
+    ],
+    settings: [
+      'The instrument: a ruler, a caliper or a micrometer',
+      'A metric ruler, 15 to 100 cm long, or an inch ruler, 6 to 20 in long, how finely it is marked, and lengths read to one estimated digit or to the nearest mark',
+      'The object on the ruler, its length and where its left end sits, with magnifiers on its ends',
+      'The caliper’s least count: 0.1 mm (10 divisions over 9 mm), 0.05 mm (20 over 39 mm) or 0.02 mm (50 over 49 mm), printed on the slider or left off',
+      'The micrometer read to its marks, 0.01 mm, or to one estimated digit past them, 0.001 mm',
+      'The caliper or micrometer reading, typed or picked at random, and a zero error, with the instrument also drawn closed',
+      'In the jaws: nothing, a block, a cylinder, a ball or a wire, drawn to size, with a short label',
+      'The instrument with its close-up, the close-up alone, or the instrument alone',
+      'A chart title, and an answer key line with the reading and any correction',
+    ],
+    faqs: [
+      {
+        q: 'How do you read a caliper?',
+        a: 'Read the main scale at the sliding scale’s zero: the last millimeter mark before it. Then find the one mark on the sliding scale that lines up exactly with a main-scale mark, and add that many least counts. With the zero just past 23 mm and the 9th mark of a 0.05 mm scale lined up, the reading is 23 + 9 × 0.05 = 23.45 mm.',
+      },
+      {
+        q: 'What is the least count of a caliper?',
+        a: 'The smallest length it can read: one main-scale division less one division of the sliding scale. Ten divisions over 9 mm are 0.9 mm each, so the least count is 1 − 0.9 = 0.1 mm. Twenty over 39 mm (1.95 mm each, against 2 mm on the main scale) give 0.05 mm, and fifty over 49 mm give 0.02 mm.',
+      },
+      {
+        q: 'How do you read a micrometer?',
+        a: 'Read the last mark showing on the sleeve: whole millimeters above the datum line, and the half-millimeter mark below it if it has appeared. Then add the thimble mark on the datum line, 0.01 mm each. A sleeve showing 7 mm and thimble mark 38 read 7.38 mm; with the 7.5 mark showing as well, 7.88 mm. When the datum line falls between two thimble marks, estimate how far, in tenths of a mark, for one more digit: 0.4 of the way from mark 38 to mark 39 reads 7.384 mm.',
+      },
+      {
+        q: 'What is a zero error?',
+        a: 'With its jaws closed, a caliper or micrometer should read zero. If it doesn’t, the reading it shows closed is the zero error, positive or negative, and you subtract it from every reading: an instrument that reads +0.10 mm closed and 23.45 mm on a block measures 23.35 mm. Turn on Also show it closed to draw the closed instrument above the measuring one.',
+      },
+      {
+        q: 'How do you measure with a ruler to the right number of significant figures?',
+        a: 'Read to the smallest mark, then estimate one more digit. On a ruler marked in millimeters, that means reading to 0.01 cm, like 4.37 cm. On a ruler marked only every centimeter, read to 0.1 cm.',
+      },
+    ],
+    imageAlt: 'A printable caliper holding a block, with close-ups of its main scale and 0.05 mm sliding scale, made with the Length Reading Generator',
+    educationalLevel: ['Middle school', 'High school', 'GCSE', 'IGCSE', 'IB Physics'],
   },
 
   'waves': {
@@ -416,6 +503,52 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
     ],
     imageAlt: 'A printable circuit diagram of a 12 V battery with three resistors in series, R₁, R₂ and R₃, made with the Circuit Diagram Generator',
+    educationalLevel: ['Middle school', 'High school', 'AP Physics'],
+  },
+
+  'ray-diagram': {
+    heading: 'Ray diagrams for lenses and mirrors, drawn to scale',
+    intro: [
+      'The Ray Diagram Generator draws a converging or diverging lens, or a concave, convex or plane mirror, on its principal axis with its focal points marked, an arrow for the object, the principal rays from the object’s tip, and the image where they meet. You type the focal length, the object’s distance and its height in cm, or put the object beyond 2F, at 2F, between F and 2F, at F or inside F with one click. The figure is drawn to scale, and the image is exactly where the thin lens and mirror equation, 1/f = 1/dₒ + 1/dᵢ, puts it.',
+      'Real images are drawn solid. For a virtual image, the rays’ dashed extensions run back to it, and the image itself is dashed. Show the setup alone, for students to draw the rays, the rays without the image, or everything. Label F, F′, 2F and 2F′ (or F and C on a mirror), the object and the image, add dimension arrows for the distances and heights, and a numbered cm scale for measuring.',
+    ],
+    settings: [
+      'A converging or diverging lens, drawn as a lens shape or the line symbol, or a concave, convex or plane mirror, hatched on its back',
+      'The focal length, the object’s distance and its height in cm, with quick places beyond 2F, at 2F, between F and 2F, at F and inside F',
+      'The object arrow pointing up or down',
+      'Each principal ray on or off: parallel, through the center or through C, through F, and to a mirror’s vertex',
+      'The setup alone, the rays too, or the rays and the image',
+      'Labels for F, F′, 2F, 2F′ or C, the object and the image, written, blank for students, or left off',
+      'Arrows marking the object and image distances, the focal length and the object and image heights, and a numbered cm scale under the figure',
+      'A chart title, an answer key line, label size, and color for slides',
+    ],
+    faqs: [
+      {
+        q: 'What are the three principal rays for a lens?',
+        a: 'A ray parallel to the principal axis bends through the focal point on the far side, F′ (a diverging lens spreads it out as if it came from F, on the object’s side). A ray through the center of the lens goes straight on. A ray through F on the object’s side leaves parallel to the axis (for a diverging lens, a ray heading for F′). Where the rays meet, or where their dashed extensions meet, is the tip of the image.',
+      },
+      {
+        q: 'Which sign convention does the answer key use?',
+        a: 'Real is positive, as AP and most US textbooks use: an image distance is negative for a virtual image, and a focal length is negative for a diverging lens or a convex mirror. The answer key also says the image is real or virtual, upright or inverted, magnified or diminished, and which side it is on, so it reads right in any convention.',
+      },
+      {
+        q: 'Why do the rays bend at a line through the middle of the lens, and reflect at a straight line on a curved mirror?',
+        a: 'That is the thin-lens convention textbooks draw. A real lens bends light at both of its faces, and a curved mirror reflects off its curve, but drawing the bend at the line through the lens’s middle, or the mirror’s vertex, makes the rays meet exactly where the lens and mirror equation puts the image. The mirror is still drawn as a shallow arc so it looks like a curved mirror.',
+      },
+      {
+        q: 'What happens when the object is at the focal point?',
+        a: 'The rays leave the lens or mirror parallel to each other, so they never meet and no image is drawn. The answer key says “No image (at infinity)”. Just outside F, the image is very far away and very large: past six focal lengths the figure stops widening, the rays run off its edge, and the answer key still gives the image distance.',
+      },
+      {
+        q: 'How do I make a blank ray diagram for students?',
+        a: 'Set Show to Setup. The figure has the lens or mirror, the principal axis, the focal points and the object, laid out exactly as the completed one, so you can print both. Turn on the numbered cm scale so students can measure the image distance, and leave the image label as a blank line.',
+      },
+      {
+        q: 'Can I draw refraction at a flat surface, or Snell’s law?',
+        a: 'Not on this generator. Reflection and refraction at a boundary, with angles, materials and total internal reflection, is planned as its own generator.',
+      },
+    ],
+    imageAlt: 'A printable ray diagram of a converging lens with the object beyond 2F, three principal rays and the real, inverted, smaller image, made with the Ray Diagram Generator',
     educationalLevel: ['Middle school', 'High school', 'AP Physics'],
   },
 }

@@ -4,17 +4,21 @@
 import { CATALOG, type CatalogEntry } from '$shared/catalog/index'
 import { SITE_ID } from '$lib/site/config'
 import { bohrLinking } from '$lib/generators/bohr-model/linking'
+import { dotCrossLinking } from '$lib/generators/dot-and-cross/linking'
 import { syringeLinking } from '$lib/generators/gas-syringe/linking'
+import { halfLifeLinking } from '$lib/generators/half-life-graph/linking'
 import { curveLinking } from '$lib/generators/heating-cooling-curve/linking'
 import { lengthLinking } from '$lib/generators/length-reading/linking'
 import { lewisLinking } from '$lib/generators/lewis-structures/linking'
 import { spectrumLinking } from '$lib/generators/line-spectrum/linking'
 import { massLinking } from '$lib/generators/mass-reading/linking'
 import { massSpectrumLinking } from '$lib/generators/mass-spectrum/linking'
+import { nuclideLinking } from '$lib/generators/nuclide-notation/linking'
 import { orbitalLinking } from '$lib/generators/orbital-diagram/linking'
 import { particleLinking } from '$lib/generators/particle-diagram/linking'
 import { phLinking } from '$lib/generators/ph-reading/linking'
 import { pesLinking } from '$lib/generators/photoelectron-spectrum/linking'
+import { energyLinking } from '$lib/generators/potential-energy-diagram/linking'
 import { temperatureLinking } from '$lib/generators/temperature-reading/linking'
 import { titrationLinking } from '$lib/generators/titration-curve/linking'
 import { displacementLinking } from '$lib/generators/volume-by-displacement/linking'
@@ -32,13 +36,17 @@ const BY_ID: Record<string, GeneratorLinking> = Object.fromEntries(
     phLinking,
     titrationLinking,
     curveLinking,
+    energyLinking,
     particleLinking,
     bohrLinking,
+    nuclideLinking,
     lewisLinking,
+    dotCrossLinking,
     orbitalLinking,
     spectrumLinking,
     pesLinking,
     massSpectrumLinking,
+    halfLifeLinking,
   ].map((l) => [l.id, l as GeneratorLinking]),
 )
 

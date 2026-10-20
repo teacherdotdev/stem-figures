@@ -381,6 +381,62 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('motion-map', [
+    {
+      slug: 'motion-map-cart-speeding-up-constant-velocity-slowing-down-stopping',
+      title: 'Motion map of a cart that speeds up, moves at a constant velocity, slows down and stops',
+      alt: 'A motion map with a dot every second from t = 0 s to 11 s along a number line from 0 to 35 m, the dots spreading out, then evenly spaced, then closing up, and one last dot labeled 12–15 s, each moving dot with a dashed velocity arrow',
+      caption:
+        'A cart speeds up from rest for 4 s, moves at a constant 4 m/s for 4 s, slows down to a stop over 4 s and stays at rest for 3 s, drawn as a dot every second along a number line in meters. The dots spread out, are evenly spaced, then close up, and the stop is one dot labeled 12–15 s. Each moving dot has a dashed velocity arrow above it, on one scale, so the arrows grow and shrink with the speed.',
+      settings: { labels: 'times' },
+    },
+    {
+      slug: 'motion-map-constant-velocity',
+      title: 'Motion map at a constant velocity',
+      alt: 'A motion map of seven evenly spaced dots, 3 m apart from 0 to 18 m, labeled t = 0 s to 6 s, each with an equal dashed velocity arrow, and a = 0 written above them',
+      caption:
+        'An object moving at a constant 3 m/s for 6 s, as a dot every second along a number line from 0 to 18 m. The dots are evenly spaced, 3 m apart, and every velocity arrow is the same length. Above the dots, a = 0: the velocity doesn’t change.',
+      settings: { segments: [segment('forward', 3, 6)], labels: 'times', acceleration: true },
+    },
+    {
+      slug: 'motion-map-speeding-up-from-rest',
+      title: 'Motion map of an object speeding up from rest',
+      alt: 'A motion map of seven dots lettered A to G, the gaps between them growing from left to right, with dashed velocity arrows getting longer and an acceleration arrow labeled a pointing right above them',
+      caption:
+        'An object speeding up steadily from rest to 6 m/s over 6 s, as a dot every second, lettered A to G. Each gap is 1 m longer than the one before, and the velocity arrows get longer from dot to dot; the first dot, at rest, has none. The acceleration arrow above the dots points the way it moves.',
+      settings: { segments: [segment('faster', 6, 6)], labels: 'letters', acceleration: true },
+    },
+    {
+      slug: 'motion-map-slowing-down-to-a-stop',
+      title: 'Motion map of an object slowing down to a stop',
+      alt: 'A motion map of dots closing up from left to right, labeled t = 0 s to 4 s, then one dot labeled 5–7 s, with dashed velocity arrows getting shorter, and the total displacement Δx drawn under the number line',
+      caption:
+        'An object moving at 6 m/s for 1 s, then slowing down steadily to a stop over 4 s and staying at rest for 2 s, as a dot every second. The gaps shrink by 1.5 m each second and the velocity arrows get shorter, until the dots meet at one spot, labeled 5–7 s, with no arrow. An arrow under the number line shows the total displacement, Δx.',
+      settings: { segments: [segment('forward', 6, 1), segment('slower', 0, 4), segment('rest', 0, 2)], labels: 'times', displacement: true },
+    },
+    {
+      slug: 'motion-map-there-and-back-lettered-to-match-motion-graph',
+      title: 'Motion map of a cart going out and back, lettered to match its motion graph',
+      alt: 'A motion map of a cart drawn on two lines: on the lower one it speeds up, moves steadily and slows to a stop at D, lettered A to D at the segment ends; on the line above it speeds up back toward the start and slows to a stop at F, with acceleration arrows above each segment',
+      caption:
+        'A cart speeds up forward from A to B, moves at 4 m/s from B to C and slows to a stop at D; then it speeds up backward from D to E and slows to a stop again at F. The way back is drawn above the way there, so no dots overlap. The letters at the segment ends are the same as on the matching Motion Graph example, and an acceleration arrow, or a = 0, sits above each segment.',
+      settings: {
+        labels: 'ends',
+        acceleration: true,
+        object: text('cart'),
+        segments: [segment('faster', 4, 2), segment('forward', 4, 3), segment('slower', 0, 2), segment('faster', 4, 2, 'back'), segment('slower', 0, 2)],
+      },
+    },
+    {
+      slug: 'motion-map-dots-only-draw-the-velocity-arrows',
+      title: 'Dots-only motion map: draw the velocity arrows',
+      alt: 'A motion map with dots only, no arrows, lettered A to I along a number line from 0 to 22 m: evenly spaced at first, then spreading out, then closing up to a stop',
+      caption:
+        'A motion map with no arrows, for students to draw the velocity arrow at each dot. The object moves at 2 m/s for 3 s, speeds up to 5 m/s over 3 s, then slows to a stop over 2 s, a dot every second, lettered A to I. The answer key lists what it does in each segment.',
+      settings: { dotsOnly: true, labels: 'letters', segments: [segment('forward', 2, 3), segment('faster', 5, 3), segment('slower', 0, 2)] },
+    },
+  ]),
+
   ...examplesOf('spring-scale', [
     {
       slug: 'spring-scale-reading-6-25-n',
@@ -421,6 +477,89 @@ export const EXAMPLES: Example[] = [
       caption:
         'A 50 N spring scale drawn in black and white, printed in newtons left of the slot and grams right of it: 0 to 50 N, numbered every 5 N and marked every 0.5 N, and 0 to 5000 g. A block hangs from its hook and the pointer sits on the 27.5 N mark, level with 2750 g, shown in the magnifier beside it.',
       settings: { capacity: '50', units: 'both', force: 27.5, color: false },
+    },
+  ]),
+
+  ...examplesOf('length-reading', [
+    {
+      slug: 'caliper-reading-23-45-mm',
+      title: 'Caliper reading 23.45 mm',
+      alt: 'A caliper holding a block, reading 23.45 mm on its 0.05 mm sliding scale, with a close-up strip of its scales',
+      caption:
+        'A 150 mm caliper with a block held between its outside jaws. The close-up strip below it shows the sliding scale’s zero just past 23 mm on the main scale, and its 9th mark, between the 4 and the 5, lined up with a main-scale mark: 23 + 9 × 0.05 = 23.45 mm. The least count, 0.05 mm, is printed on the slider.',
+      settings: { instrument: 'caliper' },
+    },
+    {
+      slug: 'caliper-0-1-mm-reading-34-7-mm',
+      title: '0.1 mm caliper reading 34.7 mm',
+      alt: 'A caliper with a 0.1 mm sliding scale holding a cylinder, reading 34.7 mm, with a close-up strip of its scales',
+      caption:
+        'A caliper whose sliding scale has 10 divisions over 9 mm, so it reads to 0.1 mm, holding an upright cylinder across its diameter. The close-up strip shows the sliding scale’s zero between 34 and 35 mm on the main scale and its 7th mark lined up with a main-scale mark, so the reading is 34.7 mm.',
+      settings: { instrument: 'caliper', leastCount: '0.1', caliper: 34.7, jaws: 'cylinder' },
+    },
+    {
+      slug: 'caliper-0-02-mm-reading-41-38-mm',
+      title: '0.02 mm caliper reading 41.38 mm',
+      alt: 'A caliper with a 0.02 mm sliding scale holding a ball, reading 41.38 mm, with a close-up strip of its scales',
+      caption:
+        'A caliper whose sliding scale has 50 divisions over 49 mm, so it reads to 0.02 mm, holding a ball. The close-up strip shows the sliding scale’s zero just past 41 mm, and its 19th mark, four marks past the 3, lined up with a main-scale mark: 41 + 19 × 0.02 = 41.38 mm.',
+      settings: { instrument: 'caliper', leastCount: '0.02', caliper: 41.38, jaws: 'ball' },
+    },
+    {
+      slug: 'caliper-with-a-zero-error',
+      title: 'Caliper with a zero error',
+      alt: 'Two 0.1 mm calipers: above, with its jaws closed, reading 0.3 mm; below, holding block A, reading 27.6 mm, each with a close-up strip of its scales',
+      caption:
+        'The same 0.1 mm caliper twice. Above, with its jaws closed, the sliding scale’s zero sits just past the main scale’s zero and its 3rd mark lines up: a zero error of +0.3 mm. Below, holding block A, it reads 27.6 mm. Students take the zero error off the reading: the block is 27.3 mm long.',
+      settings: { instrument: 'caliper', leastCount: '0.1', caliper: 27.6, caliperZero: 0.3, jawsLabel: 'A' },
+    },
+    {
+      slug: 'micrometer-reading-7-38-mm',
+      title: 'Micrometer reading 7.38 mm',
+      alt: 'A micrometer holding a ball bearing, reading 7.38 mm, with a magnified view of its sleeve and thimble',
+      caption:
+        'A 0–25 mm micrometer with a ball between its anvil and spindle. The magnifier shows the 7 mm mark showing on the sleeve, but not the 7.5 mm mark below the datum line, and the thimble’s 38th mark on the datum line, so the reading is 7 + 0.38 = 7.38 mm. The thimble’s marks bunch together toward its top and bottom edges, as on a real one.',
+      settings: { instrument: 'micrometer', micrometerRead: 'mark', jaws: 'ball' },
+    },
+    {
+      slug: 'micrometer-reading-just-past-half-a-millimeter',
+      title: 'Micrometer reading just past half a millimeter: 5.51 mm',
+      alt: 'A micrometer holding a wire, reading 5.51 mm, with a magnified view showing the 5.5 mm mark just uncovered on the sleeve',
+      caption:
+        'A micrometer measuring a wire, with the thimble’s edge just past the 5.5 mm mark below the sleeve’s datum line, and the thimble’s 1st mark on the datum line. The reading is 5.5 + 0.01 = 5.51 mm. Missing the half-millimeter mark would give 5.01 mm, the common mistake.',
+      settings: { instrument: 'micrometer', micrometerRead: 'mark', micrometer: 5.51, jaws: 'wire' },
+    },
+    {
+      slug: 'micrometer-reading-estimated-to-0-001-mm',
+      title: 'Micrometer reading estimated to 0.001 mm: 6.847 mm',
+      alt: 'A micrometer holding a cylinder, reading 6.847 mm, with a magnified view showing the datum line between the thimble’s 34th and 35th marks',
+      caption:
+        'A micrometer read one digit past its marks. The magnifier shows the 6.5 mm mark uncovered below the sleeve’s datum line, and the datum line about 0.7 of the way from the thimble’s 34th mark to its 35th, so the reading is 6.5 + 0.347 = 6.847 mm. The last digit is estimated, so 6.846 or 6.848 mm is as good an answer.',
+      settings: { instrument: 'micrometer', micrometer: 6.847, jaws: 'cylinder' },
+    },
+    {
+      slug: 'micrometer-with-a-negative-zero-error',
+      title: 'Micrometer with a negative zero error',
+      alt: 'Two micrometers: above, closed, its thimble’s 0 three marks above the datum line, reading −0.03 mm; below, holding a wire, reading 3.27 mm, each with a magnified view',
+      caption:
+        'The same micrometer twice. Above, closed, the thimble’s 0 has turned three marks past the datum line, so it reads −0.03 mm: a negative zero error. Below, holding a wire, it reads 3.27 mm. Taking off the zero error gives 3.27 − (−0.03) = 3.30 mm.',
+      settings: { instrument: 'micrometer', micrometerRead: 'mark', micrometer: 3.27, micrometerZero: -0.03, jaws: 'wire' },
+    },
+    {
+      slug: 'caliper-scales-close-up-62-35-mm',
+      title: 'Caliper scales close-up: 62.35 mm',
+      alt: 'A close-up strip of a caliper’s main scale and 0.05 mm sliding scale reading 62.35 mm',
+      caption:
+        'The scales alone, without the caliper: the main scale from 6 to 11 cm and the 0.05 mm sliding scale below it, its zero just past 62 mm, and its 7th mark, between the 3 and the 4, lined up with a main-scale mark, so the reading is 62 + 7 × 0.05 = 62.35 mm.',
+      settings: { instrument: 'caliper', caliper: 62.35, closeUp: 'magnifier' },
+    },
+    {
+      slug: 'metric-ruler-reading-7-45-cm',
+      title: 'Metric ruler reading 7.45 cm',
+      alt: 'A 15 cm ruler marked in millimeters with a metal cylinder lying along it from 0 to 7.45 cm, with a magnified view of its right end',
+      caption:
+        'A 15 cm ruler marked every millimeter, with a metal cylinder lying along it, its left end on 0. Its right end falls halfway between 7.4 and 7.5 cm, so its length is 7.45 cm, the hundredths digit estimated. A magnified view shows the right end against the marks.',
+      settings: { length: 7.45, object: 'cylinder' },
     },
   ]),
 
@@ -600,6 +739,73 @@ export const EXAMPLES: Example[] = [
         sourceValue: text('3 V'),
         switch: 'open',
       },
+    },
+  ]),
+
+  ...examplesOf('ray-diagram', [
+    {
+      slug: 'converging-lens-ray-diagram-object-beyond-2f',
+      title: 'Converging lens ray diagram: object beyond 2F',
+      alt: 'A ray diagram of a converging lens with F, F′, 2F and 2F′ marked, an object O beyond 2F, three principal rays, and a real, inverted, smaller image I between F′ and 2F′',
+      caption:
+        'A converging lens of focal length 10 cm with an object 4 cm tall, 30 cm away, beyond 2F. Three principal rays leave the object’s tip: parallel then through F′, straight through the center, and through F then parallel. They meet between F′ and 2F′, where the real, inverted, smaller image is drawn.',
+      settings: {},
+    },
+    {
+      slug: 'converging-lens-object-at-2f',
+      title: 'Converging lens with the object at 2F',
+      alt: 'A ray diagram of a converging lens with the object at 2F and a real, inverted image of the same size at 2F′, with the object and image distances marked d_o and d_i',
+      caption:
+        'A converging lens of focal length 10 cm with the object at 2F, 20 cm away. The three principal rays meet at 2F′ on the far side, where the image is real, inverted and the same size as the object. Arrows below the axis mark the object distance d_o and the image distance d_i.',
+      settings: { distance: 20, doMark: true, diMark: true },
+    },
+    {
+      slug: 'magnifying-glass-ray-diagram-object-inside-f',
+      title: 'Magnifying glass ray diagram: object inside F',
+      alt: 'A ray diagram of a converging lens with the object inside F; the rays spread out after the lens and their dashed extensions meet behind the object at a dashed, upright, larger virtual image',
+      caption:
+        'A converging lens of focal length 10 cm used as a magnifying glass, with a 3 cm object 5 cm away, inside F. The rays spread apart after the lens, so they never meet; their dashed extensions meet on the object’s side, 10 cm from the lens, at the virtual, upright image twice the object’s size, drawn dashed.',
+      settings: { distance: 5, height: 3 },
+    },
+    {
+      slug: 'diverging-lens-ray-diagram',
+      title: 'Diverging lens ray diagram',
+      alt: 'A ray diagram of a diverging lens with an object beyond 2F; the rays spread out and their dashed extensions meet between the lens and F at a small, upright, virtual image',
+      caption:
+        'A diverging lens of focal length 10 cm with an object 20 cm away. The parallel ray spreads out as if from F, the ray heading for F′ leaves parallel, and the center ray goes straight on. Their dashed extensions meet between F and the lens, at the virtual, upright, smaller image, drawn dashed.',
+      settings: { element: 'diverging', distance: 20 },
+    },
+    {
+      slug: 'concave-mirror-ray-diagram-object-between-c-and-f',
+      title: 'Concave mirror ray diagram: object between C and F',
+      alt: 'A ray diagram of a concave mirror with F and C marked, an object between C and F, four principal rays, and a real, inverted, larger image beyond C',
+      caption:
+        'A concave mirror of focal length 10 cm with an object 15 cm away, between C and F. Four rays reflect from it: parallel then through F, through F then parallel, through C and back on itself, and off the vertex at the same angle. They meet 30 cm in front of the mirror, beyond C, at the real, inverted image twice the object’s size.',
+      settings: { element: 'concave', distance: 15, height: 3 },
+    },
+    {
+      slug: 'convex-mirror-ray-diagram',
+      title: 'Convex mirror ray diagram',
+      alt: 'A ray diagram of a convex mirror with F and C behind it; the reflected rays spread out and their dashed extensions meet behind the mirror at a small, upright, virtual image',
+      caption:
+        'A convex mirror of focal length 10 cm, its F and C behind it, with an object 20 cm in front. Each ray reflects outward: the parallel one as if from F, the one heading for F back parallel, the one heading for C back on itself, and the one at the vertex at the same angle. Dashed extensions meet behind the mirror at the virtual, upright, smaller image.',
+      settings: { element: 'convex', distance: 20 },
+    },
+    {
+      slug: 'plane-mirror-ray-diagram',
+      title: 'Plane mirror ray diagram',
+      alt: 'A ray diagram of a plane mirror with an object 15 cm in front; two rays from its tip reflect at equal angles and their dashed extensions meet behind the mirror at an upright virtual image the same size, 15 cm behind',
+      caption:
+        'A plane mirror with an object 4 cm tall, 15 cm in front of it. Two rays from the object’s tip reflect at equal angles, one off the mirror level with the object’s foot and one above the tip. Their dashed extensions meet behind the mirror at the virtual image, upright and the same size, 15 cm behind it, the distances marked d_o and d_i.',
+      settings: { element: 'plane', distance: 15, doMark: true, diMark: true },
+    },
+    {
+      slug: 'blank-converging-lens-ray-diagram-worksheet',
+      title: 'Blank converging lens ray diagram worksheet',
+      alt: 'A blank ray diagram of a converging lens with F, F′, 2F and 2F′ marked on the principal axis, an object between F and 2F, and a numbered cm scale underneath, with no rays drawn',
+      caption:
+        'A converging lens of focal length 10 cm on its principal axis with F, F′, 2F and 2F′ marked and an object 15 cm away, between F and 2F, and no rays: a template for students to draw the principal rays and find the image. A cm scale numbered from the lens runs under it, for measuring the image distance.',
+      settings: { distance: 15, shown: 'setup', scale: true },
     },
   ]),
 ]

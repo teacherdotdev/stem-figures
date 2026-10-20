@@ -7,11 +7,11 @@
 import { axisEnd, readAxes, type GridSettings } from '$shared/graph/axes'
 import { COLORS } from '$shared/graph/colors'
 import { clipPath, layoutGrid, pathOf, round, type GridLayout, type Point } from '$shared/graph/grid'
+import { alongCurve, besidePoint, placer, textBox, textWidth, type Anchor, type Box, type Spot } from '$shared/graph/labels'
 import {
   census, censusDecimals, checkGrowth, curvesOf, hasK, hasLogistic, inflection, perCapitaAtN, phases, rateAtN, solve,
   type Curve, type Solution,
 } from './growth'
-import { alongCurve, besidePoint, placer, textBox, textWidth, type Anchor, type Box, type Spot } from './labels'
 import { againstOf, growthOf, viewsOf, type PopulationSettings, type View } from './settings'
 
 const DOT_R = 5.5

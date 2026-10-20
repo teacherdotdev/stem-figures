@@ -1,17 +1,21 @@
 // Lays out an enzyme activity graph for EnzymeFigure.svelte to draw: up to
 // three curves of rate against temperature, pH or substrate concentration
-// on a $shared/graph grid with no numbers (the shape is what matters), told
-// apart by their dashes and a key under the graph. Marked on them: each
-// optimum and where the enzyme has denatured, or Vmax, ½Vmax and Km, with
-// dashed lines to the axes. Vmax, ½Vmax and Km are written at the axes,
-// where the numbers would be, each named for its curve when there's more
-// than one; the other labels go wherever on the graph they touch nothing.
+// on a $shared/graph grid, shape only with no numbers or numbered (the rate
+// in arbitrary units, 10 at its fastest, or as a percentage of the fastest),
+// told apart by their dashes and a key under the graph. Marked on them: each optimum and where the enzyme
+// has denatured, or Vmax, ½Vmax and Km, with dashed lines to the axes.
+// Vmax, ½Vmax and Km are written at the axes, where the numbers would be
+// (or past them, on numbered axes), each named for its curve when there's
+// more than one; the other labels go wherever on the graph they touch
+// nothing.
 
-import { readAxes, type GridSettings } from '$shared/graph/axes'
+import { axisEnd, readAxes, type Axes, type GridSettings, type RangeSettings } from '$shared/graph/axes'
 import { COLORS } from '$shared/graph/colors'
-import { clipPath, layoutGrid, pathOf, round, type GridLayout, type Point } from '$shared/graph/grid'
+import { CELL, clipPath, layoutGrid, pathOf, round, type GridLayout, type Point } from '$shared/graph/grid'
+import { DASHES, layoutKey, placer, textWidth, type Anchor, type Box, type KeyEntry, type Spot } from '$shared/graph/labels'
+import { fmt } from '$shared/graph/numbering'
+import { niceAxis } from '../photosynthesis-rate/figure'
 import { UNKNOWN, enzymeOf, unknownName } from './enzymes'
-import { placer, textWidth, type Anchor, type Box, type Spot } from './labels'
 import {
   denaturedAbove, denaturedPH, kinetics, rateAtPH, rateAtSubstrate, rateAtTemperature,
 } from './model'
@@ -19,8 +23,12 @@ import { CURVES, INHIBITOR_NAMES, curveOf, type CurveIndex, type EnzymeSettings 
 
 const X_BLOCKS = 15
 const Y_BLOCKS = 10
-/** The fastest rate (an optimum, or Vmax), in blocks up the y-axis, leaving room above for labels. */
+/** The fastest rate (an optimum, or Vmax), in blocks up a shape-only y-axis, leaving room above for labels. */
 const TOP = 8
+/** The fastest rate, in the arbitrary units numbered axes count in. */
+export const PEAK = 10
+/** The fastest rate in the units the y-axis counts in: 10 arbitrary units, or 100%. */
+export const peakOf = (s: EnzymeSettings) => (s.axes === 'numbered' && s.rateUnit === 'percent' ? 100 : PEAK)
 /** The substrate concentration axis runs from 0 to this, in the units Km is typed in. */
 export const SUBSTRATE_END = 10
 const SAMPLES = 400
@@ -31,10 +39,6 @@ const BLANK_W = 70 // a write-on line for a label left blank
 const SIDE_BLANK_W = 40 // the same, at an axis
 /** How far apart rows of labels under the x-axis are. */
 const X_ROW = (fs: number) => fs * 1.35
-const SAMPLE_W = 30 // the line sample in front of a curve's name in the key
-const KEY_GAP = 28 // between the key's entries
-/** Each curve's dashes, so they read apart in black and white: solid, dashed, dotted. */
-export const DASHES = [undefined, '12 7', '3 5'] as const
 const INKS = ['blue', 'red', 'green'] as const
 
 type Segment = { x1: number; y1: number; x2: number; y2: number }
@@ -45,7 +49,6 @@ export type Run = { text: string; sub?: boolean; dy: number }
 /** A label on the figure: written text, or a write-on line for students. */
 export type Label = { x: number; y: number; anchor: Anchor; runs?: Run[]; blank?: Segment }
 export type Curve = { index: CurveIndex; name: string; color: string; dash?: string; paths: string[] }
-export type KeyEntry = { index: CurveIndex; sample: Segment; text: { x: number; y: number; text: string } }
 
 const SUB = 0.7 // a subscript's size, of the label's
 
@@ -111,6 +114,32 @@ export function rangeOf(s: EnzymeSettings) {
   return { from: 0, to: SUBSTRATE_END }
 }
 
+/** The ranges numbered axes fit to: the x-axis's, counted by a nice step, and the rate up to a little past its fastest. */
+export function fittedOf(s: EnzymeSettings): RangeSettings {
+  const r = rangeOf(s)
+  const x = niceAxis(r.from, r.to, 12)
+  const y = niceAxis(0, peakOf(s) * 1.12, 10)
+  return { xFrom: x.from, xTo: x.to, xStep: x.step, yFrom: y.from, yTo: y.to, yStep: y.step }
+}
+
+/** The ranges numbered axes are drawn with: fitted or as typed, each axis on its own. */
+export function rangesOf(s: EnzymeSettings, fitted = fittedOf(s)): RangeSettings {
+  const x = s.xFit ? fitted : s
+  const y = s.yFit ? fitted : s
+  return { xFrom: x.xFrom, xTo: x.xTo, xStep: x.xStep, yFrom: y.yFrom, yTo: y.yTo, yStep: y.yStep }
+}
+
+/** The axes drawn, and anything typed into them to fix: shape-only ones fitted, with no numbers, 15 blocks by 10. */
+function axesOf(s: EnzymeSettings): Axes & { problems: Record<string, string | null> } {
+  if (s.axes === 'numbered') return readAxes(rangesOf(s))
+  const r = rangeOf(s)
+  return {
+    x: { start: r.from, step: (r.to - r.from) / X_BLOCKS, blocks: X_BLOCKS, numbering: 'decimal' },
+    y: { start: 0, step: PEAK / TOP, blocks: Y_BLOCKS, numbering: 'decimal' },
+    problems: {},
+  }
+}
+
 /** Vmax and Km of a curve against substrate concentration, as shares of the enzyme's own Vmax and Km units. */
 export const kineticsOf = (s: EnzymeSettings, i: CurveIndex) => kinetics(curveOf(s, i).inhibitor, s.km, s.strength)
 
@@ -118,7 +147,7 @@ export const kineticsOf = (s: EnzymeSettings, i: CurveIndex) => kinetics(curveOf
 function rateFn(s: EnzymeSettings, i: CurveIndex): (v: number) => number {
   if (s.graph === 'substrate') {
     const k = kineticsOf(s, i)
-    return (v) => rateAtSubstrate(v, k)
+    return (v) => (v > 0 ? rateAtSubstrate(v, k) : 0)
   }
   const { opt, width } = shapeOf(s, i)
   return s.graph === 'ph' ? (v) => rateAtPH(v, opt, width) : (v) => rateAtTemperature(v, opt, width)
@@ -180,9 +209,10 @@ function groupsOf(curves: CurveIndex[], key: (i: CurveIndex) => number) {
  * The marks against substrate concentration: each Vmax, ½Vmax and Km once,
  * with the curves it belongs to and what its label adds to the words: when
  * there's more than one of a kind, the curve's name, "Vmax (competitive)",
- * except for the enzyme's own, shared with the curve with no inhibitor.
+ * except for the enzyme's own, shared with the curve with no inhibitor. Km
+ * is marked only where it's on the x-axis, which ends at `end`.
  */
-export function substrateMarksOf(s: EnzymeSettings) {
+export function substrateMarksOf(s: EnzymeSettings, end = SUBSTRATE_END) {
   const drawn = s.graph === 'substrate' ? drawnOf(s) : []
   const k = (i: CurveIndex) => kineticsOf(s, i)
   const named = <G extends { curves: CurveIndex[] }>(groups: G[]) =>
@@ -191,7 +221,7 @@ export function substrateMarksOf(s: EnzymeSettings) {
       const names = [...new Set(g.curves.map((i) => shortName(s, i)))]
       return { ...g, suffix: own ? '' : ` (${names.join(' and ')})` }
     })
-  const onAxis = drawn.filter((i) => k(i).km <= SUBSTRATE_END)
+  const onAxis = drawn.filter((i) => k(i).km <= end)
   return {
     vmax: named(groupsOf(drawn, (i) => k(i).vmax)),
     half: named(groupsOf(onAxis, (i) => k(i).vmax / 2)),
@@ -201,20 +231,25 @@ export function substrateMarksOf(s: EnzymeSettings) {
 
 export function buildEnzyme(s: EnzymeSettings) {
   const graph = s.graph
-  const range = rangeOf(s)
+  const shape = s.axes === 'shape'
   const drawn = drawnOf(s)
+  const fitted = fittedOf(s)
+  const { problems, ...axes } = axesOf(s)
+  const range = { from: axes.x.start, to: axisEnd(axes.x) }
 
-  // The grid, with no numbers or titles of its own: the titles go where
-  // this figure makes room for them, beside the labels written at the axes.
+  // A fitted x-axis numbered every line whose numbers would run together is numbered every other line.
+  const crowded = Array.from({ length: axes.x.blocks + 1 }, (_, j) => fmt(axes.x.start + j * axes.x.step)).some((t) => textWidth(t, 14) > CELL - 8)
+  // The grid, with no titles of its own: they go where this figure makes
+  // room for them, beside the labels written at shape-only axes.
   const gs: GridSettings = {
-    xEvery: 0, yEvery: 0,
+    xEvery: shape ? 0 : s.xFit && s.xEvery === 1 && crowded ? 2 : s.xEvery,
+    yEvery: shape ? 0 : s.yEvery,
     title: '', titleMode: 'none', xTitle: '', xTitleMode: 'none', yTitle: '', yTitleMode: 'none',
-    xLabel: '', xLabelMode: 'none', yLabel: '', yLabelMode: 'none',
-    xStartCap: 'none', xEndCap: s.xEndCap, yStartCap: 'none', yEndCap: s.yEndCap,
+    xLabel: s.xLabel, xLabelMode: shape ? 'none' : s.xLabelMode, yLabel: s.yLabel, yLabelMode: shape ? 'none' : s.yLabelMode,
+    xStartCap: shape ? 'none' : s.xStartCap, xEndCap: s.xEndCap, yStartCap: shape ? 'none' : s.yStartCap, yEndCap: s.yEndCap,
     minor: s.gridlines ? s.minor : 0, labelSize: s.labelSize,
   }
-  const axes = readAxes({ xFrom: '0', xTo: String(X_BLOCKS), xStep: '1', yFrom: '0', yTo: String(Y_BLOCKS), yStep: '1' })
-  const { px: gridPx, box, ...base } = layoutGrid(gs, axes)
+  const { px: gridPx, box, ...base } = layoutGrid(gs, axes, { edges: true })
   const fs = base.fs
   const LABEL_FS = fs * 1.05
 
@@ -222,13 +257,16 @@ export function buildEnzyme(s: EnzymeSettings) {
   const shown = (mode: Mode, words: string) => mode === 'blank' || !!text(mode, words)
 
   // Room on the left for the y-axis title and the labels written at the
-  // y-axis (Vmax and ½Vmax), and above for the chart title.
+  // y-axis (Vmax and ½Vmax), and above for the chart title. The labels at
+  // the axes go past their numbers, if they have them.
   const substrate = graph === 'substrate' && drawn.length > 0
   const vmaxAt = substrate && s.markVmax && shown(s.vmaxLabelMode, s.vmaxLabel)
   const halfAt = substrate && s.markKm && shown(s.halfLabelMode, s.halfLabel)
   const kmAt = substrate && s.markKm && shown(s.kmLabelMode, s.kmLabel)
+  const numbersW = base.grid.x - PAD
+  const numbersH = base.height - base.grid.y - base.grid.h - PAD
   const sideWidth = (mode: Mode, words: string) => (mode === 'blank' ? SIDE_BLANK_W : runsWidth(runsOf(text(mode, words), LABEL_FS), LABEL_FS))
-  const marks = substrateMarksOf(s)
+  const marks = substrateMarksOf(s, range.to)
   /** A mark's words with its curve's name after them; a blank line stays blank. */
   const wordsOf = (mode: Mode, words: string, suffix: string) => (mode === 'text' && words.trim() ? words.trim() + suffix : words)
   const yMarksW = Math.max(
@@ -242,7 +280,7 @@ export function buildEnzyme(s: EnzymeSettings) {
   const titleRow = title || s.titleMode === 'blank' ? fs * 1.6 + 14 : 0
   const ySide = yTitle || s.yTitleMode === 'blank'
   const xSide = xTitle || s.xTitleMode === 'blank'
-  const left = PAD + (ySide ? fs * 1.2 + 12 : 0) + (yMarksW ? yMarksW + 8 : 0)
+  const left = base.grid.x + (ySide ? fs * 1.2 + 12 : 0) + (yMarksW ? yMarksW + 8 : 0)
   const dx = left - base.grid.x
   const dy = titleRow
   const area = { ...base.grid, x: base.grid.x + dx, y: base.grid.y + dy }
@@ -251,9 +289,12 @@ export function buildEnzyme(s: EnzymeSettings) {
     const q = gridPx(p)
     return { x: q.x + dx, y: q.y + dy }
   }
-  /** A point of a curve, from x in the graph's units and a rate from 0 to 1, in the grid's blocks. */
-  const toGrid = (v: number, rate: number): Point => ({ x: ((v - range.from) / (range.to - range.from)) * X_BLOCKS, y: rate * TOP })
+  /** A point of a curve, from x in the graph's units and a rate from 0 to 1, in the axes' numbers. */
+  const peak = peakOf(s)
+  const toGrid = (v: number, rate: number): Point => ({ x: v, y: rate * peak })
   const inRange = (v: number) => v >= range.from - 1e-9 && v <= range.to + 1e-9
+  /** Whether a rate, from 0 to 1, is on the y-axis. */
+  const onY = (rate: number) => rate * peak >= box.y0 - 1e-9 && rate * peak <= box.y1 + 1e-9
 
   const bounds: Box = { x0: area.x + INSET, y0: area.y + INSET, x1: area.x + area.w - INSET, y1: area.y + area.h - INSET }
   const place = placer(bounds)
@@ -304,7 +345,7 @@ export function buildEnzyme(s: EnzymeSettings) {
   if (graph !== 'substrate') {
     for (const i of drawn) {
       const { opt } = shapeOf(s, i)
-      if (s.markOpt && inRange(opt)) optima.push(px(toGrid(opt, 1)))
+      if (s.markOpt && inRange(opt) && onY(1)) optima.push(px(toGrid(opt, 1)))
       if (s.markDen) for (const v of zerosOf(s, i)) if (v > range.from && v < range.to) denatured.push(px(toGrid(v, 0)))
     }
     for (const p of once(optima, sameX)) {
@@ -314,7 +355,7 @@ export function buildEnzyme(s: EnzymeSettings) {
     for (const p of once(denatured, sameX)) dot(p)
   } else if (drawn.length) {
     if (s.markVmax) {
-      for (const m of marks.vmax) {
+      for (const m of marks.vmax.filter((m) => onY(m.at))) {
         const y = px(toGrid(0, m.at)).y
         lines.push({ x1: area.x, y1: y, x2: area.x + area.w, y2: y })
         place.line([{ x: area.x, y }, { x: area.x + area.w, y }], true)
@@ -322,9 +363,12 @@ export function buildEnzyme(s: EnzymeSettings) {
       }
     }
     if (s.markKm) {
-      const halves = once(marks.km.flatMap((m) => m.curves.map((i) => px(toGrid(m.at, kineticsOf(s, i).vmax / 2)))), (a, b) => sameX(a, b) && sameY(a, b))
+      const halves = once(
+        marks.km.flatMap((m) => m.curves.filter((i) => onY(kineticsOf(s, i).vmax / 2)).map((i) => px(toGrid(m.at, kineticsOf(s, i).vmax / 2)))),
+        (a, b) => sameX(a, b) && sameY(a, b),
+      )
       // One line across to each height and down from each Km, to the furthest dot on it.
-      for (const m of marks.half) {
+      for (const m of marks.half.filter((m) => onY(m.at))) {
         const y = px(toGrid(0, m.at)).y
         const far = Math.max(...halves.filter((q) => near(q.y, y)).map((q) => q.x))
         guide({ x1: area.x, y1: y, x2: far, y2: y })
@@ -332,6 +376,7 @@ export function buildEnzyme(s: EnzymeSettings) {
       }
       for (const m of marks.km) {
         const x = px(toGrid(m.at, 0)).x
+        if (!halves.some((q) => near(q.x, x))) continue
         const high = Math.min(...halves.filter((q) => near(q.x, x)).map((q) => q.y))
         guide({ x1: x, y1: high, x2: x, y2: axisY })
         sideX.push({ x, mode: s.kmLabelMode, words: wordsOf(s.kmLabelMode, s.kmLabel, m.suffix) })
@@ -349,7 +394,8 @@ export function buildEnzyme(s: EnzymeSettings) {
     else markLabels.push({ x: spot.x, y: spot.y, anchor: spot.anchor, blank: { x1: spot.box.x0, y1: spot.y, x2: spot.box.x1, y2: spot.y } })
   }
   const rows = [12, 12 + LABEL_FS * 1.25, 12 + LABEL_FS * 2.5]
-  // Over a peak, centered, then to either side and higher up, then beside it.
+  // Over a peak, centered, then to either side and higher up, then beside
+  // it, then below it to either side, for a peak at the top of a typed axis.
   const overPeak = (p: Point): Spot[] => [
     ...rows.flatMap((up) => [
       { x: p.x, y: p.y - up, anchor: 'middle' as const },
@@ -358,6 +404,10 @@ export function buildEnzyme(s: EnzymeSettings) {
     ]),
     { x: p.x + 12, y: p.y + LABEL_FS * 0.35, anchor: 'start' },
     { x: p.x - 12, y: p.y + LABEL_FS * 0.35, anchor: 'end' },
+    ...[1.4, 2.6, 3.8].flatMap((down) => [24, 48].flatMap((side) => [
+      { x: p.x + side, y: p.y + LABEL_FS * down, anchor: 'start' as const },
+      { x: p.x - side, y: p.y + LABEL_FS * down, anchor: 'end' as const },
+    ])),
   ]
   // Just above the axis, outside the curve it ends first, then higher.
   const offAxis = (p: Point): Spot[] =>
@@ -378,28 +428,30 @@ export function buildEnzyme(s: EnzymeSettings) {
     }
   }
   const ys = spread(sideY.filter((l) => shown(l.mode, l.words)).map((l) => ({ ...l, at: l.y, half: LABEL_FS * 0.6 })), 3)
-  for (const l of ys) sideLabel(area.x - 7, l.at + LABEL_FS * 0.35, 'end', l.mode, l.words)
-  // Under the x-axis each stays centered under its line, on a row further
-  // down when it would run into one already there.
+  for (const l of ys) sideLabel(area.x - numbersW - 7, l.at + LABEL_FS * 0.35, 'end', l.mode, l.words)
+  // Under the x-axis (and its numbers) each stays centered under its line,
+  // on a row further down when it would run into one already there.
   const xRows: { x0: number; x1: number }[][] = []
-  for (const l of [...sideX].filter((l) => shown(l.mode, l.words)).sort((a, b) => a.x - b.x)) {
+  for (const l of sideX.filter((l) => shown(l.mode, l.words)).sort((a, b) => a.x - b.x)) {
     const half = sideWidth(l.mode, l.words) / 2
     const span = { x0: l.x - half - 4, x1: l.x + half + 4 }
     let row = xRows.findIndex((r) => r.every((b) => span.x0 >= b.x1 || span.x1 <= b.x0))
     if (row < 0) row = xRows.push([]) - 1
     xRows[row].push(span)
-    sideLabel(l.x, axisY + LABEL_FS + 5 + row * X_ROW(LABEL_FS), 'middle', l.mode, l.words)
+    sideLabel(l.x, axisY + numbersH + LABEL_FS + 5 + row * X_ROW(LABEL_FS), 'middle', l.mode, l.words)
   }
 
-  // The titles, as the grid would place them, around the room made here.
-  const gridLabels: GridLayout['labels'] = []
+  // The titles, as the grid would place them, around the room made here;
+  // the axis labels at the arrows are the grid's own.
+  const gridLabels: GridLayout['labels'] = base.labels.map((l) => ({ ...l, x: l.x + dx, y: l.y + dy }))
   const blanks: Segment[] = []
   const midX = area.x + area.w / 2
   const midY = area.y + area.h / 2
   const titleY = PAD + fs * 1.6
   if (title) gridLabels.push({ x: midX, y: titleY, text: title, kind: 'title' })
   else if (s.titleMode === 'blank') blanks.push({ x1: midX - Math.min(130, area.w / 2), y1: titleY, x2: midX + Math.min(130, area.w / 2), y2: titleY })
-  const xMarksH = kmAt ? LABEL_FS + 8 + (Math.max(1, xRows.length) - 1) * X_ROW(LABEL_FS) : 0
+  // Under the x-axis: its numbers, and the labels written there.
+  const xMarksH = numbersH + (kmAt ? LABEL_FS + 8 + (Math.max(1, xRows.length) - 1) * X_ROW(LABEL_FS) : 0)
   const xTitleY = axisY + xMarksH + fs * 1.2 + 6
   if (xTitle) gridLabels.push({ x: midX, y: xTitleY, text: xTitle, kind: 'side' })
   else if (s.xTitleMode === 'blank') blanks.push({ x1: midX - Math.min(100, area.w / 2), y1: xTitleY, x2: midX + Math.min(100, area.w / 2), y2: xTitleY })
@@ -412,36 +464,12 @@ export function buildEnzyme(s: EnzymeSettings) {
 
   // The key: each curve's line and name, in rows centered under the graph,
   // when there's more than one to tell apart.
-  const keyEntries: KeyEntry[] = []
+  let keyEntries: KeyEntry<CurveIndex>[] = []
   if (curves.length > 1) {
-    const entryW = (c: Curve) => SAMPLE_W + 6 + textWidth(c.name, LABEL_FS)
-    const rowsOf: Curve[][] = [[]]
-    let rowW = 0
-    for (const c of curves) {
-      const w = entryW(c) + (rowsOf.at(-1)!.length ? KEY_GAP : 0)
-      if (rowsOf.at(-1)!.length && rowW + w > Math.max(area.w, 360)) {
-        rowsOf.push([])
-        rowW = 0
-      }
-      rowW += entryW(c) + (rowsOf.at(-1)!.length ? KEY_GAP : 0)
-      rowsOf.at(-1)!.push(c)
-    }
-    let y = bottom + 4 + fs * 0.6
-    for (const row of rowsOf) {
-      const rw = row.reduce((w, c, k) => w + entryW(c) + (k ? KEY_GAP : 0), 0)
-      let x = Math.max(PAD, midX - rw / 2)
-      for (const c of row) {
-        keyEntries.push({
-          index: c.index,
-          sample: { x1: x, y1: y, x2: x + SAMPLE_W, y2: y },
-          text: { x: x + SAMPLE_W + 6, y: y + LABEL_FS * 0.36, text: c.name },
-        })
-        x += entryW(c) + KEY_GAP
-      }
-      width = Math.max(width, x - KEY_GAP + PAD)
-      bottom = y + fs * 0.5
-      y += LABEL_FS * 1.6
-    }
+    const key = layoutKey(curves, { midX, wrap: Math.max(area.w, 360), top: bottom, left: PAD, fs, labelFs: LABEL_FS })
+    keyEntries = key.entries
+    width = Math.max(width, key.right + PAD)
+    bottom = key.bottom
   }
 
   const layout: GridLayout = {
@@ -449,14 +477,14 @@ export function buildEnzyme(s: EnzymeSettings) {
     width: round(width),
     height: round(bottom + PAD),
     grid: area,
-    // Shape-only graphs are plain axes unless the teacher wants the grid.
-    vLines: s.gridlines ? base.vLines.map((x) => x + dx) : [],
-    hLines: s.gridlines ? base.hLines.map((y) => y + dy) : [],
+    // Shape-only graphs are plain axes unless the teacher wants the grid; numbered ones keep a tick at each block.
+    vLines: shape && !s.gridlines ? [] : base.vLines.map((x) => x + dx),
+    hLines: shape && !s.gridlines ? [] : base.hLines.map((y) => y + dy),
     minorV: s.gridlines ? base.minorV.map((x) => round(x + dx)) : [],
     minorH: s.gridlines ? base.minorH.map((y) => round(y + dy)) : [],
     xAxis: { x1: base.xAxis.x1 + dx, x2: base.xAxis.x2 + dx, y: base.xAxis.y + dy },
     yAxis: { x: base.yAxis.x + dx, y1: base.yAxis.y1 + dy, y2: base.yAxis.y2 + dy },
-    numbers: [],
+    numbers: base.numbers.map((n) => ({ ...n, x: n.x + dx, y: n.y + dy })),
     labels: gridLabels,
     blanks,
   }
@@ -465,6 +493,7 @@ export function buildEnzyme(s: EnzymeSettings) {
     ...layout,
     /** the grid's own settings, for its end caps */
     gridSettings: gs,
+    gridlines: (s.gridlines || shape ? 'standard' : 'none') as 'standard' | 'none',
     labelFs: LABEL_FS,
     r: DOT_R,
     curves,
@@ -475,6 +504,8 @@ export function buildEnzyme(s: EnzymeSettings) {
     sideLabels,
     keyEntries,
     range,
+    fitted,
+    problems,
   }
 }
 

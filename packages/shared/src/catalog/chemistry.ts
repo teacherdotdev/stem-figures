@@ -34,15 +34,20 @@ export const CHEMISTRY: CatalogEntry[] = [
     keywords: ['gas', 'syringe', 'plunger', 'collecting', 'collection', 'rate', 'reaction', 'volume', 'cm3', 'mL', 'conical', 'flask', 'delivery', 'tube', 'measurement', 'lab', 'apparatus'],
   },
   {
-    // Also on Math Figures, as its own copy: see docs/adr/0001-a-generator-on-two-sites.md.
+    // Also on Math and Physics Figures, as their own copies: see docs/adr/0001-a-generator-on-two-sites.md.
     id: 'length-reading',
     site: 'chemistry',
     name: 'Length Reading',
     path: '/length-reading',
-    blurb: 'A metric or imperial ruler with an object lying along it, to measure.',
+    blurb: 'A ruler, caliper or micrometer with an object to measure.',
     description:
-      'Make printable ruler figures for chemistry tests. Pick a centimeter or inch ruler and how finely it is marked, type an object’s length, and students measure it, lined up with 0 or starting partway along, with magnified views of its ends.',
-    keywords: ['ruler', 'length', 'measure', 'measuring', 'metric', 'imperial', 'meter', 'stick', 'meterstick', 'centimeters', 'cm', 'millimeters', 'mm', 'inches', 'fraction', 'marble', 'rock', 'cube', 'metal', 'cylinder', 'object', 'estimated', 'digit', 'significant', 'figures', 'measurement', 'lab'],
+      'Make printable length measurement figures for chemistry tests. Pick a centimeter or inch ruler, a caliper or a micrometer, set the length or reading, and students measure it, with magnified views of the scales.',
+    keywords: [
+      'ruler', 'length', 'measure', 'measuring', 'metric', 'imperial', 'meter', 'stick', 'meterstick', 'centimeters', 'cm', 'millimeters',
+      'mm', 'inches', 'fraction', 'marble', 'rock', 'cube', 'metal', 'cylinder', 'object', 'estimated', 'digit', 'significant', 'figures',
+      'measurement', 'lab', 'caliper', 'calliper', 'calipers', 'vernier', 'vernier caliper', 'vernier scale', 'micrometer',
+      'micrometer screw gauge', 'screw gauge', 'least count', 'precision', 'zero error', 'diameter', 'thickness', 'wire',
+    ],
   },
   {
     id: 'mass-reading',
@@ -97,6 +102,17 @@ export const CHEMISTRY: CatalogEntry[] = [
     keywords: ['heating', 'cooling', 'curve', 'graph', 'phase', 'change', 'changes', 'state', 'states', 'matter', 'melting', 'freezing', 'boiling', 'condensation', 'condensing', 'vaporization', 'fusion', 'plateau', 'point', 'temperature', 'time', 'heat', 'energy', 'specific', 'enthalpy', 'supercooling', 'solid', 'liquid', 'gas', 'ice', 'water', 'steam', 'ethanol', 'acetone', 'mercury', 'salt', 'kinetic', 'potential', 'thermochemistry', 'AP'],
   },
   {
+    id: 'potential-energy-diagram',
+    site: 'chemistry',
+    alsoOn: ['biology'],
+    name: 'Potential Energy Diagram',
+    path: '/potential-energy-diagram',
+    blurb: 'A reaction energy profile from the energies you type, with Ea and ΔH, a catalyst or several steps.',
+    description:
+      'Make printable potential energy diagrams for chemistry tests. Type the energies of the reactants, transition states, intermediates and products, or Ea and ΔH, and get the reaction energy profile for an exothermic or endothermic reaction, with or without a catalyst or an enzyme, in up to three steps, its Ea and ΔH arrows labeled, lettered or left blank for students.',
+    keywords: ['potential', 'energy', 'diagram', 'reaction', 'profile', 'enthalpy', 'coordinate', 'progress', 'activation', 'Ea', 'ΔH', 'delta', 'transition', 'state', 'activated', 'complex', 'intermediate', 'catalyst', 'catalysed', 'catalyzed', 'enzyme', 'exothermic', 'endothermic', 'mechanism', 'multistep', 'step', 'rate', 'determining', 'level', 'kinetics', 'thermochemistry', 'AP', 'IB'],
+  },
+  {
     id: 'particle-diagram',
     site: 'chemistry',
     name: 'Particle Diagram',
@@ -117,6 +133,17 @@ export const CHEMISTRY: CatalogEntry[] = [
     keywords: ['bohr', 'atom', 'atomic', 'model', 'structure', 'proton', 'protons', 'neutron', 'neutrons', 'electron', 'electrons', 'nucleus', 'shell', 'shells', 'energy', 'level', 'orbit', 'isotope', 'ion', 'ions', 'cation', 'anion', 'charge', 'element', 'periodic', 'gained', 'lost', 'valence', 'diagram'],
   },
   {
+    id: 'nuclide-notation',
+    site: 'chemistry',
+    alsoOn: ['physics'],
+    name: 'Nuclide Notation',
+    path: '/nuclide-notation',
+    blurb: 'An isotope, ion or nuclear particle’s symbol with its mass number, atomic number and charge.',
+    description:
+      'Make printable nuclide symbols for chemistry tests. Pick any element, type your own symbol or pick an alpha, beta or other nuclear particle, and get its mass number, atomic number and charge placed around it, any of them left blank for students, or written in hyphen notation like carbon-14.',
+    keywords: ['nuclide', 'isotope', 'isotopes', 'notation', 'nuclear', 'atomic', 'symbol', 'AZX', 'mass', 'number', 'protons', 'neutrons', 'electrons', 'ion', 'cation', 'anion', 'charge', 'superscript', 'subscript', 'alpha', 'beta', 'positron', 'gamma', 'decay', 'hyphen', 'element', 'complete'],
+  },
+  {
     id: 'lewis-structures',
     site: 'chemistry',
     name: 'Lewis Structures',
@@ -125,6 +152,16 @@ export const CHEMISTRY: CatalogEntry[] = [
     description:
       'Make printable Lewis structures for chemistry tests. Type a formula like H2O or SO4 2- and get its Lewis dot structure, with formal charges and resonance structures, a structure for students to complete, or a wrong one for students to find the mistakes in.',
     keywords: ['lewis', 'dot', 'electron', 'structure', 'structures', 'diagram', 'lone', 'pair', 'pairs', 'bond', 'bonds', 'bonding', 'covalent', 'molecule', 'polyatomic', 'ion', 'octet', 'formal', 'charge', 'resonance', 'valence', 'VSEPR'],
+  },
+  {
+    id: 'dot-and-cross',
+    site: 'chemistry',
+    name: 'Dot-and-Cross Diagram',
+    path: '/dot-and-cross',
+    blurb: 'A molecule, ionic compound or atom with its shells as circles and its electrons as dots and crosses.',
+    description:
+      'Make printable dot-and-cross diagrams for GCSE and IGCSE chemistry tests. Type a molecule like H2O or C2H4, an ionic compound like MgCl2 or one atom or ion, and get each shell as a circle around its symbol with every electron a dot or a cross, outer shells or all, with ions in brackets and the electrons left blank for students.',
+    keywords: ['dot', 'cross', 'dot-and-cross', 'bonding', 'ionic', 'covalent', 'shells', 'shell', 'electron', 'electrons', 'shared', 'sharing', 'transfer', 'outer', 'brackets', 'ion', 'molecule', 'configuration', 'arrangement', 'IGCSE', 'GCSE', 'Cambridge'],
   },
   {
     id: 'orbital-diagram',
@@ -165,6 +202,17 @@ export const CHEMISTRY: CatalogEntry[] = [
     description:
       'Make printable mass spectra of elements for chemistry tests. Pick an element, or type your own isotopes, and get a peak at each mass number as tall as its percent or relative abundance, with the element hidden or a peak left out for students and the relative atomic mass in the answer key.',
     keywords: ['mass', 'spectrum', 'spectra', 'spectrometry', 'spectrometer', 'spec', 'isotope', 'isotopes', 'abundance', 'relative', 'percent', 'average', 'atomic', 'weighted', 'm/z', 'peak', 'peaks', 'amu', 'element', 'AP'],
+  },
+  {
+    id: 'half-life-graph',
+    site: 'chemistry',
+    alsoOn: ['physics'],
+    name: 'Half-Life Graph',
+    path: '/half-life-graph',
+    blurb: 'Radioactive decay curves for carbon-14, iodine-131 and other isotopes, up to three on one graph.',
+    description:
+      'Make printable half-life graphs for chemistry and physics tests. Pick carbon-14, iodine-131, uranium-238 or another isotope, or type your own half-life, and get its decay curve as percent, mass, nuclei or activity remaining, with guide lines at each half-life, a stable daughter, or up to three isotopes with their names hidden for students.',
+    keywords: ['half-life', 'half', 'life', 'decay', 'radioactive', 'radioactivity', 'exponential', 'nuclear', 'isotope', 'parent', 'daughter', 'carbon', 'dating', 'radiometric', 'activity', 'becquerel', 'Bq', 'count', 'rate', 'remaining', 'iodine', 'uranium', 'curve', 'graph'],
   },
   {
     id: 'structure-editor',

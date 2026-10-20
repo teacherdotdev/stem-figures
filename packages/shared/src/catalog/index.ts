@@ -3,9 +3,9 @@
 // directories show it too, after their own generators. Searching any site's
 // directory finds generators from every site.
 //
-// The one exception is a generator copied onto two sites so each has it at
-// its own address (Length Reading, on Math and Chemistry): it has an entry
-// on each, with the same id. See docs/adr/0001-a-generator-on-two-sites.md.
+// The one exception is a generator copied onto several sites so each has it
+// at its own address (Length Reading, on Math, Physics and Chemistry): it has
+// an entry on each, with the same id. See docs/adr/0001-a-generator-on-two-sites.md.
 //
 // An editor (`kind: 'editor'`) is listed like a generator, but the teacher
 // draws its figure by hand, so there are no settings in its address.
@@ -38,7 +38,7 @@ export type SiteId = keyof typeof SITES
 export const SITE_IDS = Object.keys(SITES) as SiteId[]
 
 export interface CatalogEntry {
-  /** unique on its site; a generator copied onto two sites has the same id on both */
+  /** unique on its site; a generator copied onto several sites has the same id on each */
   id: string
   /** the site it lives on */
   site: SiteId

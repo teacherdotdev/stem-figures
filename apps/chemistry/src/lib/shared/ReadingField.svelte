@@ -9,6 +9,9 @@
     label: string
     value: number
     decimals: number
+    /** how far the arrows (and the mouse wheel) move it: an instrument's
+     *  least count; one in the last decimal place if not given */
+    step?: number
     min: number
     max: number
     /** what the reading is in, e.g. "mL"; a pH has none */
@@ -17,7 +20,7 @@
     /** picks a random valid reading; without it there's no Random button */
     onrandom?: () => void
   }
-  let { label, value, decimals, min, max, unit = '', onchange, onrandom }: Props = $props()
+  let { label, value, decimals, step, min, max, unit = '', onchange, onrandom }: Props = $props()
 
   const id = $props.id()
   let input: HTMLInputElement
@@ -50,7 +53,7 @@
       {id}
       type="number"
       inputmode="decimal"
-      step={10 ** -decimals}
+      step={step ?? 10 ** -decimals}
       {min}
       {max}
       defaultValue={value.toFixed(decimals)}

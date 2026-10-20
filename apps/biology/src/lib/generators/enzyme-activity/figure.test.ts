@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { textBox, textWidth, type Box } from './labels'
+import { textBox, textWidth, type Box } from '$shared/graph/labels'
 import { buildEnzyme, readoutOf, runsOf, spread, type Label } from './figure'
-import { enzymeSettings } from './settings'
+import { enzymeSettings, retitled } from './settings'
 
 const settingsOf = (query: string) => enzymeSettings.fromParams(new URLSearchParams(query))
 const build = (query: string) => buildEnzyme(settingsOf(query))
@@ -184,6 +184,79 @@ describe('an enzyme activity graph', () => {
   })
 })
 
+describe('numbered axes', () => {
+  const NUMBERED = 'axes=numbered&gridlines=1'
+
+  it('numbers the axes, fitted to the curves, the rate in arbitrary units up to 12', () => {
+    const g = build(NUMBERED)
+    expect(g.range).toEqual({ from: 0, to: 60 })
+    const xs = g.numbers.filter((n) => n.anchor === 'middle').map((n) => n.text)
+    const ys = g.numbers.filter((n) => n.anchor === 'end').map((n) => n.text)
+    expect(xs.at(-1)).toBe('60')
+    expect(ys.at(-1)).toBe('12')
+    expect(build(NUMBERED + '&graph=ph').numbers.some((n) => n.text === '14')).toBe(false)
+    expect(build(NUMBERED + '&graph=substrate').range).toEqual({ from: 0, to: 10 })
+  })
+
+  it('puts the optimum at 10 on the rate axis, 37 °C along', () => {
+    const g = build(NUMBERED)
+    const [p] = g.dots
+    expect(p.x).toBeCloseTo(g.grid.x + (37 / 60) * g.grid.w, 6)
+    expect(p.y).toBeCloseTo(g.grid.y + g.grid.h * (2 / 12), 6)
+  })
+
+  it('puts the optimum and Vmax at 100 with the rate as a percentage, on a fitted or typed axis', () => {
+    const g = build(NUMBERED + '&rateUnit=percent')
+    expect(g.numbers.filter((n) => n.anchor === 'end').at(-1)?.text).toBe('120')
+    expect(g.dots[0].y).toBeCloseTo(g.grid.y + g.grid.h * (20 / 120), 6)
+    const typed = build(NUMBERED + '&rateUnit=percent&yFit=0&yFrom=0&yTo=100&yStep=10')
+    expect(typed.dots[0].y).toBeCloseTo(typed.grid.y, 6)
+    // The optimum's label, with no room over the peak, goes below it rather than off the figure.
+    expect(boxOf(typed.markLabels[0], typed.labelFs).y0).toBeGreaterThanOrEqual(typed.grid.y)
+    const v = build(NUMBERED + '&rateUnit=percent&graph=substrate&yFit=0&yFrom=0&yTo=200&yStep=20')
+    expect(v.lines[0].y1).toBeCloseTo(v.grid.y + v.grid.h / 2, 6)
+    // Shape only, there are no numbers for the unit to change.
+    expect(build('rateUnit=percent').dots).toEqual(build('').dots)
+  })
+
+  it('draws the ranges typed once an axis isn’t fitted', () => {
+    const g = build(NUMBERED + '&xFit=0&xFrom=20&xTo=50&xStep=2&yFit=0&yFrom=0&yTo=20&yStep=2')
+    expect(g.range).toEqual({ from: 20, to: 50 })
+    expect(g.numbers.some((n) => n.text === '20' && n.anchor === 'end')).toBe(true)
+    expect(Math.min(...g.curves[0].paths.flatMap(pathXs))).toBeGreaterThanOrEqual(g.grid.x - 0.01)
+    expect(build(NUMBERED + '&xFit=0&xFrom=5&xTo=1').problems.xTo).toBeTruthy()
+  })
+
+  it('writes Vmax, ½Vmax and Km past the numbers, kept off each other, the numbers and the titles', () => {
+    for (const query of [INHIBITORS + '&markKm=1', 'graph=substrate&inhibitor1=competitive&show3=1&markKm=1']) {
+      const g = build(NUMBERED + '&' + query)
+      expect(g.sideLabels.map(labelText).sort(), query).toEqual(build(query).sideLabels.map(labelText).sort())
+      const boxes = [...g.markLabels, ...g.sideLabels].map((l) => boxOf(l, g.labelFs))
+      const numbers = g.numbers.map((n) => textBox({ x: n.x, y: n.y, anchor: n.anchor }, textWidth(n.text, g.fs), g.fs))
+      for (const [k, a] of boxes.entries()) for (const b of [...boxes.slice(k + 1), ...numbers]) expect(overlap(a, b), query).toBe(false)
+      const x = g.labels.find((l) => l.kind === 'side' && !l.rotate)!
+      const y = g.labels.find((l) => l.kind === 'side' && l.rotate)!
+      for (const b of boxes) {
+        expect(b.y1, query).toBeLessThan(x.y - g.fs)
+        expect(b.x0, query).toBeGreaterThan(y.x + g.fs / 2)
+      }
+    }
+  })
+
+  it('leaves out marks off a typed axis', () => {
+    const g = build(NUMBERED + '&graph=substrate&markKm=1&km=4&xFit=0&xFrom=0&xTo=3&xStep=1')
+    expect(g.guides.filter((l) => l.x1 === l.x2)).toEqual([])
+    const low = build(NUMBERED + '&yFit=0&yFrom=0&yTo=5&yStep=1')
+    expect(low.dots).toEqual([])
+  })
+
+  it('keeps a tick at each block without gridlines', () => {
+    const g = build('axes=numbered')
+    expect(g.gridlines).toBe('none')
+    expect(g.vLines.length).toBeGreaterThan(0)
+  })
+})
+
 describe('the readout', () => {
   it('says where each enzyme works', () => {
     expect(readoutOf(settingsOf(''))).toEqual(['Human enzyme: works best at 37 °C, and has denatured by 47 °C'])
@@ -214,5 +287,12 @@ describe('the settings', () => {
     expect(enzymeSettings.toQuery(enzymeSettings.defaults)).toBe('')
     const s = settingsOf(THREE_PH + '&enzyme3=unknown&pOpt3=9.5&markDen=1&name2=Amylase')
     expect(enzymeSettings.fromParams(new URLSearchParams(enzymeSettings.toQuery(s)))).toEqual(s)
+  })
+
+  it('give numbered axes their units in the titles, keeping ones the teacher typed', () => {
+    const before = { ...enzymeSettings.defaults, graph: 'substrate' as const, xTitle: 'Substrate concentration', yTitle: 'Speed' }
+    expect(retitled(before, { graph: 'substrate', axes: 'numbered', rateUnit: 'au' })).toEqual({ xTitle: 'Substrate concentration (arbitrary units)' })
+    const numbered = { ...enzymeSettings.defaults, axes: 'numbered' as const, yTitle: 'Rate of reaction (arbitrary units)' }
+    expect(retitled(numbered, { graph: 'temperature', axes: 'numbered', rateUnit: 'percent' }).yTitle).toBe('Rate of reaction (% of maximum)')
   })
 })
