@@ -1,10 +1,11 @@
 <script lang="ts">
   // The Motion Graph Generator: the motion segment by segment (SegmentList,
-  // shared with the Motion Map Generator), the graphs, marks, titles
-  // and grid on the left, the figure on the right. Settings live in the page
-  // address. The grids and axes are $shared/graph's, the same as Chemistry's
-  // titration curve and Biology's population growth.
-  import { ChartLine, Grid3x3, Heading, MapPin, Route, SlidersHorizontal } from '@lucide/svelte'
+  // shared with the Motion Map Generator, which a button opens with the same
+  // motion), the graphs, marks, titles and grid on the left, the figure on the
+  // right. Settings live in the page address. The grids and axes are
+  // $shared/graph's, the same as Chemistry's titration curve and Biology's
+  // population growth.
+  import { ChartLine, GitCommitHorizontal, Grid3x3, Heading, MapPin, Route, SlidersHorizontal } from '@lucide/svelte'
   import { createGenerator } from '$lib/shared/generator.svelte'
   import GeneratorPage from '$shared/GeneratorPage.svelte'
   import LabelField from '$lib/shared/LabelField.svelte'
@@ -16,6 +17,7 @@
   import RangeFields from './RangeFields.svelte'
   import SegmentList from './SegmentList.svelte'
   import { GRAPHS, motionSettings, viewsOf, type Graphs, type Kind } from './settings'
+  import { mapLink } from '../motion-map/settings'
 
   const gen = createGenerator(motionSettings, 'motion-graphs')
   const s = $derived(gen.snapshot())
@@ -72,6 +74,7 @@
     <Section title="Motion" icon={Route} summary={motionSummary}>
       <SegmentList bind:segments={gen.s.segments} bind:start={gen.s.start} clean={s.segments} {m} />
       <p class="note">Speeding up and slowing down carry on from the velocity before them.</p>
+      <a class="btn-ghost small" href={mapLink(s)}><GitCommitHorizontal size={16} aria-hidden="true" /> See it as a motion map</a>
     </Section>
 
     <Section title="Graphs" icon={ChartLine} summary={GRAPHS[s.graphs].name}>
