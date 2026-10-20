@@ -14,6 +14,7 @@ import CircuitDiagramPreview from './circuit-diagram/Preview.svelte'
 import FreeBodyPreview from './free-body-diagram/Preview.svelte'
 import InclinedPlanePreview from './inclined-plane/Preview.svelte'
 import MotionGraphsPreview from './motion-graphs/Preview.svelte'
+import MotionMapPreview from './motion-map/Preview.svelte'
 import ProjectileMotionPreview from './projectile-motion/Preview.svelte'
 import PulleyPreview from './pulley/Preview.svelte'
 import SpringScalePreview from './spring-scale/Preview.svelte'
@@ -28,6 +29,7 @@ export const PREVIEWS: Record<string, Component> = {
   'pulley': PulleyPreview,
   'projectile-motion': ProjectileMotionPreview,
   'motion-graphs': MotionGraphsPreview,
+  'motion-map': MotionMapPreview,
   'spring-scale': SpringScalePreview,
   'waves': WavePreview,
   'circuit-diagram': CircuitDiagramPreview,

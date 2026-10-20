@@ -92,6 +92,21 @@ export const PHYSICS: CatalogEntry[] = [
     ],
   },
   {
+    id: 'motion-map',
+    site: 'physics',
+    name: 'Motion Map Generator',
+    path: '/motion-map',
+    blurb: 'Dots at equal times with velocity arrows, built segment by segment.',
+    description:
+      'Make printable motion maps for physics tests. Build a motion from segments and draw a dot every second with its velocity arrow, ready to pair with its motion graph.',
+    keywords: [
+      'motion map', 'motion maps', 'motion diagram', 'motion diagrams', 'dot diagram', 'oil drop diagram', 'ticker tape',
+      'ticker tape diagram', 'strobe diagram', 'velocity arrows', 'velocity vectors', 'acceleration', 'displacement',
+      'distance', 'constant velocity', 'at rest', 'speeding up', 'slowing down', 'turning around', 'number line',
+      'kinematics', 'segments', 'cart', 'modeling physics', 'mechanics', 'printable',
+    ],
+  },
+  {
     id: 'spring-scale',
     site: 'physics',
     alsoOn: ['chemistry'],
