@@ -480,6 +480,81 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('length-reading', [
+    {
+      slug: 'caliper-reading-23-45-mm',
+      title: 'Caliper reading 23.45 mm',
+      alt: 'A caliper holding a block, reading 23.45 mm on its 0.05 mm sliding scale, with a close-up strip of its scales and a larger close-up of where the marks line up',
+      caption:
+        'A 150 mm caliper with a block held between its outside jaws. The close-up strip below it shows the sliding scale’s zero just past 23 mm on the main scale, and the larger close-up below that shows its 9th mark, between the 4 and the 5, lined up with a main-scale mark: 23 + 9 × 0.05 = 23.45 mm. The least count, 0.05 mm, is printed on the slider.',
+      settings: { instrument: 'caliper' },
+    },
+    {
+      slug: 'caliper-0-1-mm-reading-34-7-mm',
+      title: '0.1 mm caliper reading 34.7 mm',
+      alt: 'A caliper with a 0.1 mm sliding scale holding a cylinder, reading 34.7 mm, with a close-up strip of its scales',
+      caption:
+        'A caliper whose sliding scale has 10 divisions over 9 mm, so it reads to 0.1 mm, holding an upright cylinder across its diameter. The close-up strip shows the sliding scale’s zero between 34 and 35 mm on the main scale and its 7th mark lined up with a main-scale mark, so the reading is 34.7 mm.',
+      settings: { instrument: 'caliper', leastCount: '0.1', caliper: 34.7, jaws: 'cylinder' },
+    },
+    {
+      slug: 'caliper-0-02-mm-reading-41-38-mm',
+      title: '0.02 mm caliper reading 41.38 mm',
+      alt: 'A caliper with a 0.02 mm sliding scale holding a ball, reading 41.38 mm, with a close-up strip of its scales and a larger close-up of where the marks line up',
+      caption:
+        'A caliper whose sliding scale has 50 divisions over 49 mm, so it reads to 0.02 mm, holding a ball. The close-up strip shows the sliding scale’s zero just past 41 mm, and the larger close-up shows its 19th mark, four marks past the 3, lined up with a main-scale mark: 41 + 19 × 0.02 = 41.38 mm.',
+      settings: { instrument: 'caliper', leastCount: '0.02', caliper: 41.38, jaws: 'ball' },
+    },
+    {
+      slug: 'caliper-with-a-zero-error',
+      title: 'Caliper with a zero error',
+      alt: 'Two 0.1 mm calipers: above, with its jaws closed, reading 0.3 mm; below, holding block A, reading 27.6 mm, each with a close-up strip of its scales',
+      caption:
+        'The same 0.1 mm caliper twice. Above, with its jaws closed, the sliding scale’s zero sits just past the main scale’s zero and its 3rd mark lines up: a zero error of +0.3 mm. Below, holding block A, it reads 27.6 mm. Students take the zero error off the reading: the block is 27.3 mm long.',
+      settings: { instrument: 'caliper', leastCount: '0.1', caliper: 27.6, caliperZero: 0.3, jawsLabel: 'A' },
+    },
+    {
+      slug: 'micrometer-reading-7-38-mm',
+      title: 'Micrometer reading 7.38 mm',
+      alt: 'A micrometer holding a ball bearing, reading 7.38 mm, with a magnified view of its sleeve and thimble',
+      caption:
+        'A 0–25 mm micrometer with a ball between its anvil and spindle. The magnifier shows the 7 mm mark showing on the sleeve, but not the 7.5 mm mark below the datum line, and the thimble’s 38th mark on the datum line, so the reading is 7 + 0.38 = 7.38 mm. The thimble’s marks bunch together toward its top and bottom edges, as on a real one.',
+      settings: { instrument: 'micrometer', jaws: 'ball' },
+    },
+    {
+      slug: 'micrometer-reading-just-past-half-a-millimeter',
+      title: 'Micrometer reading just past half a millimeter: 5.51 mm',
+      alt: 'A micrometer holding a wire, reading 5.51 mm, with a magnified view showing the 5.5 mm mark just uncovered on the sleeve',
+      caption:
+        'A micrometer measuring a wire, with the thimble’s edge just past the 5.5 mm mark below the sleeve’s datum line, and the thimble’s 1st mark on the datum line. The reading is 5.5 + 0.01 = 5.51 mm. Missing the half-millimeter mark would give 5.01 mm, the common mistake.',
+      settings: { instrument: 'micrometer', micrometer: 5.51, jaws: 'wire' },
+    },
+    {
+      slug: 'micrometer-with-a-negative-zero-error',
+      title: 'Micrometer with a negative zero error',
+      alt: 'Two micrometers: above, closed, its thimble’s 0 three marks above the datum line, reading −0.03 mm; below, holding a wire, reading 3.27 mm, each with a magnified view',
+      caption:
+        'The same micrometer twice. Above, closed, the thimble’s 0 has turned three marks past the datum line, so it reads −0.03 mm: a negative zero error. Below, holding a wire, it reads 3.27 mm. Taking off the zero error gives 3.27 − (−0.03) = 3.30 mm.',
+      settings: { instrument: 'micrometer', micrometer: 3.27, micrometerZero: -0.03, jaws: 'wire' },
+    },
+    {
+      slug: 'caliper-scales-close-up-62-35-mm',
+      title: 'Caliper scales close-up: 62.35 mm',
+      alt: 'A close-up strip of a caliper’s main scale and 0.05 mm sliding scale reading 62.35 mm, with a larger close-up of where the marks line up below it',
+      caption:
+        'The scales alone, without the caliper: the main scale from 6 to 11 cm and the 0.05 mm sliding scale below it, its zero just past 62 mm. A larger close-up below shows its 7th mark, between the 3 and the 4, lined up with a main-scale mark, so the reading is 62 + 7 × 0.05 = 62.35 mm.',
+      settings: { instrument: 'caliper', caliper: 62.35, closeUp: 'magnifier' },
+    },
+    {
+      slug: 'metric-ruler-reading-7-45-cm',
+      title: 'Metric ruler reading 7.45 cm',
+      alt: 'A 15 cm ruler marked in millimeters with a metal cylinder lying along it from 0 to 7.45 cm, with a magnified view of its right end',
+      caption:
+        'A 15 cm ruler marked every millimeter, with a metal cylinder lying along it, its left end on 0. Its right end falls halfway between 7.4 and 7.5 cm, so its length is 7.45 cm, the hundredths digit estimated. A magnified view shows the right end against the marks.',
+      settings: { length: 7.45, object: 'cylinder' },
+    },
+  ]),
+
   ...examplesOf('vector-diagram', [
     {
       slug: 'adding-two-perpendicular-vectors-head-to-tail',

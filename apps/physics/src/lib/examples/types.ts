@@ -5,6 +5,7 @@
 import type { CircuitSettings } from '$lib/generators/circuit-diagram/settings'
 import type { FbdSettings } from '$lib/generators/free-body-diagram/settings'
 import type { InclineSettings } from '$lib/generators/inclined-plane/settings'
+import type { LengthSettings } from '$lib/generators/length-reading/settings'
 import type { MotionSettings } from '$lib/generators/motion-graphs/settings'
 import type { MapSettings } from '$lib/generators/motion-map/settings'
 import type { ProjectileSettings } from '$lib/generators/projectile-motion/settings'
@@ -24,6 +25,7 @@ export interface SettingsById {
   'motion-graphs': MotionSettings
   'motion-map': MapSettings
   'spring-scale': SpringScaleSettings
+  'length-reading': LengthSettings
   'waves': WaveSettings
   'circuit-diagram': CircuitSettings
   'ray-diagram': RaySettings

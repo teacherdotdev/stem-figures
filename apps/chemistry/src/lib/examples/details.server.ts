@@ -16,7 +16,7 @@ import { answerLines as halfLifeAnswer } from '$lib/generators/half-life-graph/f
 import { halfLifeSettings } from '$lib/generators/half-life-graph/settings'
 import { buildCurve, degrees, segmentName } from '$lib/generators/heating-cooling-curve/figure'
 import { curveSettings, temperaturesOf, setupOf } from '$lib/generators/heating-cooling-curve/settings'
-import { lengthSettings, answerLine as lengthAnswer } from '$lib/generators/length-reading/settings'
+import { lengthSettings, workingLines as lengthWorking } from '$lib/generators/length-reading/settings'
 import { chargeText } from '$lib/generators/lewis-structures/formula'
 import { electronGroups } from '$lib/generators/lewis-structures/layout'
 import { figureOf, lewisSettings } from '$lib/generators/lewis-structures/settings'
@@ -186,7 +186,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'volume-reading': { definition: volumeSettings, answer: (s) => lines(volumeAnswer(s)) },
   'volume-by-displacement': { definition: displacementSettings, answer: (s) => lines(displacementAnswer(s)) },
   'gas-syringe': { definition: syringeSettings, answer: (s) => lines(syringeAnswer(s)) },
-  'length-reading': { definition: lengthSettings, answer: (s) => lines(lengthAnswer(s)) },
+  'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthWorking(s) }) },
   'mass-reading': { definition: massSettings, answer: (s) => lines(massAnswer(s)) },
   'temperature-reading': { definition: temperatureSettings, answer: (s) => lines(temperatureAnswer(s)) },
   'ph-reading': { definition: phSettings, answer: (s) => lines(phAnswer(s)) },

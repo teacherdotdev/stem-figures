@@ -146,18 +146,20 @@ export const COPY: Record<string, GeneratorCopy> = {
   },
 
   'length-reading': {
-    heading: 'Ruler figures for measuring length',
+    heading: 'Ruler, caliper and micrometer figures for measuring length',
     intro: [
-      'Length Reading draws a centimeter or inch ruler with an object lying along it: marbles, a rock, a cube or a metal cylinder. You type the object’s length and where its left end sits, and students measure it from the ruler, either lined up with 0 or starting partway along so they have to read both ends and subtract.',
-      'On a metric ruler, lengths can go one estimated digit past the smallest mark, for significant figures practice, or land on the nearest mark. An inch ruler is read in fractions of an inch. Magnifiers on the object’s ends keep the marks readable in print, and the answer key prints the length, and both ends when the object doesn’t start at 0.',
+      'Length Reading draws the instrument a length is read from: a centimeter or inch ruler with an object lying along it (marbles, a rock, a cube or a metal cylinder), a 150 mm caliper with its jaws open to the reading you type, or a 0–25 mm micrometer. On the ruler, students measure the object lined up with 0 or starting partway along, so they read both ends and subtract.',
+      'Metric ruler lengths can go one estimated digit past the smallest mark, for significant figures practice. The caliper reads to 0.1, 0.05 or 0.02 mm, with exactly one mark on its sliding scale lined up with the main scale, and the micrometer reads to 0.01 mm. Give a caliper or micrometer a zero error for a correction question. Close-ups of the scales keep the marks readable in print, and the answer key prints the reading.',
     ],
     settings: [
-      'A metric ruler, 15, 20, 30, 50 or 100 cm long, marked every 1 mm, 0.5 cm or 1 cm (or 5 or 10 cm on the long ones)',
+      'The instrument: a ruler, a caliper or a micrometer',
+      'A metric ruler, 15, 20, 30, 50 or 100 cm long, marked every 1 mm, 0.5 cm or 1 cm (or 5 or 10 cm on the long ones), read to one estimated digit or to the nearest mark',
       'An inch ruler, 6, 8, 12 or 20 in long, marked every 1, 1/2, 1/4, 1/8 or 1/16 in',
-      'Metric lengths read to one estimated digit or to the nearest mark',
-      'The object’s length and left end, typed, picked at random, or set by dragging the object along the ruler',
-      'The object: 1 to 5 marbles in a row, a rock, a cube or a metal cylinder, with dashed lines down from its ends if you like',
-      'Magnifiers on its ends, a chart title, and an answer key line',
+      'The object on the ruler, its length and left end, typed, picked at random, or set by dragging it along the ruler, with dashed lines down from its ends if you like',
+      'The caliper’s least count: 0.1 mm (10 divisions over 9 mm), 0.05 mm (20 over 39 mm) or 0.02 mm (50 over 49 mm), printed on the slider or left off',
+      'The caliper or micrometer reading, typed or picked at random, and a zero error, with the instrument also drawn closed',
+      'In the jaws: nothing, a block, a cylinder, a ball or a wire, drawn to size, with a short label',
+      'Magnifiers or close-ups of the scales, a chart title, and an answer key line',
     ],
     faqs: [
       {
@@ -171,6 +173,18 @@ export const COPY: Record<string, GeneratorCopy> = {
       {
         q: 'What are the dashed lines at the object’s ends for?',
         a: 'A marble or a rock touches the ruler below its widest point, so its ends sit above the marks they line up with. The dashed lines drop from each end down to the ruler to show where to read.',
+      },
+      {
+        q: 'How do you read a caliper?',
+        a: 'Read the main scale at the sliding scale’s zero: the last millimeter mark before it. Then find the one mark on the sliding scale that lines up exactly with a main-scale mark, and add that many least counts. With the zero just past 23 mm and the 9th mark of a 0.05 mm scale lined up, the reading is 23 + 9 × 0.05 = 23.45 mm. On a 0.05 or 0.02 mm caliper a second, larger close-up shows the part of the scales where the marks line up, off-center so it doesn’t give the answer away.',
+      },
+      {
+        q: 'How do you read a micrometer?',
+        a: 'Read the last mark showing on the sleeve: whole millimeters above the datum line, and the half-millimeter mark below it if it has appeared. Then add the thimble mark on the datum line, 0.01 mm each. A sleeve showing 7 mm and thimble mark 38 read 7.38 mm; with the 7.5 mark showing as well, 7.88 mm.',
+      },
+      {
+        q: 'What is a zero error?',
+        a: 'With its jaws closed, a caliper or micrometer should read zero. If it doesn’t, the reading it shows closed is the zero error, positive or negative, and you subtract it from every reading: an instrument that reads +0.10 mm closed and 23.45 mm on a block measures 23.35 mm.',
       },
       {
         q: 'Can I make inch ruler questions with fractions?',
