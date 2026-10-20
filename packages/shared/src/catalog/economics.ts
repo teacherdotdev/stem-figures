@@ -16,4 +16,18 @@ export const ECONOMICS: CatalogEntry[] = [
       'deadweight loss', 'tax incidence', 'subsidy', 'elasticity', 'shift', 'market', 'AP Microeconomics', 'graph', 'printable',
     ],
   },
+  {
+    id: 'money-markets',
+    site: 'economics',
+    name: 'Money Markets',
+    path: '/money-markets',
+    blurb: 'The money market, loanable funds and the market for reserves, with Fed policy shifts.',
+    description:
+      'Make printable money market, loanable funds and reserves market graphs for economics tests. Shift money supply or money demand, show crowding out, and draw the market for reserves with ample or limited reserves as the Fed changes administered rates or buys and sells bonds.',
+    keywords: [
+      'money market', 'money supply', 'money demand', 'loanable funds', 'crowding out', 'reserves', 'ample reserves', 'limited reserves',
+      'interest on reserves', 'IORB', 'administered rates', 'federal funds rate', 'policy rate', 'open-market operations', 'monetary policy',
+      'interest rate', 'AP Macroeconomics', 'graph', 'printable',
+    ],
+  },
 ]
