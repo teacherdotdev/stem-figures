@@ -16,7 +16,7 @@ import type { Axes } from '$shared/graph/axes'
 import type { Cap } from '$shared/graph/caps'
 import { COLORS } from '$shared/graph/colors'
 import { layoutGrid, pathOf, round, clipPath, type Point } from '$shared/graph/grid'
-import { alongCurve, besidePoint, placer, textBox, type Anchor, type Box, type Segment, type Spot } from '$shared/graph/labels'
+import { alongCurve, besidePoint, crosses, placer, textBox, type Anchor, type Box, type Segment, type Spot } from '$shared/graph/labels'
 import { runsOf, runsWidth, type Run } from '$shared/graph/runs'
 import type { LabelSize } from '$shared/labelSize'
 import { centroidOf } from './curves'
@@ -39,12 +39,19 @@ export type CurveSpec = {
   nameAt?: 'start' | 'end'
 }
 export type RegionSpec = { poly: Point[]; color: string; hatch: number; name?: Words }
-export type PointSpec = { at: Point; name?: Words; dot?: boolean }
+/** A point, its name beside it (or, with `side`, over or under it, as a peak's and a trough's are). */
+export type PointSpec = { at: Point; name?: Words; dot?: boolean; side?: 'above' | 'below' }
 export type MarkSpec = { axis: 'x' | 'y'; at: number; name: Words }
 export type GuideSpec = { from: Point; x?: boolean; y?: boolean }
 export type ArrowSpec = { from: Point; to: Point; color: string }
 export type BraceSpec = { from: Point; to: Point; side: 'below' | 'above' | 'left' | 'right'; name?: Words }
-export type CalloutSpec = { at: Point; name: Words }
+/**
+ * Words with an arrow to a point. `toward` (in the graph's units, up
+ * positive) is the way from the point the words would best sit; `or` are
+ * other points the arrow could go to instead, tried in turn when the first
+ * leaves the words no clean place.
+ */
+export type CalloutSpec = { at: Point; name: Words; toward?: Point; or?: { at: Point; toward?: Point }[] }
 /** A line across the graph, like a price ceiling, drawn as a curve is but thinner. */
 export type LevelSpec = { pts: Point[]; name?: Words; color: string; dash?: string }
 
@@ -144,10 +151,16 @@ export function buildPanel(spec: PanelSpec) {
   const bounds: Box = { x0: area.x - (numbered ? 0 : 4) + INSET, y0: area.y - ROOM_TOP + INSET, x1: area.x + area.w + right - INSET, y1: axisY - INSET }
   const place = placer(bounds)
   const labels: Label[] = []
+  /** Every label's box on the graph so far, for callouts' leaders to keep out of. */
+  const taken: Box[] = []
+  /** How many labels found no place clear of every line and label. */
+  let crowded = 0
   const put = (spots: Spot[], w: Words) => {
     const width = widthOf(w)
-    const spot = place.place(spots, width, LFS)
+    const spot = place.choose(spots.map((sp) => ({ ...sp, box: textBox(sp, width, LFS) })))
     labels.push(labelAt(spot, w, spot.box))
+    taken.push(spot.box)
+    if (spot.score >= 10) crowded++
     return spot
   }
   const labelAt = (spot: Spot, w: Words, b: Box): Label =>
@@ -183,9 +196,18 @@ export function buildPanel(spec: PanelSpec) {
     for (const run of paths) place.line(run)
     return { paths: paths.map(pathOf), color: l.color, dash: l.dash, ends: paths, name: l.name }
   })
+  // Every line drawn, for callouts' leaders to keep from crossing.
+  const drawn: Segment[] = []
+  const drawnLine = (run: Point[]) => {
+    for (let k = 1; k < run.length; k++) drawn.push({ x1: run[k - 1].x, y1: run[k - 1].y, x2: run[k].x, y2: run[k].y })
+  }
+  for (const l of levels) for (const run of l.ends) drawnLine(run)
   const curves = (spec.curves ?? []).map((c) => {
     const paths = runsIn(c.pts)
-    for (const run of paths) place.line(run)
+    for (const run of paths) {
+      place.line(run)
+      drawnLine(run)
+    }
     return { paths: paths.map(pathOf), color: c.color, dash: c.dash, width: c.width ?? 3, ends: paths, name: c.name, nameAt: c.nameAt ?? 'end' }
   })
   const guides: Segment[] = []
@@ -252,7 +274,8 @@ export function buildPanel(spec: PanelSpec) {
   // levels' names, regions' names, then callouts.
   for (const p of spec.points ?? []) {
     if (!shows(p.name)) continue
-    put(besidePoint(px(p.at), LFS, 9), p.name)
+    const q = px(p.at)
+    put(p.side ? [...overSpots(q, LFS, p.side), ...besidePoint(q, LFS, 9)] : besidePoint(q, LFS, 9), p.name)
   }
   for (const b of braces) {
     if (!shows(b.name)) continue
@@ -265,6 +288,7 @@ export function buildPanel(spec: PanelSpec) {
       : { x: t.x + 5, y: t.y + LFS * 0.35, anchor: 'start' }
     const bx = textBox(spot, w, LFS)
     place.keep(bx)
+    taken.push(bx)
     labels.push(labelAt(spot, b.name, bx))
   }
   for (const c of curves) {
@@ -293,22 +317,66 @@ export function buildPanel(spec: PanelSpec) {
     put(insideSpots(r.poly, r.centroid, LFS), r.name)
   }
   const leaders: Segment[] = []
+  const WAYS = [
+    { dx: 0.7, dy: -0.6, anchor: 'start' as const, below: 0 },
+    { dx: -0.7, dy: -0.6, anchor: 'end' as const, below: 0 },
+    { dx: 0.7, dy: 0.6, anchor: 'start' as const, below: LFS },
+    { dx: -0.7, dy: 0.6, anchor: 'end' as const, below: LFS },
+    { dx: 0, dy: -1, anchor: 'middle' as const, below: 0 },
+    { dx: 0, dy: 1, anchor: 'middle' as const, below: LFS * 0.5 },
+    { dx: 1, dy: 0, anchor: 'start' as const, below: LFS * 0.35 },
+    { dx: -1, dy: 0, anchor: 'end' as const, below: LFS * 0.35 },
+  ]
   for (const c of spec.callouts ?? []) {
     if (!shows(c.name)) continue
-    const p = px(c.at)
-    const spots: Spot[] = [44, 70, 100].flatMap((r) => [
-      { x: p.x + r * 0.7, y: p.y - r * 0.6, anchor: 'start' as const },
-      { x: p.x - r * 0.7, y: p.y - r * 0.6, anchor: 'end' as const },
-      { x: p.x + r * 0.7, y: p.y + r * 0.6 + LFS, anchor: 'start' as const },
-      { x: p.x - r * 0.7, y: p.y + r * 0.6 + LFS, anchor: 'end' as const },
-      { x: p.x, y: p.y - r, anchor: 'middle' as const },
-      { x: p.x, y: p.y + r + LFS * 0.5, anchor: 'middle' as const },
-    ])
-    const spot = put(spots, c.name)
-    const from = nearestOnBox(spot.box, p, 3)
-    const len = Math.hypot(p.x - from.x, p.y - from.y) || 1
+    const width = widthOf(c.name)
     const stop = 4
-    leaders.push({ x1: round(from.x), y1: round(from.y), x2: round(p.x - ((p.x - from.x) / len) * stop), y2: round(p.y - ((p.y - from.y) / len) * stop) })
+    // Each point the arrow could go to (the first unless it leaves no clean place), and the places around it.
+    const options = [{ at: c.at, toward: c.toward }, ...(c.or ?? [])].flatMap(({ at, toward }) => {
+      const p = px(at)
+      const around = [30, 44, 70, 100].flatMap((r) => WAYS.map((w) => ({ p, r, w, spot: { x: p.x + r * w.dx, y: p.y + r * w.dy + w.below, anchor: w.anchor } })))
+      // Asked for a way, the places nearest it come first, the nearer the point the sooner.
+      if (toward && (toward.x || toward.y)) {
+        const len = Math.hypot(toward.x, toward.y)
+        const want = { x: toward.x / len, y: -toward.y / len }
+        const off = (o: (typeof around)[number]) => Math.acos(Math.max(-1, Math.min(1, (o.w.dx * want.x + o.w.dy * want.y) / Math.hypot(o.w.dx, o.w.dy)))) + ((o.r - 44) / 56) * 0.6
+        around.sort((a, b) => off(a) - off(b))
+      }
+      return around
+    })
+    // The leader from a label's nearest edge to the point, stopped short of it.
+    const leaderOf = (b: Box, p: Point): Segment | null => {
+      const from = nearestOnBox(b, p, 3)
+      const len = Math.hypot(p.x - from.x, p.y - from.y)
+      if (len < stop + 6) return null
+      return { x1: round(from.x), y1: round(from.y), x2: round(p.x - ((p.x - from.x) / len) * stop), y2: round(p.y - ((p.y - from.y) / len) * stop) }
+    }
+    // What a leader crosses (short of the point itself): a line, or a label (or close by one), counts as much as a label on a line.
+    const leaderCost = (l: Segment | null) => {
+      if (!l) return 0
+      const len = Math.hypot(l.x2 - l.x1, l.y2 - l.y1)
+      const f = Math.max(0, (len - 8) / len)
+      const short = { x1: l.x1, y1: l.y1, x2: l.x1 + (l.x2 - l.x1) * f, y2: l.y1 + (l.y2 - l.y1) * f }
+      const near = (b: Box) => ({ x0: b.x0 - 3, y0: b.y0 - 3, x1: b.x1 + 3, y1: b.y1 + 3 })
+      return 10 * (drawn.filter((d) => segmentsCross(short, d)).length + taken.filter((b) => crosses(short, near(b))).length)
+    }
+    // The place where the label and its leader touch least, the first of any as good.
+    let best: { spot: Spot; box: Box; leader: Segment | null; score: number } | null = null
+    for (const { spot, p } of options) {
+      const box = textBox(spot, width, LFS)
+      const leader = leaderOf(box, p)
+      const score = place.choose([{ box }], false).score + leaderCost(leader)
+      if (!best || score < best.score) best = { spot, box, leader, score }
+      if (score === 0) break
+    }
+    if (!best) continue
+    if (best.score >= 10) crowded++
+    place.keep(best.box)
+    labels.push(labelAt(best.spot, c.name, best.box))
+    taken.push(best.box)
+    if (!best.leader) continue
+    leaders.push(best.leader)
+    place.line([{ x: best.leader.x1, y: best.leader.y1 }, { x: best.leader.x2, y: best.leader.y2 }])
   }
 
   // The chart title on top, the y-axis's word over its top and the
@@ -375,6 +443,8 @@ export function buildPanel(spec: PanelSpec) {
     labels: [...labels, ...sideLabels],
     big,
     blanks,
+    /** how many labels (or callouts' arrows) found no place clear of every line and label */
+    crowded,
     px,
   }
 }
@@ -431,6 +501,28 @@ function insideSpots(poly: Point[], c: Point, fs: number): Spot[] {
   }
   spots.sort((a, b) => a.d - b.d)
   return [{ x: c.x, y: c.y + fs * 0.35, anchor: 'middle' }, ...spots]
+}
+
+/**
+ * Places straight over a point (`above`) or under it (`below`), clear of a
+ * dot on it, then a little to either side, then further off.
+ */
+function overSpots(p: Point, fs: number, side: 'above' | 'below'): Spot[] {
+  const gap = 9
+  const y = side === 'above' ? p.y - gap - fs * 0.3 : p.y + gap + fs * 0.78
+  const further = side === 'above' ? y - fs * 0.6 : y + fs * 0.6
+  return [
+    { x: p.x, y, anchor: 'middle' },
+    { x: p.x + 4, y, anchor: 'start' },
+    { x: p.x - 4, y, anchor: 'end' },
+    { x: p.x, y: further, anchor: 'middle' },
+  ]
+}
+
+/** Whether two segments cross. */
+function segmentsCross(a: Segment, b: Segment) {
+  const side = (s: Segment, x: number, y: number) => Math.sign((s.x2 - s.x1) * (y - s.y1) - (s.y2 - s.y1) * (x - s.x1))
+  return side(a, b.x1, b.y1) * side(a, b.x2, b.y2) < 0 && side(b, a.x1, a.y1) * side(b, a.x2, a.y2) < 0
 }
 
 /** Whether a point is inside a polygon (even–odd). */

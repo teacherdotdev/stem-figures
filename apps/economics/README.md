@@ -24,6 +24,13 @@ decisions.
   readout says what happened to the rate and why (with ample reserves, moving
   the supply of reserves leaves the policy rate where it is). Common setups,
   including the AP 2024 ample-reserves graph.
+- `/business-cycle` **Business Cycle**: real GDP rising and falling around
+  a dashed long-run trend, with its peaks and troughs named and the phases
+  (expansion, contraction, recession, recovery) pointed out with arrows, in
+  words, as letters A, B, C… for a quiz, or as blank lines. Recessions
+  shaded from peak to trough, dots at the turning points, and cycles even
+  or irregular (from a seed, so a link draws the same wave). Common setups
+  to start from.
 - `/about`, `/privacy`, `/reuse`, `/sitemap.xml`, `/robots.txt`
 
 Every page has the top bar: the site name, the current generator, and links
