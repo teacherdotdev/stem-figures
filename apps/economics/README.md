@@ -39,6 +39,14 @@ decisions.
   A, B and C with dashed guides to both axes. Schematic, or numbered in
   percent with the axes crossing at 0 for deflation. Common setups to
   start from.
+- `/production-possibilities` **Production Possibilities Curve**: a
+  curve between two goods (the axis titles), bowed out, straight or bowed
+  in; named points on, inside and outside it with captions pointing to
+  them; a shift out or in, or a pivot when only one good can be made more
+  of, with arrows; the opportunity cost steps between points on the curve;
+  and two countries' straight-line curves for comparative advantage, on one
+  graph or side by side with where each meets the axes written there.
+  Schematic or numbered. Common setups to start from.
 - `/about`, `/privacy`, `/reuse`, `/sitemap.xml`, `/robots.txt`
 
 Every page has the top bar: the site name, the current generator, and links

@@ -40,7 +40,14 @@ export type CurveSpec = {
 }
 export type RegionSpec = { poly: Point[]; color: string; hatch: number; name?: Words }
 /** A point, its name beside it (or, with `side`, over or under it, as a peak's and a trough's are). */
-export type PointSpec = { at: Point; name?: Words; dot?: boolean; side?: 'above' | 'below' }
+export type PointSpec = {
+  at: Point
+  name?: Words
+  dot?: boolean
+  side?: 'above' | 'below'
+  /** where its name may go around the point as drawn, best first, in place of beside it (or over or under it) */
+  spots?: (at: Point, fs: number) => Spot[]
+}
 export type MarkSpec = { axis: 'x' | 'y'; at: number; name: Words }
 export type GuideSpec = { from: Point; x?: boolean; y?: boolean }
 export type ArrowSpec = { from: Point; to: Point; color: string }
@@ -49,9 +56,16 @@ export type BraceSpec = { from: Point; to: Point; side: 'below' | 'above' | 'lef
  * Words with an arrow to a point. `toward` (in the graph's units, up
  * positive) is the way from the point the words would best sit; `or` are
  * other points the arrow could go to instead, tried in turn when the first
- * leaves the words no clean place.
+ * leaves the words no clean place. `spots`, if given, are the only places
+ * the words may go around the point as drawn, best first.
  */
-export type CalloutSpec = { at: Point; name: Words; toward?: Point; or?: { at: Point; toward?: Point }[] }
+export type CalloutSpec = {
+  at: Point
+  name: Words
+  toward?: Point
+  or?: { at: Point; toward?: Point }[]
+  spots?: (at: Point, fs: number) => Spot[]
+}
 /** A line across the graph, like a price ceiling, drawn as a curve is but thinner. */
 export type LevelSpec = { pts: Point[]; name?: Words; color: string; dash?: string }
 
@@ -299,7 +313,7 @@ export function buildPanel(spec: PanelSpec) {
   for (const p of spec.points ?? []) {
     if (!shows(p.name)) continue
     const q = px(p.at)
-    put(p.side ? [...overSpots(q, LFS, p.side), ...besidePoint(q, LFS, 9)] : besidePoint(q, LFS, 9), p.name)
+    put(p.spots ? p.spots(q, LFS) : p.side ? [...overSpots(q, LFS, p.side), ...besidePoint(q, LFS, 9)] : besidePoint(q, LFS, 9), p.name)
   }
   for (const b of braces) {
     if (!shows(b.name)) continue
@@ -356,7 +370,8 @@ export function buildPanel(spec: PanelSpec) {
     const width = widthOf(c.name)
     const stop = 4
     // Each point the arrow could go to (the first unless it leaves no clean place), and the places around it.
-    const options = [{ at: c.at, toward: c.toward }, ...(c.or ?? [])].flatMap(({ at, toward }) => {
+    const given = c.spots ? c.spots(px(c.at), LFS).map((spot) => ({ p: px(c.at), spot })) : null
+    const options = given ?? [{ at: c.at, toward: c.toward }, ...(c.or ?? [])].flatMap(({ at, toward }) => {
       const p = px(at)
       const around = [30, 44, 70, 100].flatMap((r) => WAYS.map((w) => ({ p, r, w, spot: { x: p.x + r * w.dx, y: p.y + r * w.dy + w.below, anchor: w.anchor } })))
       // Asked for a way, the places nearest it come first, the nearer the point the sooner.
