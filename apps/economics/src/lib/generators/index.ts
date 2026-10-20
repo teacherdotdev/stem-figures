@@ -6,10 +6,11 @@
 import type { Component } from 'svelte'
 import { generatorsOn } from '$shared/catalog/index'
 import { SITE_ID } from '$lib/site/config'
+import SupplyDemand from './supply-demand/Preview.svelte'
 
-// None of its own yet; the directory shows those it lists from other sites
-// and the card for requesting one.
-export const PREVIEWS: Record<string, Component> = {}
+export const PREVIEWS: Record<string, Component> = {
+  'supply-demand': SupplyDemand,
+}
 
 export const GENERATORS = generatorsOn(SITE_ID, PREVIEWS)
 

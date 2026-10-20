@@ -9,9 +9,13 @@ decisions.
 ## Pages
 
 - `/` **Directory**: every generator as a card with a live preview, plus a
-  card to request one we don't make yet. There are no generators yet, so
-  for now it says the first ones are on the way and shows only the request
-  card.
+  card to request one we don't make yet.
+- `/supply-demand` **Supply and Demand**: supply and demand curves and
+  where they cross, shifts with arrows, a price ceiling or floor with its
+  shortage or surplus braced, a per-unit tax or subsidy, and shaded
+  consumer and producer surplus, deadweight loss and tax revenue.
+  Schematic (no numbers, as AP graphs are drawn) or numbered from a typed
+  schedule of prices and quantities. Common setups to start from.
 - `/about`, `/privacy`, `/reuse`, `/sitemap.xml`, `/robots.txt`
 
 Every page has the top bar: the site name, the current generator, and links
@@ -34,7 +38,22 @@ src/routes/            SvelteKit pages
 src/lib/site/          top bar, Help, footer, SEO and structured data, site config
 $shared/               ../../packages/shared: pieces shared with the other sites
 src/lib/generators/    index.ts gives each generator its preview; one folder each
+src/lib/graph/         the econ graph library every generator draws with
 ```
+
+`src/lib/graph/` draws every economics graph. A generator works out its
+curves in the graph's own units (`curves.ts`: straight, bowed, convex,
+flat–slope–flat, any function, shifted copies, crossings) and describes a
+panel: curves and their names, shaded regions, points, values at the axes
+with dashed guides, shift arrows (`shifts.ts`), braces and callouts.
+`panel.ts` lays it out on $shared/graph's grid, placing every label where it
+touches nothing, and any label can be a blank line for students.
+`figure.ts` puts one or two panels side by side with dashed lines across;
+`EconFigure.svelte` draws them. `settings.ts` has the settings every graph
+shares (schematic or numbered, color or black and white, axis words) with
+`LookSettings` and `NumberSettings` as their groups; `fit.ts` fits numbered
+axes to the data. In a label, `_` lowers the next letter and `_{…}` everything
+in the braces ($shared/graph/runs).
 
 To add a generator: its entry in `packages/shared/src/catalog/economics.ts`,
 a folder under `src/lib/generators/` with its builder and preview, its
