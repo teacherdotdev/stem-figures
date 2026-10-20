@@ -163,12 +163,9 @@
       <div class="head-row">
         <h2 class="card-head">Graph</h2>
         <HelpTip id="photosynthesis-tip" label="How the curves are worked out">
-          Made to look like textbook graphs, not measured. The rate rises in a straight line while light is limiting,
-          the same slope whatever the CO₂ or temperature, then levels off where the plant’s enzymes can fix CO₂ no
-          faster: higher with more CO₂, and fastest at 30 °C (Enzyme Activity’s temperature curve). Light intensity
-          falls as 1/d² from the lamp. Net rate takes off respiration, which doubles every 10 °C. In a closed chamber
-          the CO₂ changes by respiration less photosynthesis, and the O₂ by the same the other way. With no curves you
-          get blank axes to sketch on; with points only, students draw the line of best fit.
+          Textbook-style shapes, not real data. The rate goes up with light, then levels off at a height set by CO₂
+          and temperature (highest at 30 °C). Light drops off as 1/d² from the lamp. Net rate is photosynthesis minus
+          respiration, and respiration doubles every 10 °C.
         </HelpTip>
       </div>
       <label class="field">
