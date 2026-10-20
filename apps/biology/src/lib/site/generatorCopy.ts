@@ -271,13 +271,14 @@ export const COPY: Record<string, GeneratorCopy> = {
     heading: 'Enzyme activity graphs: temperature, pH, substrate concentration and inhibitors',
     intro: [
       'Enzyme Activity graphs how fast an enzyme works, the rate of reaction, against temperature, pH or substrate concentration. Against temperature the rate rises to the optimum, then falls steeply as the enzyme denatures; against pH it makes a bell around the optimum pH; against substrate concentration it rises and levels off at Vmax, following Michaelis–Menten. Pick an enzyme for each curve, from a human enzyme and Taq polymerase to pepsin, salivary amylase, trypsin and catalase, or an unknown enzyme with an optimum and width of your own.',
-      'Teachers use it for questions on tests, worksheets and slides. Put up to three curves on one graph, like pepsin, amylase and trypsin against pH, or an enzyme with a competitive and a non-competitive inhibitor, told apart by solid, dashed and dotted lines and a key, so they read in black and white. The graphs show shape only, with no numbers on the axes. Mark the optimum, where the enzyme has denatured, Vmax, and ½Vmax with Km, each labeled, left as a blank line for students, or unlabeled.',
+      'Teachers use it for questions on tests, worksheets and slides. Put up to three curves on one graph, like pepsin, amylase and trypsin against pH, or an enzyme with a competitive and a non-competitive inhibitor, told apart by solid, dashed and dotted lines and a key, so they read in black and white. The axes show shape only, or numbers for reading values off the graph, the rate in arbitrary units. Mark the optimum, where the enzyme has denatured, Vmax, and ½Vmax with Km, each labeled, left as a blank line for students, or unlabeled.',
     ],
     settings: [
       'Rate against temperature, pH or substrate concentration',
       'Up to three curves, each one of the enzymes (human enzyme, Taq polymerase, pepsin, salivary amylase, trypsin or catalase) or an unknown enzyme with its own optimum and width, named in a key',
       'Against substrate concentration, each curve with no inhibitor, a competitive inhibitor or a non-competitive one, how soon the rate levels off (Km), and how strong the inhibitor is',
       'The optimum and denaturation marked with dots, or Vmax, ½Vmax and Km with dashed lines to the axes, named for their curve when there’s more than one, each labeled, left as a blank line for students, or unlabeled',
+      'Shape-only axes, or numbered ones fitted to the curves or set by hand',
       'Color or black and white, gridlines, arrows at the axes’ ends, the chart and axis titles (or blank lines), and label size',
     ],
     faqs: [
@@ -290,8 +291,8 @@ export const COPY: Record<string, GeneratorCopy> = {
         a: 'The human enzyme, pepsin, salivary amylase, trypsin and catalase work best at body temperature, about 37 °C, and Taq polymerase, from bacteria in hot springs, at about 75 °C. Pepsin works best at about pH 2 in the stomach, salivary amylase and catalase at about pH 7, trypsin at about pH 8 in the small intestine, and Taq polymerase at about pH 8.3. For any other optimum, choose Unknown enzyme and type your own.',
       },
       {
-        q: 'Why are there no numbers on the axes?',
-        a: 'The graphs show the shapes students learn, like a rise to an optimum and a steep fall, rather than data from one experiment, so they leave the numbers off. Each enzyme’s optimum still sits in the right place along the axis, and the settings panel says where each one works best.',
+        q: 'Can the axes have numbers?',
+        a: 'Yes. The graphs start as the shapes students learn, like a rise to an optimum and a steep fall, with no numbers. Choose Numbered under Axes to number them, for questions that ask students to read off an optimum, Vmax or Km. Temperature is in °C and pH is pH; the rate and substrate concentration are in arbitrary units, since the curves are textbook shapes rather than data from one experiment, with the fastest rate at 10. Each axis fits the curves, or can be set by hand.',
       },
       {
         q: 'How do competitive and non-competitive inhibitors change the graph?',

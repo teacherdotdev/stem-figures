@@ -2,12 +2,11 @@
 // the three curves has an enzyme, a name for the key (empty for the one this
 // page gives it), an optimum and width of its own for an unknown enzyme,
 // and, against substrate concentration, an inhibitor. The axes are a
-// $shared/graph grid fitted to the curves, with no numbers: the graphs show
-// shape only.
+// $shared/graph grid, shape only (no numbers, fitted to the curves) or
+// numbered, fitted or typed as Photosynthesis Rate's are, the rate in
+// arbitrary units.
 
-import { CAPS, type Cap } from '$shared/graph/caps'
-import { MINOR, TITLE_MODES } from '$shared/graph/axes'
-import { LABEL_SIZES, type LabelSize } from '$shared/labelSize'
+import { TITLE_MODES, gridFields } from '$shared/graph/axes'
 import { bool, choice, defineSettings, number, text, type Field } from '$shared/settings'
 import { ENZYME_IDS } from './enzymes'
 import { INHIBITORS } from './model'
@@ -19,24 +18,37 @@ export const GRAPH_NAMES: Record<Graph, string> = { temperature: 'Temperature', 
 
 export const INHIBITOR_NAMES = { none: 'No inhibitor', competitive: 'Competitive inhibitor', noncompetitive: 'Non-competitive inhibitor' }
 
+/** Shape only, with no numbers on the axes, or numbered. */
+export const AXES = ['shape', 'numbered'] as const
+export type Axes = (typeof AXES)[number]
+
 /** The most curves on one graph. */
 export const CURVES = [0, 1, 2] as const
 export type CurveIndex = (typeof CURVES)[number]
 
-/** The axis titles this page writes for each graph, which it swaps when the graph changes. */
-export function autoTitles(graph: Graph) {
+/**
+ * The axis titles this page writes for each graph, which it swaps when the
+ * graph or axes change: numbered, the rate and substrate concentration are
+ * in arbitrary units.
+ */
+export function autoTitles({ graph, axes }: { graph: Graph; axes: Axes }) {
+  const au = axes === 'numbered' ? ' (arbitrary units)' : ''
   return {
-    xTitle: graph === 'temperature' ? 'Temperature (°C)' : graph === 'ph' ? 'pH' : 'Substrate concentration',
-    yTitle: 'Rate of reaction',
+    xTitle: graph === 'temperature' ? 'Temperature (°C)' : graph === 'ph' ? 'pH' : `Substrate concentration${au}`,
+    yTitle: `Rate of reaction${au}`,
   }
 }
 
-const TITLES = autoTitles('temperature')
-
-function numberChoice(options: readonly number[], fallback: number): Field<number> {
-  const accept = (v: unknown) => (options.includes(Number(v)) && String(v).trim() !== '' ? Number(v) : undefined)
-  return { fallback, accept, parse: accept, format: (v) => String(v) }
+/** The axis titles to write after a change: each still the one this page wrote before becomes the one it writes now. */
+export function retitled(before: Parameters<typeof autoTitles>[0] & { xTitle: string; yTitle: string }, after: Parameters<typeof autoTitles>[0]) {
+  const was = autoTitles(before)
+  const now = autoTitles(after)
+  const out: { xTitle?: string; yTitle?: string } = {}
+  for (const key of ['xTitle', 'yTitle'] as const) if (before[key].trim() === was[key]) out[key] = now[key]
+  return out
 }
+
+const TITLES = autoTitles({ graph: 'temperature', axes: 'shape' })
 const label = (words: string, mode: (typeof TITLE_MODES)[number] = 'text') => ({ words: text(words, 40), mode: choice(TITLE_MODES, mode) })
 const labels = <K extends string>(defaults: Record<K, string>) =>
   Object.fromEntries(
@@ -66,8 +78,6 @@ function curve<N extends 1 | 2 | 3>(n: N, d: { show: boolean; enzyme: string; in
     Record<`inhibitor${N}`, Field<(typeof INHIBITORS)[number]>>
 }
 
-const cap = (v: Cap) => choice(Object.keys(CAPS) as Cap[], v)
-
 export const enzymeSettings = defineSettings({
   graph: choice(GRAPHS, 'temperature'),
   // The second and third curves start as the comparisons teachers make
@@ -88,16 +98,20 @@ export const enzymeSettings = defineSettings({
 
   color: bool(true),
   gridlines: bool(false),
-  minor: numberChoice(MINOR, 0),
-  xEndCap: cap('none'),
-  yEndCap: cap('none'),
-  title: text(''),
-  titleMode: choice(TITLE_MODES, 'none'),
-  xTitle: text(TITLES.xTitle),
-  xTitleMode: choice(TITLE_MODES, 'text'),
-  yTitle: text(TITLES.yTitle),
-  yTitleMode: choice(TITLE_MODES, 'text'),
-  labelSize: choice(Object.keys(LABEL_SIZES) as LabelSize[], 'medium'),
+  axes: choice(AXES, 'shape'),
+  /** fit each axis to the curves, rather than use the range typed */
+  xFit: bool(true),
+  yFit: bool(true),
+  ...gridFields({
+    xFrom: '0', xTo: '60', xStep: '5', xEvery: 1,
+    yFrom: '0', yTo: '12', yStep: '1', yEvery: 1,
+    title: '', titleMode: 'none',
+    xTitle: TITLES.xTitle, xTitleMode: 'text',
+    yTitle: TITLES.yTitle, yTitleMode: 'text',
+    xLabel: '', xLabelMode: 'none', yLabel: '', yLabelMode: 'none',
+    xStartCap: 'none', xEndCap: 'none', yStartCap: 'none', yEndCap: 'none',
+    minor: 0,
+  }),
 })
 
 export type EnzymeSettings = typeof enzymeSettings.defaults
