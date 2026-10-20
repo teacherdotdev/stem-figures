@@ -14,6 +14,7 @@ Components and helpers used by more than one STEM Figures site, imported as
 | `graph/`: `Grid`, `grid`, `axes`, `AxisSettings`, `TitleSettings`, `GridlineSettings`       | math (Coordinate Grid), chemistry (Titration Curve, Heating and Cooling Curve, Potential Energy Diagram: all but `AxisSettings` and `GridlineSettings`), biology (Population Growth, Predator–Prey Cycles, Enzyme Activity, Photosynthesis Rate), physics (Wave, all but `Grid`) |
 | `graph/`: `numbering`, `caps`, `CapPicker`, `colors`                                        | math, chemistry (Titration Curve, Heating and Cooling Curve, Potential Energy Diagram), biology (Population Growth, Predator–Prey Cycles, Enzyme Activity, Photosynthesis Rate), physics (Wave) |
 | `graph/labels`: the label placer (`placer`, `besidePoint`, `alongCurve`), curve `DASHES` and `layoutKey` | chemistry (Potential Energy Diagram: `placer`, `DASHES`, `layoutKey`), biology (Population Growth, Enzyme Activity, Photosynthesis Rate) |
+| `graph/axisMarks` (`spread`, `rowsUnder`, `guidesFrom`), `graph/runs` (subscripts: `runsOf`, `levelled`, `runsWidth`, `plainOf`) | biology (Enzyme Activity: `spread`, `rowsUnder`, `levelled`, `runsWidth`) |
 | `Section`                                                                                   | math, physics (Spring Scale), chemistry (Titration Curve, Heating and Cooling Curve), biology (every generator) |
 | `HelpTip`                                                                                   | math, physics (Length Reading), biology (Population Growth, Predator–Prey Cycles, Enzyme Activity, Photosynthesis Rate, Osmosis and Tonicity, Food Webs and Energy Pyramids) |
 | `FigureFrame`, `figureAlign`, `settings`, `figureText`, `FigureTextSettings`                | physics (Spring Scale, Length Reading), math (Length Reading), biology (`settings` in every generator, `FigureFrame` in all but the two graphs, `FigureTextSettings` in Micropipette Reading) |
@@ -84,6 +85,12 @@ make some), and takes the first that's clear. It also has `DASHES`, solid,
 dashed and dotted, which tell up to three curves apart in black and white,
 and `layoutKey`, the key naming them in rows under the graph. Physics'
 Motion Graphs keeps an older copy of the placer of its own.
+`axisMarks` writes values at the axes where numbers would be (Vmax and Km,
+P₁ and Q₁): `spread` moves those at the y-axis apart, `rowsUnder` stacks
+those under the x-axis in rows, and `guidesFrom` gives the dashed lines
+from a point across to them. `runs` writes a label's subscripts lowered and
+smaller (`S_1`, `PR_{2}`, `D_R`, the way Physics' labels are typed), with
+`plainOf` for its screen reader text.
 
 `particles/` is Chemistry's Particle Diagram's particles: particle kinds and
 their looks (`particles`), scattering, pouring and stacking them in a box

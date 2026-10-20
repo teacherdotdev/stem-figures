@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { textBox, textWidth, type Box } from '$shared/graph/labels'
-import { buildEnzyme, readoutOf, runsOf, spread, type Label } from './figure'
+import { buildEnzyme, readoutOf, runsOf, type Label } from './figure'
 import { enzymeSettings, retitled } from './settings'
 
 const settingsOf = (query: string) => enzymeSettings.fromParams(new URLSearchParams(query))
@@ -274,11 +274,6 @@ describe('label text', () => {
     expect(runsOf('½Vmax', 10).map((r) => [r.text, !!r.sub, r.dy])).toEqual([['½V', false, 0], ['max', true, 2.2]])
     expect(runsOf('Km (low)', 10).map((r) => [r.text, r.dy])).toEqual([['K', 0], ['m', 2.2], [' (low)', -2.2]])
     expect(runsOf('Optimum', 10)).toEqual([{ text: 'Optimum', dy: 0 }])
-  })
-
-  it('moves labels along an axis apart just enough', () => {
-    const out = spread([{ at: 10, half: 5 }, { at: 0, half: 5 }, { at: 40, half: 5 }], 2)
-    expect(out.map((o) => o.at)).toEqual([0, 12, 40])
   })
 })
 
