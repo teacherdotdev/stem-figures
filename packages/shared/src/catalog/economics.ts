@@ -16,4 +16,18 @@ export const ECONOMICS: CatalogEntry[] = [
       'deadweight loss', 'tax incidence', 'subsidy', 'elasticity', 'shift', 'market', 'AP Microeconomics', 'graph', 'printable',
     ],
   },
+  {
+    id: 'production-possibilities',
+    site: 'economics',
+    name: 'Production Possibilities Curve',
+    path: '/production-possibilities',
+    blurb: 'Production possibilities curves with points, shifts and comparative advantage.',
+    description:
+      'Make printable production possibilities curves for economics tests. Bowed out, straight or bowed in, with points on, inside and outside the curve, economic growth or a pivot, opportunity cost steps, and two countries side by side for comparative advantage.',
+    keywords: [
+      'production possibilities curve', 'PPC', 'PPF', 'production possibilities frontier', 'opportunity cost', 'efficiency', 'scarcity',
+      'economic growth', 'comparative advantage', 'absolute advantage', 'capital goods', 'consumer goods', 'AP Microeconomics',
+      'AP Macroeconomics', 'graph', 'printable',
+    ],
+  },
 ]

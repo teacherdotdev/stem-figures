@@ -39,12 +39,23 @@ export type CurveSpec = {
   nameAt?: 'start' | 'end'
 }
 export type RegionSpec = { poly: Point[]; color: string; hatch: number; name?: Words }
-export type PointSpec = { at: Point; name?: Words; dot?: boolean }
+export type PointSpec = {
+  at: Point
+  name?: Words
+  dot?: boolean
+  /** where its name may go around the point as drawn, best first: beside it unless given */
+  spots?: (at: Point, fs: number) => Spot[]
+}
 export type MarkSpec = { axis: 'x' | 'y'; at: number; name: Words }
 export type GuideSpec = { from: Point; x?: boolean; y?: boolean }
 export type ArrowSpec = { from: Point; to: Point; color: string }
 export type BraceSpec = { from: Point; to: Point; side: 'below' | 'above' | 'left' | 'right'; name?: Words }
-export type CalloutSpec = { at: Point; name: Words }
+export type CalloutSpec = {
+  at: Point
+  name: Words
+  /** where its words may go around the point as drawn, best first: up and out from it unless given */
+  spots?: (at: Point, fs: number) => Spot[]
+}
 /** A line across the graph, like a price ceiling, drawn as a curve is but thinner. */
 export type LevelSpec = { pts: Point[]; name?: Words; color: string; dash?: string }
 
@@ -243,7 +254,7 @@ export function buildPanel(spec: PanelSpec) {
   // levels' names, regions' names, then callouts.
   for (const p of spec.points ?? []) {
     if (!shows(p.name)) continue
-    put(besidePoint(px(p.at), LFS, 9), p.name)
+    put(p.spots ? p.spots(px(p.at), LFS) : besidePoint(px(p.at), LFS, 9), p.name)
   }
   for (const b of braces) {
     if (!shows(b.name)) continue
@@ -287,7 +298,7 @@ export function buildPanel(spec: PanelSpec) {
   for (const c of spec.callouts ?? []) {
     if (!shows(c.name)) continue
     const p = px(c.at)
-    const spots: Spot[] = [44, 70, 100].flatMap((r) => [
+    const spots: Spot[] = c.spots ? c.spots(p, LFS) : [44, 70, 100].flatMap((r) => [
       { x: p.x + r * 0.7, y: p.y - r * 0.6, anchor: 'start' as const },
       { x: p.x - r * 0.7, y: p.y - r * 0.6, anchor: 'end' as const },
       { x: p.x + r * 0.7, y: p.y + r * 0.6 + LFS, anchor: 'start' as const },
