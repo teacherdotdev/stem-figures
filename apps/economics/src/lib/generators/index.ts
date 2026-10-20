@@ -12,6 +12,7 @@ import BusinessCycle from './business-cycle/Preview.svelte'
 import PhillipsCurve from './phillips-curve/Preview.svelte'
 import ProductionPossibilities from './production-possibilities/Preview.svelte'
 import AdAs from './ad-as/Preview.svelte'
+import CostRevenueCurves from './cost-revenue-curves/Preview.svelte'
 
 export const PREVIEWS: Record<string, Component> = {
   'supply-demand': SupplyDemand,
@@ -20,6 +21,7 @@ export const PREVIEWS: Record<string, Component> = {
   'phillips-curve': PhillipsCurve,
   'production-possibilities': ProductionPossibilities,
   'ad-as': AdAs,
+  'cost-revenue-curves': CostRevenueCurves,
 }
 
 export const GENERATORS = generatorsOn(SITE_ID, PREVIEWS)

@@ -84,4 +84,18 @@ export const ECONOMICS: CatalogEntry[] = [
       'Keynesian', 'price level', 'real GDP', 'macroeconomics', 'AP Macroeconomics', 'graph', 'printable',
     ],
   },
+  {
+    id: 'cost-revenue-curves',
+    site: 'economics',
+    name: 'Cost and Revenue Curves',
+    path: '/cost-revenue-curves',
+    blurb: 'Firm cost curves with MR, profit and loss, for perfect competition, monopoly and monopolistic competition.',
+    description:
+      'Make printable cost and revenue curve graphs for economics tests. MC, ATC, AVC and AFC from one total cost, so MC crosses AVC and ATC at their lowest points; a perfectly competitive firm beside its market, with profit or loss and the break-even and shutdown points; a monopoly with consumer surplus, deadweight loss and regulated prices; and monopolistic competition in the short and long run.',
+    keywords: [
+      'cost curves', 'marginal cost', 'average total cost', 'average variable cost', 'average fixed cost', 'marginal revenue',
+      'profit maximization', 'MR = MC', 'perfect competition', 'monopoly', 'monopolistic competition', 'shutdown point', 'break-even',
+      'deadweight loss', 'natural monopoly', 'regulation', 'excess capacity', 'AP Microeconomics', 'graph', 'printable',
+    ],
+  },
 ]
