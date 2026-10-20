@@ -13,9 +13,13 @@ import { SITE_ID } from '$lib/site/config'
 import CircuitDiagramPreview from './circuit-diagram/Preview.svelte'
 import FreeBodyPreview from './free-body-diagram/Preview.svelte'
 import InclinedPlanePreview from './inclined-plane/Preview.svelte'
+import LengthReadingPreview from './length-reading/Preview.svelte'
 import MotionGraphsPreview from './motion-graphs/Preview.svelte'
+import MotionMapPreview from './motion-map/Preview.svelte'
+import StartFromGraph from './motion-map/StartFromGraph.svelte'
 import ProjectileMotionPreview from './projectile-motion/Preview.svelte'
 import PulleyPreview from './pulley/Preview.svelte'
+import RayDiagramPreview from './ray-diagram/Preview.svelte'
 import SpringScalePreview from './spring-scale/Preview.svelte'
 import VectorDiagramPreview from './vector-diagram/Preview.svelte'
 import WavePreview from './waves/Preview.svelte'
@@ -28,9 +32,18 @@ export const PREVIEWS: Record<string, Component> = {
   'pulley': PulleyPreview,
   'projectile-motion': ProjectileMotionPreview,
   'motion-graphs': MotionGraphsPreview,
+  'motion-map': MotionMapPreview,
   'spring-scale': SpringScalePreview,
+  'length-reading': LengthReadingPreview,
   'waves': WavePreview,
   'circuit-diagram': CircuitDiagramPreview,
+  'ray-diagram': RayDiagramPreview,
+}
+
+/** Another way to start, under "Start from an example" in a generator's lead
+ *  card, by id: its own button, given the same `apply`. */
+export const STARTS: Record<string, Component<{ apply: (settings: object) => void }>> = {
+  'motion-map': StartFromGraph,
 }
 
 export const GENERATORS = generatorsOn(SITE_ID, PREVIEWS)

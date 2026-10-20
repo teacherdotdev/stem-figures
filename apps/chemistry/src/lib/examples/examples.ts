@@ -206,6 +206,46 @@ export const EXAMPLES: Example[] = [
         'A meter stick (100 cm) marked every centimeter and numbered every 5 cm, with a long metal cylinder lying along it from 0. Its right end falls between 62 and 63 cm, read as 62.4 cm with the tenths digit estimated. A magnified view shows the right end against the marks.',
       settings: { cm: '100', metricMarks: 'cm', object: 'cylinder', length: 62.4 },
     },
+    {
+      slug: 'caliper-reading-23-45-mm',
+      title: 'Caliper reading 23.45 mm',
+      alt: 'A caliper holding a block, reading 23.45 mm on its 0.05 mm sliding scale, with a close-up strip of its scales',
+      caption:
+        'A 150 mm caliper with a block held between its outside jaws. The close-up strip below it shows the sliding scale’s zero just past 23 mm on the main scale, and its 9th mark, between the 4 and the 5, lined up with a main-scale mark: 23 + 9 × 0.05 = 23.45 mm. The least count, 0.05 mm, is printed on the slider.',
+      settings: { instrument: 'caliper' },
+    },
+    {
+      slug: 'caliper-with-a-zero-error',
+      title: 'Caliper with a zero error',
+      alt: 'Two 0.1 mm calipers: above, with its jaws closed, reading 0.3 mm; below, holding block A, reading 27.6 mm, each with a close-up strip of its scales',
+      caption:
+        'The same 0.1 mm caliper twice. Above, with its jaws closed, the sliding scale’s zero sits just past the main scale’s zero and its 3rd mark lines up: a zero error of +0.3 mm. Below, holding block A, it reads 27.6 mm. Students take the zero error off the reading: the block is 27.3 mm long.',
+      settings: { instrument: 'caliper', leastCount: '0.1', caliper: 27.6, caliperZero: 0.3, jawsLabel: 'A' },
+    },
+    {
+      slug: 'micrometer-reading-just-past-half-a-millimeter',
+      title: 'Micrometer reading just past half a millimeter: 5.51 mm',
+      alt: 'A micrometer holding a wire, reading 5.51 mm, with a magnified view showing the 5.5 mm mark just uncovered on the sleeve',
+      caption:
+        'A micrometer measuring a wire, with the thimble’s edge just past the 5.5 mm mark below the sleeve’s datum line, and the thimble’s 1st mark on the datum line. The reading is 5.5 + 0.01 = 5.51 mm. Missing the half-millimeter mark would give 5.01 mm, the common mistake.',
+      settings: { instrument: 'micrometer', micrometerRead: 'mark', micrometer: 5.51, jaws: 'wire' },
+    },
+    {
+      slug: 'micrometer-reading-estimated-to-0-001-mm',
+      title: 'Micrometer reading estimated to 0.001 mm: 6.847 mm',
+      alt: 'A micrometer holding a cylinder, reading 6.847 mm, with a magnified view showing the datum line between the thimble’s 34th and 35th marks',
+      caption:
+        'A micrometer read one digit past its marks. The magnifier shows the 6.5 mm mark uncovered below the sleeve’s datum line, and the datum line about 0.7 of the way from the thimble’s 34th mark to its 35th, so the reading is 6.5 + 0.347 = 6.847 mm. The last digit is estimated, so 6.846 or 6.848 mm is as good an answer.',
+      settings: { instrument: 'micrometer', micrometer: 6.847, jaws: 'cylinder' },
+    },
+    {
+      slug: 'micrometer-with-a-negative-zero-error',
+      title: 'Micrometer with a negative zero error',
+      alt: 'Two micrometers: above, closed, its thimble’s 0 three marks above the datum line, reading −0.03 mm; below, holding a wire, reading 3.27 mm, each with a magnified view',
+      caption:
+        'The same micrometer twice. Above, closed, the thimble’s 0 has turned three marks past the datum line, so it reads −0.03 mm: a negative zero error. Below, holding a wire, it reads 3.27 mm. Taking off the zero error gives 3.27 − (−0.03) = 3.30 mm.',
+      settings: { instrument: 'micrometer', micrometerRead: 'mark', micrometer: 3.27, micrometerZero: -0.03, jaws: 'wire' },
+    },
   ]),
 
   ...examplesOf('mass-reading', [
@@ -429,6 +469,71 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('potential-energy-diagram', [
+    {
+      slug: 'potential-energy-diagram-exothermic-reaction',
+      title: 'Potential energy diagram of an exothermic reaction',
+      alt: 'Potential energy diagram of an exothermic reaction: reactants at 50 kJ/mol, a transition state at 150 kJ/mol and products at 20 kJ/mol, with arrows labeled Ea = 100 kJ/mol and ΔH = −30 kJ/mol',
+      caption:
+        'The potential energy of an exothermic reaction against the reaction coordinate. The curve runs flat at the reactants, 50 kJ/mol, rises to the transition state at 150 kJ/mol and falls to the products at 20 kJ/mol. The activation energy arrow runs up from the reactants to the peak and the ΔH arrow down from the reactants to the products, each labeled with its value, and a dashed line carries the reactants’ energy across to both.',
+      settings: { eaLabel: 'value', dhLabel: 'value' },
+    },
+    {
+      slug: 'potential-energy-diagram-endothermic-reaction',
+      title: 'Potential energy diagram of an endothermic reaction',
+      alt: 'Potential energy diagram of an endothermic reaction: products higher than the reactants, with arrows for Ea, the reverse Ea and ΔH',
+      caption:
+        'The potential energy of an endothermic reaction: the reactants at 20 kJ/mol, the transition state at 150 kJ/mol and the products higher than the reactants, at 80 kJ/mol. Arrows mark the forward activation energy from the reactants, the reverse activation energy from the products, and ΔH, pointing up from the reactants to the products.',
+      settings: { levels: [20, 150, 80], revEaArrow: true },
+    },
+    {
+      slug: 'potential-energy-diagram-with-and-without-a-catalyst',
+      title: 'Potential energy diagram with and without a catalyst',
+      alt: 'Potential energy diagram of an exothermic reaction with a dashed catalysed path over a lower transition state, the activation energies of both paths marked, and a key',
+      caption:
+        'An exothermic reaction with and without a catalyst. The uncatalysed path, solid, rises to a transition state at 150 kJ/mol; the catalysed path, dashed, to one at 100 kJ/mol. Both start at the same reactants and end at the same products, so ΔH is the same, but the catalysed activation energy is 50 kJ/mol lower. A key under the graph names the two paths.',
+      settings: { catalyst: true, catTs: 100 },
+    },
+    {
+      slug: 'two-step-reaction-energy-profile-with-intermediate',
+      title: 'Two-step reaction energy profile with an intermediate',
+      alt: 'Reaction energy profile of a two-step mechanism: two transition states with an intermediate in the dip between them, each step’s Ea marked, and ΔH',
+      caption:
+        'The energy profile of a reaction that happens in two steps. Each step has its own transition state, a peak, at 120 and 100 kJ/mol, with an intermediate in the dip between them at 70 kJ/mol. Each step’s activation energy runs up from the level before it, so the first step, with the larger activation energy, is the rate-determining step. ΔH runs from the reactants to the products.',
+      settings: { levels: [40, 120, 70, 100, 10], yTo: '160' },
+    },
+    {
+      slug: 'activation-energy-with-and-without-an-enzyme',
+      title: 'Activation energy with and without an enzyme',
+      alt: 'Energy diagram with no numbers on its axes: a reaction’s path without an enzyme and a lower dashed path with an enzyme, each activation energy marked',
+      caption:
+        'A reaction with and without an enzyme, as biology courses draw it: the shape matters, so the potential energy axis has no numbers. With the enzyme, dashed, the transition state is lower, so the activation energy is smaller, while the reactants and products stay where they are. A key names the two paths.',
+      settings: {
+        catalyst: true, catTs: 90, uncatName: 'Without enzyme', catName: 'With enzyme', axes: 'shape', dhArrow: false,
+        xEndCap: 'triangle', yEndCap: 'triangle', yTitle: 'Potential energy',
+      },
+    },
+    {
+      slug: 'potential-energy-diagram-worksheet-label-the-arrows',
+      title: 'Potential energy diagram worksheet: which arrow shows ΔH?',
+      alt: 'Potential energy diagram of an exothermic reaction with three arrows lettered A, B and C for the activation energy, ΔH and the reverse activation energy',
+      caption:
+        'An exothermic reaction with its three arrows lettered for a question: A, the activation energy, from the reactants up to the transition state; B, ΔH, from the reactants down to the products; and C, the reverse activation energy, from the products up to the transition state. Students say which arrow shows which energy and read the values from the numbered axis.',
+      settings: { eaLabel: 'mark', dhLabel: 'mark', revEaArrow: true, revEaLabel: 'mark' },
+    },
+    {
+      slug: 'enthalpy-level-diagram-haber-process',
+      title: 'Enthalpy level diagram for the Haber process',
+      alt: 'Energy level diagram with N₂ + 3H₂ on a line at 0 kJ and 2NH₃ on a lower line at −92 kJ, with an arrow labeled ΔH = −92 kJ between them',
+      caption:
+        'An energy level diagram for the Haber process, N₂ + 3H₂ → 2NH₃: no curve, just the reactants and products as lines, with the ΔH arrow pointing down from the reactants at 0 kJ to the products at −92 kJ. The reaction gives out 92 kJ of heat, so it is exothermic.',
+      settings: {
+        style: 'levels', levels: [0, 100, -92], reactantsLabel: 'N_2 + 3H_2', productsLabel: '2NH_3', dhLabel: 'value', unit: 'kj',
+        yFrom: '-100', yTo: '20', yStep: '10', yTitle: 'Potential energy (kJ)',
+      },
+    },
+  ]),
+
   ...examplesOf('particle-diagram', [
     {
       slug: 'particle-diagram-mixture-of-two-elements',
@@ -613,6 +718,65 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('nuclide-notation', [
+    {
+      slug: 'carbon-14-nuclide-symbol',
+      title: 'Carbon-14 nuclide symbol (¹⁴₆C)',
+      alt: 'The nuclide symbol for carbon-14: C with mass number 14 at the top left and atomic number 6 at the bottom left, with carbon-14 written under it',
+      caption:
+        'The nuclide symbol for carbon-14, the isotope used in radiocarbon dating: the symbol C with its mass number, 14, at the top left and its atomic number, 6, at the bottom left, right-aligned against the symbol. Its hyphen notation, carbon-14, is written under it.',
+      settings: { mass: 14, notation: 'both' },
+    },
+    {
+      slug: 'chlorine-37-ion-symbol-cl-minus',
+      title: 'Chlorine-37 ion symbol (³⁷Cl⁻)',
+      alt: 'The symbol of the chlorine-37 ion: Cl with mass number 37 at the top left and a minus charge at the top right, with an answer key under it',
+      caption:
+        'The isotope symbol of a chloride ion of chlorine-37: Cl with its mass number, 37, at the top left and its 1− charge, written as a minus sign, at the top right. The atomic number is left off, as many textbooks write it. The answer key under it gives the ion’s protons, neutrons and electrons.',
+      settings: { z: 17, mass: 37, charge: -1, zPart: 'off', answerKey: true },
+    },
+    {
+      slug: 'uranium-235-find-the-atomic-number',
+      title: 'Uranium-235 with the atomic number blank',
+      alt: 'The nuclide symbol for uranium-235: U with mass number 235 at the top left and an empty box at the bottom left for the atomic number',
+      caption:
+        'The nuclide symbol for uranium-235, the isotope used in nuclear reactors, with its atomic number left as an empty box at the bottom left. Students look up uranium’s atomic number, 92, and write it in.',
+      settings: { z: 92, mass: 235, zPart: 'blank' },
+    },
+    {
+      slug: 'alpha-particle-symbol',
+      title: 'Alpha particle symbol (⁴₂He)',
+      alt: 'The symbol for an alpha particle: He with mass number 4 at the top left and 2 at the bottom left',
+      caption:
+        'An alpha particle written as in a nuclear decay equation: the symbol He with a mass number of 4 at the top left and an atomic number of 2 at the bottom left, since an alpha particle is a helium-4 nucleus of 2 protons and 2 neutrons.',
+      settings: { kind: 'particle' },
+    },
+    {
+      slug: 'beta-particle-symbol',
+      title: 'Beta particle symbol (⁰₋₁β)',
+      alt: 'The symbol for a beta particle in a serif font: the Greek letter beta with 0 at the top left and −1 at the bottom left',
+      caption:
+        'A beta particle written with the Greek letter β, in Times New Roman: a mass number of 0 at the top left and −1 at the bottom left, the charge of the electron it is. The bottom numbers balance in a decay equation, so a nucleus that gives off a beta particle goes up one atomic number.',
+      settings: { kind: 'particle', particle: 'beta', particleSymbol: 'beta', font: 'serif' },
+    },
+    {
+      slug: 'identify-the-element-x',
+      title: 'Identify the element: a made-up symbol X',
+      alt: 'A nuclide symbol with the made-up symbol X: mass number 79, atomic number 34 and a 2− charge, with an answer key under it',
+      caption:
+        'A nuclide symbol with the element hidden behind the letter X, for an “identify the element” question: mass number 79, atomic number 34 and a 2− charge. Students find the element with 34 protons and work out its neutrons and electrons, which the answer key under it gives.',
+      settings: { kind: 'custom', z: 34, mass: 79, charge: -2, answerKey: true },
+    },
+    {
+      slug: 'oxygen-18-hyphen-notation-blank',
+      title: 'Hyphen notation with the mass number blank (oxygen-18)',
+      alt: 'The hyphen notation oxygen- followed by a blank line for the mass number',
+      caption:
+        'Hyphen notation for an isotope of oxygen with its mass number left as a line to write on, for students to work out from the protons and neutrons they’re given. The isotope is oxygen-18.',
+      settings: { z: 8, mass: 18, notation: 'hyphen', massPart: 'blank', blank: 'line' },
+    },
+  ]),
+
   ...examplesOf('lewis-structures', [
     {
       slug: 'lewis-structure-of-co2',
@@ -680,6 +844,96 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('dot-and-cross', [
+    {
+      slug: 'dot-and-cross-diagram-of-water',
+      title: 'Dot-and-cross diagram of water (H₂O)',
+      alt: 'Dot-and-cross diagram of water: an oxygen circle overlapping two hydrogen circles, a dot and a cross in each overlap, and two lone pairs of dots on the oxygen',
+      caption:
+        'A dot-and-cross diagram of a water molecule, H₂O, outer shells only. The oxygen atom’s circle overlaps each hydrogen atom’s, and each overlap holds one shared pair: a dot from the oxygen and a cross from the hydrogen. The oxygen’s two lone pairs of dots sit on its own circle, so it has 8 electrons and each hydrogen 2.',
+      settings: { formula: 'H2O' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-methane',
+      title: 'Dot-and-cross diagram of methane (CH₄)',
+      alt: 'Dot-and-cross diagram of methane: a carbon circle overlapped by four hydrogen circles above, below, left and right, each overlap holding a dot and a cross',
+      caption:
+        'A dot-and-cross diagram of methane, CH₄. The carbon atom’s outer shell overlaps the shells of four hydrogen atoms on its four sides, and each overlap holds one shared pair, a dot from the carbon and a cross from the hydrogen. The carbon has no lone pairs and ends with 8 electrons.',
+      settings: { formula: 'CH4' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-carbon-dioxide',
+      title: 'Dot-and-cross diagram of carbon dioxide (CO₂)',
+      alt: 'Dot-and-cross diagram of carbon dioxide: a carbon circle between two oxygen circles, each overlap holding two dots and two crosses, and two lone pairs of crosses on each oxygen',
+      caption:
+        'A dot-and-cross diagram of carbon dioxide, CO₂, with a double bond to each oxygen: each overlap holds two shared pairs, two dots from the carbon and two crosses from the oxygen. Each oxygen also has two lone pairs of crosses on its own circle.',
+      settings: { formula: 'CO2' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-nitrogen-n2',
+      title: 'Dot-and-cross diagram of nitrogen (N₂)',
+      alt: 'Dot-and-cross diagram of a nitrogen molecule: two overlapping circles with three dots and three crosses in the overlap and one lone pair on each atom',
+      caption:
+        'A dot-and-cross diagram of a nitrogen molecule, N₂, with its triple bond: three shared pairs in the overlap, each a dot from one nitrogen and a cross from the other. Each nitrogen has one lone pair on the far side of its circle.',
+      settings: { formula: 'N2' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-ethanol',
+      title: 'Dot-and-cross diagram of ethanol (C₂H₅OH)',
+      alt: 'Dot-and-cross diagram of ethanol: two carbon circles and an oxygen circle in a row, overlapped by six smaller hydrogen circles, each overlap holding one shared pair, with two lone pairs on the oxygen',
+      caption:
+        'A dot-and-cross diagram of ethanol, C₂H₅OH. Each carbon’s electrons and the oxygen’s have their own mark, dots, open circles and open squares, and the hydrogens’ are crosses, so every shared pair shows which atom gave each electron. The hydrogen circles are drawn a little smaller so the hydrogens on the two carbons don’t overlap each other.',
+      settings: { formula: 'C2H5OH' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-ethene-for-students',
+      title: 'Dot-and-cross diagram of ethene (C₂H₄) for students to complete',
+      alt: 'The overlapping outer shells of ethene, two carbons and four hydrogens, with no electrons drawn, and an answer key under them',
+      caption:
+        'The outer shells of ethene, C₂H₄, drawn with no electrons, for students to add them: two overlapping carbon circles, each overlapped by two hydrogen circles. The answer key under it gives each atom’s bonding pairs, four for each carbon, including the double bond, and one for each hydrogen.',
+      settings: { formula: 'C2H4', blank: true, answerKey: true },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-sodium-chloride',
+      title: 'Dot-and-cross diagram of sodium chloride (NaCl)',
+      alt: 'Dot-and-cross diagram of sodium chloride: a sodium ion with 8 crosses and a chloride ion with 7 dots and 1 cross, each in square brackets with its charge',
+      caption:
+        'A dot-and-cross diagram of sodium chloride, NaCl. The sodium ion, Na⁺, is drawn with the full shell it is left with, 8 crosses, and the chloride ion, Cl⁻, with its own 7 electrons as dots and the one it gained from sodium as a cross. Each ion is in square brackets with its charge at the top right.',
+      settings: { formula: 'NaCl' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-magnesium-chloride',
+      title: 'Dot-and-cross diagram of magnesium chloride (MgCl₂)',
+      alt: 'Dot-and-cross diagram of magnesium chloride: a magnesium ion with 8 crosses between two chloride ions, each with 7 dots and 1 cross, in brackets with their charges, and an answer key',
+      caption:
+        'A dot-and-cross diagram of magnesium chloride, MgCl₂, with every ion drawn: Cl⁻ Mg²⁺ Cl⁻, the magnesium ion in the middle. Each chloride ion has the cross it gained from magnesium on the side facing it. The answer key under it says how the electrons moved and gives each ion’s electron arrangement.',
+      settings: { formula: 'MgCl2', answerKey: true },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-aluminum-oxide',
+      title: 'Dot-and-cross diagram of aluminum oxide (Al₂O₃)',
+      alt: 'Dot-and-cross diagram of aluminum oxide: 2 in front of a bracketed Al³⁺ ion with 8 crosses, and 3 in front of a bracketed O²⁻ ion with 6 dots and 2 crosses',
+      caption:
+        'A dot-and-cross diagram of aluminum oxide, Al₂O₃, drawn as one of each ion with its number in front: 2[Al]³⁺ and 3[O]²⁻. Each aluminum ion has 8 crosses on its outer shell, and each oxide ion its own 6 electrons as dots and the 2 it gained as crosses.',
+      settings: { formula: 'Al2O3' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-of-a-calcium-atom',
+      title: 'Dot-and-cross diagram of a calcium atom (2, 8, 8, 2)',
+      alt: 'A calcium atom drawn as four shells around the symbol Ca, with 2, 8, 8 and 2 electrons as dots',
+      caption:
+        'A calcium atom, Ca, with every shell drawn as a circle around its symbol and its 20 electrons as dots: 2, 8, 8 and 2 from the inside out. The electrons are paired at the top, right, bottom and left of each ring, as students are taught to draw an electron arrangement.',
+      settings: { formula: 'Ca' },
+    },
+    {
+      slug: 'dot-and-cross-diagram-mistake-sodium-chloride',
+      title: 'Find the mistake: dot-and-cross diagram of sodium chloride (NaCl)',
+      alt: 'A deliberately wrong dot-and-cross diagram of sodium chloride: a sodium ion with 8 crosses and a chloride ion with only 7 dots, its gained electron missing, each in square brackets with its charge',
+      caption:
+        'A deliberately wrong dot-and-cross diagram of sodium chloride, NaCl, for a “find the mistake” question. The chloride ion is drawn with only its own 7 electrons as dots, so the electron it gained from sodium is missing: Cl⁻ should have 8 electrons on its outer shell, 7 dots and 1 cross, to match its 1− charge.',
+      settings: { formula: 'NaCl', edits: 'e15n' },
+    },
+  ]),
   ...examplesOf('orbital-diagram', [
     {
       slug: 'orbital-diagram-of-oxygen',
@@ -914,6 +1168,60 @@ export const EXAMPLES: Example[] = [
       caption:
         'The mass spectrum of zirconium, its five natural isotopes from m/z 90 to 96, drawn with the tallest peak, zirconium-90, scaled to 100 and the others against it, as many textbooks and instruments show a spectrum.',
       settings: { element: 'Zr', scale: 'relative' },
+    },
+  ]),
+
+  ...examplesOf('half-life-graph', [
+    {
+      slug: 'carbon-14-half-life-graph',
+      title: 'Carbon-14 half-life graph',
+      alt: 'Decay curve of carbon-14, percent remaining against time in years, with dashed guide lines at 5,730, 11,460 and 17,190 years',
+      caption:
+        'The percent of carbon-14 remaining against time in years, from 100% at the start, on an axis numbered every 4,000 years up to 30,000. Dashed guide lines run from 50%, 25% and 12.5% across to the curve and down to the time axis, each labeled with its time: 5,730, 11,460 and 17,190 years, one, two and three half-lives.',
+      settings: { guides: 3 },
+    },
+    {
+      slug: 'identify-the-isotope-from-its-half-life',
+      title: 'Identify the isotope from its half-life: three decay curves',
+      alt: 'Three decay curves, solid, dashed and dotted, named Isotope A, Isotope B and Isotope C in a key, against time in years from 0 to 160',
+      caption:
+        'Three radioactive isotopes decaying on one graph, percent remaining against time in years. The curves are solid, dashed and dotted so they read apart in black and white, and the key calls them only Isotope A, B and C. Students read each half-life off the curve where it crosses 50% and match the isotopes to a table of half-lives.',
+      settings: { count: 3, iso1: 'h3', iso2: 'cs137', iso3: 'co60', names: false, xTo: '160', xStep: '10', xEvery: 2 },
+    },
+    {
+      slug: 'carbon-14-decaying-to-nitrogen-14',
+      title: 'Carbon-14 decaying to nitrogen-14: parent and daughter',
+      alt: 'Carbon-14 falling and nitrogen-14 rising as percent of atoms against time in years, crossing at 50% at one half-life, marked T½',
+      caption:
+        'Carbon-14, the parent, falls from 100% of the atoms while its stable daughter, nitrogen-14, rises from 0%, the daughter dashed and both named in a key. The two always add up to 100%, so they cross at 50% after one half-life, where a dashed guide line labeled T½ runs down to the time axis.',
+      settings: { daughter: true, guides: 1, guideLabels: 'halves' },
+    },
+    {
+      slug: 'iodine-131-mass-remaining',
+      title: 'Iodine-131 decay: mass remaining over 45 days',
+      alt: 'Decay curve of an 80 g sample of iodine-131, mass remaining in grams against time in days, with a dot at the start and at each half-life',
+      caption:
+        'An 80 g sample of iodine-131 decaying over 45 days, its mass remaining in grams against time in days. A dot marks the start and each half-life along the curve, at 80, 40, 20, 10, 5 and 2.5 g, for questions on how much is left after a given time.',
+      settings: { iso1: 'i131', xUnit: 'd', quantity: 'mass', start: 80, dots: true, xTo: '45', xStep: '5', xEvery: 1, yTo: '80' },
+    },
+    {
+      slug: 'technetium-99m-activity-read-the-half-life',
+      title: 'Technetium-99m activity: read the half-life',
+      alt: 'Activity of technetium-99m in becquerels from 800 Bq against time in hours, with dashed guide lines from 400 and 200 Bq and blank lines by the time axis',
+      caption:
+        'The activity of a technetium-99m sample, the medical tracer, falling from 800 Bq, against time in hours. Dashed guide lines run from 400 Bq and 200 Bq across to the curve and down to the time axis, each with a blank line for students to write the time, one and two half-lives.',
+      settings: {
+        iso1: 'tc99m', xUnit: 'h', quantity: 'activity', start: 800, guides: 2, guideLabels: 'blank',
+        xTo: '32', xStep: '2', yTo: '800', yStep: '100',
+      },
+    },
+    {
+      slug: 'plot-the-decay-curve-isotope-x',
+      title: 'Plot the decay curve: Isotope X, half-life 10 years',
+      alt: 'Dots at 100, 50, 25, 12.5, 6.25 and 3.125 percent every 10 years on an empty grid, for students to join into a decay curve',
+      caption:
+        'The points of a made-up Isotope X with a half-life of 10 years, its percent remaining at the start and after each half-life, 100%, 50%, 25%, 12.5% and so on, with the curve left off. Students join the dots with a smooth curve and see that it never reaches zero.',
+      settings: { iso1: 'x', curve: false, dots: true, xTo: '50', xStep: '5', xEvery: 1 },
     },
   ]),
 ]

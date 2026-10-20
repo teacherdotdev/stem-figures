@@ -129,6 +129,50 @@ _Avoid_: Difference, change
 The short line under each cylinder in a volume by displacement figure, "Before" and "After" unless the teacher changes them.
 _Avoid_: Label, subtitle
 
+**Length Reading**:
+A figure of the instrument a length is read from: a ruler with an object lying along it, a caliper or a micrometer. The ruler is the default; Math and Physics have their own copies of the generator, Math's with only the ruler.
+_Avoid_: Measuring instruments generator
+
+**Caliper**:
+A 150 mm instrument for length, drawn with its outside jaws holding an object, and its inside jaws, depth rod, lock screw and thumb rest drawn but not used. It is read from its main scale and sliding scale to its least count. Its figure has a close-up strip of the scales below it.
+_Avoid_: Vernier, vernier caliper, calliper, slide caliper (all fine in search keywords; the generator never says "vernier")
+
+**Main scale**:
+The caliper's fixed scale along its beam, marked every mm and numbered every cm (0, 1, 2…), as calipers print it.
+_Avoid_: Beam scale
+
+**Sliding scale**:
+The short scale on the caliper's slider, below the main scale: 10 divisions over 9 mm, 20 over 39 mm or 50 over 49 mm, numbered 0 to 10 in tenths of a mm. Its zero sits at the reading, so exactly one of its marks lines up with a main-scale mark (at a whole mm, its zero and its last mark both do, as on a real caliper).
+_Avoid_: Vernier, vernier scale (fine in search keywords)
+
+**Least count**:
+The smallest length an instrument reads: 0.1, 0.05 or 0.02 mm on the caliper, one main-scale division less one sliding-scale division, and 0.01 mm on the micrometer. It can be printed on the caliper's slider or the micrometer's frame, as real ones are.
+_Avoid_: Precision (fine in help text), resolution
+
+**Micrometer**:
+A 0–25 mm instrument for length, drawn with its U-shaped frame and insulating pad, anvil, spindle, lock lever, sleeve, thimble and ratchet. It reads to 0.01 mm: the last sleeve mark showing, to the half mm, plus the thimble mark on the datum line. Read to one estimated digit, the default, it reads to 0.001 mm: how far the datum line is past that thimble mark, in tenths of a mark. Its figure has a round magnifier on the sleeve and thimble.
+_Avoid_: Micrometer screw gauge, screw gauge (fine in search keywords)
+
+**Sleeve**:
+The micrometer's fixed barrel, with the datum line along it, whole mm marked above the line (numbered every 5) and half mm below it. A mark the thimble has only just uncovered is drawn a hair clear of its edge, so it plainly shows.
+_Avoid_: Barrel, main scale (that's the caliper's)
+
+**Thimble**:
+The micrometer's turning sleeve, with 50 marks round its edge, 0.01 mm each, numbered every 5. Seen side on, its marks bunch toward its top and bottom edges, and the bigger numbers are above the datum line.
+_Avoid_: Rotating scale, drum
+
+**Datum line**:
+The line along the micrometer's sleeve that the thimble's marks are read against.
+_Avoid_: Reference line, index line
+
+**Zero error**:
+What a caliper or micrometer reads closed, with nothing in its jaws: positive or negative, up to 0.5 mm on the caliper and 0.05 mm on the micrometer. The jaws are that much closer together than the reading says, and the instrument can be drawn closed above the measuring one. The answer key gives the reading, the zero error and the corrected reading, the reading minus the zero error.
+_Avoid_: Zero offset (that's a spring scale's), offset, calibration error
+
+**Jaws**:
+What holds the object on a caliper (its outside jaws) or a micrometer (its anvil and spindle): nothing, a block, a cylinder, a ball or a wire, drawn as wide as the reading less the zero error.
+_Avoid_: Clamp, grip
+
 **Magnifier**:
 An enlarged circle showing a small stretch of an instrument's scale around the reading, beside or instead of the whole instrument (above it, for a gas syringe lying on its side). In a volume by displacement figure it's optional, with one beside each cylinder, and never replaces the cylinders.
 _Avoid_: Zoom, callout, inset
@@ -190,7 +234,7 @@ _Avoid_: Legend
 ### Lewis structures
 
 **Lewis structure**:
-A figure of one molecule or polyatomic ion: element symbols joined by bonds, with each atom's lone electrons drawn as dots around its symbol. A polyatomic ion is drawn inside square brackets with its charge at the top right. It can also be one atom or monatomic ion on its own (N, Cl⁻, Ca²⁺), its Lewis dot diagram: the symbol with its valence electrons, an anion's gained electrons included and a cation's lost ones left off, and an ion in brackets with its charge. With no bonds, it has no bonds-only scaffold and no formal charges. The generator is Lewis Structures. Dot-and-cross diagrams aren't drawn.
+A figure of one molecule or polyatomic ion: element symbols joined by bonds, with each atom's lone electrons drawn as dots around its symbol. A polyatomic ion is drawn inside square brackets with its charge at the top right. It can also be one atom or monatomic ion on its own (N, Cl⁻, Ca²⁺), its Lewis dot diagram: the symbol with its valence electrons, an anion's gained electrons included and a cation's lost ones left off, and an ion in brackets with its charge. With no bonds, it has no bonds-only scaffold and no formal charges. The generator is Lewis Structures. Dot-and-cross diagrams are Dot-and-Cross Diagram's (see **Dot-and-cross diagram**), built from the same correct structures.
 _Avoid_: Lewis dot structure (fine in search keywords), electron dot diagram, dot-and-cross diagram (a different figure)
 
 **Structure**:
@@ -283,6 +327,86 @@ _Avoid_: Added electron, removed electron, missing electron, hole
 Square brackets around an ion's Bohr model with its charge at the top right, as a polyatomic ion's Lewis structure has. A neutral atom is never bracketed.
 
 A Bohr model can have a **key** like a particle diagram's: one proton, neutron and electron drawn exactly as in the figure, with its name, and a gained and a lost electron when the figure shows them.
+
+### Nuclide notation
+
+**Nuclide symbol**:
+A figure of one isotope, ion or nuclear particle written as it's typeset: the mass number at the top left, the atomic number at the bottom left, both right-aligned against the symbol, and the charge at the top right (²³⁵₉₂U, ³⁷₁₇Cl⁻). The generator is Nuclide Notation. Only the atomic number, mass number and charge are stored; the protons, neutrons and electrons are worked out from them, and typing one sets them (more protons keep the neutrons and electrons, so the mass number and charge go up). Every nuclide symbol in the same font and size is the same height with its symbol on the same baseline, whatever is left off, so a row of them could line up later for decay equations, which aren't drawn yet.
+_Avoid_: Isotope symbol, nuclear notation, AZX notation, complete chemical symbol (all fine in search keywords), element card (a different figure)
+
+**Element** (in nuclide notation):
+Any of the 118 elements, picked by atomic number. Picking one sets its mass number to the usual one, as for a Bohr model (Cl is 35), and keeps the charge. The mass number can then be any whole number from the atomic number to 300, so unlikely isotopes draw; one below the atomic number would mean fewer than 0 neutrons, so the page refuses it with a message and the figure doesn't change. For the elements Mass Spectrum has isotopes for, their natural isotopes are buttons (Cl-35, Cl-37), and a mass number that isn't one of them is noted but still drawn.
+_Avoid_: Atom
+
+**Your own symbol**:
+Up to three characters the teacher types in place of an element's symbol, such as X, Q or ?, with any atomic number from 0, for "identify the element" questions. The answer key names the element it stands for, when there is one ("X is selenium-79 ion, Se²⁻").
+_Avoid_: Custom element, unknown, mystery element
+
+**Nuclear particle**:
+An alpha particle (⁴₂He or ⁴₂α), beta particle (⁰₋₁e or ⁰₋₁β), positron (⁰₊₁e or ⁰₊₁β), neutron (¹₀n), proton (¹₁p or ¹₁H) or gamma ray (⁰₀γ), each a fixed symbol and pair of numbers as written in decay equations. The bottom number is the particle's charge, so a beta particle's is −1 and a positron's is written +1. A particle has no charge position and no hyphen notation.
+_Avoid_: Radiation, decay particle (fine in help text)
+
+**Charge** (in nuclide notation):
+The protons minus the electrons, −8 to 8 and never more than the atomic number (fewer than 0 electrons), written as chemists write it: 2+, − or 3−, never +2 or 1+. It's drawn as a raised tspan straight after the symbol, so it sits where the font ends the symbol; a neutral atom shows none.
+_Avoid_: Oxidation number, ion charge
+
+**Position**:
+One of the four places a nuclide symbol has: the mass number, atomic number, symbol and charge. Each is shown, blank or off (left out, as in ¹⁴C without its atomic number). A **blank** is an empty box by default, or a line to write on, the same size whatever it stands for, so it never hints at the answer. A blank's value is never in the figure or its screen-reader label, only in the answer key.
+_Avoid_: Slot, field, missing number
+
+**Hyphen notation**:
+An isotope written as its name or symbol and mass number joined by a hyphen, carbon-14 or C-14, on its own or as a smaller line under the symbol. It follows the symbol's and mass number's positions, so a blank mass number is carbon-[blank]; it never shows the atomic number or charge.
+_Avoid_: Isotope name, dash notation
+
+The figure is in a **sans-serif** (Arial) or **serif** (Times New Roman) font, in small, medium or large text, which is how large it pastes into a document. The **answer key** gives what it is ("Chlorine-37 ion, Cl⁻"), its protons, neutrons and electrons (a particle's mass number and charge), and each blank's value.
+
+### Dot-and-cross diagrams
+
+**Dot-and-cross diagram**:
+A UK-style bonding figure of one covalent molecule, one binary ionic compound, or one atom or ion: each atom's shell drawn as a circle with its element symbol in the middle, and each electron as a mark showing which atom it came from. The generator is Dot-and-Cross Diagram. It draws outer shells only unless the teacher picks all shells; an atom or ion on its own has its own setting and starts with all shells. The teacher types a formula or a name (H2O, ethene, MgCl2, magnesium chloride, Na, Cl-); one element alone is its atom or ion, a formula with a metal is ionic, and anything else is a molecule.
+_Avoid_: Lewis dot diagram (that's a Lewis structure's), electron dot diagram, Bohr diagram (that's a Bohr model)
+
+**Mark**:
+How one electron is drawn: a dot, a cross, an open circle or an open square, the same for every electron of one atom. In a molecule the central atom's electrons are dots, the outer atoms' crosses, a third kind of atom's open circles (CH₃OH's O, HCN's N) and a fourth's open squares; atoms of one element share a mark unless two of them bond to each other, so Cl₂ is one dots and one crosses and in C₂H₄ the second C has open circles. In an ionic compound the metal's electrons are crosses and the non-metal's dots. An atom on its own has dots, and an anion's gained electrons are crosses. Swap trades dots and crosses. Marks are black unless the teacher gives each kind its own color. An edit can change one electron's mark (see Edit).
+_Avoid_: Symbol (that's the element's), electron (fine in help text), dot (alone)
+
+**Overlap**:
+Where two bonded atoms' outer circles cross, holding their shared pairs: a row for each pair, the electron from each atom on its own side. Bonded atoms are 1.5 outer radii apart, so a triple bond's three pairs fit, and every circle is the same size, hydrogen's too, as Cambridge mark schemes draw them. Atoms that aren't bonded never overlap: where two H circles would (C₂H₆, ethanol, methylamine, hydrazine), every H circle in that molecule shrinks by the same amount, just enough to clear, and moves in along its bond so its overlap keeps room for its pair, its symbol moving out of the way. A molecule that would still overlap with H circles 0.62 of full size (CH₃COOH) isn't drawn. With all shells the circles grow so the inner rings stay clear of every overlap.
+_Avoid_: Intersection, lens
+
+**Shared pair** / **Lone pair**:
+Two electrons in an overlap, one from each atom; or two on an atom's own circle, on its free sides as a Lewis structure places them. A double bond is two shared pairs, a triple bond three.
+_Avoid_: Bond (fine in help text), nonbonding pair
+
+**Drawn molecule**:
+A molecule Lewis Structures builds (octet rule, flat) with no charge, no atom past an octet and every formal charge 0, so each atom gives one electron to each shared pair and keeps its lone electrons. Molecules that need a dative bond (CO, SO₂, O₃), polyatomic ions (NH₄⁺) and expanded octets (SF₆) get a message and the Request it button.
+_Avoid_: Supported molecule
+
+**Ionic compound**:
+A metal (Li, Na, K, Rb, Mg, Ca, Sr or Al) with a non-metal (N, O, F, S, Cl, Br or I), written either way round. Each ion's charge comes from its group (Na⁺, Mg²⁺, Al³⁺, N³⁻, O²⁻, Cl⁻) and the charges must balance: MgCl is refused, and the page says MgCl₂ balances. A metal ion shows the full shell it is left with (Na⁺ is a ring of 8 crosses); a non-metal ion has a full outer shell, its gained electrons taking the last places to fill, turned to face a metal ion beside it. Compounds with polyatomic ions (NaOH) aren't drawn.
+_Avoid_: Salt, ionic molecule, formula unit
+
+**Ion layout**:
+How an ionic compound's ions are arranged: every ion, the single ion in the middle (Cl⁻ Mg²⁺ Cl⁻, Na⁺ O²⁻ Na⁺), the third of three around one below the middle, and 2:3 compounds alternating; or numbered, one of each ion with its number in front, as 2[Al]³⁺ 3[O]²⁻. Compounds of up to three ions start with every ion, bigger ones numbered, and the teacher can pick either.
+_Avoid_: Layout (alone; that's a particle diagram's), arrangement (that's an orbital diagram's)
+
+**Atom or ion** (dot-and-cross):
+One element from H to Ca, where shells fill 2, 8, 8, with its electrons on its rings, paired at the top, right, bottom and left as a Bohr model's paired placement puts them; or the element's usual ion from its group, in brackets with its charge.
+_Avoid_: Bohr model (that has a nucleus, not a symbol)
+
+**Brackets** (dot-and-cross):
+Square brackets around every ion with its charge at the top right. The charge can be written, left blank (an empty box for students to write it in) or left off, for every ion or, by an edit, for one; the brackets stay.
+
+**Blank** (dot-and-cross):
+The circles, overlaps, symbols and brackets with no electrons, for students to draw them. The figure's description for screen readers leaves the electrons out too.
+_Avoid_: Empty rings (that's a Bohr model's), scaffold
+
+**Answer key** (dot-and-cross):
+The lines under the figure: each kind of atom's bonding and lone pairs for a molecule ("O: 2 bonding pairs, 2 lone pairs"); who loses and gains how many electrons and each ion's arrangement for an ionic compound ("Mg loses 2 electrons, one to each Cl." and "Mg²⁺ 2,8; Cl⁻ 2,8,8"); the arrangement for an atom or ion. It always describes the correct diagram; when an edit changes what's drawn it ends "This figure was edited by hand, so it may differ from the correct diagram described here."
+
+**Edit** (dot-and-cross):
+A change the teacher makes by clicking the figure, usually for a "find the mistake" question. Clicking an electron cycles what's drawn: dot, cross, open circle, open square, none (not drawn), then a dot again. Clicking an element symbol leaves it blank or shows it again; clicking an ion's charge cycles shown, blank box, left off. An electron, symbol or charge edited away keeps its click target, so it can be clicked back. Swap still trades an edited dot or cross, and with color an edited mark takes the color of the atom whose mark that is in this figure, or black if no atom has it. With the electrons blank they can't be clicked, though their edits are kept. Edits go in the address as one setting, each by the item's place in the figure's lists of electrons, symbols and charges; those places change with the formula, the molecule picked, the layout and the shells, so changing any of them clears the edits, and places the figure doesn't have are ignored. The description for screen readers says what's drawn after edits, counting the marks as drawn and naming no blank symbol (nor the molecule then). Reset edits clears them all.
+_Avoid_: Change (that's an orbital diagram's), mistake (the teacher may edit for other reasons), override
 
 ### Orbital diagrams
 
@@ -480,3 +604,94 @@ _Avoid_: Annotation, caption
 **Point label**:
 What's written by the temperature axis just above (or below) a plateau's dashed line: its temperature (78.3 °C), m.p. or b.p. (f.p. and b.p. on a cooling curve), or a blank line for students to write the melting or boiling point on. It goes along the line, inside the grid, as far from the axis as the curve makes it. The temperature by default.
 _Avoid_: Axis label (that's the letter at an axis's end), tick label
+
+### Half-life graphs
+
+**Half-life graph**:
+A graph of how much of a radioactive isotope is left (up the side) against time (along the bottom), falling as N = N₀ · (½)^(t / T½): half is left after one half-life, a quarter after two, and it never reaches zero. One curve serves for the share left, the mass, the number of nuclei and the activity, since all fall alike. The generator is Half-Life Graph, also listed on Physics Figures. The grid, axes and titles are the same as a heating curve's, from `$shared/graph`, the axes always along the grid's left and bottom edges; nothing is drawn before time 0.
+_Avoid_: Decay curve, decay graph, radioactive decay graph (all fine in search keywords), exponential graph
+
+**Half-life**:
+How long it takes half of an isotope's nuclei to decay, written T½. The decay constant, λ = ln 2 / T½, is given in the answer key, not on the figure.
+_Avoid_: Half life (unhyphenated), halving time
+
+**Isotope**:
+One of up to three radioactive isotopes on a graph, each drawn from time 0 in its own line: solid, dashed or dotted, so three read apart in black and white, with a key under the graph naming them when there's more than one line. Each is an **isotope setup** or Custom, a name, half-life and unit the teacher types. The setups are carbon-14, hydrogen-3, fluorine-18, phosphorus-32, cobalt-60, strontium-90, technetium-99m, iodine-131, cesium-137, radon-222, radium-226, polonium-210, uranium-238, potassium-40, plutonium-239, americium-241 and Isotope X (made up: 10 years, decaying to Isotope Y), with half-lives from NNDC NuDat 3 rounded to three significant figures, cited in `isotopes.ts`, except carbon-14's: the textbook 5,730 years, where NuDat 3 gives 5,700 ± 30. Picking a setup for the first isotope sets the time axis to its unit; any change of isotope fits the time axis. Picking Custom copies the isotope already there, so the curve doesn't change until the teacher types.
+_Avoid_: Element, nuclide (fine in help text), sample, preset (that's a teacher's saved settings)
+
+**Hidden names**:
+The isotopes called Isotope A, B and C in the key (one alone with its daughter, Parent isotope and Daughter isotope), for students to identify from the half-lives they read off. The real names are in the answer key only, never on the figure or in its description for screen readers.
+_Avoid_: Mystery isotope, unknown
+
+**Quantity**:
+What's up the side: percent remaining (from 100, the default), fraction remaining (from 1), or the mass in g, the number of nuclei, or the activity in Bq or counts per minute, each from a starting amount the teacher types. The y-axis title follows it ("Percent remaining (%)", "Mass remaining (g)", "Count rate (counts/min)") unless the teacher types their own, as Mass Spectrum's does; the x-axis title follows the time unit ("Time (years)"). Picking a quantity fits the y-axis to it.
+_Avoid_: Y-axis (fine in help text), measure, amount (alone)
+
+**Time unit**:
+The unit along the x-axis: seconds, minutes, hours, days, years, thousand years or billion years. Each isotope's half-life is turned into it, a year being 365.25 days.
+_Avoid_: Scale, x-axis unit
+
+**Fitted axes**:
+The axes the Fit button gives: time from 0 to at least five half-lives of the longest-lived isotope drawn, in up to 16 blocks, and the quantity from 0 to the starting amount in up to 10, both counting in round steps (1, 2, 2.5 or 5 times a power of ten). The steps are round, not the half-life, so students read the half-life off the curve; the guide lines show it when the teacher wants it shown.
+_Avoid_: Auto axes, zoom
+
+**Guide line**:
+A dashed line at one of the first isotope's first one to four half-lives: from 50%, 25%, 12.5% or 6.25% of the starting amount across from the y-axis to the curve, then down to the time axis. Each is labeled by its foot on the time axis, or beside its corner where the curve is in the way, with its time ("5,730 years"), T½, 2T½…, a blank line for students, or nothing. A guide line off the grid is left out, and the page says so. None by default.
+_Avoid_: Marked point, dashed line (fine in help text), drop line
+
+**Half-life dot**:
+A dot at each of a curve's first six half-lives, in its own marker (circle, square or triangle), and at the start when it's the only curve (several isotopes share the start, and a daughter's is on the axis). A curve whose half-lives would sit almost on top of each other on the time axis gets none. With the curves turned off, the dots alone (or an empty grid) are left for students to draw the curve.
+_Avoid_: Data point, marker
+
+**Daughter curve**:
+The first isotope's stable daughter, rising as N₀ − N, dashed and named in the key, so it crosses the parent at one half-life. Offered only for one isotope, as a percent, fraction or number of nuclei (a stable daughter has no activity, and an alpha emitter's daughter is lighter than its parent), and only where the daughter is stable or lives far longer than the parent: strontium-90, radon-222, radium-226 and potassium-40 have none. Uranium-238 is drawn going straight to lead-206, its chain's steps all far shorter than its own half-life. A custom isotope's daughter takes the name the teacher types. The y-axis title then says atoms or nuclei, not "remaining".
+_Avoid_: Product, decay product (fine in help text), daughter isotope (that's the hidden name)
+
+**Answer key** (half-life graphs):
+The lines in the settings panel and on example pages giving each isotope's half-life, decay constant and how it decays and to what, naming each hidden one ("Isotope A is carbon-14"), then what's left of the first isotope at each guide line ("After 3 half-lives (17,190 years): 12.5%").
+
+### Potential energy diagrams
+
+**Potential energy diagram**:
+A graph of the potential energy of the reacting particles (up the side, in kJ/mol, kJ mol⁻¹ or kJ) against the reaction coordinate (along the bottom) as a reaction goes from reactants to products: a smooth curve, flat at the reactants, over each transition state and down to the products. The generator is Potential Energy Diagram, also listed on Biology for activation energy with and without an enzyme. The grid and titles are `$shared/graph`'s, with the axes along the grid's edges as on a heating curve.
+_Avoid_: Reaction energy profile, energy profile, enthalpy profile, reaction coordinate diagram (all fine in search keywords and help text), energy graph, bond energy curve (a different figure)
+
+**Reaction coordinate**:
+The x-axis: how far the reaction has gone, from reactants to products. It isn't a time or any quantity with units, so it's never numbered and has no gridlines; each step takes the same width, with flat runs at both ends.
+_Avoid_: Time, progress axis
+
+**Level**:
+One energy the curve passes through, typed by the teacher: the reactants, a transition state, an intermediate or the products, in order along the reaction. Only the levels are kept (in the address as `levels=50_150_20`); Ea and ΔH are worked out from them, and typing Ea or ΔH moves the transition state or the products to match. The curve between neighboring levels is a smoothstep, so each peak and dip is exactly at its level and nothing overshoots.
+_Avoid_: Point, value
+
+**Transition state**:
+The peak of a step, its highest energy. A transition state must be above the levels either side of it, or the page says so. The usual word, which the teacher can change to "Activated complex".
+_Avoid_: Peak (fine in help text), activated complex (fine as a label)
+
+**Intermediate**:
+The dip between two steps of a mechanism, below the transition states either side of it.
+_Avoid_: Trough
+
+**Step**:
+One rise to a transition state and fall from it. A diagram has one, two or three. Each step's Ea runs from the level before it up to its transition state; its reverse Ea from the level after it. The answer key names the **rate-determining step** only when the step with the highest Ea is also the one whose transition state is highest above the lowest point before it.
+_Avoid_: Stage, hump
+
+**Catalysed path**:
+A second curve, dashed, with the same reactants and products and one lower transition state, so ΔH doesn't change and both activation energies drop by the same amount. Its transition state must be above the reactants and products and below the highest uncatalysed one. A key under the graph names the two paths ("Uncatalysed" and "Catalysed", or the teacher's words, such as "Without enzyme" and "With enzyme").
+_Avoid_: Catalyst curve, second curve
+
+**Arrow**:
+A vertical arrow marking an energy difference: each step's Ea, the catalysed Ea, ΔH (from the reactants to the products, pointing toward the products) and the reverse Ea (of the last step). Each is labeled with its symbol (Eₐ, ΔH), its value ("ΔH = −30 kJ/mol"), a letter or number for "which arrow shows…?" questions, a blank line, or nothing, beside it where there's room, otherwise in the nearest clear spot with a thin line back to it. Dashed lines carry each level across to its arrows.
+_Avoid_: Bracket, dimension line
+
+**Level label**:
+The words on a level: Reactants, Products, Transition state or Intermediate (numbered when there's more than one), the teacher's own text with formulas typed as `N_2 + 3H_2` as in the key of a particle diagram, a blank line, or nothing.
+_Avoid_: Annotation, tag
+
+**Level diagram**:
+The second style: no curve, just the reactants and products as horizontal lines with the ΔH arrow between them, for enthalpy change questions.
+_Avoid_: Enthalpy diagram (fine in search keywords), energy level diagram (fine in help text), Hess cycle (a different figure)
+
+**Shape only**:
+The energy axis with no numbers or gridlines, fitted to the levels, for a diagram where the shape is the point (the enzyme setup). Numbered, with light gridlines, is the default.
+_Avoid_: Unnumbered, qualitative

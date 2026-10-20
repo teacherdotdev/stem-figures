@@ -3,17 +3,21 @@
 // only, so the gallery on a generator page doesn't pull in every generator.
 
 import type { BohrSettings } from '$lib/generators/bohr-model/settings'
+import type { DotCrossSettings } from '$lib/generators/dot-and-cross/settings'
 import type { SyringeSettings } from '$lib/generators/gas-syringe/settings'
+import type { HalfLifeSettings } from '$lib/generators/half-life-graph/settings'
 import type { CurveSettings } from '$lib/generators/heating-cooling-curve/settings'
 import type { LengthSettings } from '$lib/generators/length-reading/settings'
 import type { LewisSettings } from '$lib/generators/lewis-structures/settings'
 import type { SpectrumSettings } from '$lib/generators/line-spectrum/settings'
 import type { MassSettings } from '$lib/generators/mass-reading/settings'
 import type { MassSpectrumSettings } from '$lib/generators/mass-spectrum/settings'
+import type { NuclideSettings } from '$lib/generators/nuclide-notation/settings'
 import type { OrbitalSettings } from '$lib/generators/orbital-diagram/settings'
 import type { ParticleSettings } from '$lib/generators/particle-diagram/settings'
 import type { PhSettings } from '$lib/generators/ph-reading/settings'
 import type { PesSettings } from '$lib/generators/photoelectron-spectrum/settings'
+import type { EnergySettings } from '$lib/generators/potential-energy-diagram/settings'
 import type { TemperatureSettings } from '$lib/generators/temperature-reading/settings'
 import type { TitrationSettings } from '$lib/generators/titration-curve/settings'
 import type { DisplacementSettings } from '$lib/generators/volume-by-displacement/settings'
@@ -30,13 +34,17 @@ export interface SettingsById {
   'ph-reading': PhSettings
   'titration-curve': TitrationSettings
   'heating-cooling-curve': CurveSettings
+  'potential-energy-diagram': EnergySettings
   'particle-diagram': ParticleSettings
   'bohr-model': BohrSettings
+  'nuclide-notation': NuclideSettings
   'lewis-structures': LewisSettings
+  'dot-and-cross': DotCrossSettings
   'orbital-diagram': OrbitalSettings
   'line-spectrum': SpectrumSettings
   'photoelectron-spectrum': PesSettings
   'mass-spectrum': MassSpectrumSettings
+  'half-life-graph': HalfLifeSettings
 }
 
 export type ExampleGeneratorId = keyof SettingsById

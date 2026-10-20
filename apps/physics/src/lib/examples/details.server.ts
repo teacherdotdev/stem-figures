@@ -11,10 +11,14 @@ import { circuitAnswer } from '$lib/generators/circuit-diagram/circuit'
 import { circuitSettings } from '$lib/generators/circuit-diagram/settings'
 import { fbdSettings } from '$lib/generators/free-body-diagram/settings'
 import { inclineSettings } from '$lib/generators/inclined-plane/settings'
+import { lengthSettings, workingLines as lengthWorking } from '$lib/generators/length-reading/settings'
 import { motionOf, numberText, segmentLines, tangentAt } from '$lib/generators/motion-graphs/motion'
 import { motionSettings, viewsOf } from '$lib/generators/motion-graphs/settings'
+import { mapAnswer } from '$lib/generators/motion-map/map'
+import { mapSettings } from '$lib/generators/motion-map/settings'
 import { projectileSettings } from '$lib/generators/projectile-motion/settings'
 import { pulleySettings } from '$lib/generators/pulley/settings'
+import { answerLines as rayAnswer, raySettings } from '$lib/generators/ray-diagram/settings'
 import { answerLines as springScaleAnswer, springScaleSettings } from '$lib/generators/spring-scale/settings'
 import { resultantOf } from '$lib/generators/vector-diagram/vd'
 import { vectorSettings } from '$lib/generators/vector-diagram/settings'
@@ -100,7 +104,9 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'pulley': { definition: physics(pulleySettings), answer: none },
   'projectile-motion': { definition: physics(projectileSettings), answer: none },
   'motion-graphs': { definition: physics(motionSettings), answer: motionAnswer },
+  'motion-map': { definition: physics(mapSettings), answer: (s) => ({ heading: 'Answer key', lines: mapAnswer(s) }) },
   'spring-scale': { definition: springScaleSettings, answer: (s) => ({ heading: 'Answer key', lines: springScaleAnswer(s).split('\n') }) },
+  'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthWorking(s) }) },
   'waves': { definition: waveSettings, answer: (s) => ({ heading: 'Answer key', lines: waveAnswer(s) }) },
   'circuit-diagram': {
     definition: physics(circuitSettings),
@@ -109,6 +115,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
       return lines && { heading: 'Answer key', lines }
     },
   },
+  'ray-diagram': { definition: raySettings, answer: (s) => ({ heading: 'Answer key (real is positive)', lines: rayAnswer(s) }) },
 }
 
 function detailsOf<G extends ExampleGeneratorId>(generator: G, example: Example): ExampleDetails {

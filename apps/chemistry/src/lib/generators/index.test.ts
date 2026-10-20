@@ -28,9 +28,23 @@ describe('searching the directory', () => {
       expect(ids(query)).toContain('bohr-model')
   })
 
+  it('finds Nuclide Notation the ways teachers ask for it', () => {
+    for (const query of ['nuclide', 'isotope notation', 'nuclear notation', 'atomic notation', 'isotope symbol', 'AZX', 'alpha particle', 'mass number', 'hyphen notation'])
+      expect(ids(query), query).toContain('nuclide-notation')
+  })
+
   it('finds Lewis Structures the ways teachers ask for it', () => {
     for (const query of ['lewis dot', 'electron dot', 'lone pair', 'covalent', 'resonance', 'formal charge'])
       expect(ids(query), query).toContain('lewis-structures')
+  })
+
+  it('finds Dot-and-Cross Diagram the ways teachers ask for it', () => {
+    for (const query of ['dot and cross', 'dot-and-cross', 'dot cross', 'ionic bonding', 'covalent bonding', 'electron arrangement', 'electron transfer', 'IGCSE'])
+      expect(ids(query), query).toContain('dot-and-cross')
+  })
+
+  it('keeps "lewis dot" for Lewis Structures', () => {
+    expect(ids('lewis dot')).toEqual(['lewis-structures'])
   })
 
   it('finds Gas Syringe the ways teachers ask for it', () => {

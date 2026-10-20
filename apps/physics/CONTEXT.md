@@ -184,7 +184,7 @@ A figure of one motion along a line: its position–time, velocity–time or acc
 _Avoid_: Kinematics graph, x–t graph, distance–time graph (all fine as search words)
 
 **Segment**:
-One stretch of the motion, up to six in a row: at rest, constant velocity forward or back, speeding up or slowing down, with its speed (the one it moves at, or speeds up or slows down to) and how long it lasts typed in. It is a straight line on the velocity–time graph. Speeding up and slowing down carry on from the velocity before them, and slowing down stops at rest rather than turning around.
+One stretch of the motion, up to six in a row: at rest, constant velocity forward or back, speeding up or slowing down, with its speed (the one it moves at, or speeds up or slows down to) and how long it lasts typed in. It is a straight line on the velocity–time graph. Speeding up and slowing down carry on from the velocity before them, and slowing down stops at rest rather than turning around. The Motion Graph and the Motion Map share segments: the same editor, the same motion worked out from them, and the same page address, so each page opens the other's motion with a plain link. A change to segments changes both generators.
 _Avoid_: Section, phase, interval
 
 **Segment end**:
@@ -198,6 +198,22 @@ _Avoid_: Slope line
 **Ranges**:
 Each axis's From, To and Count by. They are fitted to the motion unless the teacher sets them, to make several graphs on a worksheet match. Stacked graphs share the time axis's range; each has its own up its side.
 _Avoid_: Scale, window, zoom
+
+### Motion Map
+
+**Motion Map**:
+A figure of one motion along a line as a dot at equal times along a number line in meters, with a velocity arrow above each moving dot. Its generator is the Motion Map Generator. Its motion is built from the Motion Graph's segments and worked out by the same code, so a motion map and a motion graph from the same segments always show the same motion. Vertical motion, two objects on one map and motion on a plane are not drawn.
+_Avoid_: Motion diagram, dot diagram, ticker tape, strobe diagram (all fine as search words)
+
+**Dot**:
+Where the object is at one of the equal times, 0.5 s, 1 s or 2 s apart (the time between dots, Δt). Dots at one spot while it's at rest are drawn as one dot, with the times it's there (t = 12–15 s) and no arrow. At a segment end a dot takes the later segment's velocity. A segment end that falls between dots has no dot, and the settings panel says so.
+_Avoid_: Point (that's a circuit's), position, mark, time step (that's a Projectile Motion's)
+
+**Run**:
+The dots from where the motion starts or turns back to where it next turns back. Each run is drawn on its own line, the next above the last, so the way there and the way back never overlap.
+_Avoid_: Row (that's an Inclined Plane's), leg, trip
+
+On a Motion Map, every velocity arrow is on one scale, so equal speeds are drawn equal: the fastest is 0.8 of the widest gap between dots, or shorter if that would take an arrow up to the next dot ahead of it (as happens just before a stop). The **acceleration arrow** of a segment is one dashed arrow above its dots pointing the way the acceleration points, or a = 0. **Dots only** leaves off every velocity and acceleration arrow, for students to draw them. The **total displacement** is a solid arrow under the number line from where the motion starts to where it ends, labeled Δx; a motion that ends where it started has none. The letters at segment ends are the Motion Graph's. A motion map's arrows are short, so their heads are smaller than other figures'.
 
 ### Circuit Diagram
 
@@ -228,3 +244,87 @@ _Avoid_: Node, junction (a junction is where wires meet, drawn as a dot with no 
 **Symbol style**:
 US symbols (a zigzag resistor, a bulb with a looped filament) or IEC symbols, as UK GCSE uses (a box resistor, a bulb with a cross).
 _Avoid_: Standard, notation
+
+### Ray Diagram
+
+**Ray Diagram**:
+A figure of one lens or mirror on its principal axis, an object in front of it, the principal rays from the object's tip and the image they make, for optics. Its generator is the Ray Diagram Generator. It is drawn to scale in cm, the same across as up, and the image is exactly where the thin lens and mirror equation, 1/f = 1/d_o + 1/d_i, puts it. The light always comes from the left, so it has no Mirror (flip) switch: on this page a mirror is only ever the optical one.
+_Avoid_: Optics diagram (fine as a search word), lens diagram
+
+**Element**:
+The one lens or mirror a Ray Diagram is of: a converging or diverging lens (drawn as its shape or as the line symbol), or a concave, convex or plane mirror (a shallow arc or a line, hatched on its back). Rays bend at the vertical line through a lens's middle, and reflect at the vertical line through a mirror's vertex, the thin-lens convention textbooks draw.
+_Avoid_: Optic, device, part (that's a circuit's)
+
+**Principal axis**:
+The horizontal line through the middle of the element. The object stands on it, and the focal points are marked on it.
+_Avoid_: Optical axis (fine as a search word), center line
+
+**Focal point**:
+A point marked on the principal axis with a dot and a label: F, F′, 2F and 2F′ on a lens (F and 2F on the object's side), F and C on a mirror (in front of a concave mirror, behind a convex one). A plane mirror has none.
+_Avoid_: Focus (fine as a search word)
+
+**Principal ray**:
+One of the rays from the object's tip that a rule says where to draw: on a lens, parallel then through F′, through the center undeviated, and through F then parallel; on a mirror, parallel then through F, through F then parallel, through C and back on itself, and to the vertex and back at the same angle. A plane mirror has two rays from the tip, one to the mirror level with the object's foot and one above the tip. Each can be turned off, and each has small arrowheads showing which way the light goes. In color, each has its own color.
+_Avoid_: Light ray (fine in captions), beam, line
+
+On a Ray Diagram the **object** is always an arrow, upright or pointing down, standing on the principal axis, its distance and height set in cm.
+
+**Image**:
+The arrow where the principal rays from the object's tip meet. A real image is solid, where the rays themselves meet. A virtual image is dashed, where the rays' dashed extensions meet. The object at F of a converging lens or concave mirror has no image: its rays leave parallel. An image more than six focal lengths away is left off and the rays run off the figure's edge.
+_Avoid_: Picture, reflection
+
+**Shown**:
+How much of a Ray Diagram is drawn: the setup (the element, principal axis, focal points and object, for students to draw the rays), the rays too, or everything, the rays and the image. All three are laid out alike, so a blank setup and its completed figure line up.
+_Avoid_: Mode, stage, view
+
+**Scale**:
+A numbered cm ruler under a Ray Diagram, with 0 under the element, for students to measure distances.
+_Avoid_: Ruler (fine as a search word), grid
+
+The **answer key** gives the image distance and magnification, real is positive (an image distance is negative for a virtual image), with the words too: real or virtual, upright or inverted, magnified, diminished or the same size, and which side the image is on.
+
+### Length Reading
+
+**Length Reading**:
+A figure of the instrument a length is read from: a ruler with an object lying along it, a caliper or a micrometer, picked by its instrument. Its generator is the Length Reading Generator, Physics' copy of the generator Math and Chemistry have too (Math's has only the ruler). The ruler is the default, and its figures are the same on all three sites.
+_Avoid_: Measuring instruments generator, caliper generator
+
+**Caliper**:
+A 150 mm instrument for length, drawn with its outside jaws holding an object, and its inside jaws, depth rod, lock screw and thumb rest drawn but not used. It is read from its main scale and sliding scale to its least count. Its figure has a close-up strip of the scales below it.
+_Avoid_: Vernier, vernier caliper, calliper, slide caliper (all fine in search keywords; the generator never says "vernier")
+
+**Main scale**:
+The caliper's fixed scale along its beam, marked every mm and numbered every cm (0, 1, 2…), as calipers print it.
+_Avoid_: Beam scale
+
+**Sliding scale**:
+The short scale on the caliper's slider, below the main scale: 10 divisions over 9 mm, 20 over 39 mm or 50 over 49 mm, numbered 0 to 10 in tenths of a mm. Its zero sits at the reading, so exactly one of its marks lines up with a main-scale mark (at a whole mm, its zero and its last mark both do, as on a real caliper).
+_Avoid_: Vernier, vernier scale (fine in search keywords)
+
+**Least count**:
+The smallest length an instrument reads: 0.1, 0.05 or 0.02 mm on the caliper, one main-scale division less one sliding-scale division, and 0.01 mm on the micrometer. It can be printed on the caliper's slider or the micrometer's frame, as real ones are.
+_Avoid_: Precision (fine in help text), resolution
+
+**Micrometer**:
+A 0–25 mm instrument for length, drawn with its U-shaped frame and insulating pad, anvil, spindle, lock lever, sleeve, thimble and ratchet. It reads to 0.01 mm: the last sleeve mark showing, to the half mm, plus the thimble mark on the datum line. Read to one estimated digit, the default, it reads to 0.001 mm: how far the datum line is past that thimble mark, in tenths of a mark. Its figure has a round magnifier on the sleeve and thimble.
+_Avoid_: Micrometer screw gauge, screw gauge (fine in search keywords)
+
+**Sleeve**:
+The micrometer's fixed barrel, with the datum line along it, whole mm marked above the line (numbered every 5) and half mm below it. A mark the thimble has only just uncovered is drawn a hair clear of its edge, so it plainly shows.
+_Avoid_: Barrel, main scale (that's the caliper's)
+
+**Thimble**:
+The micrometer's turning sleeve, with 50 marks round its edge, 0.01 mm each, numbered every 5. Seen side on, its marks bunch toward its top and bottom edges, and the bigger numbers are above the datum line.
+_Avoid_: Rotating scale, drum
+
+**Datum line**:
+The line along the micrometer's sleeve that the thimble's marks are read against.
+_Avoid_: Reference line, index line
+
+**Zero error**:
+What a caliper or micrometer reads closed, with nothing in its jaws: positive or negative, up to 0.5 mm on the caliper and 0.05 mm on the micrometer. The jaws are that much closer together than the reading says, and the instrument can be drawn closed above the measuring one. The answer key gives the reading, the zero error and the corrected reading, the reading minus the zero error.
+_Avoid_: Zero offset (that's a spring scale's), offset, calibration error
+
+**Jaws**:
+What holds the object on a caliper (its outside jaws) or a micrometer (its anvil and spindle): nothing, a block, a cylinder, a ball or a wire, drawn as wide as the reading less the zero error.
+_Avoid_: Clamp, grip

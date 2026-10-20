@@ -7,12 +7,13 @@
   // Forces are solid. Motion (velocity, acceleration) has a dashed shaft at
   // full weight, so it's never read as a force, even photocopied. A force's
   // components are thinner and dashed, drawn in the palette's lighter color.
+  // `head` makes the head smaller, for a figure of short arrows (a Motion Map).
   import { arrow, VECTOR_HEAD, VECTOR_WIDTH, type Segment, type VectorStyle } from './vector'
 
-  let { v, color, style = 'force', halo = true }: { v: Segment; color: string; style?: VectorStyle; halo?: boolean } = $props()
+  let { v, color, style = 'force', halo = true, head: headSize }: { v: Segment; color: string; style?: VectorStyle; halo?: boolean; head?: number } = $props()
 
   const width = $derived(style === 'component' ? 2 : VECTOR_WIDTH)
-  const head = $derived(style === 'component' ? 10 : VECTOR_HEAD)
+  const head = $derived(headSize ?? (style === 'component' ? 10 : VECTOR_HEAD))
   const a = $derived(arrow(v, head))
   // Dashes stretched a little so the shaft starts and ends on a whole dash.
   const dash = $derived.by(() => {

@@ -86,6 +86,79 @@ export const BIOLOGY: CatalogEntry[] = [
     keywords: ['predator', 'prey', 'predator-prey', 'lotka-volterra', 'population', 'cycle', 'hare', 'lynx', 'wolf', 'phase plane', 'census', 'lag', 'ecology', 'graph', 'printable'],
   },
   {
+    id: 'food-web',
+    site: 'biology',
+    off: true,
+    name: 'Food Webs and Energy Pyramids',
+    path: '/food-web',
+    blurb: 'Food webs, food chains and energy pyramids, with pictures of the organisms.',
+    description:
+      'Make printable food webs, food chains and energy pyramids for biology tests. Start from a grassland, forest, pond, ocean, tundra or desert, change what eats what, leave names blank, and show the 10% rule.',
+    keywords: [
+      'food web', 'food chain', 'energy pyramid', 'trophic level', 'trophic levels', 'producer', 'consumer', 'primary consumer',
+      'secondary consumer', 'tertiary consumer', 'decomposer', 'herbivore', 'carnivore', 'omnivore', '10% rule', 'ten percent rule',
+      'energy flow', 'ecosystem', 'ecology', 'food pyramid', 'ecological pyramid', 'predator', 'prey', 'worksheet', 'printable',
+    ],
+  },
+  {
+    id: 'enzyme-activity',
+    site: 'biology',
+    name: 'Enzyme Activity',
+    path: '/enzyme-activity',
+    blurb: 'Rate of reaction against temperature, pH or substrate concentration.',
+    description:
+      'Make printable enzyme activity graphs for biology tests. Graph the rate of reaction against temperature, pH or substrate concentration for enzymes like pepsin and amylase, or with an inhibitor, and mark the optimum, denaturation, Vmax and Km.',
+    keywords: [
+      'enzyme', 'enzymes', 'enzyme activity', 'rate of reaction', 'reaction rate', 'temperature', 'ph', 'optimum', 'optimal',
+      'denature', 'denaturation', 'substrate concentration', 'michaelis-menten', 'vmax', 'km', 'inhibitor', 'inhibition',
+      'competitive', 'non-competitive', 'pepsin', 'amylase', 'trypsin', 'catalase', 'taq polymerase', 'graph', 'printable',
+    ],
+  },
+  {
+    id: 'dna-protein-synthesis',
+    site: 'biology',
+    name: 'DNA and Protein Synthesis',
+    path: '/dna-protein-synthesis',
+    blurb: 'A DNA strand transcribed and translated, base under base, with any row left for students.',
+    description:
+      'Make printable DNA and protein synthesis figures for biology tests. Type a DNA or mRNA sequence and get both DNA strands, the mRNA, the tRNA anticodons and the amino acids lined up base under base, with any row left blank for students, wrong pairings for multiple choice and a codon chart.',
+    keywords: [
+      'dna', 'rna', 'mrna', 'trna', 'protein synthesis', 'transcription', 'translation', 'central dogma', 'gene expression',
+      'base pairing', 'complementary strand', 'template strand', 'coding strand', 'antiparallel', "5' 3'", 'codon', 'anticodon',
+      'amino acids', 'genetic code', 'codon chart', 'codon table', 'start codon', 'stop codon', 'hydrogen bonds', 'worksheet', 'printable',
+    ],
+  },
+  {
+    id: 'photosynthesis-rate',
+    site: 'biology',
+    name: 'Photosynthesis Rate',
+    path: '/photosynthesis-rate',
+    blurb: 'Limiting factors: the rate against light, CO₂ or temperature.',
+    description:
+      'Make printable photosynthesis rate graphs for biology tests. Graph the rate against light intensity, lamp distance, CO₂ concentration or temperature, mark the limiting factors, or show CO₂ and O₂ in a closed chamber.',
+    keywords: [
+      'photosynthesis', 'rate of photosynthesis', 'limiting factor', 'limiting factors', 'light intensity', 'lamp distance',
+      'inverse square', 'pondweed', 'elodea', 'cabomba', 'oxygen bubbles', 'carbon dioxide', 'co2', 'co2 concentration', 'temperature',
+      'compensation point', 'saturation point', 'net photosynthesis', 'respiration', 'oxygen', 'o2', 'closed chamber', 'gas exchange',
+      'graph', 'printable',
+    ],
+  },
+  {
+    id: 'osmosis',
+    site: 'biology',
+    name: 'Osmosis and Tonicity',
+    path: '/osmosis',
+    blurb: 'Cells, U-tubes and dialysis bags in hypotonic, isotonic and hypertonic solutions.',
+    description:
+      'Make printable osmosis and tonicity figures for biology tests. Put a red blood cell, a plant cell, a U-tube or a dialysis bag in solutions you set, with solute and water particles and arrows for which way water moves, before and after.',
+    keywords: [
+      'osmosis', 'tonicity', 'hypertonic', 'hypotonic', 'isotonic', 'diffusion', 'water movement', 'solute', 'solvent',
+      'concentration gradient', 'selectively permeable membrane', 'semipermeable membrane', 'red blood cell', 'crenation', 'lysis',
+      'plant cell', 'plasmolysis', 'turgid', 'flaccid', 'turgor pressure', 'u-tube', 'dialysis tubing', 'dialysis bag', 'starch',
+      'glucose', 'particle diagram', 'cell transport', 'printable',
+    ],
+  },
+  {
     id: 'gel-electrophoresis',
     site: 'biology',
     name: 'Gel Electrophoresis',
