@@ -16,4 +16,18 @@ export const ECONOMICS: CatalogEntry[] = [
       'deadweight loss', 'tax incidence', 'subsidy', 'elasticity', 'shift', 'market', 'AP Microeconomics', 'graph', 'printable',
     ],
   },
+  {
+    id: 'ad-as',
+    site: 'economics',
+    name: 'AD–AS Model',
+    path: '/ad-as',
+    blurb: 'AD, SRAS and LRAS with gaps, shocks and policy shifts.',
+    description:
+      'Make printable AD–AS graphs for economics tests. Start at long-run equilibrium or with a recessionary or inflationary gap braced under the axis, shift aggregate demand, short-run or long-run aggregate supply (or to full employment), use a three-range Keynesian AS curve, or number the graph from a schedule with a callout.',
+    keywords: [
+      'aggregate demand', 'aggregate supply', 'AD-AS', 'AD/AS', 'SRAS', 'LRAS', 'potential GDP', 'full employment', 'recessionary gap',
+      'inflationary gap', 'output gap', 'stagflation', 'supply shock', 'fiscal policy', 'monetary policy', 'self-adjustment', 'economic growth',
+      'Keynesian', 'price level', 'real GDP', 'macroeconomics', 'AP Macroeconomics', 'graph', 'printable',
+    ],
+  },
 ]

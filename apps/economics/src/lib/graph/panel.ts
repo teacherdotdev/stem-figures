@@ -16,7 +16,7 @@ import type { Axes } from '$shared/graph/axes'
 import type { Cap } from '$shared/graph/caps'
 import { COLORS } from '$shared/graph/colors'
 import { layoutGrid, pathOf, round, clipPath, type Point } from '$shared/graph/grid'
-import { alongCurve, besidePoint, placer, textBox, type Anchor, type Box, type Segment, type Spot } from '$shared/graph/labels'
+import { alongCurve, besidePoint, crosses, placer, textBox, type Anchor, type Box, type Segment, type Spot } from '$shared/graph/labels'
 import { runsOf, runsWidth, type Run } from '$shared/graph/runs'
 import type { LabelSize } from '$shared/labelSize'
 import { centroidOf } from './curves'
@@ -43,7 +43,15 @@ export type PointSpec = { at: Point; name?: Words; dot?: boolean }
 export type MarkSpec = { axis: 'x' | 'y'; at: number; name: Words }
 export type GuideSpec = { from: Point; x?: boolean; y?: boolean }
 export type ArrowSpec = { from: Point; to: Point; color: string }
-export type BraceSpec = { from: Point; to: Point; side: 'below' | 'above' | 'left' | 'right'; name?: Words }
+export type BraceSpec = {
+  from: Point
+  to: Point
+  side: 'below' | 'above' | 'left' | 'right'
+  name?: Words
+  /** under the values written at the x-axis, from `from.x` to `to.x` (a recessionary gap), rather than by the points */
+  under?: boolean
+}
+/** Words with a leader arrow to a point; long ones are written on two or more lines, broken after a comma if they can be. */
 export type CalloutSpec = { at: Point; name: Words }
 /** A line across the graph, like a price ceiling, drawn as a curve is but thinner. */
 export type LevelSpec = { pts: Point[]; name?: Words; color: string; dash?: string }
@@ -144,9 +152,12 @@ export function buildPanel(spec: PanelSpec) {
   const bounds: Box = { x0: area.x - (numbered ? 0 : 4) + INSET, y0: area.y - ROOM_TOP + INSET, x1: area.x + area.w + right - INSET, y1: axisY - INSET }
   const place = placer(bounds)
   const labels: Label[] = []
+  /** what labels and dots take up, which callouts' leaders keep off */
+  const taken: Box[] = []
   const put = (spots: Spot[], w: Words) => {
     const width = widthOf(w)
     const spot = place.place(spots, width, LFS)
+    taken.push(spot.box)
     labels.push(labelAt(spot, w, spot.box))
     return spot
   }
@@ -158,6 +169,16 @@ export function buildPanel(spec: PanelSpec) {
   // Keep labels off the axes too.
   place.line([{ x: axisX, y: axisY }, { x: xEnd, y: axisY }])
   place.line([{ x: axisX, y: axisY }, { x: axisX, y: yTop }])
+  // And off the y-axis's word over its top (a long one reaches over the grid).
+  const yWordSpot = (() => {
+    if (!yWord) return null
+    const y = yTop - 8 - (spec.every.y && spec.ends.y === 'none' ? fs * 0.7 : 0)
+    const w = widthOf(yWord)
+    const spot: Spot = w <= 28 ? { x: axisX, y, anchor: 'middle' } : { x: Math.max(PAD + w / 2, axisX), y, anchor: 'middle' }
+    const b = textBox(spot, w, LFS)
+    place.keep(b)
+    return { spot, box: b }
+  })()
 
   const gbox = { x0: box.x0, x1: box.x1, y0: box.y0, y1: box.y1 }
   const runsIn = (pts: Point[]) => clipPath(pts, gbox).map((run) => run.map(px))
@@ -201,7 +222,7 @@ export function buildPanel(spec: PanelSpec) {
   })
 
   // Braces, their labels just past their middles.
-  const braces = (spec.braces ?? []).map((b) => {
+  const braces = (spec.braces ?? []).filter((b) => !b.under).map((b) => {
     const off = { below: { x: 0, y: BRACE_GAP }, above: { x: 0, y: -BRACE_GAP }, left: { x: -BRACE_GAP, y: 0 }, right: { x: BRACE_GAP, y: 0 } }[b.side]
     const at = (p: Point) => {
       const q = px(p)
@@ -218,6 +239,7 @@ export function buildPanel(spec: PanelSpec) {
     const q = px(p.at)
     dots.push(q)
     place.box({ x0: q.x - DOT_R, y0: q.y - DOT_R, x1: q.x + DOT_R, y1: q.y + DOT_R })
+    taken.push({ x0: q.x - DOT_R, y0: q.y - DOT_R, x1: q.x + DOT_R, y1: q.y + DOT_R })
   }
 
   // The values at the axes, where numbers would be: at the y-axis moved
@@ -256,6 +278,7 @@ export function buildPanel(spec: PanelSpec) {
       : { x: t.x + 5, y: t.y + LFS * 0.35, anchor: 'start' }
     const bx = textBox(spot, w, LFS)
     place.keep(bx)
+    taken.push(bx)
     labels.push(labelAt(spot, b.name, bx))
   }
   for (const c of curves) {
@@ -283,23 +306,76 @@ export function buildPanel(spec: PanelSpec) {
     if (!shows(r.name)) continue
     put(insideSpots(r.poly, r.centroid, LFS), r.name)
   }
+  // Callouts last: each written where neither its words nor its leader
+  // touch anything, the leader staying between the lines that meet at its
+  // point and its arrow stopping just short of the point.
   const leaders: Segment[] = []
+  /** how much wider the panel is for a callout out past the grid */
+  let extraRight = 0
+  const lines: Segment[] = [
+    ...[...curves, ...levels].flatMap((c) => c.ends.flatMap(segmentsOf)),
+    ...guides,
+    ...arrows,
+  ]
   for (const c of spec.callouts ?? []) {
     if (!shows(c.name)) continue
     const p = px(c.at)
-    const spots: Spot[] = [44, 70, 100].flatMap((r) => [
-      { x: p.x + r * 0.7, y: p.y - r * 0.6, anchor: 'start' as const },
-      { x: p.x - r * 0.7, y: p.y - r * 0.6, anchor: 'end' as const },
-      { x: p.x + r * 0.7, y: p.y + r * 0.6 + LFS, anchor: 'start' as const },
-      { x: p.x - r * 0.7, y: p.y + r * 0.6 + LFS, anchor: 'end' as const },
-      { x: p.x, y: p.y - r, anchor: 'middle' as const },
-      { x: p.x, y: p.y + r + LFS * 0.5, anchor: 'middle' as const },
-    ])
-    const spot = put(spots, c.name)
-    const from = nearestOnBox(spot.box, p, 3)
-    const len = Math.hypot(p.x - from.x, p.y - from.y) || 1
-    const stop = 4
-    leaders.push({ x1: round(from.x), y1: round(from.y), x2: round(p.x - ((p.x - from.x) / len) * stop), y2: round(p.y - ((p.y - from.y) / len) * stop) })
+    const rows = c.name.mode === 'text' ? wrapped(text(c.name), LFS, LFS * 10) : ['']
+    const w = c.name.mode === 'text' ? Math.max(...rows.map((r) => runsWidth(runsOf(r, LFS), LFS) * 1.04 + 2)) : BLANK_W
+    const LH = LFS * 1.2
+    const h = (rows.length - 1) * LH + LFS * 1.08
+    /** A place for the callout: its box from its top left, the leader from it, and where its lines are written. */
+    const option = (x0: number, y0: number, anchor: Anchor) => {
+      const box = { x0, y0, x1: x0 + w, y1: y0 + h }
+      const from = nearestOnBox(box, p, 3)
+      const len = Math.hypot(p.x - from.x, p.y - from.y) || 1
+      const stop = DOT_R + 3
+      const leader = { x1: round(from.x), y1: round(from.y), x2: round(p.x - ((p.x - from.x) / len) * stop), y2: round(p.y - ((p.y - from.y) / len) * stop) }
+      return { box, leader, anchor, x: anchor === 'start' ? x0 : anchor === 'end' ? x0 + w : x0 + w / 2, y: y0 + LFS * 0.78 }
+    }
+    const options = [36, 56, 80, 110, 150].flatMap((r) =>
+      ([[1, -1], [-1, -1], [1, 1], [-1, 1], [0, -1], [0, 1], [1, 0], [-1, 0]] as const).map(([sx, sy]) => {
+        const reach = sx && sy ? r * 0.75 : r
+        const x0 = sx > 0 ? p.x + reach : sx < 0 ? p.x - reach - w : p.x - w / 2
+        const y0 = sy > 0 ? p.y + r * 0.55 : sy < 0 ? p.y - r * 0.55 - h : p.y - h / 2
+        return option(x0, y0, sx > 0 ? 'start' : sx < 0 ? 'end' : 'middle')
+      }),
+    )
+    const leaderCost = (o: (typeof options)[number]) =>
+      taken.filter((b) => crosses(o.leader, b)).length * 100 + lines.filter((l) => segmentsCross(o.leader, l)).length * 4
+    // How much each option touches: its words as the placer sees them, and its leader across labels and lines.
+    let best = options[0]
+    let bestScore = Infinity
+    for (const o of options) {
+      const score = place.choose([o], false).score + leaderCost(o)
+      if (score < bestScore) {
+        best = o
+        bestScore = score
+        if (!score) break
+      }
+    }
+    // Nowhere on the graph clear of lines and labels: out past its right
+    // edge instead, the panel widening to fit, if that's clearer.
+    if (bestScore >= 10) {
+      const x0 = area.x + area.w + 14
+      for (const dy of [0, -1, 1, -2, 2, -3, 3]) {
+        const y0 = Math.min(axisY - h - 4, Math.max(area.y - ROOM_TOP, p.y - h / 2 + dy * LFS * 1.6))
+        const o = option(x0, y0, 'start')
+        const score = 8 + taken.filter((b) => b.x0 < o.box.x1 + 3 && o.box.x0 - 3 < b.x1 && b.y0 < o.box.y1 + 3 && o.box.y0 - 3 < b.y1).length * 100 + leaderCost(o)
+        if (score < bestScore) {
+          best = o
+          bestScore = score
+        }
+      }
+      extraRight = Math.max(extraRight, best.box.x1 + 6 - (area.x + area.w + right))
+    }
+    place.keep(best.box)
+    taken.push(best.box)
+    place.line([{ x: best.leader.x1, y: best.leader.y1 }, { x: best.leader.x2, y: best.leader.y2 }])
+    lines.push(best.leader)
+    leaders.push(best.leader)
+    if (c.name.mode === 'text') rows.forEach((r, k) => labels.push({ x: best.x, y: best.y + k * LH, anchor: best.anchor, runs: runsOf(r, LFS) }))
+    else labels.push({ x: best.x, y: best.y, anchor: best.anchor, blank: { x1: best.box.x0, y1: best.y, x2: best.box.x1, y2: best.y } })
   }
 
   // The chart title on top, the y-axis's word over its top and the
@@ -312,22 +388,39 @@ export function buildPanel(spec: PanelSpec) {
     if (title.mode === 'text') big.push({ x: midX, y, anchor: 'middle', runs: runsOf(text(title), fs * 1.4), big: true })
     else blanks.push({ x1: midX - Math.min(110, area.w / 2), y1: y, x2: midX + Math.min(110, area.w / 2), y2: y })
   }
-  if (yWord) {
-    const y = yTop - 8 - (spec.every.y && spec.ends.y === 'none' ? fs * 0.7 : 0)
-    const w = widthOf(yWord)
-    const spot: Spot = w <= 28 ? { x: axisX, y, anchor: 'middle' } : { x: Math.max(PAD + w / 2, axisX), y, anchor: 'middle' }
-    labels.push(labelAt(spot, yWord, textBox(spot, w, LFS)))
-  }
+  if (yWord && yWordSpot) labels.push(labelAt(yWordSpot.spot, yWord, yWordSpot.box))
   let bottom = axisY + xMarksH
+  // Braces under the values at the x-axis (a recessionary gap), each with its label under it.
+  const underBraces: string[] = []
+  const under: Box[] = []
+  const panelW = area.x + area.w + right + extraRight + PAD - 6
+  for (const b of (spec.braces ?? []).filter((b) => b.under)) {
+    const y = bottom + BRACE_GAP
+    const [a, c] = [px(b.from).x, px(b.to).x].sort((m, n) => m - n)
+    if (c - a < 1) continue
+    const brace = braceOf({ x: a, y }, { x: c, y }, 'below', BRACE_DEPTH)
+    underBraces.push(brace.d)
+    under.push({ x0: a, y0: y, x1: c, y1: brace.tip.y })
+    if (!shows(b.name)) continue
+    const w = widthOf(b.name)
+    const spot: Spot = { x: Math.min(panelW - PAD - w / 2, Math.max(PAD + w / 2, brace.tip.x)), y: brace.tip.y + LFS + 2, anchor: 'middle' }
+    const bx = textBox(spot, w, LFS)
+    labels.push(labelAt(spot, b.name, bx))
+    under.push(bx)
+  }
   if (xWord) {
     if (xWordBeside) labels.push(labelAt({ x: xEnd + 7, y: axisY + LFS * 0.35, anchor: 'start' }, xWord, textBox({ x: xEnd + 7, y: axisY + LFS * 0.35, anchor: 'start' }, xWordW, LFS)))
     else {
       const spot: Spot = { x: area.x + area.w + Math.min(right - 4, xWordW / 2), y: bottom + LFS + 6, anchor: 'end' }
       spot.x = Math.max(spot.x, area.x + xWordW)
+      // Under a brace's label, if the two would meet.
+      const wb = textBox(spot, xWordW, LFS)
+      if (under.some((u) => u.x0 < wb.x1 + 6 && wb.x0 - 6 < u.x1 && u.y0 < wb.y1 && wb.y0 < u.y1)) spot.y = Math.max(...under.map((u) => u.y1)) + LFS * 0.78 + 6
       labels.push(labelAt(spot, xWord, textBox(spot, xWordW, LFS)))
       bottom = spot.y + LFS * 0.3
     }
   }
+  bottom = Math.max(bottom, ...under.map((u) => u.y1))
   if (spec.caption && shows(spec.caption)) {
     const y = bottom + fs * 1.3 + 8
     if (spec.caption.mode === 'text') big.push({ x: midX, y, anchor: 'middle', runs: runsOf(text(spec.caption), fs * 1.2), big: true })
@@ -335,7 +428,7 @@ export function buildPanel(spec: PanelSpec) {
     bottom = y + fs * 0.3
   }
 
-  const width = area.x + area.w + right + PAD - 6
+  const width = panelW
   const height = bottom + PAD
 
   return {
@@ -365,7 +458,7 @@ export function buildPanel(spec: PanelSpec) {
     curves: curves.map(({ paths, color, dash, width }) => ({ paths, color, dash, width })),
     guides,
     arrows,
-    braces: braces.map(({ d }) => d),
+    braces: [...braces.map(({ d }) => d), ...underBraces],
     dots,
     leaders,
     labels: [...labels, ...sideLabels],
@@ -438,6 +531,32 @@ function inside(poly: Point[], p: Point) {
     if (a.y > p.y !== b.y > p.y && p.x < ((b.x - a.x) * (p.y - a.y)) / (b.y - a.y) + a.x) ins = !ins
   }
   return ins
+}
+
+/** A run of points as the segments between them. */
+const segmentsOf = (run: Point[]): Segment[] => run.slice(1).map((q, k) => ({ x1: run[k].x, y1: run[k].y, x2: q.x, y2: q.y }))
+
+/** Whether two segments cross. */
+function segmentsCross(a: Segment, b: Segment) {
+  const side = (s: Segment, x: number, y: number) => Math.sign((s.x2 - s.x1) * (y - s.y1) - (s.y2 - s.y1) * (x - s.x1))
+  return side(a, b.x1, b.y1) * side(a, b.x2, b.y2) < 0 && side(b, a.x1, a.y1) * side(b, a.x2, a.y2) < 0
+}
+
+/**
+ * A callout's words in lines no wider than `max`: broken after commas if it
+ * has any, otherwise between words; a line that can't be broken stays whole.
+ */
+export function wrapped(t: string, fs: number, max: number): string[] {
+  const width = (x: string) => runsWidth(runsOf(x, fs), fs) * 1.04 + 2
+  if (width(t) <= max) return [t]
+  const pieces = t.includes(', ') ? t.split(/(?<=,) /) : t.split(' ')
+  const out: string[] = []
+  for (const piece of pieces) {
+    const last = out.at(-1)
+    if (last !== undefined && width(`${last} ${piece}`) <= max) out[out.length - 1] = `${last} ${piece}`
+    else out.push(piece)
+  }
+  return out
 }
 
 /** The point on a box's edge (grown by `pad`) nearest `p`. */
