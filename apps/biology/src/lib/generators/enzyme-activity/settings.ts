@@ -4,7 +4,7 @@
 // and, against substrate concentration, an inhibitor. The axes are a
 // $shared/graph grid, shape only (no numbers, fitted to the curves) or
 // numbered, fitted or typed as Photosynthesis Rate's are, the rate in
-// arbitrary units.
+// arbitrary units or as a percentage of the fastest.
 
 import { TITLE_MODES, gridFields } from '$shared/graph/axes'
 import { bool, choice, defineSettings, number, text, type Field } from '$shared/settings'
@@ -22,20 +22,25 @@ export const INHIBITOR_NAMES = { none: 'No inhibitor', competitive: 'Competitive
 export const AXES = ['shape', 'numbered'] as const
 export type Axes = (typeof AXES)[number]
 
+/** On numbered axes, the rate in arbitrary units, 10 at its fastest, or as a percentage of the fastest. */
+export const RATE_UNITS = ['au', 'percent'] as const
+export type RateUnit = (typeof RATE_UNITS)[number]
+
 /** The most curves on one graph. */
 export const CURVES = [0, 1, 2] as const
 export type CurveIndex = (typeof CURVES)[number]
 
 /**
  * The axis titles this page writes for each graph, which it swaps when the
- * graph or axes change: numbered, the rate and substrate concentration are
- * in arbitrary units.
+ * graph, axes or units change: numbered, substrate concentration is in
+ * arbitrary units, and the rate in those or as a percentage of the fastest.
  */
-export function autoTitles({ graph, axes }: { graph: Graph; axes: Axes }) {
+export function autoTitles({ graph, axes, rateUnit }: { graph: Graph; axes: Axes; rateUnit: RateUnit }) {
   const au = axes === 'numbered' ? ' (arbitrary units)' : ''
+  const rate = axes === 'numbered' && rateUnit === 'percent' ? ' (% of maximum)' : au
   return {
     xTitle: graph === 'temperature' ? 'Temperature (°C)' : graph === 'ph' ? 'pH' : `Substrate concentration${au}`,
-    yTitle: `Rate of reaction${au}`,
+    yTitle: `Rate of reaction${rate}`,
   }
 }
 
@@ -48,7 +53,7 @@ export function retitled(before: Parameters<typeof autoTitles>[0] & { xTitle: st
   return out
 }
 
-const TITLES = autoTitles({ graph: 'temperature', axes: 'shape' })
+const TITLES = autoTitles({ graph: 'temperature', axes: 'shape', rateUnit: 'au' })
 const label = (words: string, mode: (typeof TITLE_MODES)[number] = 'text') => ({ words: text(words, 40), mode: choice(TITLE_MODES, mode) })
 const labels = <K extends string>(defaults: Record<K, string>) =>
   Object.fromEntries(
@@ -99,6 +104,7 @@ export const enzymeSettings = defineSettings({
   color: bool(true),
   gridlines: bool(false),
   axes: choice(AXES, 'shape'),
+  rateUnit: choice(RATE_UNITS, 'au'),
   /** fit each axis to the curves, rather than use the range typed */
   xFit: bool(true),
   yFit: bool(true),

@@ -205,6 +205,20 @@ describe('numbered axes', () => {
     expect(p.y).toBeCloseTo(g.grid.y + g.grid.h * (2 / 12), 6)
   })
 
+  it('puts the optimum and Vmax at 100 with the rate as a percentage, on a fitted or typed axis', () => {
+    const g = build(NUMBERED + '&rateUnit=percent')
+    expect(g.numbers.filter((n) => n.anchor === 'end').at(-1)?.text).toBe('120')
+    expect(g.dots[0].y).toBeCloseTo(g.grid.y + g.grid.h * (20 / 120), 6)
+    const typed = build(NUMBERED + '&rateUnit=percent&yFit=0&yFrom=0&yTo=100&yStep=10')
+    expect(typed.dots[0].y).toBeCloseTo(typed.grid.y, 6)
+    // The optimum's label, with no room over the peak, goes below it rather than off the figure.
+    expect(boxOf(typed.markLabels[0], typed.labelFs).y0).toBeGreaterThanOrEqual(typed.grid.y)
+    const v = build(NUMBERED + '&rateUnit=percent&graph=substrate&yFit=0&yFrom=0&yTo=200&yStep=20')
+    expect(v.lines[0].y1).toBeCloseTo(v.grid.y + v.grid.h / 2, 6)
+    // Shape only, there are no numbers for the unit to change.
+    expect(build('rateUnit=percent').dots).toEqual(build('').dots)
+  })
+
   it('draws the ranges typed once an axis isn’t fitted', () => {
     const g = build(NUMBERED + '&xFit=0&xFrom=20&xTo=50&xStep=2&yFit=0&yFrom=0&yTo=20&yStep=2')
     expect(g.range).toEqual({ from: 20, to: 50 })
@@ -277,6 +291,8 @@ describe('the settings', () => {
 
   it('give numbered axes their units in the titles, keeping ones the teacher typed', () => {
     const before = { ...enzymeSettings.defaults, graph: 'substrate' as const, xTitle: 'Substrate concentration', yTitle: 'Speed' }
-    expect(retitled(before, { graph: 'substrate', axes: 'numbered' })).toEqual({ xTitle: 'Substrate concentration (arbitrary units)' })
+    expect(retitled(before, { graph: 'substrate', axes: 'numbered', rateUnit: 'au' })).toEqual({ xTitle: 'Substrate concentration (arbitrary units)' })
+    const numbered = { ...enzymeSettings.defaults, axes: 'numbered' as const, yTitle: 'Rate of reaction (arbitrary units)' }
+    expect(retitled(numbered, { graph: 'temperature', axes: 'numbered', rateUnit: 'percent' }).yTitle).toBe('Rate of reaction (% of maximum)')
   })
 })
