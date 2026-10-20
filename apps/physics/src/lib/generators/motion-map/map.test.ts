@@ -3,7 +3,7 @@ import { buildMotion } from '../motion-graphs/figure'
 import { letterOf, motionOf, positionAt, velocityAt } from '../motion-graphs/motion'
 import { motionSettings, newSegment, type Segment } from '../motion-graphs/settings'
 import { buildMap, mapAnswer, xOf, type MotionMapLayout } from './map'
-import { graphLink, mapLink, mapSettings, type MapSettings } from './settings'
+import { graphLink, mapFromLink, mapLink, mapSettings, type MapSettings } from './settings'
 
 const from = (query: string) => buildMap(mapSettings.fromParams(new URLSearchParams(query)))
 const make = (over: Partial<MapSettings> = {}) => buildMap({ ...mapSettings.defaults, ...over })
@@ -50,6 +50,34 @@ describe('the settings', () => {
   test('link with no query at all for the default motion', () => {
     expect(graphLink(mapSettings.defaults)).toBe('/motion-graphs')
     expect(mapLink(motionSettings.defaults)).toBe('/motion-map')
+  })
+})
+
+describe('starting from a pasted motion graph link', () => {
+  const graph = { ...motionSettings.defaults, segments: THERE_AND_BACK, start: -4, graphs: 'all' as const }
+  const pasted = `https://physicsfigures.com/motion-graphs?${motionSettings.toQuery(graph)}`
+
+  test('takes the graph’s segments and start, and nothing else', () => {
+    expect(mapFromLink(pasted)).toEqual({ ...mapSettings.defaults, segments: THERE_AND_BACK, start: -4 })
+  })
+
+  test('takes links from any address, with or without https:// or spaces around them', () => {
+    const query = pasted.split('?')[1]
+    for (const link of [`  ${pasted}\n`, `physicsfigures.com/motion-graphs?${query}`, `http://localhost:10000/motion-graphs/?${query}`]) {
+      expect(mapFromLink(link)?.segments, link).toEqual(THERE_AND_BACK)
+    }
+  })
+
+  test('reads a link with no settings as the default motion, and takes motion map links too', () => {
+    expect(mapFromLink('https://physicsfigures.com/motion-graphs')).toEqual(mapSettings.defaults)
+    const map = mapLink({ segments: THERE_AND_BACK, start: 2 })
+    expect(mapFromLink(`https://physicsfigures.com${map}`)?.start).toBe(2)
+  })
+
+  test('turns away anything else', () => {
+    for (const text of ['hello', 'https://physicsfigures.com/projectile-motion?angle=30', 'https://physicsfigures.com/motion-graphs/examples/cart', 'not a link at all']) {
+      expect(mapFromLink(text), text).toBeNull()
+    }
   })
 })
 

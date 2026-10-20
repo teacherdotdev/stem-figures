@@ -326,7 +326,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'Can I make a motion map and a motion graph of the same motion?',
-        a: 'Yes. See it as a motion graph opens the Motion Graph Generator with the same segments and starting position, and See it as a motion map comes back. With letters at the segment ends on both, the letters match: the cart does the same thing between B and C on the map and on the graph.',
+        a: 'Yes. See it as a motion graph opens the Motion Graph Generator with the same segments and starting position, and See it as a motion map comes back. To turn a graph you already made into a motion map, copy its link with Share link and paste it into Start from a motion graph, at the top of the settings. With letters at the segment ends on both, the letters match: the cart does the same thing between B and C on the map and on the graph.',
       },
       {
         q: 'What if a segment doesn’t last a whole number of dots?',

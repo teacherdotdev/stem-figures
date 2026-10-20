@@ -60,4 +60,24 @@ export const graphLink = (s: Shared) => linkTo('/motion-graphs', motionSettings,
 /** The Motion Map Generator with this motion. */
 export const mapLink = (s: Shared) => linkTo('/motion-map', mapSettings, s)
 
-export const stepOf = (s: Pick<MapSettings, 'dt'>) => Number(s.dt)
+/** A pasted link to the Motion Graph Generator (or another motion map) as a
+ *  fresh motion map of the same motion, or null when it isn't one. Only the
+ *  segments and start come across; every other setting is this page's default. */
+export function mapFromLink(text: string): MapSettings | null {
+  const t = text.trim()
+  let url: URL
+  try {
+    url = new URL(/^[a-z]+:\/\//i.test(t) ? t : `https://${t}`)
+  } catch {
+    return null
+  }
+  if (!/\/motion-(graphs|map)\/?$/.test(url.pathname)) return null
+  const motion = new URLSearchParams()
+  for (const key of ['segments', 'start']) {
+    const value = url.searchParams.get(key)
+    if (value !== null) motion.set(key, value)
+  }
+  return mapSettings.fromParams(motion)
+}
+
+export const stepOf =(s: Pick<MapSettings, 'dt'>) => Number(s.dt)
