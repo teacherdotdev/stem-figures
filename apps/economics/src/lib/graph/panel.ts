@@ -158,6 +158,15 @@ export function buildPanel(spec: PanelSpec) {
   // Keep labels off the axes too.
   place.line([{ x: axisX, y: axisY }, { x: xEnd, y: axisY }])
   place.line([{ x: axisX, y: axisY }, { x: axisX, y: yTop }])
+  // And off the y-axis's word over its top, which a long one runs out over the graph from.
+  let yWordSpot: (Spot & { box: Box }) | undefined
+  if (yWord) {
+    const y = yTop - 8 - (spec.every.y && spec.ends.y === 'none' ? fs * 0.7 : 0)
+    const w = widthOf(yWord)
+    const spot: Spot = w <= 28 ? { x: axisX, y, anchor: 'middle' } : { x: Math.max(PAD + w / 2, axisX), y, anchor: 'middle' }
+    yWordSpot = { ...spot, box: textBox(spot, w, LFS) }
+    place.box(yWordSpot.box)
+  }
 
   const gbox = { x0: box.x0, x1: box.x1, y0: box.y0, y1: box.y1 }
   const runsIn = (pts: Point[]) => clipPath(pts, gbox).map((run) => run.map(px))
@@ -312,12 +321,7 @@ export function buildPanel(spec: PanelSpec) {
     if (title.mode === 'text') big.push({ x: midX, y, anchor: 'middle', runs: runsOf(text(title), fs * 1.4), big: true })
     else blanks.push({ x1: midX - Math.min(110, area.w / 2), y1: y, x2: midX + Math.min(110, area.w / 2), y2: y })
   }
-  if (yWord) {
-    const y = yTop - 8 - (spec.every.y && spec.ends.y === 'none' ? fs * 0.7 : 0)
-    const w = widthOf(yWord)
-    const spot: Spot = w <= 28 ? { x: axisX, y, anchor: 'middle' } : { x: Math.max(PAD + w / 2, axisX), y, anchor: 'middle' }
-    labels.push(labelAt(spot, yWord, textBox(spot, w, LFS)))
-  }
+  if (yWord && yWordSpot) labels.push(labelAt(yWordSpot, yWord, yWordSpot.box))
   let bottom = axisY + xMarksH
   if (xWord) {
     if (xWordBeside) labels.push(labelAt({ x: xEnd + 7, y: axisY + LFS * 0.35, anchor: 'start' }, xWord, textBox({ x: xEnd + 7, y: axisY + LFS * 0.35, anchor: 'start' }, xWordW, LFS)))

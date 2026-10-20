@@ -16,6 +16,14 @@ decisions.
   consumer and producer surplus, deadweight loss and tax revenue.
   Schematic (no numbers, as AP graphs are drawn) or numbered from a typed
   schedule of prices and quantities. Common setups to start from.
+- `/money-markets` **Money Markets**: the money market (upright money
+  supply, money demand), loanable funds, or the market for reserves (upright
+  supply of reserves, demand flat, sloping, then flat at the administered
+  rate) with ample or limited reserves. Shift either curve with arrows; the
+  rates and quantities before and after are written at the axes, and the
+  readout says what happened to the rate and why (with ample reserves, moving
+  the supply of reserves leaves the policy rate where it is). Common setups,
+  including the AP 2024 ample-reserves graph.
 - `/about`, `/privacy`, `/reuse`, `/sitemap.xml`, `/robots.txt`
 
 Every page has the top bar: the site name, the current generator, and links
