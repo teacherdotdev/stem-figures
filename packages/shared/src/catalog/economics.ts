@@ -43,4 +43,17 @@ export const ECONOMICS: CatalogEntry[] = [
       'economic growth', 'AP Macroeconomics', 'graph', 'printable',
     ],
   },
+  {
+    id: 'phillips-curve',
+    site: 'economics',
+    name: 'Phillips Curve',
+    path: '/phillips-curve',
+    blurb: 'Short- and long-run Phillips curves with movements and shifts.',
+    description:
+      'Make printable Phillips curve graphs for economics tests. Draw the short-run Phillips curve and the long-run curve at the natural rate of unemployment, move along the SRPC, shift either curve after a supply shock or a change in expected inflation, and show the long-run adjustment with points A, B and C, schematic or numbered in percent with deflation.',
+    keywords: [
+      'Phillips curve', 'SRPC', 'LRPC', 'inflation', 'unemployment', 'natural rate of unemployment', 'NRU', 'expectations', 'expected inflation',
+      'stagflation', 'supply shock', 'deflation', 'AP Macroeconomics', 'graph', 'printable',
+    ],
+  },
 ]

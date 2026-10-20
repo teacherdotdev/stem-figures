@@ -16,7 +16,7 @@ import type { Axes } from '$shared/graph/axes'
 import type { Cap } from '$shared/graph/caps'
 import { COLORS } from '$shared/graph/colors'
 import { layoutGrid, pathOf, round, clipPath, type Point } from '$shared/graph/grid'
-import { alongCurve, besidePoint, crosses, placer, textBox, type Anchor, type Box, type Segment, type Spot } from '$shared/graph/labels'
+import { alongCurve, besidePoint, crosses, placer, textBox, textWidth, type Anchor, type Box, type Segment, type Spot } from '$shared/graph/labels'
 import { runsOf, runsWidth, type Run } from '$shared/graph/runs'
 import type { LabelSize } from '$shared/labelSize'
 import { centroidOf } from './curves'
@@ -64,6 +64,8 @@ export type PanelSpec = {
   ends: { x: Cap; y: Cap }
   /** the axes cross at 0 when it's on the grid, rather than along its edges */
   cross?: boolean
+  /** written after every number on each axis, like % */
+  units?: { x?: string; y?: string }
   axisWords: { x: Words; y: Words }
   title?: Words
   /** a line under the panel, like a country's name */
@@ -122,8 +124,13 @@ export function buildPanel(spec: PanelSpec) {
   // numbers, if any) and on top for the chart title and the y-axis's word.
   const marks = (spec.marks ?? []).filter((m) => shows(m.name))
   const yMarksW = Math.max(0, ...marks.filter((m) => m.axis === 'y').map((m) => widthOf(m.name, SIDE_BLANK_W)))
-  const numbersW = base.grid.x - PAD
-  const numbersH = base.height - base.grid.y - base.grid.h - PAD
+  // Numbers with units after them (5%) are wider at the y-axis.
+  const yUnits = spec.every.y && spec.units?.y ? spec.units.y : ''
+  const xUnits = spec.every.x && spec.units?.x ? spec.units.x : ''
+  const numbersW = base.grid.x - PAD + (yUnits ? textWidth(yUnits, fs) : 0)
+  // An x-axis crossing inside the grid (inflation below 0) has its numbers under it, on the grid.
+  const xInside = base.xAxis.y < base.grid.y + base.grid.h - 0.5
+  const numbersH = xInside ? (spec.every.x ? fs + 8 : 0) : base.height - base.grid.y - base.grid.h - PAD
   const title = spec.title && shows(spec.title) ? spec.title : undefined
   const yWord = shows(spec.axisWords.y) ? spec.axisWords.y : undefined
   const xWord = shows(spec.axisWords.x) ? spec.axisWords.x : undefined
@@ -148,7 +155,8 @@ export function buildPanel(spec: PanelSpec) {
   const xWordBeside = !!xWord && xWord.mode === 'text' && xWordW <= 28
   const right = Math.max(ROOM_RIGHT, xWordBeside ? xEnd - (area.x + area.w) + xWordW + 10 : 0)
 
-  const bounds: Box = { x0: area.x - (numbered ? 0 : 4) + INSET, y0: area.y - ROOM_TOP + INSET, x1: area.x + area.w + right - INSET, y1: axisY - INSET }
+  const gridBottom = area.y + area.h
+  const bounds: Box = { x0: area.x - (numbered ? 0 : 4) + INSET, y0: area.y - ROOM_TOP + INSET, x1: area.x + area.w + right - INSET, y1: (xInside ? gridBottom : axisY) - INSET }
   const place = placer(bounds)
   const labels: Label[] = []
   /** Every label's box on the graph so far, for callouts' leaders to keep out of. */
@@ -267,8 +275,24 @@ export function buildPanel(spec: PanelSpec) {
   )
   for (const m of ys) sideLabel(axisX - numbersW - 7, m.at + LFS * 0.35, 'end', m.name)
   const xMarks = rowsUnder(marks.filter((m) => m.axis === 'x').map((m) => ({ ...m, x: px({ x: m.at, y: box.y0 }).x, half: widthOf(m.name, SIDE_BLANK_W) / 2 })))
-  for (const m of xMarks.placed) sideLabel(m.x, axisY + numbersH + LFS + 5 + m.row * X_ROW(LFS), 'middle', m.name)
-  const xMarksH = numbersH + (xMarks.rows ? LFS + 8 + (xMarks.rows - 1) * X_ROW(LFS) : 0)
+  // Under an x-axis crossing the grid, they go under the grid, clear of the lines running on down to its bottom.
+  const marksFrom = xInside ? Math.max(gridBottom, axisY + numbersH) : axisY + numbersH
+  for (const m of xMarks.placed) sideLabel(m.x, marksFrom + LFS + 5 + m.row * X_ROW(LFS), 'middle', m.name)
+  const xMarksH = marksFrom - axisY + (xMarks.rows ? LFS + 8 + (xMarks.rows - 1) * X_ROW(LFS) : 0)
+
+  // The numbers, with their units; on the grid (under an x-axis crossing it), labels keep off them and the values there.
+  const numbers = base.numbers.map((n) => {
+    // x-axis numbers are centered under their lines, but for the one where the axes cross, just left of it.
+    const corner = Math.abs(n.x - (base.yAxis.x - 8)) < 0.01
+    const onX = n.anchor === 'middle' || corner
+    // With the x-axis crossing the grid, the 0 there goes with the y-axis's numbers, clear of those under it.
+    if (corner && xInside) return { ...n, x: base.yAxis.x - 6 + dx, y: base.xAxis.y + fs * 0.35 + dy, text: n.text + (yUnits || xUnits) }
+    return { ...n, x: n.x + dx, y: n.y + dy, text: n.text + (onX ? xUnits : yUnits) }
+  })
+  if (xInside) {
+    for (const n of numbers) place.keep(textBox({ x: n.x, y: n.y, anchor: n.anchor }, textWidth(n.text, fs), fs))
+    for (const l of sideLabels) place.keep(textBox(l, l.runs ? runsWidth(l.runs, LFS) : SIDE_BLANK_W, LFS))
+  }
 
   // Labels on the graph, most important first: points, braces, curve names,
   // levels' names, regions' names, then callouts.
@@ -390,7 +414,7 @@ export function buildPanel(spec: PanelSpec) {
     else blanks.push({ x1: midX - Math.min(110, area.w / 2), y1: y, x2: midX + Math.min(110, area.w / 2), y2: y })
   }
   if (yWord && yWordSpot) labels.push(labelAt(yWordSpot, yWord, yWordSpot.box))
-  let bottom = axisY + xMarksH
+  let bottom = xInside ? Math.max(axisY + xMarksH, gridBottom) : axisY + xMarksH
   if (xWord) {
     if (xWordBeside) labels.push(labelAt({ x: xEnd + 7, y: axisY + LFS * 0.35, anchor: 'start' }, xWord, textBox({ x: xEnd + 7, y: axisY + LFS * 0.35, anchor: 'start' }, xWordW, LFS)))
     else {
@@ -431,7 +455,7 @@ export function buildPanel(spec: PanelSpec) {
     xAxis: { x1: base.xAxis.x1 + dx, x2: xEnd, y: axisY },
     yAxis: { x: axisX, y1: base.yAxis.y1 + dy, y2: yTop },
     ends: spec.ends,
-    numbers: base.numbers.map((n) => ({ ...n, x: n.x + dx, y: n.y + dy })),
+    numbers,
     regions,
     levels: levels.map(({ paths, color, dash }) => ({ paths, color, dash })),
     curves: curves.map(({ paths, color, dash, width }) => ({ paths, color, dash, width })),

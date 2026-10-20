@@ -31,6 +31,14 @@ decisions.
   shaded from peak to trough, dots at the turning points, and cycles even
   or irregular (from a seed, so a link draws the same wave). Common setups
   to start from.
+- `/phillips-curve` **Phillips Curve**: the short-run Phillips curve,
+  convex and sloping down, and the vertical long-run curve at the natural
+  rate of unemployment; a movement along the SRPC, the SRPC shifting after
+  a supply shock or a change in expected inflation, or the LRPC shifting
+  with the natural rate; the long-run adjustment back to the LRPC; points
+  A, B and C with dashed guides to both axes. Schematic, or numbered in
+  percent with the axes crossing at 0 for deflation. Common setups to
+  start from.
 - `/about`, `/privacy`, `/reuse`, `/sitemap.xml`, `/robots.txt`
 
 Every page has the top bar: the site name, the current generator, and links
