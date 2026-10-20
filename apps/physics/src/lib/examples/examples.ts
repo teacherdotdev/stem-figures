@@ -602,6 +602,73 @@ export const EXAMPLES: Example[] = [
       },
     },
   ]),
+
+  ...examplesOf('ray-diagram', [
+    {
+      slug: 'converging-lens-ray-diagram-object-beyond-2f',
+      title: 'Converging lens ray diagram: object beyond 2F',
+      alt: 'A ray diagram of a converging lens with F, F′, 2F and 2F′ marked, an object O beyond 2F, three principal rays, and a real, inverted, smaller image I between F′ and 2F′',
+      caption:
+        'A converging lens of focal length 10 cm with an object 4 cm tall, 30 cm away, beyond 2F. Three principal rays leave the object’s tip: parallel then through F′, straight through the center, and through F then parallel. They meet between F′ and 2F′, where the real, inverted, smaller image is drawn.',
+      settings: {},
+    },
+    {
+      slug: 'converging-lens-object-at-2f',
+      title: 'Converging lens with the object at 2F',
+      alt: 'A ray diagram of a converging lens with the object at 2F and a real, inverted image of the same size at 2F′, with the object and image distances marked d_o and d_i',
+      caption:
+        'A converging lens of focal length 10 cm with the object at 2F, 20 cm away. The three principal rays meet at 2F′ on the far side, where the image is real, inverted and the same size as the object. Arrows below the axis mark the object distance d_o and the image distance d_i.',
+      settings: { distance: 20, doMark: true, diMark: true },
+    },
+    {
+      slug: 'magnifying-glass-ray-diagram-object-inside-f',
+      title: 'Magnifying glass ray diagram: object inside F',
+      alt: 'A ray diagram of a converging lens with the object inside F; the rays spread out after the lens and their dashed extensions meet behind the object at a dashed, upright, larger virtual image',
+      caption:
+        'A converging lens of focal length 10 cm used as a magnifying glass, with a 3 cm object 5 cm away, inside F. The rays spread apart after the lens, so they never meet; their dashed extensions meet on the object’s side, 10 cm from the lens, at the virtual, upright image twice the object’s size, drawn dashed.',
+      settings: { distance: 5, height: 3 },
+    },
+    {
+      slug: 'diverging-lens-ray-diagram',
+      title: 'Diverging lens ray diagram',
+      alt: 'A ray diagram of a diverging lens with an object beyond 2F; the rays spread out and their dashed extensions meet between the lens and F at a small, upright, virtual image',
+      caption:
+        'A diverging lens of focal length 10 cm with an object 20 cm away. The parallel ray spreads out as if from F, the ray heading for F′ leaves parallel, and the center ray goes straight on. Their dashed extensions meet between F and the lens, at the virtual, upright, smaller image, drawn dashed.',
+      settings: { element: 'diverging', distance: 20 },
+    },
+    {
+      slug: 'concave-mirror-ray-diagram-object-between-c-and-f',
+      title: 'Concave mirror ray diagram: object between C and F',
+      alt: 'A ray diagram of a concave mirror with F and C marked, an object between C and F, four principal rays, and a real, inverted, larger image beyond C',
+      caption:
+        'A concave mirror of focal length 10 cm with an object 15 cm away, between C and F. Four rays reflect from it: parallel then through F, through F then parallel, through C and back on itself, and off the vertex at the same angle. They meet 30 cm in front of the mirror, beyond C, at the real, inverted image twice the object’s size.',
+      settings: { element: 'concave', distance: 15, height: 3 },
+    },
+    {
+      slug: 'convex-mirror-ray-diagram',
+      title: 'Convex mirror ray diagram',
+      alt: 'A ray diagram of a convex mirror with F and C behind it; the reflected rays spread out and their dashed extensions meet behind the mirror at a small, upright, virtual image',
+      caption:
+        'A convex mirror of focal length 10 cm, its F and C behind it, with an object 20 cm in front. Each ray reflects outward: the parallel one as if from F, the one heading for F back parallel, the one heading for C back on itself, and the one at the vertex at the same angle. Dashed extensions meet behind the mirror at the virtual, upright, smaller image.',
+      settings: { element: 'convex', distance: 20 },
+    },
+    {
+      slug: 'plane-mirror-ray-diagram',
+      title: 'Plane mirror ray diagram',
+      alt: 'A ray diagram of a plane mirror with an object 15 cm in front; two rays from its tip reflect at equal angles and their dashed extensions meet behind the mirror at an upright virtual image the same size, 15 cm behind',
+      caption:
+        'A plane mirror with an object 4 cm tall, 15 cm in front of it. Two rays from the object’s tip reflect at equal angles, one off the mirror level with the object’s foot and one above the tip. Their dashed extensions meet behind the mirror at the virtual image, upright and the same size, 15 cm behind it, the distances marked d_o and d_i.',
+      settings: { element: 'plane', distance: 15, doMark: true, diMark: true },
+    },
+    {
+      slug: 'blank-converging-lens-ray-diagram-worksheet',
+      title: 'Blank converging lens ray diagram worksheet',
+      alt: 'A blank ray diagram of a converging lens with F, F′, 2F and 2F′ marked on the principal axis, an object between F and 2F, and a numbered cm scale underneath, with no rays drawn',
+      caption:
+        'A converging lens of focal length 10 cm on its principal axis with F, F′, 2F and 2F′ marked and an object 15 cm away, between F and 2F, and no rays: a template for students to draw the principal rays and find the image. A cm scale numbered from the lens runs under it, for measuring the image distance.',
+      settings: { distance: 15, shown: 'setup', scale: true },
+    },
+  ]),
 ]
 
 /** A generator's examples, in order; the first is its best. */

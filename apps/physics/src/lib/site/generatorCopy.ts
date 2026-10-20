@@ -418,6 +418,52 @@ export const COPY: Record<string, GeneratorCopy> = {
     imageAlt: 'A printable circuit diagram of a 12 V battery with three resistors in series, R₁, R₂ and R₃, made with the Circuit Diagram Generator',
     educationalLevel: ['Middle school', 'High school', 'AP Physics'],
   },
+
+  'ray-diagram': {
+    heading: 'Ray diagrams for lenses and mirrors, drawn to scale',
+    intro: [
+      'The Ray Diagram Generator draws a converging or diverging lens, or a concave, convex or plane mirror, on its principal axis with its focal points marked, an arrow for the object, the principal rays from the object’s tip, and the image where they meet. You type the focal length, the object’s distance and its height in cm, or put the object beyond 2F, at 2F, between F and 2F, at F or inside F with one click. The figure is drawn to scale, and the image is exactly where the thin lens and mirror equation, 1/f = 1/dₒ + 1/dᵢ, puts it.',
+      'Real images are drawn solid. For a virtual image, the rays’ dashed extensions run back to it, and the image itself is dashed. Show the setup alone, for students to draw the rays, the rays without the image, or everything. Label F, F′, 2F and 2F′ (or F and C on a mirror), the object and the image, add dimension arrows for the distances and heights, and a numbered cm scale for measuring.',
+    ],
+    settings: [
+      'A converging or diverging lens, drawn as a lens shape or the line symbol, or a concave, convex or plane mirror, hatched on its back',
+      'The focal length, the object’s distance and its height in cm, with quick places beyond 2F, at 2F, between F and 2F, at F and inside F',
+      'The object arrow pointing up or down',
+      'Each principal ray on or off: parallel, through the center or through C, through F, and to a mirror’s vertex',
+      'The setup alone, the rays too, or the rays and the image',
+      'Labels for F, F′, 2F, 2F′ or C, the object and the image, written, blank for students, or left off',
+      'Arrows marking the object and image distances, the focal length and the object and image heights, and a numbered cm scale under the figure',
+      'A chart title, an answer key line, label size, and color for slides',
+    ],
+    faqs: [
+      {
+        q: 'What are the three principal rays for a lens?',
+        a: 'A ray parallel to the principal axis bends through the focal point on the far side, F′ (a diverging lens spreads it out as if it came from F, on the object’s side). A ray through the center of the lens goes straight on. A ray through F on the object’s side leaves parallel to the axis (for a diverging lens, a ray heading for F′). Where the rays meet, or where their dashed extensions meet, is the tip of the image.',
+      },
+      {
+        q: 'Which sign convention does the answer key use?',
+        a: 'Real is positive, as AP and most US textbooks use: an image distance is negative for a virtual image, and a focal length is negative for a diverging lens or a convex mirror. The answer key also says the image is real or virtual, upright or inverted, magnified or diminished, and which side it is on, so it reads right in any convention.',
+      },
+      {
+        q: 'Why do the rays bend at a line through the middle of the lens, and reflect at a straight line on a curved mirror?',
+        a: 'That is the thin-lens convention textbooks draw. A real lens bends light at both of its faces, and a curved mirror reflects off its curve, but drawing the bend at the line through the lens’s middle, or the mirror’s vertex, makes the rays meet exactly where the lens and mirror equation puts the image. The mirror is still drawn as a shallow arc so it looks like a curved mirror.',
+      },
+      {
+        q: 'What happens when the object is at the focal point?',
+        a: 'The rays leave the lens or mirror parallel to each other, so they never meet and no image is drawn. The answer key says “No image (at infinity)”. Just outside F, the image is very far away and very large: past six focal lengths the figure stops widening, the rays run off its edge, and the answer key still gives the image distance.',
+      },
+      {
+        q: 'How do I make a blank ray diagram for students?',
+        a: 'Set Show to Setup. The figure has the lens or mirror, the principal axis, the focal points and the object, laid out exactly as the completed one, so you can print both. Turn on the numbered cm scale so students can measure the image distance, and leave the image label as a blank line.',
+      },
+      {
+        q: 'Can I draw refraction at a flat surface, or Snell’s law?',
+        a: 'Not on this generator. Reflection and refraction at a boundary, with angles, materials and total internal reflection, is planned as its own generator.',
+      },
+    ],
+    imageAlt: 'A printable ray diagram of a converging lens with the object beyond 2F, three principal rays and the real, inverted, smaller image, made with the Ray Diagram Generator',
+    educationalLevel: ['Middle school', 'High school', 'AP Physics'],
+  },
 }
 
 /** The copy for a generator; every generator on the site has some. */

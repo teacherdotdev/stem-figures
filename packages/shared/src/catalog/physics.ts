@@ -135,4 +135,19 @@ export const PHYSICS: CatalogEntry[] = [
       'current', 'voltage', 'potential difference', 'equivalent resistance', 'symbols', 'iec', 'gcse', 'printable',
     ],
   },
+  {
+    id: 'ray-diagram',
+    site: 'physics',
+    name: 'Ray Diagram Generator',
+    path: '/ray-diagram',
+    blurb: 'Lenses and mirrors with their principal rays and image, to scale.',
+    description:
+      'Make printable ray diagrams for physics tests. Pick a lens or mirror, set its focal length and the object, and draw the principal rays and the image, or a blank setup for students.',
+    keywords: [
+      'ray diagram', 'ray diagrams', 'optics', 'light', 'lens', 'lenses', 'converging lens', 'convex lens', 'diverging lens',
+      'concave lens', 'mirror', 'mirrors', 'concave mirror', 'convex mirror', 'plane mirror', 'curved mirror', 'focal point',
+      'focal length', 'principal axis', 'principal rays', 'image', 'real image', 'virtual image', 'magnification',
+      'thin lens equation', 'lens equation', 'mirror equation', 'magnifying glass', 'reflection', 'refraction', 'printable',
+    ],
+  },
 ]
