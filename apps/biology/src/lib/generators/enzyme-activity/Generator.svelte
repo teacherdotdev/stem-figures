@@ -3,27 +3,30 @@
   // or substrate concentration, up to three curves at once: enzymes like
   // pepsin, amylase and trypsin, or unknown ones with an optimum of the
   // teacher's own, or an enzyme with a competitive and a non-competitive
-  // inhibitor. Shape only, with no numbers on the axes; the optimum,
-  // denaturation, Vmax and Km are marked if wanted. The grid and axes are
-  // $shared/graph's, the same as Chemistry's titration curve.
+  // inhibitor. Shape only by default, or numbered axes, the rate in
+  // arbitrary units; the optimum, denaturation, Vmax and Km are marked if
+  // wanted. The grid and axes are $shared/graph's, the same as
+  // Photosynthesis Rate's.
   import { Axis3d, ChartLine, MapPin } from '@lucide/svelte'
   import GeneratorPage from '$shared/GeneratorPage.svelte'
   import HelpTip from '$shared/HelpTip.svelte'
   import LabelField from '$shared/LabelField.svelte'
   import Section from '$shared/Section.svelte'
   import { generatorState } from '$shared/generatorState.svelte'
+  import AxisSettings from '$shared/graph/AxisSettings.svelte'
   import CapPicker from '$shared/graph/CapPicker.svelte'
   import GridlineSettings from '$shared/graph/GridlineSettings.svelte'
   import TitleSettings from '$shared/graph/TitleSettings.svelte'
+  import { readAxes } from '$shared/graph/axes'
   import { CAPS } from '$shared/graph/caps'
   import { COLORS } from '$shared/graph/colors'
   import { DASHES } from '$shared/graph/labels'
   import EnzymeFigure from './EnzymeFigure.svelte'
   import { ENZYMES, UNKNOWN } from './enzymes'
-  import { curveName, drawnOf, readoutOf, shapeOf } from './figure'
+  import { curveName, drawnOf, fittedOf, rangesOf, readoutOf, shapeOf } from './figure'
   import { INHIBITORS, type Inhibitor } from './model'
   import {
-    CURVES, GRAPHS, GRAPH_NAMES, INHIBITOR_NAMES, autoTitles, curveOf, enzymeSettings, type CurveIndex, type Graph,
+    CURVES, GRAPHS, GRAPH_NAMES, INHIBITOR_NAMES, autoTitles, curveOf, enzymeSettings, retitled, type Axes, type CurveIndex, type Graph,
   } from './settings'
 
   const gen = generatorState(enzymeSettings, 'enzyme-activity')
@@ -32,15 +35,38 @@
   let svg = $state<SVGSVGElement>()
 
   const substrate = $derived(clean.graph === 'substrate')
+  const numbered = $derived(clean.axes === 'numbered')
   const drawn = $derived(drawnOf(clean))
 
-  /** A new graph swaps the axis titles this page wrote for the new graph's, leaving ones the teacher typed. */
-  function chooseGraph(graph: Graph) {
-    const before = autoTitles(s.graph)
-    const after = autoTitles(graph)
-    if (s.xTitle.trim() === before.xTitle) s.xTitle = after.xTitle
-    if (s.yTitle.trim() === before.yTitle) s.yTitle = after.yTitle
-    s.graph = graph
+  /** A change that keeps the axis titles this page wrote in step with it, leaving ones the teacher typed. */
+  function retitle(change: () => void) {
+    const before = gen.snapshot()
+    change()
+    Object.assign(s, retitled(before, s))
+  }
+
+  const chooseGraph = (graph: Graph) => retitle(() => (s.graph = graph))
+
+  /** Numbers come with graph paper; shape only goes back to plain axes. */
+  function chooseAxes(axes: Axes) {
+    if (axes === s.axes) return
+    retitle(() => {
+      s.gridlines = axes === 'numbered'
+      s.axes = axes
+    })
+  }
+
+  // While an axis is fitted, its boxes show the fitted range; typing in one
+  // takes over for that axis.
+  const fitted = $derived(fittedOf(clean))
+  const shown = $derived(rangesOf(clean, fitted))
+  const shownAxes = $derived(readAxes(shown))
+  type RangeKey = 'xFrom' | 'xTo' | 'xStep' | 'yFrom' | 'yTo' | 'yStep'
+  function typeRange(key: RangeKey, v: string) {
+    const f = fitted
+    if (key.startsWith('x') && s.xFit) Object.assign(s, { xFrom: f.xFrom, xTo: f.xTo, xStep: f.xStep, xFit: false })
+    if (key.startsWith('y') && s.yFit) Object.assign(s, { yFrom: f.yFrom, yTo: f.yTo, yStep: f.yStep, yFit: false })
+    s[key] = v
   }
 
   const key = <K extends string>(name: K, i: CurveIndex) => `${name}${i + 1}` as `${K}${1 | 2 | 3}`
@@ -66,7 +92,9 @@
   const markSummary = $derived(marks.filter(Boolean).join(', ').replace(/^./, (c) => c.toUpperCase()) || 'Nothing marked')
   const lineSummary = $derived([clean.color ? 'Color' : 'Black and white', clean.gridlines ? 'gridlines' : 'no gridlines'].join(' · '))
   const axesSummary = $derived(
-    clean.xEndCap === 'none' && clean.yEndCap === 'none' ? 'Plain ends' : `${CAPS[clean.xEndCap]} / ${CAPS[clean.yEndCap]}`.toLowerCase().replace(/^./, (c) => c.toUpperCase()),
+    numbered ? 'Numbered'
+    : clean.xEndCap === 'none' && clean.yEndCap === 'none' ? 'Shape only, plain ends'
+    : `Shape only, ${CAPS[clean.xEndCap]} / ${CAPS[clean.yEndCap]}`.toLowerCase().replace(/^./, (c) => c.toUpperCase()),
   )
   const filename = $derived(
     (clean.titleMode === 'text' && clean.title.trim() ? clean.title.trim() : `enzyme-activity-${clean.graph}`)
@@ -226,21 +254,49 @@
     <TitleSettings
       bind:title={s.title} bind:titleMode={s.titleMode} bind:xTitle={s.xTitle} bind:xTitleMode={s.xTitleMode}
       bind:yTitle={s.yTitle} bind:yTitleMode={s.yTitleMode}
-      placeholders={{ title: 'Effect of pH on enzyme activity', ...autoTitles(clean.graph) }}
+      placeholders={{ title: 'Effect of pH on enzyme activity', ...autoTitles(clean) }}
     />
 
     <Section title="Axes" icon={Axis3d} summary={axesSummary}>
-      <div class="ends">
-        <div class="field">
-          <span>x-axis right end</span>
-          <CapPicker options={CAPS} label="x-axis right end" direction="right" bind:value={s.xEndCap} />
-        </div>
-        <div class="field">
-          <span>y-axis top end</span>
-          <CapPicker options={CAPS} label="y-axis top end" direction="up" bind:value={s.yEndCap} />
-        </div>
+      <div class="segmented setting" role="radiogroup" aria-label="Axes">
+        <button type="button" role="radio" aria-checked={!numbered} class:on={!numbered} onclick={() => chooseAxes('shape')}>Shape only</button>
+        <button type="button" role="radio" aria-checked={numbered} class:on={numbered} onclick={() => chooseAxes('numbered')}>Numbered</button>
       </div>
+      {#if !numbered}
+        <div class="ends">
+          <div class="field">
+            <span>x-axis right end</span>
+            <CapPicker options={CAPS} label="x-axis right end" direction="right" bind:value={s.xEndCap} />
+          </div>
+          <div class="field">
+            <span>y-axis top end</span>
+            <CapPicker options={CAPS} label="y-axis top end" direction="up" bind:value={s.yEndCap} />
+          </div>
+        </div>
+      {/if}
     </Section>
+    {#if numbered}
+      <AxisSettings
+        axis="x" read={shownAxes.x} problems={shownAxes.problems}
+        bind:from={() => shown.xFrom, (v) => typeRange('xFrom', v)}
+        bind:to={() => shown.xTo, (v) => typeRange('xTo', v)}
+        bind:step={() => shown.xStep, (v) => typeRange('xStep', v)}
+        bind:every={s.xEvery} bind:labelMode={s.xLabelMode} bind:label={s.xLabel} bind:startCap={s.xStartCap} bind:endCap={s.xEndCap}
+        extras={[clean.xFit ? 'fitted' : '']}
+      >
+        {@render check('Fit to the curves', s.xFit, (v) => (s.xFit = v))}
+      </AxisSettings>
+      <AxisSettings
+        axis="y" read={shownAxes.y} problems={shownAxes.problems}
+        bind:from={() => shown.yFrom, (v) => typeRange('yFrom', v)}
+        bind:to={() => shown.yTo, (v) => typeRange('yTo', v)}
+        bind:step={() => shown.yStep, (v) => typeRange('yStep', v)}
+        bind:every={s.yEvery} bind:labelMode={s.yLabelMode} bind:label={s.yLabel} bind:startCap={s.yStartCap} bind:endCap={s.yEndCap}
+        extras={[clean.yFit ? 'fitted' : '']}
+      >
+        {@render check('Fit to the curves', s.yFit, (v) => (s.yFit = v))}
+      </AxisSettings>
+    {/if}
     {#if s.gridlines}<GridlineSettings bind:minor={s.minor} />{/if}
   {/snippet}
 
