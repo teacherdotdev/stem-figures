@@ -13,6 +13,7 @@ import { SITE_ID } from '$lib/site/config'
 import CircuitDiagramPreview from './circuit-diagram/Preview.svelte'
 import FreeBodyPreview from './free-body-diagram/Preview.svelte'
 import InclinedPlanePreview from './inclined-plane/Preview.svelte'
+import LengthReadingPreview from './length-reading/Preview.svelte'
 import MotionGraphsPreview from './motion-graphs/Preview.svelte'
 import ProjectileMotionPreview from './projectile-motion/Preview.svelte'
 import PulleyPreview from './pulley/Preview.svelte'
@@ -29,6 +30,7 @@ export const PREVIEWS: Record<string, Component> = {
   'projectile-motion': ProjectileMotionPreview,
   'motion-graphs': MotionGraphsPreview,
   'spring-scale': SpringScalePreview,
+  'length-reading': LengthReadingPreview,
   'waves': WavePreview,
   'circuit-diagram': CircuitDiagramPreview,
 }

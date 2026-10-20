@@ -11,6 +11,7 @@ import { circuitAnswer } from '$lib/generators/circuit-diagram/circuit'
 import { circuitSettings } from '$lib/generators/circuit-diagram/settings'
 import { fbdSettings } from '$lib/generators/free-body-diagram/settings'
 import { inclineSettings } from '$lib/generators/inclined-plane/settings'
+import { lengthSettings, workingLines as lengthWorking } from '$lib/generators/length-reading/settings'
 import { motionOf, numberText, segmentLines, tangentAt } from '$lib/generators/motion-graphs/motion'
 import { motionSettings, viewsOf } from '$lib/generators/motion-graphs/settings'
 import { projectileSettings } from '$lib/generators/projectile-motion/settings'
@@ -101,6 +102,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'projectile-motion': { definition: physics(projectileSettings), answer: none },
   'motion-graphs': { definition: physics(motionSettings), answer: motionAnswer },
   'spring-scale': { definition: springScaleSettings, answer: (s) => ({ heading: 'Answer key', lines: springScaleAnswer(s).split('\n') }) },
+  'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthWorking(s) }) },
   'waves': { definition: waveSettings, answer: (s) => ({ heading: 'Answer key', lines: waveAnswer(s) }) },
   'circuit-diagram': {
     definition: physics(circuitSettings),

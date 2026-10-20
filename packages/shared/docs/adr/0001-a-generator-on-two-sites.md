@@ -1,4 +1,4 @@
-# A generator copied onto two sites
+# A generator copied onto two sites (now three)
 
 Until now every generator in the catalog lived on one site, its only address, and other sites could list it with `alsoOn`, linking across to that site. Length Reading breaks that rule: it is a generator on both Math Figures (`mathfigures.com/length-reading`) and Chemistry Figures (`chemistryfigures.com/length-reading`). Measuring with a ruler is as much a math lesson (reading to the nearest quarter inch, measuring from a point other than 0) as a chemistry lab skill (the estimated digit), and a math teacher sent to chemistryfigures.com for it lands on a site whose other generators are not for them.
 
@@ -15,4 +15,12 @@ Until now every generator in the catalog lived on one site, its only address, an
 
 ## Consequences
 
-A fix or feature in Length Reading has to be made in both apps, or deliberately left on one; the copies may drift, and that is allowed. When changing one, diff the two folders (`apps/math/src/lib/generators/length-reading` and `apps/chemistry/src/lib/generators/length-reading`): they should differ only in imports and the page's name. Another generator put on two sites should follow the same pattern.
+A fix or feature in Length Reading has to be made in every copy, or deliberately left off some; the copies may drift, and that is allowed. Another generator put on two sites should follow the same pattern.
+
+## A third site (2026-10-19)
+
+Physics Figures (`physicsfigures.com/length-reading`) now has a third copy, with its own catalog entry named in Physics' style ("Length Reading Generator"). Physics and Chemistry teachers asked for a caliper and a micrometer; rather than two new generators, the generator is named after the measurement, length, and both copies gained an instrument choice: ruler (still the default), caliper and micrometer.
+
+- **Physics and Chemistry** have all three instruments. Physics' copy was made from Math's, so it uses the `packages/shared` reading pieces as Math's does, with `objectKinds.ts` for the ruler's objects. Diff the two folders (`apps/physics/src/lib/generators/length-reading` and `apps/chemistry/src/lib/generators/length-reading`): they should differ only in imports, the page's name, and Chemistry's `linking.ts` and Physics' `objectKinds.ts`.
+- **Math's copy deliberately stays ruler only.** Its ruler files still match the other two copies' apart from imports; the instrument choice, the caliper and micrometer files and the settings they add are left off. A ruler fix belongs in all three copies.
+- The ruler's settings and drawing didn't change, so links and pictures made before still draw the same figure on every site. The directory preview, keyed by id and shared by all three entries, stays the ruler.

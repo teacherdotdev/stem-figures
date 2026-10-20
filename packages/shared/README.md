@@ -15,10 +15,10 @@ Components and helpers used by more than one STEM Figures site, imported as
 | `graph/`: `numbering`, `caps`, `CapPicker`, `colors`                                        | math, chemistry (Titration Curve, Heating and Cooling Curve, Potential Energy Diagram), biology (Population Growth, Predator–Prey Cycles, Enzyme Activity, Photosynthesis Rate), physics (Wave) |
 | `graph/labels`: the label placer (`placer`, `besidePoint`, `alongCurve`), curve `DASHES` and `layoutKey` | chemistry (Potential Energy Diagram: `placer`, `DASHES`, `layoutKey`), biology (Population Growth, Enzyme Activity, Photosynthesis Rate) |
 | `Section`                                                                                   | math, physics (Spring Scale), chemistry (Titration Curve, Heating and Cooling Curve), biology (every generator) |
-| `HelpTip`                                                                                   | math, biology (Population Growth, Predator–Prey Cycles, Enzyme Activity, Photosynthesis Rate, Osmosis and Tonicity, Food Webs and Energy Pyramids) |
-| `FigureFrame`, `figureAlign`, `settings`, `figureText`, `FigureTextSettings`                | physics (Spring Scale), math (Length Reading), biology (`settings` in every generator, `FigureFrame` in all but the two graphs, `FigureTextSettings` in Micropipette Reading) |
-| `Magnifier`, `MagnifierSettings`, `magnify`                                                 | physics (Spring Scale), math (Length Reading), biology (Micropipette Reading: `Magnifier`, `magnify`) |
-| `marks`, `ReadingField`                                                                     | physics (Spring Scale), biology (Microscope Field of View: `ReadingField`) |
+| `HelpTip`                                                                                   | math, physics (Length Reading), biology (Population Growth, Predator–Prey Cycles, Enzyme Activity, Photosynthesis Rate, Osmosis and Tonicity, Food Webs and Energy Pyramids) |
+| `FigureFrame`, `figureAlign`, `settings`, `figureText`, `FigureTextSettings`                | physics (Spring Scale, Length Reading), math (Length Reading), biology (`settings` in every generator, `FigureFrame` in all but the two graphs, `FigureTextSettings` in Micropipette Reading) |
+| `Magnifier`, `MagnifierSettings`, `magnify`                                                 | physics (Spring Scale, Length Reading), math (Length Reading), biology (Micropipette Reading: `Magnifier`, `magnify`) |
+| `marks`, `ReadingField`                                                                     | physics (Spring Scale; Length Reading's `ReadingField`), biology (Microscope Field of View: `ReadingField`) |
 | `particles/`: `particles`, `layout`, `random`, `key`, `keyText`, `Discs`, `KeyDrawing`, `LookSettings` | chemistry (Particle Diagram; Bohr Model's `random`; Potential Energy Diagram's level labels: `key`, `keyText`), biology (Osmosis and Tonicity) |
 
 `catalog/` lists every generator on every site. Each lives on one site
@@ -31,11 +31,11 @@ pictures from `catalog/previews/`. Retake a site's pictures after changing its
 previews: start it with `./scripts/agent-dev.mjs`, then run
 `node scripts/snapshot-previews.mjs <its address>` from the monorepo root.
 
-A generator can instead be copied onto a second site, with an entry on each
+A generator can instead be copied onto other sites, with an entry on each
 under the same id, so each site has it at its own address; each directory
-then shows only its own copy. Length Reading, on Math and Chemistry, is the
-one so far. Its two copies are kept in step by hand (see
-`docs/adr/0001-a-generator-on-two-sites.md`).
+then shows only its own copy. Length Reading, on Math, Physics and Chemistry,
+is the one so far. Its copies are kept in step by hand, Math's with the ruler
+only (see `docs/adr/0001-a-generator-on-two-sites.md`).
 
 To add a generator: its entry in its site's `catalog/` file, its preview in
 that app's `src/lib/generators/index.ts`, and a snapshot.
@@ -97,8 +97,8 @@ Where the box and key sit in a Particle Diagram figure stays in Chemistry
 Particle Diagram example, so Chemistry's `examples-unchanged.test.ts` checks
 each one still draws as it did.
 
-Every site keeps the rest in its own `src/lib/`, except Physics' Spring Scale,
-Math's Length Reading and Biology's Micropipette Reading, which use the
+Every site keeps the rest in its own `src/lib/`, except Physics' Spring Scale
+and Length Reading, Math's Length Reading and Biology's Micropipette Reading, which use the
 instrument-reading pieces above.
 Chemistry keeps its own copies of those reading pieces (the magnifier, marks,
 reading box, figure frame and title settings) for now; they started as copies

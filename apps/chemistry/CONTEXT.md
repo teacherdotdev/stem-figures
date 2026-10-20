@@ -129,6 +129,50 @@ _Avoid_: Difference, change
 The short line under each cylinder in a volume by displacement figure, "Before" and "After" unless the teacher changes them.
 _Avoid_: Label, subtitle
 
+**Length Reading**:
+A figure of the instrument a length is read from: a ruler with an object lying along it, a caliper or a micrometer. The ruler is the default; Math and Physics have their own copies of the generator, Math's with only the ruler.
+_Avoid_: Measuring instruments generator
+
+**Caliper**:
+A 150 mm instrument for length, drawn with its outside jaws holding an object, and its inside jaws, depth rod, lock screw and thumb rest drawn but not used. It is read from its main scale and sliding scale to its least count. Its figure has a close-up strip of the scales below it, and on a 0.05 or 0.02 mm caliper a larger detail of where the marks line up below that, never centered on the lined-up mark.
+_Avoid_: Vernier, vernier caliper, calliper, slide caliper (all fine in search keywords; the generator never says "vernier")
+
+**Main scale**:
+The caliper's fixed scale along its beam, marked every mm and numbered every cm (0, 1, 2…), as calipers print it.
+_Avoid_: Beam scale
+
+**Sliding scale**:
+The short scale on the caliper's slider, below the main scale: 10 divisions over 9 mm, 20 over 39 mm or 50 over 49 mm, numbered 0 to 10 in tenths of a mm. Its zero sits at the reading, so exactly one of its marks lines up with a main-scale mark (at a whole mm, its zero and its last mark both do, as on a real caliper).
+_Avoid_: Vernier, vernier scale (fine in search keywords)
+
+**Least count**:
+The smallest length an instrument reads: 0.1, 0.05 or 0.02 mm on the caliper, one main-scale division less one sliding-scale division, and 0.01 mm on the micrometer. It can be printed on the caliper's slider or the micrometer's frame, as real ones are.
+_Avoid_: Precision (fine in help text), resolution
+
+**Micrometer**:
+A 0–25 mm instrument for length, drawn with its U-shaped frame and insulating pad, anvil, spindle, lock lever, sleeve, thimble and ratchet. It reads to 0.01 mm: the last sleeve mark showing, to the half mm, plus the thimble mark on the datum line. Its figure has a round magnifier on the sleeve and thimble.
+_Avoid_: Micrometer screw gauge, screw gauge (fine in search keywords)
+
+**Sleeve**:
+The micrometer's fixed barrel, with the datum line along it, whole mm marked above the line (numbered every 5) and half mm below it. A mark the thimble has only just uncovered is drawn a hair clear of its edge, so it plainly shows.
+_Avoid_: Barrel, main scale (that's the caliper's)
+
+**Thimble**:
+The micrometer's turning sleeve, with 50 marks round its edge, 0.01 mm each, numbered every 5. Seen side on, its marks bunch toward its top and bottom edges, and the bigger numbers are above the datum line.
+_Avoid_: Rotating scale, drum
+
+**Datum line**:
+The line along the micrometer's sleeve that the thimble's marks are read against.
+_Avoid_: Reference line, index line
+
+**Zero error**:
+What a caliper or micrometer reads closed, with nothing in its jaws: positive or negative, up to 0.5 mm on the caliper and 0.05 mm on the micrometer. The jaws are that much closer together than the reading says, and the instrument can be drawn closed above the measuring one. The answer key gives the reading, the zero error and the corrected reading, the reading minus the zero error.
+_Avoid_: Zero offset (that's a spring scale's), offset, calibration error
+
+**Jaws**:
+What holds the object on a caliper (its outside jaws) or a micrometer (its anvil and spindle): nothing, a block, a cylinder, a ball or a wire, drawn as wide as the reading less the zero error.
+_Avoid_: Clamp, grip
+
 **Magnifier**:
 An enlarged circle showing a small stretch of an instrument's scale around the reading, beside or instead of the whole instrument (above it, for a gas syringe lying on its side). In a volume by displacement figure it's optional, with one beside each cylinder, and never replaces the cylinders.
 _Avoid_: Zoom, callout, inset

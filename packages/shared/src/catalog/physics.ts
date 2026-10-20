@@ -107,6 +107,23 @@ export const PHYSICS: CatalogEntry[] = [
     ],
   },
   {
+    // Also on Math and Chemistry Figures, as their own copies: see docs/adr/0001-a-generator-on-two-sites.md.
+    id: 'length-reading',
+    site: 'physics',
+    name: 'Length Reading Generator',
+    path: '/length-reading',
+    blurb: 'A ruler, caliper or micrometer at any reading, with close-ups of its scales.',
+    description:
+      'Make printable length measurement figures for physics tests. Pick a ruler, a caliper to 0.1, 0.05 or 0.02 mm, or a micrometer to 0.01 mm, set the reading and any zero error, and students read it.',
+    keywords: [
+      'length', 'measure', 'measuring', 'measurement', 'measuring instruments', 'ruler', 'meter stick', 'metre rule', 'cm', 'mm',
+      'millimetre', 'millimeter', 'inches', 'caliper', 'calliper', 'calipers', 'callipers', 'vernier', 'vernier caliper',
+      'vernier calliper', 'vernier scale', 'slide caliper', 'main scale', 'micrometer', 'micrometer screw gauge', 'screw gauge',
+      'sleeve', 'thimble', 'least count', 'precision', 'zero error', 'diameter', 'thickness', 'wire', 'estimated', 'digit',
+      'practical', 'printable',
+    ],
+  },
+  {
     id: 'waves',
     site: 'physics',
     name: 'Wave Generator',

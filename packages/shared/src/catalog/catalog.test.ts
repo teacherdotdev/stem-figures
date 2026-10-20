@@ -10,9 +10,13 @@ describe('the catalog', () => {
     expect(new Set(keys).size).toBe(CATALOG.length)
   })
 
-  it('has Length Reading on both Math and Chemistry, at the same path', () => {
+  it('has Length Reading on Math, Physics and Chemistry, at the same path', () => {
     const copies = CATALOG.filter((g) => g.id === 'length-reading')
-    expect(copies.map((g) => [g.site, g.path])).toEqual([['math', '/length-reading'], ['chemistry', '/length-reading']])
+    expect(copies.map((g) => [g.site, g.path])).toEqual([
+      ['math', '/length-reading'],
+      ['physics', '/length-reading'],
+      ['chemistry', '/length-reading'],
+    ])
   })
 
   it('shares an id only between copies of one generator, at the same path', () => {
@@ -52,18 +56,21 @@ describe('a site’s directory', () => {
     expect(elsewhere.flatMap((group) => ids(group.generators))).not.toContain('temperature-reading')
   })
 
-  it('lists a copied generator on each of its sites, not again under the other', () => {
-    for (const [here, other] of [['math', 'chemistry'], ['chemistry', 'math']] as const) {
+  it('lists a copied generator on each of its sites, not again under the others', () => {
+    const sites = ['math', 'physics', 'chemistry'] as const
+    for (const here of sites) {
       const { listed, elsewhere } = directory(here, 'ruler')
       expect(listed.filter((g) => g.id === 'length-reading').map((g) => g.site), here).toEqual([here])
-      expect(elsewhere.find((group) => group.site === other)?.generators.map((g) => g.id) ?? [], here).not.toContain('length-reading')
+      for (const other of sites.filter((s) => s !== here)) {
+        expect(elsewhere.find((group) => group.site === other)?.generators.map((g) => g.id) ?? [], here).not.toContain('length-reading')
+      }
     }
   })
 
-  it('finds both copies from a site that has neither, under each of their sites', () => {
-    const { elsewhere } = directory('physics', 'ruler')
+  it('finds every copy from a site that has none, under each of their sites', () => {
+    const { elsewhere } = directory('biology', 'ruler')
     const sites = elsewhere.filter((group) => ids(group.generators).includes('length-reading')).map((group) => group.site)
-    expect(sites).toEqual(['math', 'chemistry'])
+    expect(sites).toEqual(['math', 'physics', 'chemistry'])
   })
 
   it('links to a generator at its one address', () => {
