@@ -228,3 +228,41 @@ _Avoid_: Node, junction (a junction is where wires meet, drawn as a dot with no 
 **Symbol style**:
 US symbols (a zigzag resistor, a bulb with a looped filament) or IEC symbols, as UK GCSE uses (a box resistor, a bulb with a cross).
 _Avoid_: Standard, notation
+
+### Ray Diagram
+
+**Ray Diagram**:
+A figure of one lens or mirror on its principal axis, an object in front of it, the principal rays from the object's tip and the image they make, for optics. Its generator is the Ray Diagram Generator. It is drawn to scale in cm, the same across as up, and the image is exactly where the thin lens and mirror equation, 1/f = 1/d_o + 1/d_i, puts it. The light always comes from the left, so it has no Mirror (flip) switch: on this page a mirror is only ever the optical one.
+_Avoid_: Optics diagram (fine as a search word), lens diagram
+
+**Element**:
+The one lens or mirror a Ray Diagram is of: a converging or diverging lens (drawn as its shape or as the line symbol), or a concave, convex or plane mirror (a shallow arc or a line, hatched on its back). Rays bend at the vertical line through a lens's middle, and reflect at the vertical line through a mirror's vertex, the thin-lens convention textbooks draw.
+_Avoid_: Optic, device, part (that's a circuit's)
+
+**Principal axis**:
+The horizontal line through the middle of the element. The object stands on it, and the focal points are marked on it.
+_Avoid_: Optical axis (fine as a search word), center line
+
+**Focal point**:
+A point marked on the principal axis with a dot and a label: F, F′, 2F and 2F′ on a lens (F and 2F on the object's side), F and C on a mirror (in front of a concave mirror, behind a convex one). A plane mirror has none.
+_Avoid_: Focus (fine as a search word)
+
+**Principal ray**:
+One of the rays from the object's tip that a rule says where to draw: on a lens, parallel then through F′, through the center undeviated, and through F then parallel; on a mirror, parallel then through F, through F then parallel, through C and back on itself, and to the vertex and back at the same angle. A plane mirror has two rays from the tip, one to the mirror level with the object's foot and one above the tip. Each can be turned off, and each has small arrowheads showing which way the light goes. In color, each has its own color.
+_Avoid_: Light ray (fine in captions), beam, line
+
+On a Ray Diagram the **object** is always an arrow, upright or pointing down, standing on the principal axis, its distance and height set in cm.
+
+**Image**:
+The arrow where the principal rays from the object's tip meet. A real image is solid, where the rays themselves meet. A virtual image is dashed, where the rays' dashed extensions meet. The object at F of a converging lens or concave mirror has no image: its rays leave parallel. An image more than six focal lengths away is left off and the rays run off the figure's edge.
+_Avoid_: Picture, reflection
+
+**Shown**:
+How much of a Ray Diagram is drawn: the setup (the element, principal axis, focal points and object, for students to draw the rays), the rays too, or everything, the rays and the image. All three are laid out alike, so a blank setup and its completed figure line up.
+_Avoid_: Mode, stage, view
+
+**Scale**:
+A numbered cm ruler under a Ray Diagram, with 0 under the element, for students to measure distances.
+_Avoid_: Ruler (fine as a search word), grid
+
+The **answer key** gives the image distance and magnification, real is positive (an image distance is negative for a virtual image), with the words too: real or virtual, upright or inverted, magnified, diminished or the same size, and which side the image is on.

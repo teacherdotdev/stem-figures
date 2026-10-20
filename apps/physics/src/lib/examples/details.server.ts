@@ -15,6 +15,7 @@ import { motionOf, numberText, segmentLines, tangentAt } from '$lib/generators/m
 import { motionSettings, viewsOf } from '$lib/generators/motion-graphs/settings'
 import { projectileSettings } from '$lib/generators/projectile-motion/settings'
 import { pulleySettings } from '$lib/generators/pulley/settings'
+import { answerLines as rayAnswer, raySettings } from '$lib/generators/ray-diagram/settings'
 import { answerLines as springScaleAnswer, springScaleSettings } from '$lib/generators/spring-scale/settings'
 import { resultantOf } from '$lib/generators/vector-diagram/vd'
 import { vectorSettings } from '$lib/generators/vector-diagram/settings'
@@ -109,6 +110,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
       return lines && { heading: 'Answer key', lines }
     },
   },
+  'ray-diagram': { definition: raySettings, answer: (s) => ({ heading: 'Answer key (real is positive)', lines: rayAnswer(s) }) },
 }
 
 function detailsOf<G extends ExampleGeneratorId>(generator: G, example: Example): ExampleDetails {

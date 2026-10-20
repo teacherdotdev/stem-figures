@@ -16,6 +16,7 @@ import InclinedPlanePreview from './inclined-plane/Preview.svelte'
 import MotionGraphsPreview from './motion-graphs/Preview.svelte'
 import ProjectileMotionPreview from './projectile-motion/Preview.svelte'
 import PulleyPreview from './pulley/Preview.svelte'
+import RayDiagramPreview from './ray-diagram/Preview.svelte'
 import SpringScalePreview from './spring-scale/Preview.svelte'
 import VectorDiagramPreview from './vector-diagram/Preview.svelte'
 import WavePreview from './waves/Preview.svelte'
@@ -31,6 +32,7 @@ export const PREVIEWS: Record<string, Component> = {
   'spring-scale': SpringScalePreview,
   'waves': WavePreview,
   'circuit-diagram': CircuitDiagramPreview,
+  'ray-diagram': RayDiagramPreview,
 }
 
 export const GENERATORS = generatorsOn(SITE_ID, PREVIEWS)
