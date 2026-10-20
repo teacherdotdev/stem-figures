@@ -16,6 +16,15 @@ decisions.
   consumer and producer surplus, deadweight loss and tax revenue.
   Schematic (no numbers, as AP graphs are drawn) or numbered from a typed
   schedule of prices and quantities. Common setups to start from.
+- `/cost-revenue-curves` **Cost and Revenue Curves**: a firm's MC, ATC, AVC
+  and AFC from one cubic total cost, so MC crosses AVC and ATC at their
+  lowest points (set by where ATC is lowest, how steeply MC rises and how
+  much cost is fixed). A perfectly competitive firm at a price above, at or
+  below its costs, with profit or loss, break-even and shutdown points, and
+  the market beside it setting the price; a monopoly with consumer surplus,
+  deadweight loss and the socially optimal and fair-return prices; and
+  monopolistic competition in the short run and the long run (demand
+  tangent to ATC, excess capacity). Common setups to start from.
 - `/about`, `/privacy`, `/reuse`, `/sitemap.xml`, `/robots.txt`
 
 Every page has the top bar: the site name, the current generator, and links

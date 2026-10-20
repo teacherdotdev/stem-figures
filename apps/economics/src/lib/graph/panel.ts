@@ -37,13 +37,37 @@ export type CurveSpec = {
   width?: number
   /** which end of the curve its name goes by: its last point unless 'start' */
   nameAt?: 'start' | 'end'
+  /** its name stays by its end when it only comes close to a line there, rather than moving along the curve to a clearer place */
+  nameHugsEnd?: boolean
+  /** its name goes just past its end, level with it, with room made on the right for a long one ("D = MR = AR = P") */
+  namePast?: boolean
+  /**
+   * for a curve drawn through many close points: labels keep off it as a
+   * line through points about this far apart on the drawing, so crossing it
+   * counts as crossing one line, not dozens
+   */
+  keepOffEvery?: number
 }
-export type RegionSpec = { poly: Point[]; color: string; hatch: number; name?: Words }
+export type RegionSpec = {
+  poly: Point[]
+  color: string
+  hatch: number
+  name?: Words
+  /** when its name finds no clear place inside it (a thin profit rectangle), it goes outside with a leader arrow to it, as a callout does */
+  leader?: boolean
+}
 export type PointSpec = { at: Point; name?: Words; dot?: boolean }
 export type MarkSpec = { axis: 'x' | 'y'; at: number; name: Words }
 export type GuideSpec = { from: Point; x?: boolean; y?: boolean }
 export type ArrowSpec = { from: Point; to: Point; color: string }
-export type BraceSpec = { from: Point; to: Point; side: 'below' | 'above' | 'left' | 'right'; name?: Words }
+export type BraceSpec = {
+  from: Point
+  to: Point
+  side: 'below' | 'above' | 'left' | 'right'
+  name?: Words
+  /** under the x-axis and the values written there, from `from.x` to `to.x` (excess capacity) */
+  underAxis?: boolean
+}
 export type CalloutSpec = { at: Point; name: Words }
 /** A line across the graph, like a price ceiling, drawn as a curve is but thinner. */
 export type LevelSpec = { pts: Point[]; name?: Words; color: string; dash?: string }
@@ -87,6 +111,7 @@ const ARROW_GAP = 5 // how far shift arrows stop short of the curves
 const BRACE_DEPTH = 7
 const BRACE_GAP = 6 // between a brace and the line it's under or over
 const ROOM_RIGHT = 56 // past the grid, for curve names at their ends
+const PAST_GAP = 6 // between a curve's end and a name just past it
 const ROOM_TOP = 18 // over the grid, for names at the tops of curves
 const EXT = 20 // how far an arrowed axis runs past the grid (as $shared/graph's)
 /** How far apart rows of labels under the x-axis are. */
@@ -139,7 +164,9 @@ export function buildPanel(spec: PanelSpec) {
   // A short x-axis word goes past the arrow; a long one under the axis's end.
   const xWordW = xWord ? widthOf(xWord) : 0
   const xWordBeside = !!xWord && xWord.mode === 'text' && xWordW <= 28
-  const right = Math.max(ROOM_RIGHT, xWordBeside ? xEnd - (area.x + area.w) + xWordW + 10 : 0)
+  const past = (spec.curves ?? []).filter((c) => c.namePast && c.pts.length && shows(c.name))
+  const pastW = Math.max(0, ...past.map((c) => px(c.pts.at(-1)!).x + PAST_GAP + widthOf(c.name!) + INSET + 2 - (area.x + area.w)))
+  const right = Math.max(ROOM_RIGHT, pastW, xWordBeside ? xEnd - (area.x + area.w) + xWordW + 10 : 0)
 
   const bounds: Box = { x0: area.x - (numbered ? 0 : 4) + INSET, y0: area.y - ROOM_TOP + INSET, x1: area.x + area.w + right - INSET, y1: axisY - INSET }
   const place = placer(bounds)
@@ -155,9 +182,18 @@ export function buildPanel(spec: PanelSpec) {
       ? { x: spot.x, y: spot.y, anchor: spot.anchor, runs: runsOf(text(w), LFS) }
       : { x: spot.x, y: spot.y, anchor: spot.anchor, blank: { x1: b.x0, y1: spot.y, x2: b.x1, y2: spot.y } }
 
-  // Keep labels off the axes too.
+  // Keep labels off the axes too, and off the y-axis's word over its top.
   place.line([{ x: axisX, y: axisY }, { x: xEnd, y: axisY }])
   place.line([{ x: axisX, y: axisY }, { x: axisX, y: yTop }])
+  let yWordAt: Label | null = null
+  if (yWord) {
+    const y = yTop - 8 - (spec.every.y && spec.ends.y === 'none' ? fs * 0.7 : 0)
+    const w = widthOf(yWord)
+    const spot: Spot = w <= 28 ? { x: axisX, y, anchor: 'middle' } : { x: Math.max(PAD + w / 2, axisX), y, anchor: 'middle' }
+    const b = textBox(spot, w, LFS)
+    place.keep(b)
+    yWordAt = labelAt(spot, yWord, b)
+  }
 
   const gbox = { x0: box.x0, x1: box.x1, y0: box.y0, y1: box.y1 }
   const runsIn = (pts: Point[]) => clipPath(pts, gbox).map((run) => run.map(px))
@@ -176,8 +212,8 @@ export function buildPanel(spec: PanelSpec) {
   })
   const curves = (spec.curves ?? []).map((c) => {
     const paths = runsIn(c.pts)
-    for (const run of paths) place.line(run)
-    return { paths: paths.map(pathOf), color: c.color, dash: c.dash, width: c.width ?? 3, ends: paths, name: c.name, nameAt: c.nameAt ?? 'end' }
+    for (const run of paths) place.line(c.keepOffEvery ? thinned(run, c.keepOffEvery) : run)
+    return { paths: paths.map(pathOf), color: c.color, dash: c.dash, width: c.width ?? 3, ends: paths, name: c.name, nameAt: c.nameAt ?? 'end', hugs: !!c.nameHugsEnd, past: !!c.namePast }
   })
   const guides: Segment[] = []
   for (const g of spec.guides ?? []) {
@@ -201,7 +237,7 @@ export function buildPanel(spec: PanelSpec) {
   })
 
   // Braces, their labels just past their middles.
-  const braces = (spec.braces ?? []).map((b) => {
+  const braces = (spec.braces ?? []).filter((b) => !b.underAxis).map((b) => {
     const off = { below: { x: 0, y: BRACE_GAP }, above: { x: 0, y: -BRACE_GAP }, left: { x: -BRACE_GAP, y: 0 }, right: { x: BRACE_GAP, y: 0 } }[b.side]
     const at = (p: Point) => {
       const q = px(p)
@@ -237,7 +273,25 @@ export function buildPanel(spec: PanelSpec) {
   for (const m of ys) sideLabel(axisX - numbersW - 7, m.at + LFS * 0.35, 'end', m.name)
   const xMarks = rowsUnder(marks.filter((m) => m.axis === 'x').map((m) => ({ ...m, x: px({ x: m.at, y: box.y0 }).x, half: widthOf(m.name, SIDE_BLANK_W) / 2 })))
   for (const m of xMarks.placed) sideLabel(m.x, axisY + numbersH + LFS + 5 + m.row * X_ROW(LFS), 'middle', m.name)
-  const xMarksH = numbersH + (xMarks.rows ? LFS + 8 + (xMarks.rows - 1) * X_ROW(LFS) : 0)
+  let xMarksH = numbersH + (xMarks.rows ? LFS + 8 + (xMarks.rows - 1) * X_ROW(LFS) : 0)
+
+  // Braces under the x-axis, below its values, each with its name under its point.
+  const underBraces: string[] = []
+  for (const b of (spec.braces ?? []).filter((b) => b.underAxis)) {
+    const y = axisY + xMarksH + BRACE_GAP
+    const [x0, x1] = [px(b.from).x, px(b.to).x].sort((m, n) => m - n)
+    const brace = braceOf({ x: x0, y }, { x: x1, y }, 'below', BRACE_DEPTH)
+    underBraces.push(brace.d)
+    let depth = brace.tip.y - axisY
+    if (b.name && shows(b.name)) {
+      const spot: Spot = { x: brace.tip.x, y: brace.tip.y + LFS, anchor: 'middle' }
+      const bx = textBox(spot, widthOf(b.name), LFS)
+      place.keep(bx)
+      labels.push(labelAt(spot, b.name, bx))
+      depth = bx.y1 - axisY
+    }
+    xMarksH = Math.max(xMarksH, depth)
+  }
 
   // Labels on the graph, most important first: points, braces, curve names,
   // levels' names, regions' names, then callouts.
@@ -261,7 +315,18 @@ export function buildPanel(spec: PanelSpec) {
   for (const c of curves) {
     if (!shows(c.name) || !c.ends.length) continue
     const run = c.nameAt === 'start' ? [...c.ends[0]].reverse() : c.ends.at(-1)!
-    put(endSpots(run, LFS), c.name)
+    const end = run.at(-1)!
+    const pastEnd: Spot[] = c.past ? [{ x: end.x + PAST_GAP, y: end.y + LFS * 0.35, anchor: 'start' }] : []
+    if (c.hugs) {
+      // The best place by the end, if all it does there is come close to lines (crossing one scores 10).
+      const width = widthOf(c.name)
+      const best = place.choose([...pastEnd, ...byEnd(run, LFS)].map((spot) => ({ ...spot, box: textBox(spot, width, LFS) })), false)
+      if (best.score < 10) {
+        put([best], c.name)
+        continue
+      }
+    }
+    put([...pastEnd, ...endSpots(run, LFS)], c.name)
   }
   for (const l of levels) {
     if (!shows(l.name) || !l.ends.length) continue
@@ -279,22 +344,40 @@ export function buildPanel(spec: PanelSpec) {
       ...alongCurve(run, LFS),
     ], l.name)
   }
-  for (const r of regions) {
+  // Callouts, on the drawing: those asked for, and regions' names with no room inside them.
+  const calls = (spec.callouts ?? []).filter((c) => shows(c.name)).map((c) => ({ p: px(c.at), name: c.name }))
+  for (const [k, r] of regions.entries()) {
     if (!shows(r.name)) continue
-    put(insideSpots(r.poly, r.centroid, LFS), r.name)
+    const spots = insideSpots(r.poly, r.centroid, LFS)
+    if (spec.regions?.[k].leader) {
+      const width = widthOf(r.name)
+      const best = place.choose(spots.map((spot) => ({ ...spot, box: textBox(spot, width, LFS) })), false)
+      if (best.score >= 10) {
+        calls.unshift({ p: r.centroid, name: r.name })
+        continue
+      }
+    }
+    put(spots, r.name)
   }
   const leaders: Segment[] = []
-  for (const c of spec.callouts ?? []) {
-    if (!shows(c.name)) continue
-    const p = px(c.at)
-    const spots: Spot[] = [44, 70, 100].flatMap((r) => [
+  for (const c of calls) {
+    const p = c.p
+    const around = (r: number): Spot[] => [
       { x: p.x + r * 0.7, y: p.y - r * 0.6, anchor: 'start' as const },
       { x: p.x - r * 0.7, y: p.y - r * 0.6, anchor: 'end' as const },
       { x: p.x + r * 0.7, y: p.y + r * 0.6 + LFS, anchor: 'start' as const },
       { x: p.x - r * 0.7, y: p.y + r * 0.6 + LFS, anchor: 'end' as const },
       { x: p.x, y: p.y - r, anchor: 'middle' as const },
       { x: p.x, y: p.y + r + LFS * 0.5, anchor: 'middle' as const },
-    ])
+    ]
+    // Nearest first; if none of those is clear, level with the point and further out.
+    const level = (r: number): Spot[] => [
+      { x: p.x + r, y: p.y + LFS * 0.35, anchor: 'start' as const },
+      { x: p.x - r, y: p.y + LFS * 0.35, anchor: 'end' as const },
+      { x: p.x + r * 0.9, y: p.y + r * 0.35 + LFS, anchor: 'start' as const },
+      { x: p.x - r * 0.9, y: p.y + r * 0.35 + LFS, anchor: 'end' as const },
+    ]
+    const spots: Spot[] = [...[44, 70, 100, 130].flatMap(around), ...[44, 70, 100, 130, 160].flatMap(level), ...[160, 200].flatMap(around)]
     const spot = put(spots, c.name)
     const from = nearestOnBox(spot.box, p, 3)
     const len = Math.hypot(p.x - from.x, p.y - from.y) || 1
@@ -312,12 +395,7 @@ export function buildPanel(spec: PanelSpec) {
     if (title.mode === 'text') big.push({ x: midX, y, anchor: 'middle', runs: runsOf(text(title), fs * 1.4), big: true })
     else blanks.push({ x1: midX - Math.min(110, area.w / 2), y1: y, x2: midX + Math.min(110, area.w / 2), y2: y })
   }
-  if (yWord) {
-    const y = yTop - 8 - (spec.every.y && spec.ends.y === 'none' ? fs * 0.7 : 0)
-    const w = widthOf(yWord)
-    const spot: Spot = w <= 28 ? { x: axisX, y, anchor: 'middle' } : { x: Math.max(PAD + w / 2, axisX), y, anchor: 'middle' }
-    labels.push(labelAt(spot, yWord, textBox(spot, w, LFS)))
-  }
+  if (yWordAt) labels.push(yWordAt)
   let bottom = axisY + xMarksH
   if (xWord) {
     if (xWordBeside) labels.push(labelAt({ x: xEnd + 7, y: axisY + LFS * 0.35, anchor: 'start' }, xWord, textBox({ x: xEnd + 7, y: axisY + LFS * 0.35, anchor: 'start' }, xWordW, LFS)))
@@ -365,7 +443,7 @@ export function buildPanel(spec: PanelSpec) {
     curves: curves.map(({ paths, color, dash, width }) => ({ paths, color, dash, width })),
     guides,
     arrows,
-    braces: braces.map(({ d }) => d),
+    braces: [...braces.map(({ d }) => d), ...underBraces],
     dots,
     leaders,
     labels: [...labels, ...sideLabels],
@@ -387,12 +465,15 @@ function tickMarks(base: { vLines: number[]; hLines: number[]; xAxis: { y: numbe
 }
 
 /** Places for a curve's name by the end of a run of it: past the end, over it, under it, then along it. */
-function endSpots(run: Point[], fs: number): Spot[] {
+const endSpots = (run: Point[], fs: number): Spot[] => [...byEnd(run, fs), ...alongCurve(run, fs)]
+
+/** Places for a curve's name right by the end of a run of it: past the end, over it, under it. */
+function byEnd(run: Point[], fs: number): Spot[] {
   const end = run.at(-1)!
   const prev = run[Math.max(0, run.length - 6)]
   const rising = end.y < prev.y - 0.5
   const upright = Math.abs(end.x - prev.x) < 1
-  const spots: Spot[] = upright
+  return upright
     ? [
         { x: end.x, y: end.y - 7, anchor: 'middle' },
         { x: end.x + 6, y: end.y + fs * 0.8, anchor: 'start' },
@@ -406,7 +487,6 @@ function endSpots(run: Point[], fs: number): Spot[] {
         { x: end.x - 6, y: end.y - 6, anchor: 'end' },
         { x: end.x - 6, y: end.y + fs + 2, anchor: 'end' },
       ]
-  return [...spots, ...alongCurve(run, fs)]
 }
 
 /**
@@ -427,6 +507,17 @@ function insideSpots(poly: Point[], c: Point, fs: number): Spot[] {
   }
   spots.sort((a, b) => a.d - b.d)
   return [{ x: c.x, y: c.y + fs * 0.35, anchor: 'middle' }, ...spots]
+}
+
+/** A run of points with only those at least `gap` apart kept, and its ends. */
+function thinned(run: Point[], gap: number): Point[] {
+  const out: Point[] = []
+  for (const p of run) {
+    const last = out.at(-1)
+    if (!last || Math.hypot(p.x - last.x, p.y - last.y) >= gap) out.push(p)
+  }
+  if (run.length && out.at(-1) !== run.at(-1)) out.push(run.at(-1)!)
+  return out
 }
 
 /** Whether a point is inside a polygon (even–odd). */
