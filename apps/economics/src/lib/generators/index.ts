@@ -7,9 +7,11 @@ import type { Component } from 'svelte'
 import { generatorsOn } from '$shared/catalog/index'
 import { SITE_ID } from '$lib/site/config'
 import SupplyDemand from './supply-demand/Preview.svelte'
+import BusinessCycle from './business-cycle/Preview.svelte'
 
 export const PREVIEWS: Record<string, Component> = {
   'supply-demand': SupplyDemand,
+  'business-cycle': BusinessCycle,
 }
 
 export const GENERATORS = generatorsOn(SITE_ID, PREVIEWS)

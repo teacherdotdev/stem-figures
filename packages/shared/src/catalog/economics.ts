@@ -16,4 +16,17 @@ export const ECONOMICS: CatalogEntry[] = [
       'deadweight loss', 'tax incidence', 'subsidy', 'elasticity', 'shift', 'market', 'AP Microeconomics', 'graph', 'printable',
     ],
   },
+  {
+    id: 'business-cycle',
+    site: 'economics',
+    name: 'Business Cycle',
+    path: '/business-cycle',
+    blurb: 'A business cycle around a growth trend, with peaks, troughs and phases labeled or blank.',
+    description:
+      'Make printable business cycle graphs for economics tests: real GDP rising and falling around a dashed long-run trend, with peaks, troughs, expansion, contraction, recession and recovery labeled, lettered for a quiz or left blank, and recessions shaded.',
+    keywords: [
+      'business cycle', 'peak', 'trough', 'expansion', 'contraction', 'recession', 'recovery', 'real GDP', 'trend', 'potential GDP',
+      'economic growth', 'AP Macroeconomics', 'graph', 'printable',
+    ],
+  },
 ]

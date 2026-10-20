@@ -16,6 +16,13 @@ decisions.
   consumer and producer surplus, deadweight loss and tax revenue.
   Schematic (no numbers, as AP graphs are drawn) or numbered from a typed
   schedule of prices and quantities. Common setups to start from.
+- `/business-cycle` **Business Cycle**: real GDP rising and falling around
+  a dashed long-run trend, with its peaks and troughs named and the phases
+  (expansion, contraction, recession, recovery) pointed out with arrows, in
+  words, as letters A, B, C… for a quiz, or as blank lines. Recessions
+  shaded from peak to trough, dots at the turning points, and cycles even
+  or irregular (from a seed, so a link draws the same wave). Common setups
+  to start from.
 - `/about`, `/privacy`, `/reuse`, `/sitemap.xml`, `/robots.txt`
 
 Every page has the top bar: the site name, the current generator, and links
