@@ -14,7 +14,7 @@ export const SETUPS: Setup[] = [
   { id: 'money-purchase', name: 'Money market: open-market purchase', settings: { shift: 'supply', supplyDir: 'increase' } },
   { id: 'money-demand', name: 'Money market: higher money demand', settings: { shift: 'demand', demandDir: 'increase' } },
   { id: 'crowding-out', name: 'Loanable funds: deficit spending (crowding out)', settings: { graph: 'funds', shift: 'demand', demandDir: 'increase' } },
-  { id: 'ample-lower', name: 'Ample reserves: lower administered rates (AP 2024)', settings: { graph: 'reserves', regime: 'ample', shift: 'demand', demandDir: 'decrease' } },
+  { id: 'ample-lower', name: 'Ample reserves: lower administered rates', settings: { graph: 'reserves', regime: 'ample', shift: 'demand', demandDir: 'decrease' } },
   { id: 'ample-purchase', name: "Ample reserves: open-market purchase (rate doesn't move)", settings: { graph: 'reserves', regime: 'ample', shift: 'supply', supplyDir: 'increase' } },
   { id: 'limited-purchase', name: 'Limited reserves: open-market purchase', settings: { graph: 'reserves', regime: 'limited', shift: 'supply', supplyDir: 'increase' } },
   { id: 'blank', name: 'Students label a shift (blank labels)', settings: { shift: 'supply', supplyDir: 'increase', ...BLANKS } },
