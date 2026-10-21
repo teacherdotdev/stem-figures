@@ -190,7 +190,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'What is the difference between a contraction and a recession?',
-        a: 'A contraction is any fall in real GDP from a peak to a trough. A recession is a contraction deep and widespread enough to count: a common rule of thumb is two quarters in a row of falling real GDP, and in the United States the NBER dates recessions by a significant decline in activity across the economy. Many textbooks use the two words for the same phase, and call the early part of an expansion the recovery. Here Contraction points at the fall just after a peak and Recession at the fall nearer the trough; Recovery points at the rise just after the trough and Expansion further up.',
+        a: 'A contraction is any fall in real GDP from a peak to a trough. A recession is a contraction deep and widespread enough to count: a common rule of thumb is two quarters in a row of falling real GDP, and in the United States the NBER dates recessions by a significant decline in activity across the economy. Many textbooks use the two words for the same phase, and call the early part of an expansion the recovery. Here Contraction and Recession are two names for the same fall, from a peak to the trough after it: Contraction points at it from above and Recession from below. Recovery points at the rise just after the trough and Expansion further up.',
       },
       {
         q: 'What does the trend line on a business cycle graph show?',

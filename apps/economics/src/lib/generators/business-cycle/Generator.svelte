@@ -93,7 +93,7 @@
       </div>
       <label class="field">
         <span>Swings</span>
-        <div class="slider"><input type="range" min="0.3" max="2.5" step="0.1" bind:value={s.amplitude} aria-label="How big the swings are" /></div>
+        <div class="slider"><input type="range" min="0.5" max="2.5" step="0.1" bind:value={s.amplitude} aria-label="How big the swings are" /></div>
       </label>
       <label class="field">
         <span>Trend</span>
