@@ -6,12 +6,14 @@
 // as letters along the wave for a quiz.
 
 import type { Axes } from '$shared/graph/axes'
+import type { Point } from '$shared/graph/grid'
+import type { Segment, Spot } from '$shared/graph/labels'
 import { plainOf } from '$shared/graph/runs'
 import { graphOf } from '$lib/graph/curves'
 import { buildFigure } from '$lib/graph/figure'
-import { inks, type CalloutSpec, type CurveSpec, type PointSpec, type RegionSpec, type Words } from '$lib/graph/panel'
+import { inks, type CalloutSpec, type CurveSpec, type PanelLayout, type PointSpec, type RegionSpec, type Words } from '$lib/graph/panel'
 import { panelBase, wordsOf } from '$lib/graph/settings'
-import { waveOf, type Phase } from './model'
+import { waveOf, type Phase, type Wave } from './model'
 import type { BusinessCycleSettings, LabelKey } from './settings'
 
 /** The hidden grid the graph is drawn on: wider than tall, as time runs on. */
@@ -40,11 +42,41 @@ type PhaseKey = keyof typeof PHASE_AT
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
+/** Whether a turn is at one of the wave's ends, where it was asked to start or end. */
+const atEnd = (t: { x: number }) => t.x === WAVE.x0 || t.x === WAVE.x1
+
 export function buildBusinessCycle(s: BusinessCycleSettings) {
-  const ink = inks(s.ink === 'bw')
   const wave = waveOf(s, { ...WAVE, ...FIT, trendFrom: TREND.x0, trendTo: TREND.x1 })
   const notes: string[] = []
   if (!wave.falls) notes.push('With the trend this steep and the swings this small, real GDP never falls: there are no peaks, troughs or contractions. Make the swings bigger or the trend flatter.')
+
+  // A wave started or ended at a peak or trough has it named there too,
+  // unless that crowds the labels and leaving it unnamed doesn't.
+  let laid = layOut(s, wave, true)
+  if (laid.figure.panels[0].crowded && wave.turns.some(atEnd)) {
+    const unnamed = layOut(s, wave, false)
+    if (unnamed.figure.panels[0].crowded < laid.figure.panels[0].crowded) laid = unnamed
+  }
+  const { figure, answers } = laid
+  if (figure.panels[0].crowded) {
+    notes.push(s.every ? 'Some labels are crowded. Name each phase once, or use fewer cycles, fewer terms or smaller labels.' : 'Some labels are crowded. Use fewer cycles, fewer terms or smaller labels.')
+  }
+
+  return {
+    figure,
+    wave,
+    notes,
+    /** each letter on a quiz and the term it stands for */
+    answers,
+    label: labelOf(s, wave.turns.filter((t) => t.kind === 'peak').length, wave.turns.filter((t) => t.kind === 'trough').length),
+  }
+}
+
+export type BusinessCycleFigure = ReturnType<typeof buildBusinessCycle>
+
+/** The labels and the figure, laid out with the turns at the wave's ends named or not. */
+function layOut(s: BusinessCycleSettings, wave: Wave, nameEnds: boolean) {
+  const ink = inks(s.ink === 'bw')
 
   // Everything labeled, in order along the wave, so a quiz's letters run left to right.
   type Item = { x: number; key: LabelKey; name: Words; place: (name: Words) => void }
@@ -57,10 +89,11 @@ export function buildBusinessCycle(s: BusinessCycleSettings) {
     const key = t.kind === 'peak' ? 'peakLabel' : 'troughLabel'
     const point: PointSpec = { at: t, dot: s.dots, side: t.kind === 'peak' ? 'above' : 'below' }
     points.push(point)
-    if (shown(key)) items.push({ x: t.x, key, name: word(key), place: (name) => (point.name = name) })
+    if (shown(key) && (nameEnds || !atEnd(t))) items.push({ x: t.x, key, name: word(key), place: (name) => (point.name = name) })
   }
 
   const callouts: CalloutSpec[] = []
+  const phaseCallouts: CalloutSpec[] = []
   for (const key of Object.keys(PHASE_AT) as PhaseKey[]) {
     if (!shown(key)) continue
     const { rising, at, over } = PHASE_AT[key]
@@ -81,6 +114,7 @@ export function buildBusinessCycle(s: BusinessCycleSettings) {
         .map(onWave)
       const callout: CalloutSpec = { ...onWave(x), name: word(key), or }
       callouts.push(callout)
+      phaseCallouts.push(callout)
       items.push({ x, key, name: word(key), place: (name) => (callout.name = name) })
     }
   }
@@ -133,27 +167,72 @@ export function buildBusinessCycle(s: BusinessCycleSettings) {
     callouts,
   }
 
-  const figure = buildFigure([spec])
-  if (figure.panels[0].crowded) {
-    notes.push(s.every ? 'Some labels are crowded. Name each phase once, or use fewer cycles, fewer terms or smaller labels.' : 'Some labels are crowded. Use fewer cycles, fewer terms or smaller labels.')
+  let figure = buildFigure([spec])
+  // A phase named once whose name found room only a long way from the wave
+  // (under a trough on a steep, narrow fall, say, every place nearer being
+  // close to a line) is tried again close by its point, either side of the
+  // wave, and kept there if that's less crowded, or as clear and nearer.
+  // (Named in every cycle, there are too many to try each again.)
+  if (!s.every) {
+    for (const c of farFrom(figure.panels[0], phaseCallouts)) {
+      const tried: CalloutSpec = { at: c.at, name: c.name, spots: closeBy(c.toward!) }
+      const tidier = { ...spec, callouts: spec.callouts.map((d) => (d === c ? tried : d)) }
+      const next = buildFigure([tidier])
+      const [was, now] = [figure.panels[0], next.panels[0]]
+      if (now.crowded < was.crowded || (now.crowded === 0 && was.crowded === 0 && reachOf(now) < reachOf(was))) {
+        figure = next
+        spec.callouts = tidier.callouts
+      }
+    }
   }
-
-  return {
-    figure,
-    wave,
-    notes,
-    /** each letter on a quiz and the term it stands for */
-    answers,
-    label: labelOf(s, wave.turns.filter((t) => t.kind === 'peak').length, wave.turns.filter((t) => t.kind === 'trough').length),
-  }
+  return { figure, answers }
 }
 
-export type BusinessCycleFigure = ReturnType<typeof buildBusinessCycle>
+/** How long a phase's arrow may run, on the drawing, before its name is tried nearer the wave. */
+const FAR = 50
+
+/**
+ * Places close by a point for a callout's words, every way round, each
+ * with the nearest edge of the words that far from the point: those
+ * nearest `toward` (in the graph's units, up positive) and nearest the
+ * point first, so the words go on the wave's other side only if they must.
+ */
+const closeBy = (toward: Point) => (at: Point, fs: number): Spot[] => {
+  const len = Math.hypot(toward.x, toward.y) || 1
+  const places: { cost: number; spot: Spot }[] = []
+  for (const r of [20, 30, 42, 56, 70]) {
+    for (let k = 0; k < 16; k++) {
+      const a = (k * Math.PI) / 8
+      const [dx, dy] = [Math.cos(a), Math.sin(a)]
+      const anchor = dx > 0.3 ? 'start' : dx < -0.3 ? 'end' : 'middle'
+      // Words below hang from their top, words above stand on their descenders, words level are centered on the point's height.
+      const y = at.y + r * dy + (dy > 0.3 ? fs * 0.78 : dy < -0.3 ? -fs * 0.3 : fs * 0.24)
+      const off = Math.acos(Math.max(-1, Math.min(1, (dx * toward.x - dy * toward.y) / len)))
+      places.push({ cost: off + ((r - 20) / 50) * 0.8, spot: { x: at.x + r * dx, y, anchor } })
+    }
+  }
+  return places.sort((a, b) => a.cost - b.cost).map((p) => p.spot)
+}
+
+const lengthOf = (l: Segment) => Math.hypot(l.x2 - l.x1, l.y2 - l.y1)
+
+/** The callouts whose arrows run longer than FAR: each arrow found by where it stops, just short of its point. */
+function farFrom(panel: PanelLayout, callouts: CalloutSpec[]): CalloutSpec[] {
+  return callouts.filter((c) => {
+    const ends = [c.at, ...(c.or ?? []).map((o) => o.at)].map(panel.px)
+    const leader = panel.leaders.find((l) => ends.some((p) => Math.hypot(l.x2 - p.x, l.y2 - p.y) < 6))
+    return leader !== undefined && lengthOf(leader) > FAR
+  })
+}
+
+/** How far a panel's arrows run past FAR, all told. */
+const reachOf = (panel: PanelLayout) => panel.leaders.reduce((sum, l) => sum + Math.max(0, lengthOf(l) - FAR), 0)
 
 /**
  * The rises (or falls) a phase is named on: every one long enough to hold
  * a label, or just one, the longest that runs from turn to turn (the first
- * of any about as long), else the longest there is.
+ * of any about as long, and one clear of the graph's ends, where its name
+ * has less room, if there is one), else the longest there is.
  */
 function phasesFor(phases: Phase[], every: boolean): Phase[] {
   if (!phases.length) return []
@@ -161,7 +240,8 @@ function phasesFor(phases: Phase[], every: boolean): Phase[] {
   const longest = Math.max(...phases.map(length))
   if (every) return phases.filter((p) => length(p) >= longest * 0.4)
   const whole = phases.filter((p) => p.whole)
-  const pick = whole.length ? whole : phases
+  const inside = whole.filter((p) => p.x0 > WAVE.x0 && p.x1 < WAVE.x1)
+  const pick = inside.length ? inside : whole.length ? whole : phases
   const most = Math.max(...pick.map(length))
   return [pick.find((p) => length(p) >= most * 0.95)!]
 }
