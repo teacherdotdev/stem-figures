@@ -134,8 +134,10 @@ const SIDE_BLANK_W = 36 // the same, at an axis
 const ARROW_GAP = 5 // how far shift arrows stop short of the curves
 const BRACE_DEPTH = 7
 const BRACE_GAP = 6 // between a brace and the line it's under or over
-const ROOM_RIGHT = 56 // past the grid, for curve names at their ends
+const ROOM_RIGHT = 56 // past the grid, for curve names at their ends, at medium labels
 const PAST_GAP = 6 // between a curve's end and a name just past it
+/** The label size the room on the right is measured for: medium. */
+const BASE_LFS = 14 * 1.1
 const ROOM_TOP = 18 // over the grid, for names at the tops of curves
 const EXT = 20 // how far an arrowed axis runs past the grid (as $shared/graph's)
 /** How far apart rows of labels under the x-axis are. */
@@ -195,7 +197,8 @@ export function buildPanel(spec: PanelSpec) {
   const xWordBeside = !!xWord && xWord.mode === 'text' && xWordW <= 28
   const past = (spec.curves ?? []).filter((c) => c.namePast && c.pts.length && shows(c.name))
   const pastW = Math.max(0, ...past.map((c) => px(c.pts.at(-1)!).x + PAST_GAP + widthOf(c.name!) + INSET + 2 - (area.x + area.w)))
-  const right = Math.max(ROOM_RIGHT, pastW, xWordBeside ? xEnd - (area.x + area.w) + xWordW + 10 : 0)
+  // Room on the right grows with the labels, so SRAS₁ fits past its end at large size.
+  const right = Math.max(ROOM_RIGHT * (LFS / (BASE_LFS)), pastW, xWordBeside ? xEnd - (area.x + area.w) + xWordW + 10 : 0)
 
   const gridBottom = area.y + area.h
   const bounds: Box = { x0: area.x - (numbered ? 0 : 4) + INSET, y0: area.y - ROOM_TOP + INSET, x1: area.x + area.w + right - INSET, y1: (xInside ? gridBottom : axisY) - INSET }
