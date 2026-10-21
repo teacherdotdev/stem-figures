@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { crosses, textBox, textWidth } from '$shared/graph/labels'
 import { overlaps } from '$lib/graph/testing'
 import { buildPhillips, fitOf, inflationAt, modelOf } from './figure'
 import { CURVATURES, LABEL_KEYS, phillipsSettings, type PhillipsSettings } from './settings'
@@ -84,6 +85,40 @@ describe('phillips curve', () => {
     const shock = build({ ...numbered, movement: 'srpc', expected2: 5, uShock: 6 })
     expect(shock.model.B!.x).toBe(6)
     expect(shock.model.B!.y).toBeCloseTo(4)
+  })
+
+  it('says which way a numbered movement goes from where B is, whatever the hidden direction setting', () => {
+    expect(build({ ...numbered, movement: 'along', along: 'up', u2: 8, pi2: -1 }).label).toMatch(/a movement down the short-run curve/)
+    expect(build({ ...numbered, movement: 'along', along: 'down', u2: 3, pi2: 6 }).label).toMatch(/a movement up the short-run curve/)
+    expect(build({ movement: 'along', along: 'down' }).label).toMatch(/a movement down the short-run curve/)
+  })
+
+  it('fits deflation with room for the SRPC above A, every point, and arrows clear of the numbers on the grid', () => {
+    for (const over of [
+      { movement: 'along', u2: 8, pi2: -1 },
+      { movement: 'along', u2: 8, pi2: -1, longRun: true },
+      { movement: 'along', expected: -1, u2: 9, pi2: -3, longRun: true },
+      { movement: 'srpc', expected2: -2, uShock: 4 },
+      { movement: 'lrpc', expected: -1, lrpcSide: 'right', nru2: 7 },
+    ] as Partial<PhillipsSettings>[]) {
+      for (const curvature of CURVATURES) {
+        const s = tidy({ ...numbered, curvature, ...over })
+        const g = buildPhillips(s)
+        const f = fitOf(s)
+        const [x0, x1, y0, y1] = [f.xFrom, f.xTo, f.yFrom, f.yTo].map(Number)
+        const m = g.model
+        for (const p of [m.A, m.B, m.C].filter((p) => !!p)) expect([over, curvature, p.x > x0 && p.x < x1 && p.y > y0 && p.y < y1]).toEqual([over, curvature, true])
+        // SRPC₁ comes down into the graph a good stretch above and left of A, not just over it.
+        const top = y1 - 0.07 * (y1 - y0)
+        let u = m.A.x
+        while (u > Math.max(x0, m.srpc1.c) + 0.01 && inflationAt(m.srpc1, u) < top) u -= 0.01
+        expect(Math.hypot((m.A.x - u) / (x1 - x0), (inflationAt(m.srpc1, u) - m.A.y) / (y1 - y0))).toBeGreaterThan(0.15)
+        // No arrow runs through a number written under the x-axis.
+        const p = g.figure.panels[0]
+        const boxes = p.numbers.map((n) => textBox(n, textWidth(n.text, p.fs), p.fs))
+        expect([over, curvature, p.arrows.filter((a) => boxes.some((b) => crosses(a, b))).length]).toEqual([over, curvature, 0])
+      }
+    }
   })
 
   it('says when the typed point would make the SRPC slope up, or the natural rate cannot be', () => {
