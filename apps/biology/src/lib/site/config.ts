@@ -9,7 +9,7 @@ export const SITE_NAME = 'Biology Figures'
 export const SITE_URL = 'https://biologyfigures.com'
 
 // The STEM Figures family this site belongs to, and its other sites, linked
-// from the top bar and footer.
+// from the top bar.
 export const FAMILY = { name: 'STEM Figures', url: 'https://stemfigures.com' }
 export const SISTER_SITES = [
   { name: 'Math Figures', url: 'https://mathfigures.com' },

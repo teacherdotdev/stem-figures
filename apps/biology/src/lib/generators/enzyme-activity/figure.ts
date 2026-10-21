@@ -12,8 +12,10 @@
 import { axisEnd, readAxes, type Axes, type GridSettings, type RangeSettings } from '$shared/graph/axes'
 import { COLORS } from '$shared/graph/colors'
 import { CELL, clipPath, layoutGrid, pathOf, round, type GridLayout, type Point } from '$shared/graph/grid'
+import { rowsUnder, spread } from '$shared/graph/axisMarks'
 import { DASHES, layoutKey, placer, textWidth, type Anchor, type Box, type KeyEntry, type Spot } from '$shared/graph/labels'
 import { fmt } from '$shared/graph/numbering'
+import { levelled, runsWidth, type Run } from '$shared/graph/runs'
 import { niceAxis } from '../photosynthesis-rate/figure'
 import { UNKNOWN, enzymeOf, unknownName } from './enzymes'
 import {
@@ -44,13 +46,10 @@ const INKS = ['blue', 'red', 'green'] as const
 type Segment = { x1: number; y1: number; x2: number; y2: number }
 type Mode = EnzymeSettings['optLabelMode']
 
-/** A stretch of a label's text, `sub` for the max of Vmax and the m of Km; `dy` moves it down from the run before. */
-export type Run = { text: string; sub?: boolean; dy: number }
+export type { Run }
 /** A label on the figure: written text, or a write-on line for students. */
 export type Label = { x: number; y: number; anchor: Anchor; runs?: Run[]; blank?: Segment }
 export type Curve = { index: CurveIndex; name: string; color: string; dash?: string; paths: string[] }
-
-const SUB = 0.7 // a subscript's size, of the label's
 
 /** A label's words in runs, with Vmax and Km written as textbooks do, their last letters lowered and smaller. */
 export function runsOf(text: string, fs: number): Run[] {
@@ -61,18 +60,8 @@ export function runsOf(text: string, fs: number): Run[] {
     last = m.index + m[0].length
   }
   runs.push({ text: text.slice(last) })
-  let level = 0
-  return runs
-    .filter((r) => r.text)
-    .map((r) => {
-      const to = r.sub ? fs * 0.22 : 0
-      const dy = round(to - level)
-      level = to
-      return { ...r, dy }
-    })
+  return levelled(runs, fs)
 }
-
-const runsWidth = (runs: Run[], fs: number) => runs.reduce((w, r) => w + textWidth(r.text, r.sub ? fs * SUB : fs), 0)
 
 /** A curve's name in the key: the one typed, or its enzyme's (Enzyme A for an unknown one), or its inhibitor's. */
 export function curveName(s: EnzymeSettings, i: CurveIndex) {
@@ -431,15 +420,8 @@ export function buildEnzyme(s: EnzymeSettings) {
   for (const l of ys) sideLabel(area.x - numbersW - 7, l.at + LABEL_FS * 0.35, 'end', l.mode, l.words)
   // Under the x-axis (and its numbers) each stays centered under its line,
   // on a row further down when it would run into one already there.
-  const xRows: { x0: number; x1: number }[][] = []
-  for (const l of sideX.filter((l) => shown(l.mode, l.words)).sort((a, b) => a.x - b.x)) {
-    const half = sideWidth(l.mode, l.words) / 2
-    const span = { x0: l.x - half - 4, x1: l.x + half + 4 }
-    let row = xRows.findIndex((r) => r.every((b) => span.x0 >= b.x1 || span.x1 <= b.x0))
-    if (row < 0) row = xRows.push([]) - 1
-    xRows[row].push(span)
-    sideLabel(l.x, axisY + numbersH + LABEL_FS + 5 + row * X_ROW(LABEL_FS), 'middle', l.mode, l.words)
-  }
+  const xMarks = rowsUnder(sideX.filter((l) => shown(l.mode, l.words)).map((l) => ({ ...l, half: sideWidth(l.mode, l.words) / 2 })))
+  for (const l of xMarks.placed) sideLabel(l.x, axisY + numbersH + LABEL_FS + 5 + l.row * X_ROW(LABEL_FS), 'middle', l.mode, l.words)
 
   // The titles, as the grid would place them, around the room made here;
   // the axis labels at the arrows are the grid's own.
@@ -451,7 +433,7 @@ export function buildEnzyme(s: EnzymeSettings) {
   if (title) gridLabels.push({ x: midX, y: titleY, text: title, kind: 'title' })
   else if (s.titleMode === 'blank') blanks.push({ x1: midX - Math.min(130, area.w / 2), y1: titleY, x2: midX + Math.min(130, area.w / 2), y2: titleY })
   // Under the x-axis: its numbers, and the labels written there.
-  const xMarksH = numbersH + (kmAt ? LABEL_FS + 8 + (Math.max(1, xRows.length) - 1) * X_ROW(LABEL_FS) : 0)
+  const xMarksH = numbersH + (kmAt ? LABEL_FS + 8 + (Math.max(1, xMarks.rows) - 1) * X_ROW(LABEL_FS) : 0)
   const xTitleY = axisY + xMarksH + fs * 1.2 + 6
   if (xTitle) gridLabels.push({ x: midX, y: xTitleY, text: xTitle, kind: 'side' })
   else if (s.xTitleMode === 'blank') blanks.push({ x1: midX - Math.min(100, area.w / 2), y1: xTitleY, x2: midX + Math.min(100, area.w / 2), y2: xTitleY })
@@ -510,18 +492,3 @@ export function buildEnzyme(s: EnzymeSettings) {
 }
 
 export type EnzymeLayout = ReturnType<typeof buildEnzyme>
-
-/**
- * Places along an axis for labels wanting to be `at`, each `half` its
- * length either side: moved apart, in order, just enough to keep `gap`
- * between neighbours.
- */
-export function spread<T extends { at: number; half: number }>(items: T[], gap: number): T[] {
-  const sorted = [...items].sort((a, b) => a.at - b.at)
-  const out: T[] = []
-  for (const item of sorted) {
-    const before = out.at(-1)
-    out.push(before ? { ...item, at: Math.max(item.at, before.at + before.half + item.half + gap) } : item)
-  }
-  return out
-}

@@ -1,0 +1,318 @@
+// Works out a money market, loanable funds or reserves market graph from
+// its settings, as a panel for the econ graph library to lay out: the
+// curves (an upright money supply or supply of reserves, straight demand
+// and supply of loanable funds, and the demand for reserves flat at the
+// top, sloping, then flat at the administered rate), a shift and where the
+// rate ends up, the arrows showing it, the rates and quantities at the axes
+// with dashed lines to them, and every label.
+
+import { clipPath, type Point } from '$shared/graph/grid'
+import { besidePoint, type Spot } from '$shared/graph/labels'
+import { plainOf } from '$shared/graph/runs'
+import { along, flatSlopeFlat, intersect, lineThrough, shifted, yAt, type Box, type Curve } from '$lib/graph/curves'
+import { buildFigure } from '$lib/graph/figure'
+import { inks, type ArrowSpec, type CurveSpec, type GuideSpec, type MarkSpec, type PanelSpec, type PointSpec, type Words } from '$lib/graph/panel'
+import { SCHEMATIC, panelBase, wordsOf } from '$lib/graph/settings'
+import { SHIFT_SHARE } from '$lib/graph/shifts'
+import { KEYS, axisWordsOf, type Graph, type MoneyMarketsSettings } from './settings'
+
+/** Far enough to run a straight curve off the graph. */
+const FAR = 100
+/** Where curves are drawn: short of the grid's top and right, leaving room for their names. */
+const DRAW: Box = { x0: 0, x1: 9.4, y0: 0, y1: 9.6 }
+/**
+ * Where an upright curve stops, lower, leaving room over its top for its
+ * name clear of the y-axis's words; or higher, short of the grid's top, to
+ * reach where the curves cross.
+ */
+const UPRIGHT_TOP = 9
+/** Where a sloping demand curve stops, short of the x-axis, leaving room by its end for its name. */
+const DEMAND_BOTTOM = 0.8
+const BOX: Box = { x0: 0, x1: 10, y0: 0, y1: 10 }
+/** How far an upright supply curve may move: it stays on the graph, clear of its edges. */
+const UPRIGHT = { min: 0.6, max: 9 }
+
+/** The demand for reserves: flat at the discount rate, sloping from `x0` to `x1`, flat at the administered rate. */
+export const RESERVES = { x0: 1, x1: 5, high: 7.2, low: 3.4 }
+/** How high the demand for reserves' flat top may go: on the graph, its top shift arrow with it. */
+export const RESERVES_TOP = 9.2
+/** Where the supply of reserves is: on demand's flat bottom (ample) or on its slope (limited). */
+export const SUPPLY_AT = { ample: 7, limited: 2.2 }
+
+const line = (at: number, slope: number) => lineThrough({ x: 0, y: at }, { x: 1, y: at + slope }, { x0: -FAR, x1: FAR, y0: -FAR, y1: FAR })
+const upright = (x: number): Curve => [{ x, y: -FAR }, { x, y: FAR }]
+const isUpright = (c: Curve) => Math.abs(c[0].x - c.at(-1)!.x) < 1e-9
+/** A curve cut to `box`, its longest run. */
+const drawn = (c: Curve, box: Box) => clipPath(c, box).sort((a, b) => b.length - a.length)[0] ?? []
+
+/** What each graph's curves and rate are called, in the figure's summary. */
+const WORDS: Record<Graph, { rate: string; supply: string; demand: string }> = {
+  money: { rate: 'The nominal interest rate', supply: 'Money supply', demand: 'money demand' },
+  funds: { rate: 'The real interest rate', supply: 'Supply of loanable funds', demand: 'demand for loanable funds' },
+  reserves: { rate: 'The policy rate', supply: 'Supply of reserves', demand: 'demand for reserves' },
+}
+
+const near = (a: number, b: number) => Math.abs(a - b) < 1e-6
+
+/**
+ * A curve's name before and after it shifts: MS₁ and MS₂, with the number
+ * joining a subscript already there (D_R → D_{R1}), or the name alone.
+ */
+export function curveNamed(w: Words, k: 0 | 1 | 2): Words {
+  const t = w.text.trim()
+  if (w.mode !== 'text' || !t || !k) return w
+  const braced = t.match(/^(.*)_\{([^}]*)\}$/)
+  if (braced) return { ...w, text: `${braced[1]}_{${braced[2]}${k}}` }
+  const one = t.match(/^(.*)_(.)$/)
+  if (one) return { ...w, text: `${one[1]}_{${one[2]}${k}}` }
+  return { ...w, text: `${t}_${k}` }
+}
+
+/** A value's name at one equilibrium (iₑ or i*), or before and after a shift (i₁, i₂). */
+function valueNamed(w: Words, k: 0 | 1 | 2, style: MoneyMarketsSettings['eqStyle']): Words {
+  const t = w.text.trim()
+  if (w.mode !== 'text' || !t) return w
+  return { ...w, text: k ? `${t}_${k}` : style === 'star' ? `${t}*` : `${t}_e` }
+}
+
+export function buildMoneyMarkets(s: MoneyMarketsSettings) {
+  const ink = inks(s.ink === 'bw')
+  const g = s.graph
+  const keys = KEYS[g]
+  const notes: string[] = []
+  const reserves = g === 'reserves'
+
+  // The curves before anything happens.
+  const supplyUpright = g !== 'funds'
+  const q1 = reserves ? SUPPLY_AT[s.regime] : 5
+  const s1: Curve = supplyUpright ? upright(q1) : line(1, 0.8)
+  const d1: Curve = reserves ? flatSlopeFlat(RESERVES.x0, RESERVES.x1, RESERVES.high, RESERVES.low, FAR) : line(9, -0.8)
+
+  // Shifts: supply across; demand across, but the demand for reserves up or down with the administered rates.
+  const moving = (kind: 'supply' | 'demand') => s.shift === kind || s.shift === 'both'
+  const shiftOf = (kind: 'supply' | 'demand') => {
+    if (!moving(kind)) return { dx: 0, dy: 0 }
+    const sign = (kind === 'supply' ? s.supplyDir : s.demandDir) === 'increase' ? 1 : -1
+    const share = SHIFT_SHARE[kind === 'supply' ? s.supplySize : s.demandSize]
+    // The demand for reserves' flat top stays on the graph, however far it's asked to go up.
+    if (kind === 'demand' && reserves) return { dx: 0, dy: Math.min(sign * share * 10, RESERVES_TOP - RESERVES.high) }
+    let dx = sign * share * 10
+    // An upright supply curve stays on the graph however far it's asked to go.
+    if (kind === 'supply' && supplyUpright) dx = Math.max(UPRIGHT.min, Math.min(UPRIGHT.max, q1 + dx)) - q1
+    return { dx, dy: 0 }
+  }
+  const sShift = shiftOf('supply')
+  const dShift = shiftOf('demand')
+  const sMoves = !!(sShift.dx || sShift.dy)
+  const dMoves = !!(dShift.dx || dShift.dy)
+  const anyShift = sMoves || dMoves
+  const s2 = shifted(s1, sShift.dx, sShift.dy)
+  const d2 = shifted(d1, dShift.dx, dShift.dy)
+
+  const e1 = intersect(s1, d1)
+  const e2 = anyShift ? intersect(s2, d2) : e1
+  const onGraph = (p: Point | null): p is Point => !!p && p.x >= BOX.x0 - 1e-9 && p.x <= BOX.x1 + 1e-9 && p.y >= BOX.y0 - 1e-9 && p.y <= BOX.y1 + 1e-9
+  if (!onGraph(e1)) notes.push("The curves don't cross on the graph.")
+  else if (anyShift && !onGraph(e2)) notes.push("After the shift the curves don't cross on the graph. Make the shift smaller.")
+
+  // The curves and their names. Upright curves reach any crossing high on the graph.
+  const top = Math.min(DRAW.y1, Math.max(UPRIGHT_TOP, ...[e1, e2].filter(onGraph).map((e) => e.y + 0.4)))
+  const supplyBox: Box = supplyUpright ? { ...DRAW, y1: top } : DRAW
+  const demandBox: Box = reserves ? DRAW : { ...DRAW, y0: DEMAND_BOTTOM }
+  const sName = wordsOf(s, keys.supply)
+  const dName = wordsOf(s, keys.demand)
+  const curves: CurveSpec[] = [
+    { pts: drawn(d1, demandBox), name: curveNamed(dName, dMoves ? 1 : 0), color: ink.demand },
+    ...(dMoves ? [{ pts: drawn(d2, demandBox), name: curveNamed(dName, 2), color: ink.demand }] : []),
+  ]
+  // An upright supply curve's name goes over its top, as a point's name at
+  // its top (the library would move it down beside the line), each the same
+  // way over its own curve: centered, or with two curves too close for that,
+  // leaning away from each other. A sloped one's goes by its end as a curve's
+  // does.
+  const close = Math.abs(sShift.dx) < CLOSE_PAIR
+  const tops: PointSpec[] = []
+  const supplyCurve = (c: Curve, name: Words, side: Side) => {
+    const pts = drawn(c, supplyBox)
+    if (supplyUpright && pts.length) {
+      curves.push({ pts, color: ink.supply })
+      tops.push({ at: pts.reduce((a, b) => (b.y > a.y ? b : a)), name, dot: false, spots: overTop(side, close) })
+    } else curves.push({ pts, name, color: ink.supply })
+  }
+  supplyCurve(s1, curveNamed(sName, sMoves ? 1 : 0), !sMoves ? 'alone' : sShift.dx > 0 ? 'left' : 'right')
+  if (sMoves) supplyCurve(s2, curveNamed(sName, 2), sShift.dx > 0 ? 'right' : 'left')
+  // The left one's name first, so by the y-axis it can lean right before the other's takes the room.
+  tops.sort((a, b) => a.at.x - b.at.x)
+
+  // Shift arrows: across from a curve, or for the demand for reserves up or down on its flat parts, as AP draws them.
+  const arrows: ArrowSpec[] = []
+  // Arrows across keep off the other curves, and clear of where the curves cross, which have names by them.
+  const crossings = [e1, e2].filter(onGraph)
+  if (sMoves) arrows.push(...clearArrows(s1, sShift.dx, s.arrows, [d1, d2], crossings, ink.supply, supplyBox))
+  if (dMoves) {
+    if (reserves) arrows.push(...reserveArrows(dShift.dy, s.arrows, [q1, q1 + sShift.dx], ink.demand))
+    else arrows.push(...clearArrows(d1, dShift.dx, s.arrows, [s1, s2], crossings, ink.demand, demandBox))
+  }
+
+  // The rates and quantities at the axes, dashed lines to them, and the points where the curves cross.
+  const marks: MarkSpec[] = []
+  const guides: GuideSpec[] = []
+  const points: PointSpec[] = [...tops]
+  const rateName = wordsOf(s, keys.rate)
+  const qName = wordsOf(s, 'qLabel')
+  const eName = wordsOf(s, 'eLabel')
+  /** A value written once at an axis: where both equilibria share it, it keeps the first one's name. */
+  const mark = (axis: 'x' | 'y', at: number, name: Words) => {
+    if (!marks.some((m) => m.axis === axis && near(m.at, at))) marks.push({ axis, at, name })
+  }
+  const equilibrium = (e: Point | null, k: 0 | 1 | 2) => {
+    if (!onGraph(e)) return
+    if (s.points) points.push({ at: e, name: curveNamed(eName, k), ...(supplyUpright ? {} : { spots: overCrossing }) })
+    if (!s.guides) return
+    // An upright supply curve is its own line down to the quantity.
+    guides.push({ from: e, x: !supplyUpright })
+    mark('y', e.y, valueNamed(rateName, k, s.eqStyle))
+    mark('x', e.x, valueNamed(qName, k, s.eqStyle))
+  }
+  equilibrium(e1, anyShift ? 1 : 0)
+  if (anyShift) equilibrium(e2, 2)
+
+  const spec: PanelSpec = {
+    ...panelBase({ ...s, ...axisWordsOf(s), look: 'schematic' }),
+    axes: SCHEMATIC,
+    curves,
+    points,
+    marks,
+    guides,
+    arrows,
+  }
+
+  return {
+    figure: buildFigure([spec]),
+    /** where the curves cross, before and after any shift */
+    before: e1,
+    after: e2,
+    notes,
+    label: labelOf(s, summaryOf(s, e1, e2, anyShift, sMoves, dMoves)),
+  }
+}
+
+export type MoneyMarketsFigure = ReturnType<typeof buildMoneyMarkets>
+
+/**
+ * Places for the name of a point where sloped supply and demand cross: over
+ * it, between the two curves and clear of the guides, higher up where the
+ * curves are further apart for a wide one (a blank); then beside it.
+ */
+const overCrossing = (p: Point, fs: number): Spot[] => [
+  ...[9, 15, 21, 27].map((gap): Spot => ({ x: p.x, y: p.y - gap - fs * 0.3, anchor: 'middle' })),
+  ...besidePoint(p, fs, 9),
+]
+
+/** Which of two upright supply curves one is, or the only one. */
+type Side = 'left' | 'right' | 'alone'
+
+/** How far apart (in the graph's units) two upright curves are too close for both names to be centered over them. */
+const CLOSE_PAIR = 1.5
+
+/**
+ * Places for an upright curve's name over its top, just clear of it:
+ * centered on it, then leaning away from the other upright curve (first,
+ * when the two are `close`), then toward it (by the y-axis), then beside
+ * its top, outer side first. A lone one tries the left first.
+ */
+const overTop = (side: Side, close: boolean) => (top: Point, fs: number): Spot[] => {
+  const y = top.y - fs * 0.3 - 7
+  const beside = top.y + fs * 0.8
+  const out = side === 'right' ? 1 : -1
+  const centered: Spot = { x: top.x, y, anchor: 'middle' }
+  const lean = (way: number): Spot => ({ x: top.x - way * 8, y, anchor: way > 0 ? 'start' : 'end' })
+  const by = (way: number): Spot => ({ x: top.x + way * 6, y: beside, anchor: way > 0 ? 'start' : 'end' })
+  return [...(close && side !== 'alone' ? [lean(out), centered] : [centered, lean(out)]), lean(-out), by(out), by(-out)]
+}
+
+/**
+ * Arrows from the demand for reserves to where it moves, `dy` up: one on its
+ * flat bottom (clear of the supply curves at `avoid`), then one on its flat
+ * top by the y-axis, then one halfway down its slope, leaving out any of
+ * the last two a supply curve runs too close to.
+ */
+function reserveArrows(dy: number, count: number, avoid: number[], color: string): ArrowSpec[] {
+  const { x0, x1, high, low } = RESERVES
+  // The widest stretch of the bottom with no supply curve in it.
+  const cuts = [x1, ...avoid.filter((x) => x > x1 && x < DRAW.x1).sort((a, b) => a - b), DRAW.x1]
+  let best = { a: cuts[0], b: cuts[1] }
+  for (let k = 2; k < cuts.length; k++) if (cuts[k] - cuts[k - 1] > best.b - best.a) best = { a: cuts[k - 1], b: cuts[k] }
+  const mid = (x0 + x1) / 2
+  const at: Point[] = [
+    { x: (best.a + best.b) / 2, y: low },
+    { x: x0 / 2, y: high },
+    { x: mid, y: (high + low) / 2 },
+  ]
+    .filter((p) => avoid.every((x) => Math.abs(p.x - x) >= CLEAR))
+    .slice(0, Math.max(0, Math.min(3, Math.round(count))))
+  return at.map((from) => ({ from, to: { x: from.x, y: from.y + dy }, color }))
+}
+
+/** Where along a curve its arrows go, by how many there are, as shares of its length (as $lib/graph/shifts'). */
+const ARROWS_AT: Record<number, number[]> = { 0: [], 1: [0.2], 2: [0.2, 0.8], 3: [0.15, 0.5, 0.85] }
+/** How far an arrow keeps from a curve it would otherwise run along or cut. */
+const CLEAR = 0.6
+/** How far above or below a crossing an arrow keeps, leaving room for its name. */
+const NAME_ROOM = 1
+
+/**
+ * `count` arrows across from a curve to where it moves, `dx` across: at the
+ * usual places along it, or the nearest ones where they cross none of the
+ * curves in `others`, pass clear of the `crossings`, and end on the graph.
+ * `c` is drawn cut to `box`.
+ */
+function clearArrows(c: Curve, dx: number, count: number, others: Curve[], crossings: Point[], color: string, box: Box): ArrowSpec[] {
+  const run = drawn(c, box)
+  if (!run.length || !dx) return []
+  const clear = (p: Point) => {
+    if (p.x + dx > DRAW.x1 - CLEAR / 2 || p.x + dx < DRAW.x0 + CLEAR / 2) return false
+    const lo = Math.min(p.x, p.x + dx) - CLEAR / 2
+    const hi = Math.max(p.x, p.x + dx) + CLEAR / 2
+    if (crossings.some((e) => e.x > lo && e.x < hi && Math.abs(e.y - p.y) < NAME_ROOM)) return false
+    for (const o of others) {
+      // An upright curve in the way, or a sloped one too near the arrow anywhere along it.
+      if (isUpright(o)) {
+        if (o[0].x > lo && o[0].x < hi) return false
+        continue
+      }
+      for (let k = 0; k <= 12; k++) if (Math.abs((yAt(o, p.x + (dx * k) / 12) ?? Infinity) - p.y) < CLEAR) return false
+    }
+    return true
+  }
+  const shares = Array.from({ length: 19 }, (_, k) => 0.05 + k * 0.05)
+  const chosen: number[] = []
+  for (const want of ARROWS_AT[Math.max(0, Math.min(3, Math.round(count)))] ?? []) {
+    const best = shares
+      .filter((f) => clear(along(run, f).at) && chosen.every((c) => Math.abs(c - f) > 0.15))
+      .sort((a, b) => Math.abs(a - want) - Math.abs(b - want))[0]
+    if (best !== undefined) chosen.push(best)
+  }
+  return chosen.sort((a, b) => a - b).map((f) => {
+    const from = along(run, f).at
+    return { from, to: { x: from.x + dx, y: from.y }, color }
+  })
+}
+
+/** What happens, in words, for the figure's summary for screen readers. */
+function summaryOf(s: MoneyMarketsSettings, e1: Point | null, e2: Point | null, anyShift: boolean, sMoves: boolean, dMoves: boolean) {
+  const w = WORDS[s.graph]
+  const summary: string[] = []
+  const dir = (d: string, up: string, down: string) => (d === 'increase' ? up : down)
+  if (sMoves) summary.push(`${w.supply.toLowerCase()} ${dir(s.supplyDir, 'increases', 'decreases')}`)
+  if (dMoves) summary.push(s.graph === 'reserves' ? `${w.demand} shifts ${dir(s.demandDir, 'up', 'down')}` : `${w.demand} ${dir(s.demandDir, 'increases', 'decreases')}`)
+  if (e1 && e2 && anyShift) summary.push(`${w.rate.toLowerCase()} ${near(e1.y, e2.y) ? 'stays the same' : e2.y > e1.y ? 'rises' : 'falls'}`)
+  return summary
+}
+
+/** The figure in words, for screen readers. */
+function labelOf(s: MoneyMarketsSettings, summary: string[]) {
+  if (s.titleMode === 'text' && s.title.trim()) return plainOf(s.title.trim())
+  const what = s.graph === 'money' ? 'Money market graph' : s.graph === 'funds' ? 'Loanable funds market graph' : `Market for reserves graph, ${s.regime} reserves`
+  return `${what}${summary.length ? `: ${summary.join(', ')}` : ''}`
+}
