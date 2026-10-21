@@ -8,11 +8,12 @@
 // at 0, and the numbers are written with percent signs.
 
 import { clipPath, type Point } from '$shared/graph/grid'
+import { crosses, textBox, textWidth } from '$shared/graph/labels'
 import { plainOf } from '$shared/graph/runs'
 import { along, graphOf, intersect, type Box, type Curve } from '$lib/graph/curves'
 import { buildFigure } from '$lib/graph/figure'
-import { fitted, rangesOf } from '$lib/graph/fit'
-import { inks, type ArrowSpec, type CurveSpec, type GuideSpec, type MarkSpec, type PanelSpec, type PointSpec, type Words } from '$lib/graph/panel'
+import { niceAxis, rangesOf } from '$lib/graph/fit'
+import { buildPanel, inks, type ArrowSpec, type CurveSpec, type GuideSpec, type MarkSpec, type PanelSpec, type PointSpec, type Words } from '$lib/graph/panel'
 import { SCHEMATIC, panelBase, wordsOf } from '$lib/graph/settings'
 import { SHIFT_SHARE } from '$lib/graph/shifts'
 import { readAxes, axisEnd } from '$shared/graph/axes'
@@ -98,16 +99,63 @@ export function modelOf(s: PhillipsSettings) {
 
 export type PhillipsModel = ReturnType<typeof modelOf>
 
-/** The ranges a numbered graph fits to: unemployment from 0, inflation from 0 or below it where the curves fall under 0. */
+/** How long a stretch of each short-run curve a fitted graph shows above and left of its leftmost point, in shares of the axes. */
+const SRPC_ROOM = 0.18
+/** How far short of the grid's top and right the curves stop, leaving room for their names, as shares of the axes. */
+const NAME_ROOM = { x: 0.06, y: 0.07 }
+
+/**
+ * How high the inflation axis has to run, with the axes from `lo` to
+ * `hi` so far, for short-run curve `c` to come down into the graph a
+ * stretch above and left of point `p` on it, rather than starting just
+ * over it. Never past where the curve meets the inflation axis.
+ */
+function topFor(c: Srpc, p: Point, xSpan: number, lo: number, hi: number) {
+  let top = hi
+  // A taller axis makes the same stretch shorter in shares of it, so it's worked out again till it settles.
+  for (let i = 0; i < 6; i++) {
+    const ySpan = top - lo
+    const du = xSpan / 400
+    let at = p
+    let len = 0
+    while (len < SRPC_ROOM && at.x - du > Math.max(0, c.c + du)) {
+      const next = { x: at.x - du, y: inflationAt(c, at.x - du) }
+      len += Math.hypot(du / xSpan, (next.y - at.y) / ySpan)
+      at = next
+    }
+    const want = (at.y - NAME_ROOM.y * lo) / (1 - NAME_ROOM.y)
+    if (want <= top + 1e-9) break
+    top = want
+  }
+  return top
+}
+
+/**
+ * The ranges a numbered graph fits to: unemployment from 0, inflation from
+ * 0 or below it where the curves or points fall under 0, with room over
+ * the highest point and for each short-run curve to come down into the
+ * graph from well above its points, deflation or not.
+ */
 export function fitOf(s: PhillipsSettings) {
   const m = modelOf({ ...s, look: 'numeric' })
-  const pts = [m.A, m.B, m.C, { x: s.u2, y: s.pi2 }].filter((p): p is Point => !!p)
-  const xHi = Math.max(10, 1.6 * Math.max(m.un, m.un2 ?? 0, ...pts.map((p) => p.x)))
+  const typed = { x: s.u2, y: s.pi2 }
+  const pts = [m.A, m.B, m.C, typed].filter((p): p is Point => !!p)
+  const x = niceAxis(0, Math.max(10, 1.6 * Math.max(m.un, m.un2 ?? 0, ...pts.map((p) => p.x))), 10)
+  const xEnd = Number(x.to) * (1 - NAME_ROOM.x)
+  const srpcs = [m.srpc1, m.srpc2].filter((c): c is Srpc => !!c)
   const ys = pts.map((p) => p.y)
-  const yHi = Math.max(1, Math.max(...ys) * 1.4)
-  const lows = [m.srpc1, m.srpc2].filter((c): c is Srpc => !!c).map((c) => inflationAt(c, xHi)).filter(Number.isFinite)
-  const yLo = Math.min(0, ...ys, ...lows)
-  return fitted(0, xHi, yLo, yHi, 10)
+  const hi = Math.max(...ys)
+  // Down to where the curves end on the right, and a little under the lowest point.
+  const lows = srpcs.map((c) => inflationAt(c, xEnd)).filter(Number.isFinite)
+  let lo = Math.min(0, ...lows, ...ys)
+  if (Math.min(...ys) < 0) lo = Math.min(lo, Math.min(...ys) - 0.05 * (hi - lo))
+  let top = Math.max(1, hi + 0.4 * (hi - Math.min(0, ...ys)))
+  for (const c of srpcs) {
+    const on = pts.filter((p) => p.x > c.c && Math.abs(inflationAt(c, p.x) - p.y) < 1e-6 * Math.max(1, Math.abs(p.y)))
+    if (on.length) top = topFor(c, on.reduce((a, b) => (b.x < a.x ? b : a)), Number(x.to), lo, top)
+  }
+  const y = niceAxis(lo, top, 10)
+  return { xFrom: x.from, xTo: x.to, xStep: x.step, yFrom: y.from, yTo: y.to, yStep: y.step }
 }
 
 /** The axes drawn, and anything typed into their ranges to fix. */
@@ -133,11 +181,13 @@ const ARROWS_AT: Record<number, number[]> = { 0: [], 1: [0.8], 2: [0.2, 0.8], 3:
  * `count` shift arrows, each from a point `t` of the way along a curve to
  * where `aim` says it goes, spread as AP graphs spread them but each moved
  * along till it's long enough to read and clear of the other curves, the
- * points and the x-axis (at `axis`), all in shares of the axes.
+ * points and the x-axis (at `axis`), all in shares of the axes, and of the
+ * numbers written on the grid (`onNumbers`).
  */
 function clearArrows(
   aim: (t: number) => { from: Point; to: Point } | null, count: number, color: string,
   avoid: Curve[], points: Point[], span: { x: number; y: number }, axis: number,
+  onNumbers: (from: Point, to: Point) => boolean,
 ): ArrowSpec[] {
   const unit = (p: Point) => ({ x: p.x / span.x, y: p.y / span.y })
   const ok = (a: { from: Point; to: Point }) => {
@@ -147,7 +197,7 @@ function clearArrows(
     if ((Math.min(a.from.y, a.to.y) - axis) / span.y < 0.03 && (Math.max(a.from.y, a.to.y) - axis) / span.y > -0.03) return false
     // The arrow, and a little past both its ends, crosses nothing.
     const reach: Curve = [-0.08, 1.08].map((k) => ({ x: a.from.x + (a.to.x - a.from.x) * k, y: a.from.y + (a.to.y - a.from.y) * k }))
-    if (avoid.some((c) => intersect(reach, c))) return false
+    if (avoid.some((c) => intersect(reach, c)) || onNumbers(a.from, a.to)) return false
     return points.every((p) => distanceTo(unit(p), f, g) > 0.05)
   }
   const options: { t: number; from: Point; to: Point }[] = []
@@ -191,7 +241,7 @@ export function buildPhillips(s: PhillipsSettings) {
   const box: Box = { x0: axes.x.start, x1: axisEnd(axes.x), y0: axes.y.start, y1: axisEnd(axes.y) }
   const span = { x: box.x1 - box.x0, y: box.y1 - box.y0 }
   // Curves stop a little short of the grid's top and right, leaving room for their names.
-  const drawBox: Box = numeric ? { ...box, x1: box.x1 - span.x * 0.06, y1: box.y1 - span.y * 0.07 } : { x0: 0, x1: 9.4, y0: 0.4, y1: 9.6 }
+  const drawBox: Box = numeric ? { ...box, x1: box.x1 - span.x * NAME_ROOM.x, y1: box.y1 - span.y * NAME_ROOM.y } : { x0: 0, x1: 9.4, y0: 0.4, y1: 9.6 }
   // Where the x-axis is, for shift arrows to keep off.
   const axisAt = box.y0 < 0 && box.y1 > 0 && numeric ? 0 : box.y0
   const onGraph = (p: Point | null): p is Point => !!p && p.x >= box.x0 - 1e-9 && p.x <= box.x1 + 1e-9 && p.y >= box.y0 - 1e-9 && p.y <= box.y1 + 1e-9
@@ -222,52 +272,6 @@ export function buildPhillips(s: PhillipsSettings) {
   const off = shown.filter((p) => !onGraph(p.at))
   if (off.length) notes.push(`${off.map((p) => wordsOf(s, p.key).text.trim() || 'A point').join(' and ')} ${off.length > 1 ? 'are' : 'is'} off the graph. Widen the axes${numeric ? '' : ' or make the movement smaller'}.`)
   const points: PointSpec[] = shown.filter((p) => onGraph(p.at)).map((p) => ({ at: p.at, name: wordsOf(s, p.key) }))
-
-  // Shift arrows: slanting across to a short-run curve that shifts up or down, straight across for the natural rate moving.
-  const arrows: ArrowSpec[] = []
-  const lrpcs = curves.filter((c) => c.color === ink.supply && c.pts.length === 2 && c.pts[0].x === c.pts[1].x).map((c) => c.pts)
-  const srpcs = s.srpc ? [c1, c2].filter((c) => c.length > 1) : []
-  const dots = [A, B, C].filter((p) => onGraph(p))
-  const inside = (p: Point) => p.x >= drawBox.x0 && p.x <= drawBox.x1 && p.y >= drawBox.y0 && p.y <= drawBox.y1
-  if (un2 !== null) {
-    const dx = un2 - un
-    const line = lrpcOf(un)
-    if (s.lrpc) {
-      arrows.push(...clearArrows((t) => {
-        const p = along(line, t).at
-        return { from: p, to: { x: p.x + dx, y: p.y } }
-      }, s.arrows, ink.supply, srpcs, dots, span, axisAt))
-    }
-    if (s.srpc && srpc2 && c1.length > 1) {
-      arrows.push(...clearArrows((t) => {
-        const p = along(c1, t).at
-        const q = { x: p.x + dx, y: p.y }
-        return inside(q) ? { from: p, to: q } : null
-      }, s.arrows, ink.demand, lrpcs, dots, span, axisAt))
-    }
-  } else if (s.srpc && srpc2 && c1.length > 1 && c2.length > 1) {
-    const up = srpc2.pe > srpc1.pe ? 1 : -1
-    arrows.push(...clearArrows((t) => {
-      const p = along(c1, t).at
-      const hit = intersect([p, { x: p.x + up * span.x, y: p.y + up * span.y }], c2)
-      return hit ? { from: p, to: hit } : null
-    }, s.arrows, ink.demand, lrpcs, dots, span, axisAt))
-  }
-
-  // An arrow from each point to the next, clear of the curve it moves along.
-  if (s.pathArrows) {
-    const step = (a: Point, b: Point, lift: number) => {
-      const v = { x: (b.x - a.x) / span.x, y: (b.y - a.y) / span.y }
-      const len = Math.hypot(v.x, v.y) || 1
-      // Lifted to the outside of the bend (up and right), as a share of the axes.
-      let n = { x: v.y / len, y: -v.x / len }
-      if (n.x + n.y < 0) n = { x: -n.x, y: -n.y }
-      const at = (t: number) => ({ x: a.x + (b.x - a.x) * t + n.x * lift * span.x, y: a.y + (b.y - a.y) * t + n.y * lift * span.y })
-      arrows.push({ from: at(0.18), to: at(0.82), color: ink.black })
-    }
-    if (B && onGraph(A) && onGraph(B) && (s.movement === 'along' || (s.movement === 'srpc' && s.cause === 'shock'))) step(A, B, s.movement === 'along' ? 0.035 : 0)
-    if (B && C && onGraph(B) && onGraph(C)) step(B, C, 0.025)
-  }
 
   // Dashed guides from the points to the axes, with the inflation and unemployment rates written there.
   const guides: GuideSpec[] = []
@@ -314,11 +318,75 @@ export function buildPhillips(s: PhillipsSettings) {
     points,
     marks,
     guides,
-    arrows,
+    arrows: [],
+  }
+
+  // An x-axis crossing the grid (deflation) has its numbers under it, on the grid, written over
+  // whatever runs through them: where they are, laid out once without arrows, for arrows to keep off.
+  const laid = numeric && spec.cross && box.y0 < 0 && box.y1 > 0 ? buildPanel(spec) : null
+  const numberBoxes = (laid?.numbers ?? []).map((n) => textBox(n, textWidth(n.text, laid!.fs), laid!.fs))
+  const onNumbers = (from: Point, to: Point) => {
+    if (!laid) return false
+    const a = laid.px(from)
+    const b = laid.px(to)
+    return numberBoxes.some((n) => crosses({ x1: a.x, y1: a.y, x2: b.x, y2: b.y }, { x0: n.x0 - 3, y0: n.y0 - 3, x1: n.x1 + 3, y1: n.y1 + 3 }))
+  }
+
+  // Shift arrows: slanting across to a short-run curve that shifts up or down, straight across for the natural rate moving.
+  const arrows: ArrowSpec[] = []
+  const lrpcs = curves.filter((c) => c.color === ink.supply && c.pts.length === 2 && c.pts[0].x === c.pts[1].x).map((c) => c.pts)
+  const srpcs = s.srpc ? [c1, c2].filter((c) => c.length > 1) : []
+  const dots = [A, B, C].filter((p) => onGraph(p))
+  const inside = (p: Point) => p.x >= drawBox.x0 && p.x <= drawBox.x1 && p.y >= drawBox.y0 && p.y <= drawBox.y1
+  if (un2 !== null) {
+    const dx = un2 - un
+    const line = lrpcOf(un)
+    if (s.lrpc) {
+      arrows.push(...clearArrows((t) => {
+        const p = along(line, t).at
+        return { from: p, to: { x: p.x + dx, y: p.y } }
+      }, s.arrows, ink.supply, srpcs, dots, span, axisAt, onNumbers))
+    }
+    if (s.srpc && srpc2 && c1.length > 1) {
+      arrows.push(...clearArrows((t) => {
+        const p = along(c1, t).at
+        const q = { x: p.x + dx, y: p.y }
+        return inside(q) ? { from: p, to: q } : null
+      }, s.arrows, ink.demand, lrpcs, dots, span, axisAt, onNumbers))
+    }
+  } else if (s.srpc && srpc2 && c1.length > 1 && c2.length > 1) {
+    const up = srpc2.pe > srpc1.pe ? 1 : -1
+    arrows.push(...clearArrows((t) => {
+      const p = along(c1, t).at
+      const hit = intersect([p, { x: p.x + up * span.x, y: p.y + up * span.y }], c2)
+      return hit ? { from: p, to: hit } : null
+    }, s.arrows, ink.demand, lrpcs, dots, span, axisAt, onNumbers))
+  }
+
+  // An arrow from each point to the next, clear of the curve it moves along.
+  if (s.pathArrows) {
+    const drawn = curves.map((c) => c.pts).filter((c) => c.length > 1)
+    const step = (a: Point, b: Point, lift: number) => {
+      const v = { x: (b.x - a.x) / span.x, y: (b.y - a.y) / span.y }
+      const len = Math.hypot(v.x, v.y) || 1
+      // Lifted to the outside of the bend (up and right), as a share of the axes.
+      let n = { x: v.y / len, y: -v.x / len }
+      if (n.x + n.y < 0) n = { x: -n.x, y: -n.y }
+      const arrow = (side: number, t0: number, t1: number) => {
+        const at = (t: number) => ({ x: a.x + (b.x - a.x) * t + side * n.x * lift * span.x, y: a.y + (b.y - a.y) * t + side * n.y * lift * span.y })
+        return { from: at(t0), to: at(t1), color: ink.black }
+      }
+      // Through a number on the grid, it's shortened, or moved to the other side if that crosses no curve.
+      const options = [1, -1].flatMap((side) => [[0.18, 0.82], [0.18, 0.68], [0.32, 0.82], [0.25, 0.62], [0.38, 0.75]].map(([t0, t1]) => arrow(side, t0, t1)))
+      const clear = options.find((o) => !onNumbers(o.from, o.to) && !drawn.some((c) => intersect([o.from, o.to], c)))
+      arrows.push(onNumbers(options[0].from, options[0].to) && clear ? clear : options[0])
+    }
+    if (B && onGraph(A) && onGraph(B) && (s.movement === 'along' || (s.movement === 'srpc' && s.cause === 'shock'))) step(A, B, s.movement === 'along' ? 0.035 : 0)
+    if (B && C && onGraph(B) && onGraph(C)) step(B, C, 0.025)
   }
 
   return {
-    figure: buildFigure([spec]),
+    figure: buildFigure([{ ...spec, arrows }]),
     model: m,
     problems,
     notes,
@@ -348,7 +416,8 @@ function labelOf(s: PhillipsSettings, m: PhillipsModel) {
   if (s.titleMode === 'text' && s.title.trim()) return plainOf(s.title.trim())
   const curves = [s.srpc && 'short-run', s.lrpc && 'long-run'].filter(Boolean).join(' and ')
   const parts: string[] = []
-  if (s.movement === 'along') parts.push(`a movement ${s.along === 'up' || (m.B && m.B.x < m.A.x) ? 'up' : 'down'} the short-run curve from A to B`)
+  // Up or down from where B is: on a numbered graph, B is typed and the hidden direction setting means nothing.
+  if (s.movement === 'along' && m.B) parts.push(`a movement ${m.B.x < m.A.x ? 'up' : 'down'} the short-run curve from A to B`)
   if (s.movement === 'srpc' && m.srpc2) parts.push(`the short-run curve shifts ${m.srpc2.pe > m.srpc1.pe ? 'right' : 'left'}${s.cause === 'shock' ? ' after a supply shock' : ' as expected inflation changes'}`)
   if (s.movement === 'lrpc' && m.un2 !== null) parts.push(`the natural rate ${m.un2 > m.un ? 'rises' : 'falls'} and the long-run curve shifts ${m.un2 > m.un ? 'right' : 'left'}`)
   if (m.C) parts.push('in the long run the economy returns to the long-run curve at C')
