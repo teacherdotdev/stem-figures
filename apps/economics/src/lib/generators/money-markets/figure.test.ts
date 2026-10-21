@@ -63,7 +63,7 @@ describe('money markets', () => {
     expect(panel({ graph: 'funds' }).guides).toHaveLength(2)
   })
 
-  it('draws the ample reserves market: S_R on the flat bottom, D_R shifting down lowers the policy rate', () => {
+  it('draws the ample reserves market: SR on the flat bottom, DR shifting down lowers the policy rate', () => {
     const g = build({ graph: 'reserves', shift: 'demand', demandDir: 'decrease' })
     expect(g.before!.x).toBeCloseTo(RESERVES.ample.supply)
     expect(g.before!.y).toBeCloseTo(RESERVES.ample.low)
@@ -79,7 +79,7 @@ describe('money markets', () => {
       expect(a.x1).toBe(a.x2)
       expect(a.y2).toBeGreaterThan(a.y1)
     }
-    // Two dashed guides across to PR₁ and PR₂, none down S_R.
+    // Two dashed guides across to PR₁ and PR₂, none down SR.
     expect(p.guides).toHaveLength(2)
     for (const l of p.guides) expect(l.y1).toBe(l.y2)
   })
@@ -98,7 +98,7 @@ describe('money markets', () => {
         }
         const [a, b] = [slope(d1), slope(d2)]
         const line = { x1: a[0].x, y1: a[0].y, x2: a.at(-1)!.x, y2: a.at(-1)!.y }
-        // Both slopes on the same line, D_R2's corners further along it.
+        // Both slopes on the same line, DR₂'s corners further along it.
         for (const q of b) {
           const t = (q.y - line.y1) / (line.y2 - line.y1)
           expect([demandDir, demandSize, Math.abs(line.x1 + t * (line.x2 - line.x1) - q.x) < 0.5]).toEqual([demandDir, demandSize, true])
@@ -214,7 +214,7 @@ describe('money markets', () => {
     for (const t of tops) expect(p.labels.some((l) => l.blank && l.y < t.top && Math.abs((l.blank.x1 + l.blank.x2) / 2 - t.x) < 0.01)).toBe(true)
   })
 
-  it('puts both S_R names the same way over their curves in the limited reserves open-market purchase', () => {
+  it('puts both SR names the same way over their curves in the limited reserves open-market purchase', () => {
     const setup = SETUPS.find((x) => x.id === 'limited-purchase')!
     const p = buildMoneyMarkets(settingsFor(setup, moneyMarketsSettings.defaults, moneyMarketsSettings.defaults)).figure.panels[0]
     const names = ['SR1', 'SR2'].map((t) => p.labels.find((l) => l.runs?.map((r) => r.text).join('') === t)!)
@@ -390,6 +390,11 @@ describe('money markets', () => {
   })
 
   it('joins a shift number to a subscript already there', () => {
+    // The default names write the number alone under the line: DR₁, SLF₂.
+    expect(texts({ graph: 'reserves', shift: 'demand' })).toEqual(expect.arrayContaining(['SR', 'DR1', 'DR2']))
+    const runs = panel({ graph: 'reserves', shift: 'demand' }).labels.find((l) => l.runs?.map((r) => r.text).join('') === 'DR1')!.runs!
+    expect(runs.map((r) => [r.text, !!r.sub])).toEqual([['DR', false], ['1', true]])
+    // A name typed with a subscript has the number join it: D_R becomes D_{R1}.
     expect(curveNamed({ text: 'D_R', mode: 'text' }, 1, '1').text).toBe('D_{R1}')
     expect(curveNamed({ text: 'S_{LF}', mode: 'text' }, 2, '1').text).toBe('S_{LF2}')
     expect(curveNamed({ text: 'MS', mode: 'text' }, 2, '1').text).toBe('MS_2')

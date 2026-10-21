@@ -48,8 +48,8 @@ export const moneyMarketsSettings = defineSettings({
   numberFrom: choice(NUMBER_FROMS, '1'),
   ...labels({
     msLabel: 'MS', mdLabel: 'MD', iLabel: 'i',
-    slfLabel: 'S_{LF}', dlfLabel: 'D_{LF}', rLabel: 'r',
-    srLabel: 'S_R', drLabel: 'D_R', prLabel: 'PR',
+    slfLabel: 'SLF', dlfLabel: 'DLF', rLabel: 'r',
+    srLabel: 'SR', drLabel: 'DR', prLabel: 'PR',
     qLabel: 'Q', eLabel: 'E',
     moneyX: 'Quantity of money', moneyY: 'Nominal interest rate',
     fundsX: 'Quantity of loanable funds', fundsY: 'Real interest rate',
