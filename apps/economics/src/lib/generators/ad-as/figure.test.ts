@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest'
+import { textBox } from '$shared/graph/labels'
+import { runsWidth } from '$shared/graph/runs'
 import { overlaps } from '$lib/graph/testing'
 import { buildAdAs } from './figure'
 import { AS_SHAPES, LABEL_KEYS, SHIFTS, STARTS, adAsSettings, type AdAsSettings } from './settings'
@@ -7,6 +9,43 @@ import { SETUPS, settingsFor } from './setups'
 const build = (over: Partial<AdAsSettings> = {}) => buildAdAs(adAsSettings.tidy({ ...adAsSettings.defaults, ...over }))
 const panel = (over: Partial<AdAsSettings> = {}) => build(over).figure.panels[0]
 const texts = (over: Partial<AdAsSettings>) => panel(over).labels.map((l) => l.runs?.map((r) => r.text).join('') ?? '')
+
+type Panel = ReturnType<typeof panel>
+type Pt = { x: number; y: number }
+/** Each curve drawn, as the segments of its path. */
+const curveSegments = (p: Panel) =>
+  p.curves.flatMap((c) =>
+    c.paths.flatMap((d) => {
+      const pts = [...d.matchAll(/[ML](-?[\d.]+),(-?[\d.]+)/g)].map((m) => ({ x: +m[1], y: +m[2] }))
+      return pts.slice(1).map((q, k) => [pts[k], q] as [Pt, Pt])
+    }),
+  )
+/** Whether two segments cross, short of their ends. */
+function cross([a, b]: [Pt, Pt], [c, d]: [Pt, Pt]) {
+  const den = (b.x - a.x) * (d.y - c.y) - (b.y - a.y) * (d.x - c.x)
+  if (!den) return false
+  const t = ((c.x - a.x) * (d.y - c.y) - (c.y - a.y) * (d.x - c.x)) / den
+  const u = ((c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x)) / den
+  return t > 0.001 && t < 0.999 && u > 0.001 && u < 0.999
+}
+/** How near a segment comes to a label's box, sampled along it. */
+function gapTo([a, b]: [Pt, Pt], box: { x0: number; y0: number; x1: number; y1: number }) {
+  let gap = Infinity
+  for (let t = 0; t <= 1; t += 0.01) {
+    const x = a.x + (b.x - a.x) * t
+    const y = a.y + (b.y - a.y) * t
+    gap = Math.min(gap, Math.hypot(Math.max(box.x0 - x, 0, x - box.x1), Math.max(box.y0 - y, 0, y - box.y1)))
+  }
+  return gap
+}
+/** The equilibrium names (E, E₁, E₂) that come within 3 of a curve or a guide. */
+function crowdedNames(p: Panel) {
+  const lines = [...curveSegments(p), ...p.guides.map((g) => [{ x: g.x1, y: g.y1 }, { x: g.x2, y: g.y2 }] as [Pt, Pt])]
+  return p.labels
+    .filter((l) => l.runs && /^E\d?$/.test(l.runs.map((r) => r.text).join('')))
+    .filter((l) => lines.some((s) => gapTo(s, textBox(l, runsWidth(l.runs!, p.labelFs), p.labelFs)) < 3))
+    .map((l) => l.runs!.map((r) => r.text).join(''))
+}
 
 describe('AD–AS model', () => {
   it('meets AD, SRAS and LRAS at one point in long-run equilibrium', () => {
@@ -71,6 +110,35 @@ describe('AD–AS model', () => {
     expect(panel({ lrasShift: 'right', arrows: 3 }).arrows).toHaveLength(3)
   })
 
+  it('draws shift arrows crossing no other curve, fewer of them where there is room for fewer', () => {
+    for (const setup of SETUPS) {
+      const p = buildAdAs(settingsFor(setup, adAsSettings.defaults, adAsSettings.defaults)).figure.panels[0]
+      const crossing = p.arrows.filter((a) => curveSegments(p).some((s) => cross([{ x: a.x1, y: a.y1 }, { x: a.x2, y: a.y2 }], s)))
+      expect([setup.id, crossing]).toEqual([setup.id, []])
+    }
+    // SRAS following LRAS right has room for one arrow left of both LRAS lines.
+    const growth = panel({ lrasShift: 'right', srasShift: 'full' })
+    expect(growth.arrows.filter((a) => a.color === growth.curves[2].color)).toHaveLength(1)
+  })
+
+  it('puts each equilibrium name clear of the curves and guides through its point', () => {
+    for (const setup of SETUPS) {
+      for (const labelSize of ['small', 'medium', 'large'] as const) {
+        const s = settingsFor(setup, adAsSettings.defaults, { ...adAsSettings.defaults, labelSize })
+        expect([setup.id, labelSize, crowdedNames(buildAdAs(s).figure.panels[0])]).toEqual([setup.id, labelSize, []])
+      }
+    }
+    for (const asShape of AS_SHAPES) {
+      for (const start of STARTS) {
+        for (const adShift of SHIFTS) {
+          for (const srasShift of SHIFTS) {
+            expect([asShape, start, adShift, srasShift, crowdedNames(panel({ asShape, start, adShift, srasShift }))]).toEqual([asShape, start, adShift, srasShift, []])
+          }
+        }
+      }
+    }
+  })
+
   it('shifts the whole three-range curve sideways', () => {
     const a = build({ asShape: 'three', start: 'recession' })
     const b = build({ asShape: 'three', start: 'recession', srasShift: 'right' })
@@ -97,6 +165,19 @@ describe('AD–AS model', () => {
     expect(texts({ look: 'numeric', callout: true })).toEqual(expect.arrayContaining(['price level = 90,', 'real GDP = 8,800']))
     // Straight from row to row, too.
     expect(build({ look: 'numeric', smooth: false }).equilibrium).toEqual({ x: 8800, y: 90 })
+  })
+
+  it('names both ends of the gap braced, even with no guides', () => {
+    const numbered = SETUPS.find((s) => s.id === 'numbered')!
+    const p = buildAdAs(settingsFor(numbered, adAsSettings.defaults, adAsSettings.defaults)).figure.panels[0]
+    const at = (t: string) => p.labels.find((l) => l.runs?.map((r) => r.text).join('') === t)
+    expect(p.guides).toHaveLength(0)
+    expect(p.braces).toHaveLength(1)
+    // Yₑ at 8,800 and Y_f at 9,500, the brace's ends.
+    expect(at('Ye')!.x).toBeCloseTo(p.px({ x: 8800, y: 60 }).x, 0)
+    expect(at('Yf')!.x).toBeCloseTo(p.px({ x: 9500, y: 60 }).x, 0)
+    // With no guides and no brace, output at equilibrium isn't written.
+    expect(texts({ look: 'numeric', guides: false, brace: false })).not.toContain('Ye')
   })
 
   it('writes a typed callout, or names the equilibrium on a schematic graph', () => {
