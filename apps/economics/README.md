@@ -99,8 +99,9 @@ with dashed guides, shift arrows (`shifts.ts`), braces and callouts.
 touches nothing, and any label can be a blank line for students.
 `figure.ts` puts one or two panels side by side with dashed lines across;
 `EconFigure.svelte` draws them. `settings.ts` has the settings every graph
-shares (schematic or numbered, color or black and white, axis words) with
-`LookSettings` and `NumberSettings` as their groups; `fit.ts` fits numbered
+shares (schematic or numbered, color or black and white, axis words):
+`AxesPicker` for schematic or numbered, in a generator's first card, and
+`LookSettings` and `NumberSettings` as settings groups; `fit.ts` fits numbered
 axes to the data. In a label, `_` lowers the next letter and `_{…}` everything
 in the braces ($shared/graph/runs).
 

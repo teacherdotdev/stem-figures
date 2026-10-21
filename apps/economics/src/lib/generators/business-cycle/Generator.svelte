@@ -151,7 +151,7 @@
       bind:yTitle={s.yTitle} bind:yTitleMode={s.yTitleMode}
       placeholders={{ title: 'The business cycle', xTitle: 'Time', yTitle: 'Real GDP' }}
     />
-    <LookSettings bind:look={s.look} bind:ink={s.ink} bind:xEndCap={s.xEndCap} bind:yEndCap={s.yEndCap} numeric={false} />
+    <LookSettings bind:ink={s.ink} bind:xEndCap={s.xEndCap} bind:yEndCap={s.yEndCap} />
   {/snippet}
 
   {#snippet figure()}

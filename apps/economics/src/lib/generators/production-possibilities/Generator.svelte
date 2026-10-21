@@ -14,6 +14,7 @@
   import { generatorState } from '$shared/generatorState.svelte'
   import TitleSettings from '$shared/graph/TitleSettings.svelte'
   import { TITLE_MODES, type TitleMode } from '$shared/graph/axes'
+  import AxesPicker from '$lib/graph/AxesPicker.svelte'
   import LookSettings from '$lib/graph/LookSettings.svelte'
   import NumberSettings from '$lib/graph/NumberSettings.svelte'
   import { rangesOf, typeRange } from '$lib/graph/fit'
@@ -148,6 +149,7 @@
           {#each SETUPS as setup}<option value={setup.id}>{setup.name}</option>{/each}
         </select>
       </label>
+      <AxesPicker bind:look={s.look} />
       <div class="field-row">
         <label class="field">
           <span>Good on the x-axis</span>
@@ -329,7 +331,7 @@
       bind:yTitle={s.yTitle} bind:yTitleMode={s.yTitleMode}
       placeholders={{ title: 'Production possibilities', xTitle: 'Consumer goods', yTitle: 'Capital goods' }}
     />
-    <LookSettings bind:look={s.look} bind:ink={s.ink} bind:xEndCap={s.xEndCap} bind:yEndCap={s.yEndCap} />
+    <LookSettings bind:ink={s.ink} bind:xEndCap={s.xEndCap} bind:yEndCap={s.yEndCap} />
     {#if numeric}
       <NumberSettings
         {shown} read={read} problems={read.problems} {type}

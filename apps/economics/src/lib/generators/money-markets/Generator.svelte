@@ -193,7 +193,7 @@
       bind:yTitle={s[keys.y]} bind:yTitleMode={s[`${keys.y}Mode`]}
       placeholders={PLACEHOLDERS[clean.graph]}
     />
-    <LookSettings bind:look={s.look} bind:ink={s.ink} bind:xEndCap={s.xEndCap} bind:yEndCap={s.yEndCap} numeric={false} />
+    <LookSettings bind:ink={s.ink} bind:xEndCap={s.xEndCap} bind:yEndCap={s.yEndCap} />
   {/snippet}
 
   {#snippet figure()}

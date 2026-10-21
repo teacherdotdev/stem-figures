@@ -14,6 +14,7 @@
   import { generatorState } from '$shared/generatorState.svelte'
   import TitleSettings from '$shared/graph/TitleSettings.svelte'
   import type { TitleMode } from '$shared/graph/axes'
+  import AxesPicker from '$lib/graph/AxesPicker.svelte'
   import LookSettings from '$lib/graph/LookSettings.svelte'
   import NumberSettings from '$lib/graph/NumberSettings.svelte'
   import { rangesOf, typeRange } from '$lib/graph/fit'
@@ -129,6 +130,7 @@
           {#each SETUPS as setup}<option value={setup.id}>{setup.name}</option>{/each}
         </select>
       </label>
+      <AxesPicker bind:look={s.look} />
 
       <div class="checks">
         <label class="check"><input type="checkbox" bind:checked={s.srpc} /> SRPC</label>
@@ -262,7 +264,7 @@
       bind:yTitle={s.yTitle} bind:yTitleMode={s.yTitleMode}
       placeholders={{ title: 'The Phillips curve', xTitle: 'Unemployment rate', yTitle: 'Inflation rate' }}
     />
-    <LookSettings bind:look={s.look} bind:ink={s.ink} bind:xEndCap={s.xEndCap} bind:yEndCap={s.yEndCap} />
+    <LookSettings bind:ink={s.ink} bind:xEndCap={s.xEndCap} bind:yEndCap={s.yEndCap} />
     {#if numeric}
       <NumberSettings
         {shown} read={read} problems={read.problems} {type}
