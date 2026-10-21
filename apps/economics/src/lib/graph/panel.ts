@@ -329,7 +329,7 @@ export function buildPanel(spec: PanelSpec) {
   // the y-axis's level with its line, rather than nudged apart as the shared
   // grid does for a 0 written once.
   const liftedY = base.numbers.find((n) => n.anchor === 'end' && Math.abs(n.y - (base.xAxis.y - 5)) < 0.01)
-  const numbers = base.numbers.map((n) => {
+  const laid = base.numbers.map((n) => {
     // x-axis numbers are centered under their lines, but for the one where the axes cross, just left of it.
     const corner = Math.abs(n.x - (base.yAxis.x - 8)) < 0.01
     const onX = n.anchor === 'middle' || corner
@@ -340,8 +340,21 @@ export function buildPanel(spec: PanelSpec) {
     if (n === liftedY) return { ...n, x: n.x + dx, y: base.xAxis.y + fs * 0.35 + dy, text: text + yUnits }
     return { ...n, x: n.x + dx, y: n.y + dy, text: text + (onX ? xUnits : yUnits) }
   })
+  // Under an x-axis crossing the grid, its numbers sit on the graph: one a
+  // curve, guide, arrow or point runs through goes just above the axis
+  // instead, or is left out if something's there too.
+  const numberBox = (n: (typeof laid)[number]) => textBox({ x: n.x, y: n.y, anchor: n.anchor }, textWidth(n.text, fs), fs)
+  const inTheWay = (b: Box) =>
+    [...drawn, ...guides, ...arrows].some((l) => crosses(l, b)) || dots.some((d) => d.x > b.x0 - DOT_R && d.x < b.x1 + DOT_R && d.y > b.y0 - DOT_R && d.y < b.y1 + DOT_R)
+  const numbers = !xInside
+    ? laid
+    : laid.flatMap((n) => {
+        if (n.anchor !== 'middle' || !inTheWay(numberBox(n))) return [n]
+        const above = { ...n, y: base.xAxis.y + dy - 6 }
+        return inTheWay(numberBox(above)) ? [] : [above]
+      })
   if (xInside) {
-    for (const n of numbers) place.keep(textBox({ x: n.x, y: n.y, anchor: n.anchor }, textWidth(n.text, fs), fs))
+    for (const n of numbers) place.keep(numberBox(n))
     for (const l of sideLabels) place.keep(textBox(l, l.runs ? runsWidth(l.runs, LFS) : SIDE_BLANK_W, LFS))
   }
 
