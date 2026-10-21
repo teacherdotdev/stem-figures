@@ -7,18 +7,20 @@
   interface Props {
     /** left out on the directory, which is titled by the site name alone */
     title?: string
+    /** the whole title, in place of "<title> | <site name>" (the directory's) */
+    headTitle?: string
     description: string
     path: string
-    /** the social card image: a site path like `/og/punnett-square.png`, or a full URL */
+    /** the social card image: a site path like `/og/supply-demand.png`, or a full URL */
     image?: string
     /** what the image shows, for people who can't see it */
     imageAlt?: string
     /** one or more schema.org objects, each written in its own script tag */
     jsonLd?: object | object[]
   }
-  let { title = '', description, path, image, imageAlt, jsonLd }: Props = $props()
+  let { title = '', headTitle, description, path, image, imageAlt, jsonLd }: Props = $props()
 
-  const fullTitle = $derived(title ? `${title} | ${SITE_NAME}` : SITE_NAME)
+  const fullTitle = $derived(headTitle ?? (title ? `${title} | ${SITE_NAME}` : SITE_NAME))
   const url = $derived(`${SITE_URL}${path}`)
   const imageUrl = $derived(image ? (/^https?:\/\//.test(image) ? image : `${SITE_URL}${image.startsWith('/') ? '' : '/'}${image}`) : '')
 

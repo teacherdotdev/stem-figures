@@ -6,11 +6,15 @@
   import { page } from '$app/state'
   import { findGenerator } from '$lib/generators/index'
   import Footer from '$lib/site/Footer.svelte'
+  import GeneratorLead from '$lib/site/GeneratorLead.svelte'
   import Help from '$lib/site/Help.svelte'
   import RequestDialog from '$shared/RequestDialog.svelte'
+  import { setGeneratorLead } from '$shared/generatorLead'
   import TopBar from '$lib/site/TopBar.svelte'
 
   let { children }: { children: Snippet } = $props()
+  // Each generator's settings open with what it makes and its examples.
+  setGeneratorLead(GeneratorLead)
 
   // Cloudflare Web Analytics beacon; the token is set in Vercel's production env only.
   const beacon = import.meta.env.CF_BEACON_TOKEN
