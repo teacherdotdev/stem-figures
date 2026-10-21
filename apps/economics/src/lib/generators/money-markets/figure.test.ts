@@ -88,22 +88,20 @@ describe('money markets', () => {
     for (const demandDir of DIRECTIONS) {
       for (const demandSize of SHIFT_SIZES) {
         const p = panel({ graph: 'reserves', shift: 'demand', demandDir, demandSize })
-        const [d1, d2] = p.curves.slice(0, 2).map((c) => segmentsOf(c.paths).flatMap((l) => [{ x: l.x1, y: l.y1 }]))
-        // The points of each curve on its slope, clear of its round corners.
-        const slope = (pts: { x: number; y: number }[]) => {
+        const [d1, d2] = p.curves.slice(0, 2).map((c) => [...c.paths.join(' ').matchAll(/([\d.]+),([\d.]+)/g)].map((m) => ({ x: +m[1], y: +m[2] })))
+        // Each curve's sharp corners: the right end of its flat top and the left end of its flat bottom.
+        const corners = (pts: { x: number; y: number }[]) => {
           const top = Math.min(...pts.map((q) => q.y))
           const bottom = Math.max(...pts.map((q) => q.y))
-          const room = (bottom - top) * 0.25
-          return pts.filter((q) => q.y > top + room && q.y < bottom - room)
+          return [pts.filter((q) => q.y === top).at(-1)!, pts.find((q) => q.y === bottom)!]
         }
-        const [a, b] = [slope(d1), slope(d2)]
-        const line = { x1: a[0].x, y1: a[0].y, x2: a.at(-1)!.x, y2: a.at(-1)!.y }
-        // Both slopes on the same line, DR₂'s corners further along it.
-        for (const q of b) {
-          const t = (q.y - line.y1) / (line.y2 - line.y1)
-          expect([demandDir, demandSize, Math.abs(line.x1 + t * (line.x2 - line.x1) - q.x) < 0.5]).toEqual([demandDir, demandSize, true])
+        const [[a1, a2], [b1, b2]] = [corners(d1), corners(d2)]
+        // DR₂'s corners on DR₁'s slope, further along it.
+        for (const q of [b1, b2]) {
+          const x = a1.x + ((q.y - a1.y) / (a2.y - a1.y)) * (a2.x - a1.x)
+          expect([demandDir, demandSize, Math.abs(x - q.x) < 0.5]).toEqual([demandDir, demandSize, true])
         }
-        expect(Math.abs(b[0].x - a[0].x)).toBeGreaterThan(5)
+        expect(Math.abs(b1.x - a1.x)).toBeGreaterThan(5)
       }
     }
   })
