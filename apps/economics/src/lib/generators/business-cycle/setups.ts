@@ -12,7 +12,7 @@ const ALL = (mode: 'text' | 'blank' | 'none') => Object.fromEntries(LABEL_KEYS.m
 export const SETUPS: Setup[] = [
   { id: 'classic', name: 'Peak, trough, expansion, contraction', settings: {} },
   { id: 'quiz', name: 'Quiz: a letter at each point', settings: { style: 'letters', dots: true, every: true } },
-  { id: 'shaded', name: 'Irregular cycles, recessions shaded', settings: { cycles: 3, irregularity: 0.6, seed: 8, shade: true, recessionLabel: 'Recession', recessionLabelMode: 'text', contractionLabelMode: 'none', trendLabelMode: 'text' } },
+  { id: 'shaded', name: 'Irregular cycles, recessions shaded', settings: { cycles: 3, irregularity: 0.6, seed: 8, shade: true, recessionLabelMode: 'text', contractionLabelMode: 'none', trendLabelMode: 'text' } },
   { id: 'one-cycle', name: 'One cycle, every term', settings: { cycles: 1, start: 'peak', amplitude: 1.8, ...ALL('text') } },
   { id: 'blank', name: 'Students label it (blank lines)', settings: { dots: true, ...ALL('blank'), recessionLabelMode: 'none', recoveryLabelMode: 'none', trendLabelMode: 'none' } },
   { id: 'none', name: 'No labels', settings: { ...ALL('none') } },

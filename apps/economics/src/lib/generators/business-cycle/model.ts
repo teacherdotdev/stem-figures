@@ -4,7 +4,8 @@
 // the same; irregular cycles vary each swing's height and length, from a
 // seed, so the same settings always draw the same wave. Where real GDP
 // peaks and bottoms out, and the stretches where it rises and falls between
-// them, are worked out from the wave as drawn, trend and all.
+// them, are worked out from the wave as drawn, trend and all; a wave asked
+// to start or end at a peak or trough is fitted so it does, trend and all.
 
 import type { Point } from '$shared/graph/grid'
 
@@ -54,26 +55,57 @@ export function random(seed: number) {
  * they wouldn't otherwise), with its turning points and phases.
  */
 export function waveOf(w: WaveSettings, { x0, x1, lo, hi, trendFrom = x0, trendTo = x1 }: { x0: number; x1: number; lo: number; hi: number; trendFrom?: number; trendTo?: number }) {
-  const from = START_AT[w.start]
-  const to = from + 2 * w.cycles
-  const count = Math.ceil(to) + 1
   // Each swing's height (troughs below the trend, peaks above) and each half cycle's length.
   const next = random(w.seed)
   const heights: number[] = []
   const lengths: number[] = []
-  for (let k = 0; k <= count; k++) {
+  for (let k = 0; k <= Math.ceil(START_AT[w.start] + 2 * w.cycles) + 1; k++) {
     heights.push((k % 2 ? 1 : -1) * w.amplitude * (1 + w.irregularity * HEIGHT_VARIES * (2 * next() - 1)))
     lengths.push(1 + w.irregularity * LENGTH_VARIES * (2 * next() - 1))
   }
+  // And a fall into the first trough, for a wave that starts at it.
+  heights.unshift(w.amplitude)
+  lengths.unshift(lengths[0])
+  const from = START_AT[w.start] + 1
+  const to = from + 2 * w.cycles
+  const count = heights.length - 1
   const starts = [0]
   for (let k = 0; k < count; k++) starts.push(starts[k] + lengths[k])
-  // Time in half cycles' worth of length, from the first trough.
+  // Time in half cycles' worth of length, from the high before the first trough.
   const timeAt = (h: number) => {
     const k = Math.min(count - 1, Math.floor(h))
     return starts[k] + (h - k) * lengths[k]
   }
-  const t0 = timeAt(from)
-  const t1 = timeAt(to)
+  // Where real GDP turns by the swings' high or low `k`, with the trend
+  // rising `g` for each unit of time: a peak a little after the high, the
+  // trend carrying it on up until the fall is steeper than the trend; a
+  // trough a little before the low. None if the fall is never that steep.
+  const turnNear = (k: number, g: number) => {
+    const peak = heights[k] > 0
+    const j = peak ? k : k - 1
+    const steepest = (Math.abs(heights[j + 1] - heights[j]) * Math.PI) / 2 / lengths[j]
+    if (g >= steepest) return null
+    const f = Math.asin(g / steepest) / Math.PI
+    return peak ? starts[k] + f * lengths[k] : starts[k] - f * lengths[k - 1]
+  }
+  // A wave asked to start (or end) at a peak or trough starts (or ends)
+  // where real GDP turns, trend and all, so one cycle from a peak runs to
+  // the next peak. How steep the trend is in time depends on how much time
+  // fits across, which depends on where the turns are: it settles in a few rounds.
+  let t0 = timeAt(from)
+  let t1 = timeAt(to)
+  const turnsAt = { start: false, end: false }
+  for (let i = 0; i < 40 && (Number.isInteger(from) || Number.isInteger(to)); i++) {
+    const g = (w.trend * (x1 - x0)) / (t1 - t0)
+    const a = Number.isInteger(from) ? turnNear(from, g) : null
+    const b = Number.isInteger(to) ? turnNear(to, g) : null
+    turnsAt.start = a !== null
+    turnsAt.end = b !== null
+    const moved = Math.abs((a ?? timeAt(from)) - t0) + Math.abs((b ?? timeAt(to)) - t1)
+    t0 = a ?? timeAt(from)
+    t1 = b ?? timeAt(to)
+    if (moved < 1e-12) break
+  }
   const perX = (t1 - t0) / (x1 - x0)
   const swing = (x: number) => {
     const t = t0 + (x - x0) * perX
@@ -117,14 +149,18 @@ export function waveOf(w: WaveSettings, { x0, x1, lo, hi, trendFrom = x0, trendT
     if (x - x0 < (x1 - x0) * 1e-3 || x1 - x < (x1 - x0) * 1e-3) continue
     turns.push({ x, y: y(x), kind: sa > 0 ? 'peak' : 'trough' })
   }
-  // The stretches between them.
-  const edges = [x0, ...turns.map((t) => t.x), x1]
+  // Unless it was asked to start or end at a turn, and does.
+  if (turnsAt.start) turns.unshift({ x: x0, y: y(x0), kind: heights[from] > 0 ? 'peak' : 'trough' })
+  if (turnsAt.end) turns.push({ x: x1, y: y(x1), kind: heights[to] > 0 ? 'peak' : 'trough' })
+  // The stretches between them, or between one and the graph's end.
+  const turning = new Set(turns.map((t) => t.x))
+  const edges = [...new Set([x0, ...turning, x1])]
   const phases: Phase[] = []
   for (let k = 1; k < edges.length; k++) {
     const a = edges[k - 1]
     const b = edges[k]
     if (b - a < 1e-6) continue
-    phases.push({ x0: a, x1: b, rising: rawSlope((a + b) / 2) > 0, whole: k > 1 && k < edges.length - 1 })
+    phases.push({ x0: a, x1: b, rising: rawSlope((a + b) / 2) > 0, whole: turning.has(a) && turning.has(b) })
   }
   const falls = xs.some((x) => rawSlope(x) < 0)
 

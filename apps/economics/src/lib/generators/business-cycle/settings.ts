@@ -18,6 +18,15 @@ export const CYCLES = [1, 1.5, 2, 2.5, 3, 3.5, 4] as const
 
 export const MAX_SEED = 999999
 
+/** The look's fields, numbered ranges and all, though the graph is only ever drawn schematic. */
+const look = lookFields({
+  xTitle: 'Time', yTitle: 'Real GDP',
+  range: { xFrom: '0', xTo: '15', xStep: '1', yFrom: '0', yTo: '10', yStep: '1' },
+})
+/** Those of them the graph never reads, kept at their defaults so an address or a preset can't set them to no effect. */
+const UNREAD = ['look', 'gridlines', 'xFrom', 'xTo', 'xStep', 'yFrom', 'yTo', 'yStep', 'xEvery', 'yEvery', 'xLabel', 'xLabelMode', 'yLabel', 'yLabelMode', 'xStartCap', 'yStartCap', 'minor'] as const
+const unread = Object.fromEntries(UNREAD.map((key) => [key, look[key].fallback])) as { [K in (typeof UNREAD)[number]]: (typeof look)[K]['fallback'] }
+
 export const businessCycleSettings = defineSettings(
   {
     cycles: number({ min: 1, max: 4, fallback: 1.5 }),
@@ -44,12 +53,9 @@ export const businessCycleSettings = defineSettings(
       recoveryLabel: ['Recovery', 'none'],
       trendLabel: ['Long-run trend', 'none'],
     }),
-    ...lookFields({
-      xTitle: 'Time', yTitle: 'Real GDP',
-      range: { xFrom: '0', xTo: '15', xStep: '1', yFrom: '0', yTo: '10', yStep: '1' },
-    }),
+    ...look,
   },
-  (s) => ({ ...s, cycles: Math.round(s.cycles * 2) / 2, seed: Math.round(s.seed) }),
+  (s) => ({ ...s, ...unread, cycles: Math.round(s.cycles * 2) / 2, seed: Math.round(s.seed) }),
 )
 
 export type BusinessCycleSettings = typeof businessCycleSettings.defaults

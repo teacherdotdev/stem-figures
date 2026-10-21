@@ -47,10 +47,40 @@ describe('business cycle', () => {
   })
 
   it('starts where it is asked to, and runs as many cycles', () => {
-    expect(kinds({ start: 'peak', cycles: 1, trend: 0 })).toEqual(['trough'])
-    expect(kinds({ start: 'trough', cycles: 1, trend: 0 })).toEqual(['peak'])
+    expect(kinds({ start: 'peak', cycles: 1, trend: 0 })).toEqual(['peak', 'trough', 'peak'])
+    expect(kinds({ start: 'trough', cycles: 1, trend: 0 })).toEqual(['trough', 'peak', 'trough'])
+    expect(kinds({ start: 'peak', cycles: 1.5 })).toEqual(['peak', 'trough', 'peak', 'trough'])
     expect(kinds({ start: 'falling', cycles: 1 })).toEqual(['trough', 'peak'])
     for (const cycles of CYCLES) expect(kinds({ cycles, start: 'rising' }).filter((k) => k === 'peak')).toHaveLength(Math.ceil(cycles))
+  })
+
+  it('starts and ends right at a peak or trough when asked to, whatever the trend', () => {
+    for (const start of ['peak', 'trough'] as const) {
+      for (const trend of [0, 0.3, 0.6]) {
+        for (const irregularity of [0, 1]) {
+          const w = build({ start, cycles: 2, trend, irregularity, seed: 3 }).wave
+          // Level at both ends, turning there: no part rise or fall cut off by the graph's edge.
+          const slope = (x: number) => (w.y(x + 1e-4) - w.y(x - 1e-4)) / 2e-4
+          expect(Math.abs(slope(SPAN.x0 + 1e-4))).toBeLessThan(0.01)
+          expect(Math.abs(slope(SPAN.x1 - 1e-4))).toBeLessThan(0.01)
+          expect([w.turns[0].kind, w.turns.at(-1)!.kind]).toEqual([start, start])
+          expect([w.turns[0].x, w.turns.at(-1)!.x]).toEqual([SPAN.x0, SPAN.x1])
+          expect(w.phases.every((p) => p.whole)).toBe(true)
+        }
+      }
+    }
+    // Unless the trend is so steep that real GDP never falls.
+    expect(build({ start: 'peak', trend: 0.6, amplitude: 0.3 }).wave.turns).toEqual([])
+  })
+
+  it('draws one whole cycle, every term placed, for "One cycle, every term"', () => {
+    const s = settingsFor(SETUPS.find((x) => x.id === 'one-cycle')!, businessCycleSettings.defaults, businessCycleSettings.defaults)
+    const g = buildBusinessCycle(s)
+    expect(g.wave.turns.map((t) => t.kind)).toEqual(['peak', 'trough', 'peak'])
+    const t = g.figure.panels[0].labels.map((l) => l.runs?.map((r) => r.text).join(''))
+    for (const term of ['Contraction', 'Recession', 'Trough', 'Recovery', 'Expansion', 'Long-run trend']) expect(t.filter((x) => x === term)).toHaveLength(1)
+    expect(t.filter((x) => x === 'Peak')).toHaveLength(2)
+    expect(g.notes).toEqual([])
   })
 
   it('keeps the wave and trend on the graph whatever the shape', () => {
@@ -134,6 +164,17 @@ describe('business cycle', () => {
     }
   })
 
+  it('keeps a phase named once close to the wave on steep, narrow irregular cycles', () => {
+    // Each of these once put Recession far under its trough, with a long arrow up to the wave.
+    for (const seed of [2, 17]) {
+      const p = panel({ cycles: 3, irregularity: 0.6, seed, shade: true, recessionLabelMode: 'text', recoveryLabelMode: 'text', trendLabelMode: 'text' })
+      const name = p.labels.find((l) => l.runs?.[0].text === 'Recession')!
+      const arrow = p.leaders.reduce((a, b) => (Math.hypot(a.x1 - name.x, a.y1 - name.y) < Math.hypot(b.x1 - name.x, b.y1 - name.y) ? a : b))
+      expect(Math.hypot(arrow.x2 - arrow.x1, arrow.y2 - arrow.y1)).toBeLessThan(50)
+      expect(p.crowded).toBe(0)
+    }
+  })
+
   it('says when naming every phase in every cycle is too crowded', () => {
     const all = Object.fromEntries(LABEL_KEYS.map((k) => [`${k}Mode`, 'text']))
     expect(build({ cycles: 4, every: true, ...all, labelSize: 'large' }).notes.join(' ')).toMatch(/crowded/)
@@ -147,5 +188,12 @@ describe('business cycle', () => {
     expect(businessCycleSettings.fromParams(new URLSearchParams(businessCycleSettings.toQuery(s)))).toEqual(s)
     // Cycles come in halves.
     expect(businessCycleSettings.fromParams(new URLSearchParams('cycles=2.3')).cycles).toBe(2.5)
+  })
+
+  it('ignores numbered axes in an address, the graph being only ever schematic', () => {
+    const s = businessCycleSettings.fromParams(new URLSearchParams('look=numeric&gridlines=0&xTo=30&yStep=2&xEvery=2&minor=4&xStartCap=arrow'))
+    expect(s).toEqual(businessCycleSettings.defaults)
+    expect(businessCycleSettings.toQuery(s)).toBe('')
+    expect(businessCycleSettings.keyOf(businessCycleSettings.tidy({ ...s, look: 'numeric' }))).toBe(businessCycleSettings.keyOf(businessCycleSettings.defaults))
   })
 })
