@@ -31,11 +31,11 @@ export const SUPPLY_AT = { ample: 7, limited: 2.2 }
 const line = (at: number, slope: number) => lineThrough({ x: 0, y: at }, { x: 1, y: at + slope }, { x0: -FAR, x1: FAR, y0: -FAR, y1: FAR })
 const upright = (x: number): Curve => [{ x, y: -FAR }, { x, y: FAR }]
 
-/** What each graph's rate and quantity are called, in the readout. */
-const WORDS: Record<Graph, { rate: string; quantity: string; supply: string; demand: string }> = {
-  money: { rate: 'The nominal interest rate', quantity: 'the quantity of money', supply: 'Money supply', demand: 'money demand' },
-  funds: { rate: 'The real interest rate', quantity: 'the quantity of loanable funds', supply: 'Supply of loanable funds', demand: 'demand for loanable funds' },
-  reserves: { rate: 'The policy rate', quantity: 'the quantity of reserves', supply: 'Supply of reserves', demand: 'demand for reserves' },
+/** What each graph's curves and rate are called, in the figure's summary. */
+const WORDS: Record<Graph, { rate: string; supply: string; demand: string }> = {
+  money: { rate: 'The nominal interest rate', supply: 'Money supply', demand: 'money demand' },
+  funds: { rate: 'The real interest rate', supply: 'Supply of loanable funds', demand: 'demand for loanable funds' },
+  reserves: { rate: 'The policy rate', supply: 'Supply of reserves', demand: 'demand for reserves' },
 }
 
 const near = (a: number, b: number) => Math.abs(a - b) < 1e-6
@@ -154,15 +154,13 @@ export function buildMoneyMarkets(s: MoneyMarketsSettings) {
     arrows,
   }
 
-  const result = resultOf(s, e1, e2, anyShift, sMoves, dMoves, d2)
   return {
     figure: buildFigure([spec]),
     /** where the curves cross, before and after any shift */
     before: e1,
     after: e2,
     notes,
-    readout: onGraph(e1) && (!anyShift || onGraph(e2)) ? result.readout : [],
-    label: labelOf(s, result.summary),
+    label: labelOf(s, summaryOf(s, e1, e2, anyShift, sMoves, dMoves)),
   }
 }
 
@@ -229,36 +227,15 @@ function clearArrows(c: Curve, dx: number, count: number, others: Curve[], color
   })
 }
 
-/** What happens, in words: for the readout, and the figure's summary for screen readers. */
-function resultOf(s: MoneyMarketsSettings, e1: Point | null, e2: Point | null, anyShift: boolean, sMoves: boolean, dMoves: boolean, d2: Curve) {
+/** What happens, in words, for the figure's summary for screen readers. */
+function summaryOf(s: MoneyMarketsSettings, e1: Point | null, e2: Point | null, anyShift: boolean, sMoves: boolean, dMoves: boolean) {
   const w = WORDS[s.graph]
-  const readout: string[] = []
   const summary: string[] = []
   const dir = (d: string, up: string, down: string) => (d === 'increase' ? up : down)
   if (sMoves) summary.push(`${w.supply.toLowerCase()} ${dir(s.supplyDir, 'increases', 'decreases')}`)
   if (dMoves) summary.push(s.graph === 'reserves' ? `${w.demand} shifts ${dir(s.demandDir, 'up', 'down')}` : `${w.demand} ${dir(s.demandDir, 'increases', 'decreases')}`)
-  if (!e1 || !e2 || !anyShift) return { readout, summary }
-
-  const way = (a: number, b: number, up: string, down: string) => (near(a, b) ? 'stays the same' : b > a ? up : down)
-  const rateWay = way(e1.y, e2.y, 'rises', 'falls')
-  const qWay = way(e1.x, e2.x, 'rises', 'falls')
-  const names = (key: 'qLabel' | (typeof KEYS)[Graph]['rate']) => {
-    const n = wordsOf(s, key)
-    return n.mode === 'text' && n.text.trim() ? ` from ${plainOf(`${n.text.trim()}_1`)} to ${plainOf(`${n.text.trim()}_2`)}` : ''
-  }
-  readout.push(`${w.rate} ${rateWay}${near(e1.y, e2.y) ? '' : names(KEYS[s.graph].rate)}; ${w.quantity} ${qWay}${near(e1.x, e2.x) ? '' : names('qLabel')}`)
-  summary.push(`${w.rate.toLowerCase()} ${rateWay}`)
-
-  // The market for reserves: why the rate did or didn't move.
-  if (s.graph === 'reserves') {
-    // How far demand moved, and whether supply now crosses its flat bottom.
-    const onFloor = near(e2.y, RESERVES.low + d2[0].y - RESERVES.high)
-    if (sMoves && !dMoves && near(e1.y, e2.y)) readout.push('With ample reserves, the supply of reserves crosses the flat part of demand, so changing the quantity of reserves leaves the policy rate where it is.')
-    else if (sMoves && s.regime === 'ample' && !onFloor) readout.push('The supply of reserves now crosses the sloped part of demand: reserves are no longer ample.')
-    else if (sMoves && s.regime === 'limited' && onFloor) readout.push('The supply of reserves now crosses the flat part of demand: reserves have become ample.')
-    else if (dMoves && !sMoves && s.regime === 'ample') readout.push('With ample reserves, the Fed moves the policy rate by changing its administered rates, which shifts demand for reserves.')
-  }
-  return { readout, summary }
+  if (e1 && e2 && anyShift) summary.push(`${w.rate.toLowerCase()} ${near(e1.y, e2.y) ? 'stays the same' : e2.y > e1.y ? 'rises' : 'falls'}`)
+  return summary
 }
 
 /** The figure in words, for screen readers. */

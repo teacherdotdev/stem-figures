@@ -324,7 +324,7 @@ export function buildAdAs(s: AdAsSettings) {
     callout: calloutText,
     problems,
     notes,
-    readout: readoutOf({ e1, e2, shifted, numeric, gap, gapKind, yf1, yf2, lrasMoves, closed: !!gap && shifted && gap.e === e1 }),
+    readout: readoutOf({ e1, e2, shifted, numeric, gap, gapKind, yf1, yf2, lrasMoves }),
     label: labelOf(s, { adDx, asDx, lrasDx, gapKind }),
   }
 }
@@ -340,28 +340,19 @@ function calloutOf(s: AdAsSettings, e: Point | null, yf: number, tol: number): W
   return { text: Math.abs(e.x - yf) < tol ? 'Long-run equilibrium' : 'Short-run equilibrium', mode: 'text' }
 }
 
-/** What the graph shows, in words, for the settings panel. */
+/** A numbered graph's values, for the settings panel: the equilibrium, what changes it, and the gap braced. */
 function readoutOf(r: {
   e1: Point | null; e2: Point | null; shifted: boolean; numeric: boolean; gap: { y: number; yf: number } | null; gapKind: string | null
   yf1: number; yf2: number; lrasMoves: boolean
-  /** the gap braced is where the economy started, closed by the shift */
-  closed: boolean
 }) {
   const out: string[] = []
-  const way = (a: number, b: number, up: string, down: string) => (Math.abs(a - b) < 1e-6 * (Math.abs(a) + 1) ? 'stays the same' : b > a ? up : down)
-  if (r.numeric && r.e1) out.push(`Equilibrium: price level ${fmt(r.e1.y)}, real GDP ${fmt(r.e1.x)}`)
-  if (r.shifted && r.e1 && r.e2) {
-    out.push(
-      `Price level ${way(r.e1.y, r.e2.y, 'rises', 'falls')}${r.numeric ? ` (${fmt(r.e1.y)} to ${fmt(r.e2.y)})` : ''}; ` +
-        `real GDP ${way(r.e1.x, r.e2.x, 'rises', 'falls')}${r.numeric ? ` (${fmt(r.e1.x)} to ${fmt(r.e2.x)})` : ''}`,
-    )
-  }
-  if (r.lrasMoves) out.push(`Full-employment output ${r.yf2 > r.yf1 ? 'grows' : 'shrinks'}${r.numeric ? ` (${fmt(r.yf1)} to ${fmt(r.yf2)})` : ''}`)
+  if (!r.numeric) return out
+  if (r.e1) out.push(`Equilibrium: price level ${fmt(r.e1.y)}, real GDP ${fmt(r.e1.x)}`)
+  if (r.shifted && r.e2) out.push(`After the shift: price level ${fmt(r.e2.y)}, real GDP ${fmt(r.e2.x)}`)
+  if (r.lrasMoves) out.push(`Potential GDP: ${fmt(r.yf1)} to ${fmt(r.yf2)}`)
   if (r.gap) {
     const name = r.gapKind === 'recession' ? 'Recessionary gap' : 'Inflationary gap'
-    const size = r.numeric ? ` of ${fmt(Math.abs(r.gap.yf - r.gap.y))}` : ''
-    if (r.closed) out.push(`${name}${size} closed: output back to full employment`)
-    else out.push(r.numeric ? `${name}${size}: real GDP ${fmt(r.gap.y)}, potential ${fmt(r.gap.yf)}` : `${name}: output ${r.gapKind === 'recession' ? 'below' : 'above'} full employment`)
+    out.push(`${name} of ${fmt(Math.abs(r.gap.yf - r.gap.y))}: real GDP ${fmt(r.gap.y)}, potential ${fmt(r.gap.yf)}`)
   }
   return out
 }

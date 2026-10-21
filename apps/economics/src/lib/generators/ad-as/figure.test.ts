@@ -45,7 +45,6 @@ describe('AD–AS model', () => {
     expect(g.equilibrium!.y).toBeGreaterThan(g.e1!.y)
     // The gap braced is the one it started with.
     expect(g.gap!.kind).toBe('recession')
-    expect(g.readout.join(' ')).toMatch(/Recessionary gap closed/)
     expect(texts({ start: 'recession', adShift: 'full' })).toEqual(expect.arrayContaining(['AD1', 'AD2', 'E1', 'E2', 'PL1', 'PL2', 'Y1', 'Yf']))
   })
 
@@ -61,7 +60,6 @@ describe('AD–AS model', () => {
     expect(g.equilibrium!.y).toBeGreaterThan(5)
     expect(g.equilibrium!.x).toBeLessThan(5)
     expect(g.gap!.kind).toBe('recession')
-    expect(g.readout.join(' ')).toMatch(/Price level rises; real GDP falls/)
   })
 
   it('grows: LRAS right to a new Y_f, with SRAS following it there', () => {

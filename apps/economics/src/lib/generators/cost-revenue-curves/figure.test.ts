@@ -121,9 +121,8 @@ describe('a perfectly competitive firm', () => {
     expect(texts({ graph: 'perfect', price: 'profit', eqStyle: 'star' })).toContain('P*')
   })
 
-  it('says the firm shuts down below AVC, with no quantity made', () => {
+  it('shuts the firm down below AVC, with no quantity made', () => {
     const g = build({ graph: 'perfect', price: 'shutdown' })
-    expect(g.readout[0]).toMatch(/shuts down/)
     expect(texts({ graph: 'perfect', price: 'shutdown' })).not.toContain('q*')
     expect(g.figure.panels[0].regions).toHaveLength(0)
   })
@@ -182,7 +181,6 @@ describe('a monopoly', () => {
     expect(priceOn(d2, qSO)).toBeLessThan(atc(k2, qSO))
     expect(qSO).toBeLessThan(minATC(k2).q)
     expect(texts({ graph: 'monopoly', ...NATURAL, regulation: 'both' })).toEqual(expect.arrayContaining(['PM', 'QM', 'PSO', 'QSO', 'PFR', 'QFR']))
-    expect(build({ graph: 'monopoly', ...NATURAL, regulation: 'optimal' }).readout.join(' ')).toMatch(/P = MC.*a loss, so it would need a subsidy/)
     // Regulated to P = MC there's a loss to shade and no deadweight loss; at P = ATC, no profit but some deadweight loss.
     const optimal = firm({ graph: 'monopoly', ...NATURAL, regulation: 'optimal', profit: true, dwl: true })
     expect(optimal.labels.map((l) => l.runs?.map((r) => r.text).join(''))).toEqual(expect.arrayContaining(['Loss']))

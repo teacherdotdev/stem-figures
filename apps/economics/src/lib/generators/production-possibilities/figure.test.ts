@@ -53,18 +53,16 @@ describe('production possibilities curve', () => {
     expect(texts({ look: 'numeric', steps: true, points: 'A,on,0;B,on,0.5' })).toEqual(expect.arrayContaining(['−13.4', '+50']))
     // Straight, every step costs the same.
     const flat = build({ look: 'numeric', shape: 'straight', steps: true, points: 'A,on,0;B,on,0.5;C,on,1' })
-    expect(flat.readout[0]).toMatch(/each unit of consumer goods costs 1 capital goods/)
+    expect(flat.readout[0]).toMatch(/^Each unit of consumer goods costs 1 capital goods/)
     expect(build({ steps: true, points: 'A,on,0.5' }).notes[0]).toMatch(/at least two points/)
   })
 
-  it('says which country has the comparative and the absolute advantage', () => {
+  it("gives each country's opportunity costs", () => {
     const g = build({ countries: 'side', xTitle: 'Wheat', yTitle: 'Cloth' })
     expect(g.figure.panels).toHaveLength(2)
     expect(g.readout).toEqual([
       'Country A: each unit of wheat costs 0.5 cloth; each unit of cloth, 2 wheat',
       'Country B: each unit of wheat costs 1 cloth; each unit of cloth, 1 wheat',
-      'Comparative advantage: Country A in wheat, Country B in cloth',
-      'Absolute advantage: Country A in wheat, Country B in cloth',
     ])
     // Each panel captioned with its country, with where its curve meets the axes written there.
     expect(g.figure.panels[0].big.map((l) => l.runs?.map((r) => r.text).join(''))).toContain('Country A')

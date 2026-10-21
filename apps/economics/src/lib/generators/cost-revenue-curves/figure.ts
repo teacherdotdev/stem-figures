@@ -92,7 +92,6 @@ export function buildCostRevenue(s: CostRevenueSettings) {
   const ink = inks(s.ink === 'bw')
   const { costs: k, notes } = costsOf({ q: s.atcQ, cost: s.atcCost, slope: s.mcSlope, fixed: s.fixed })
   const w = (key: LabelKey) => wordsOf(s, key)
-  const readout: string[] = []
   const lowATC = minATC(k)
   const lowAVC = minAVC(k)
   const showAVC = s.graph === 'costs' || s.graph === 'perfect' ? true : s.avc
@@ -158,7 +157,6 @@ export function buildCostRevenue(s: CostRevenueSettings) {
 
   if (s.graph === 'costs') {
     minimums(false)
-    readout.push('MC crosses AVC and ATC at their lowest points')
     story = `Cost curves: ${[w('mcLabel'), w('atcLabel'), w('avcLabel'), ...(s.afc ? [w('afcLabel')] : [])].map((x) => plainOf(x.text) || 'a curve').join(', ')}`
   }
 
@@ -185,14 +183,6 @@ export function buildCostRevenue(s: CostRevenueSettings) {
       : atLowAVC ? 'the price is at the lowest AVC, the shutdown point'
       : o.profit > 0 ? 'the price is above ATC, so the firm makes an economic profit'
       : 'the price is between AVC and ATC, so the firm makes a loss but keeps producing'
-    readout.push(
-      o.shutdown ? 'The firm shuts down: the price is below the lowest AVC, so it makes nothing and loses its fixed cost'
-      : atLowATC ? 'Price equals the lowest ATC: zero economic profit (normal profit), as in the long run'
-      : atLowAVC ? 'Price equals the lowest AVC: the firm loses its fixed cost whether it produces or shuts down'
-      : o.profit > 0 ? 'Price is above ATC at q*: an economic profit'
-      : 'Price is below ATC but above AVC: a loss, but the firm keeps producing because it covers its variable costs',
-    )
-    if (!o.shutdown) readout.push('The firm produces where MR = MC')
 
     if (s.market) {
       market = marketPanel(s, price)
@@ -257,31 +247,12 @@ export function buildCostRevenue(s: CostRevenueSettings) {
       }
     }
 
-    // What each outcome marked comes to.
-    /** Profit, zero profit or a loss, at a price and quantity. */
-    const verdict = (q: number, p: number) => (Math.abs(p - atc(k, q)) < 0.02 ? 'zero economic profit' : p > atc(k, q) ? 'an economic profit' : 'a loss')
-    const pSO = qSO === null ? null : priceOn(d, qSO)
-    if (m && !m.shutdown && !longRun) {
-      const who = monopoly ? (reg === 'none' ? 'The monopoly' : 'Unregulated, the monopoly') : 'The firm'
-      readout.push(`${who} makes the quantity where MR = MC and charges what demand will pay there: ${verdict(m.q, m.p)}`)
-      if (qSO !== null && m.q < qSO && (reg === 'none' || reg === 'both')) readout.push('Price is above MC, so it makes less than the efficient quantity: deadweight loss')
-    }
-    if ((reg === 'optimal' || reg === 'both') && qSO !== null && pSO !== null) {
-      const v = verdict(qSO, pSO)
-      readout.push(`At P = MC (socially optimal): no deadweight loss, and ${v}${v === 'a loss' ? ', so it would need a subsidy to stay open' : ''}`)
-    }
-    if ((reg === 'fair' || reg === 'both') && qFR !== null) {
-      readout.push(`At P = ATC (fair return): zero economic profit${qSO !== null && qFR < qSO - 0.02 ? ', with less deadweight loss than the monopoly leaves' : ''}`)
-    }
-
     if (longRun && tangent !== undefined) {
       // Excess capacity: from what the firm makes up to where ATC is lowest.
       point({ x: lowATC.q, y: lowATC.v })
       if (s.guides) guides.push({ from: { x: lowATC.q, y: lowATC.v }, y: false })
       mark('x', lowATC.q, w('qMinLabel'))
       braces.push({ from: { x: tangent, y: 0 }, to: { x: lowATC.q, y: 0 }, side: 'below', under: true, name: w('excessLabel') })
-      readout.push('Demand is tangent to ATC, where MR = MC: zero economic profit in the long run')
-      readout.push('The firm makes less than where ATC is lowest (excess capacity), at a price above MC')
     }
     if (monopoly) {
       const regs = { none: '', optimal: ', regulated to the socially optimal price', fair: ', regulated to a fair-return price', both: ', with the socially optimal and fair-return prices marked' }
@@ -306,7 +277,6 @@ export function buildCostRevenue(s: CostRevenueSettings) {
     figure: buildFigure(market ? [market, firm] : [firm], connectors),
     costs: k,
     notes,
-    readout,
     label,
   }
 }

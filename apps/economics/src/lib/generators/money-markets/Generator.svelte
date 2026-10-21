@@ -130,9 +130,6 @@
       {/if}
 
       {#each built.notes as note}<p class="problem">{note}</p>{/each}
-      {#if built.readout.length}
-        <ul class="readout">{#each built.readout as line}<li>{line}</li>{/each}</ul>
-      {/if}
     </section>
   {/snippet}
 
@@ -210,6 +207,4 @@
   .market .field { margin-bottom: 0; }
   .head-row { display: flex; align-items: center; justify-content: space-between; }
   .problem { margin: 0; font-size: 0.85rem; font-weight: 600; color: var(--red); }
-  .readout { margin: 0; padding: 0.55rem 0.75rem; list-style: none; border-radius: 10px; background: var(--blue-soft); font-size: 0.85rem; font-weight: 600; }
-  .readout li + li { margin-top: 0.2rem; }
 </style>

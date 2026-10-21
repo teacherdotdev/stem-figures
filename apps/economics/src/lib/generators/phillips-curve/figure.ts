@@ -331,22 +331,15 @@ export type PhillipsFigure = ReturnType<typeof buildPhillips>
 
 const num = (v: number) => String(Number(v.toPrecision(3))).replace('-', '−')
 
-/** What the graph shows, in words, for the settings panel. */
+/** A numbered graph's points, for the settings panel: each one's rates. */
 function readoutOf(s: PhillipsSettings, m: PhillipsModel) {
   const out: string[] = []
+  if (!m.numeric) return out
   const name = (key: 'aLabel' | 'bLabel' | 'cLabel', fallback: string) => plainOf(s[key].trim()) || fallback
-  if (m.numeric) {
-    const at = (p: Point) => `${num(p.x)}% unemployment, ${num(p.y)}% inflation`
-    out.push(`${name('aLabel', 'A')}: ${at(m.A)}`)
-    if (m.B) out.push(`${name('bLabel', 'B')}: ${at(m.B)}`)
-    if (m.C) out.push(`${name('cLabel', 'C')}: ${at(m.C)}`)
-    return out
-  }
-  const { A, B, C } = m
-  if (!B) return out
-  const way = (a: number, b: number, up: string, down: string) => (near(a, b) ? 'stays the same' : b > a ? up : down)
-  out.push(`Unemployment ${way(A.x, B.x, 'rises', 'falls')}; inflation ${way(A.y, B.y, 'rises', 'falls')} (${name('aLabel', 'A')} to ${name('bLabel', 'B')})`)
-  if (C) out.push(`In the long run, unemployment returns to the natural rate; inflation stays ${C.y > A.y ? 'higher' : 'lower'} (${name('cLabel', 'C')})`)
+  const at = (p: Point) => `${num(p.x)}% unemployment, ${num(p.y)}% inflation`
+  out.push(`${name('aLabel', 'A')}: ${at(m.A)}`)
+  if (m.B) out.push(`${name('bLabel', 'B')}: ${at(m.B)}`)
+  if (m.C) out.push(`${name('cLabel', 'C')}: ${at(m.C)}`)
   return out
 }
 

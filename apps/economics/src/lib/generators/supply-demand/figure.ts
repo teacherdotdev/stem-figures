@@ -316,7 +316,7 @@ export type SupplyDemandFigure = ReturnType<typeof buildSupplyDemand>
 
 const num = (v: number) => String(Number(v.toPrecision(3)))
 
-/** What the graph shows, in words, for the settings panel. */
+/** A numbered graph's values, for the settings panel: the equilibrium and what changes it. */
 function readoutOf(
   s: SupplyDemandSettings,
   r: {
@@ -325,18 +325,14 @@ function readoutOf(
   },
 ) {
   const out: string[] = []
-  const way = (a: number, b: number, up: string, down: string) => (Math.abs(a - b) < 1e-6 ? 'stays the same' : b > a ? up : down)
-  if (r.numeric && r.e1) out.push(`Equilibrium: price ${num(r.e1.y)}, quantity ${num(r.e1.x)}`)
-  if (r.shifted && r.e1 && r.e2) {
-    out.push(`Price ${way(r.e1.y, r.e2.y, 'rises', 'falls')}${r.numeric ? ` (${num(r.e1.y)} to ${num(r.e2.y)})` : ''}; quantity ${way(r.e1.x, r.e2.x, 'rises', 'falls')}${r.numeric ? ` (${num(r.e1.x)} to ${num(r.e2.x)})` : ''}`)
-    if (s.shift === 'both') out.push('With both curves shifting, one change depends on which shift is bigger')
-  }
+  if (!r.numeric) return out
+  if (r.e1) out.push(`Equilibrium: price ${num(r.e1.y)}, quantity ${num(r.e1.x)}`)
+  if (r.shifted && r.e2) out.push(`After the shift: price ${num(r.e2.y)}, quantity ${num(r.e2.x)}`)
   if (r.binding && r.qd !== null && r.qs !== null) {
     const gap = r.qd - r.qs
-    const what = r.numeric ? `${num(r.qd)} demanded, ${num(r.qs)} supplied` : `quantity demanded ${gap > 0 ? 'exceeds' : 'falls short of'} quantity supplied`
-    out.push(`${gap > 0 ? 'Shortage' : 'Surplus'}${r.numeric ? ` of ${num(Math.abs(gap))}` : ''}: ${what}`)
+    out.push(`${gap > 0 ? 'Shortage' : 'Surplus'} of ${num(Math.abs(gap))}: ${num(r.qd)} demanded, ${num(r.qs)} supplied`)
   }
-  if (r.eT && r.buyers !== null && r.sellers !== null && r.traded !== null && r.numeric) {
+  if (r.eT && r.buyers !== null && r.sellers !== null && r.traded !== null) {
     out.push(`Buyers pay ${num(r.buyers)}, sellers keep ${num(r.sellers)}, ${num(r.traded)} sold`)
   }
   return out

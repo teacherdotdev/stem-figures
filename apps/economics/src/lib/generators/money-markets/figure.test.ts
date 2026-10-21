@@ -25,7 +25,6 @@ describe('money markets', () => {
     expect(buy.after!.x).toBeGreaterThan(buy.before!.x)
     expect(buy.after!.y).toBeLessThan(buy.before!.y)
     expect(texts({ shift: 'supply' })).toEqual(expect.arrayContaining(['MS1', 'MS2', 'MD', 'i1', 'i2', 'Q1', 'Q2']))
-    expect(buy.readout[0]).toBe('The nominal interest rate falls from i₁ to i₂; the quantity of money rises from Q₁ to Q₂')
     const more = build({ shift: 'demand', demandDir: 'increase' })
     expect(more.after!.y).toBeGreaterThan(more.before!.y)
     expect(more.after!.x).toBeCloseTo(more.before!.x)
@@ -64,18 +63,15 @@ describe('money markets', () => {
     for (const l of p.guides) expect(l.y1).toBe(l.y2)
   })
 
-  it("says the policy rate doesn't move when the supply of reserves shifts with ample reserves", () => {
+  it("keeps the policy rate where it is when the supply of reserves shifts with ample reserves", () => {
     for (const supplyDir of DIRECTIONS) {
       const g = build({ graph: 'reserves', shift: 'supply', supplyDir })
       expect(g.after!.y).toBeCloseTo(g.before!.y)
-      expect(g.readout[0]).toMatch(/^The policy rate stays the same/)
-      expect(g.readout[1]).toMatch(/leaves the policy rate where it is/)
       expect(texts({ graph: 'reserves', shift: 'supply', supplyDir })).not.toContain('PR2')
     }
     // Far enough left, supply reaches the slope: reserves are no longer ample.
     const scarce = build({ graph: 'reserves', shift: 'supply', supplyDir: 'decrease', supplySize: 'large' })
     expect(scarce.after!.y).toBeGreaterThan(scarce.before!.y)
-    expect(scarce.readout[1]).toMatch(/no longer ample/)
   })
 
   it('moves the policy rate along the slope with limited reserves', () => {
@@ -83,7 +79,6 @@ describe('money markets', () => {
     expect(g.before!.y).toBeGreaterThan(RESERVES.low + 1)
     expect(g.after!.y).toBeLessThan(g.before!.y)
     expect(g.after!.y).toBeGreaterThan(RESERVES.low)
-    expect(g.readout[0]).toMatch(/^The policy rate falls from PR₁ to PR₂/)
     // Lowering the administered rates moves the whole curve, and the rate with it.
     const lower = build({ graph: 'reserves', regime: 'limited', shift: 'demand', demandDir: 'decrease' })
     expect(lower.after!.y).toBeLessThan(lower.before!.y)

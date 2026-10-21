@@ -338,16 +338,7 @@ function buildTwo(s: PpcSettings) {
     // Opportunity costs: what one more of each good costs in the other.
     const [a, b] = countries.map((c) => ({ ofX: c.Y / c.X, ofY: c.X / c.Y }))
     countries.forEach((c, k) => readout.push(`${named[k]}: each unit of ${x} costs ${num(c.Y / c.X)} ${y}; each unit of ${y}, ${num(c.X / c.Y)} ${x}`))
-    if (near(a.ofX, b.ofX)) notes.push("Both countries give up the same for each good: neither has a comparative advantage, so there's nothing to gain from trade.")
-    else {
-      const [cx, cy] = a.ofX < b.ofX ? [0, 1] : [1, 0]
-      readout.push(`Comparative advantage: ${named[cx]} in ${x}, ${named[cy]} in ${y}`)
-    }
-    const absolute = (k: 'X' | 'Y', good: string) => {
-      const [p, q] = [countries[0][k], countries[1][k]]
-      return near(p, q) ? `neither in ${good}` : `${named[p > q ? 0 : 1]} in ${good}`
-    }
-    readout.push(`Absolute advantage: ${absolute('X', x)}, ${absolute('Y', y)}`)
+    if (near(a.ofX, b.ofX)) notes.push('Both countries have the same opportunity costs, so neither has a comparative advantage.')
   }
 
   return {
@@ -362,31 +353,21 @@ function buildTwo(s: PpcSettings) {
   }
 }
 
-/** What the graph shows, in words, for the settings panel. */
+/** A numbered graph's values, for the settings panel: the opportunity cost of each step, and where a shifted curve meets the axes. */
 function readoutOne(
   s: PpcSettings,
   r: { numeric: boolean; X1: number; Y1: number; X2: number; Y2: number; shifted: boolean; steps: { from: string; to: string; dx: number; dy: number }[]; x: string; y: string },
 ) {
   const out: string[] = []
-  if (s.shape === 'straight' && r.numeric && r.X1 > 0) out.push(`Constant opportunity cost: each unit of ${r.x} costs ${num(r.Y1 / r.X1)} ${r.y}`)
+  if (!r.numeric) return out
+  if (s.shape === 'straight' && r.X1 > 0) out.push(`Each unit of ${r.x} costs ${num(r.Y1 / r.X1)} ${r.y}`)
   for (const st of r.steps) {
     const between = st.from && st.to ? `${st.from} to ${st.to}: ` : ''
-    if (r.numeric) out.push(`${between}${num(st.dy)} ${r.y} given up for ${num(st.dx)} ${r.x}${st.dx > 0 ? ` (${num(st.dy / st.dx)} each)` : ''}`)
-  }
-  if (!r.numeric && r.steps.length > 1) {
-    out.push(
-      s.shape === 'out' ? `Each step down the curve gives up more ${r.y} for each unit of ${r.x}: increasing opportunity cost`
-      : s.shape === 'in' ? `Each step down the curve gives up less ${r.y} for each unit of ${r.x}: decreasing opportunity cost`
-      : `Every unit of ${r.x} costs the same ${r.y}: constant opportunity cost`,
-    )
+    out.push(`${between}${num(st.dy)} ${r.y} given up for ${num(st.dx)} ${r.x}${st.dx > 0 ? ` (${num(st.dy / st.dx)} each)` : ''}`)
   }
   if (r.shifted) {
-    const grow = (a: number, b: number) => (near(a, b) ? null : b > a)
-    const gx = grow(r.X1, r.X2)
-    const gy = grow(r.Y1, r.Y2)
-    const what = gx !== false && gy !== false ? 'grows (shifts out)' : gx !== true && gy !== true ? 'shrinks (shifts in)' : 'shifts out at one end and in at the other'
-    const moves = [gx !== null && `${num(r.X1)} to ${num(r.X2)} ${r.x}`, gy !== null && `${num(r.Y1)} to ${num(r.Y2)} ${r.y}`].filter(Boolean)
-    out.push(`The curve ${what}${r.numeric ? `: ${moves.join(', ')}` : ''}`)
+    const moves = [!near(r.X1, r.X2) && `${num(r.X1)} to ${num(r.X2)} ${r.x}`, !near(r.Y1, r.Y2) && `${num(r.Y1)} to ${num(r.Y2)} ${r.y}`].filter(Boolean)
+    if (moves.length) out.push(`Intercepts: ${moves.join(', ')}`)
   }
   return out
 }
