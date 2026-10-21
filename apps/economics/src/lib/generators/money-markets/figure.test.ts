@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
+import { crosses } from '$shared/graph/labels'
 import { labelBoxes, overlaps } from '$lib/graph/testing'
 import { SHIFT_SIZES } from '$lib/graph/shifts'
-import { RESERVES, RESERVES_TOP, SUPPLY_AT, buildMoneyMarkets, curveNamed } from './figure'
+import { SHIFT_SHARE } from '$lib/graph/shifts'
+import { RESERVES, SPAN, buildMoneyMarkets, curveNamed } from './figure'
 import { DIRECTIONS, GRAPHS, LABEL_KEYS, REGIMES, SHIFTS, labelKeysOf, moneyMarketsSettings, type MoneyMarketsSettings } from './settings'
 import { SETUPS, settingsFor } from './setups'
 
@@ -13,6 +15,19 @@ const uprights = (p: { curves: { paths: string[] }[] }) =>
     const m = c.paths[0]?.match(/^M([\d.]+),([\d.]+)L\1,([\d.]+)$/)
     return m ? [{ x: +m[1], top: Math.min(+m[2], +m[3]) }] : []
   })
+/** The straight pieces of drawn paths. */
+const segmentsOf = (paths: string[]) =>
+  paths.flatMap((d) => {
+    const pts = [...d.matchAll(/([\d.]+),([\d.]+)/g)].map((m) => ({ x: +m[1], y: +m[2] }))
+    return pts.slice(1).map((q, k) => ({ x1: pts[k].x, y1: pts[k].y, x2: q.x, y2: q.y }))
+  })
+/** How far a point is from a straight piece. */
+function toSegment(p: { x: number; y: number }, l: { x1: number; y1: number; x2: number; y2: number }) {
+  const dx = l.x2 - l.x1
+  const dy = l.y2 - l.y1
+  const t = Math.max(0, Math.min(1, ((p.x - l.x1) * dx + (p.y - l.y1) * dy) / (dx * dx + dy * dy || 1)))
+  return Math.hypot(p.x - l.x1 - t * dx, p.y - l.y1 - t * dy)
+}
 const texts = (over: Partial<MoneyMarketsSettings>) => panel(over).labels.map((l) => l.runs?.map((r) => r.text).join('') ?? '')
 
 describe('money markets', () => {
@@ -48,12 +63,12 @@ describe('money markets', () => {
     expect(panel({ graph: 'funds' }).guides).toHaveLength(2)
   })
 
-  it('draws the AP 2024 reserves market: S_R on the flat bottom, D_R shifting down lowers the policy rate', () => {
+  it('draws the ample reserves market: S_R on the flat bottom, D_R shifting down lowers the policy rate', () => {
     const g = build({ graph: 'reserves', shift: 'demand', demandDir: 'decrease' })
-    expect(g.before!.x).toBeCloseTo(SUPPLY_AT.ample)
-    expect(g.before!.y).toBeCloseTo(RESERVES.low)
-    expect(g.after!.x).toBeCloseTo(SUPPLY_AT.ample)
-    expect(g.after!.y).toBeCloseTo(RESERVES.low - 2)
+    expect(g.before!.x).toBeCloseTo(RESERVES.ample.supply)
+    expect(g.before!.y).toBeCloseTo(RESERVES.ample.low)
+    expect(g.after!.x).toBeCloseTo(RESERVES.ample.supply)
+    expect(g.after!.y).toBeCloseTo(RESERVES.ample.low - SHIFT_SHARE.medium * SPAN.ample)
     const t = texts({ graph: 'reserves', shift: 'demand', demandDir: 'decrease' })
     expect(t).toEqual(expect.arrayContaining(['SR', 'DR1', 'DR2', 'PR1', 'PR2', 'Q1', 'Policy rate', 'Quantity of reserves']))
     expect(t).not.toContain('Q2')
@@ -69,25 +84,63 @@ describe('money markets', () => {
     for (const l of p.guides) expect(l.y1).toBe(l.y2)
   })
 
-  it("keeps the policy rate where it is when the supply of reserves shifts with ample reserves", () => {
+  it("keeps the policy rate where it is when the supply of reserves shifts with ample reserves, however far, clear of the kink", () => {
     for (const supplyDir of DIRECTIONS) {
-      const g = build({ graph: 'reserves', shift: 'supply', supplyDir })
-      expect(g.after!.y).toBeCloseTo(g.before!.y)
-      expect(texts({ graph: 'reserves', shift: 'supply', supplyDir })).not.toContain('PR2')
+      for (const supplySize of SHIFT_SIZES) {
+        const g = build({ graph: 'reserves', shift: 'supply', supplyDir, supplySize })
+        expect(g.after!.y).toBeCloseTo(g.before!.y)
+        expect(g.after!.x).toBeGreaterThan(RESERVES.ample.x1 + 0.4)
+        expect(texts({ graph: 'reserves', shift: 'supply', supplyDir, supplySize })).not.toContain('PR2')
+      }
     }
-    // Far enough left, supply reaches the slope: reserves are no longer ample.
-    const scarce = build({ graph: 'reserves', shift: 'supply', supplyDir: 'decrease', supplySize: 'large' })
-    expect(scarce.after!.y).toBeGreaterThan(scarce.before!.y)
   })
 
-  it('moves the policy rate along the slope with limited reserves', () => {
+  it('moves the policy rate along the slope with limited reserves, short of the discount rate and the floor', () => {
+    const { high, low } = RESERVES.limited
     const g = build({ graph: 'reserves', regime: 'limited', shift: 'supply', supplyDir: 'increase' })
-    expect(g.before!.y).toBeGreaterThan(RESERVES.low + 1)
+    expect(g.before!.y).toBeGreaterThan(low + 1)
     expect(g.after!.y).toBeLessThan(g.before!.y)
-    expect(g.after!.y).toBeGreaterThan(RESERVES.low)
-    // Lowering the administered rates moves the whole curve, and the rate with it.
-    const lower = build({ graph: 'reserves', regime: 'limited', shift: 'demand', demandDir: 'decrease' })
-    expect(lower.after!.y).toBeLessThan(lower.before!.y)
+    for (const shift of ['supply', 'demand'] as const) {
+      for (const dir of DIRECTIONS) {
+        for (const size of SHIFT_SIZES) {
+          const y = build({ graph: 'reserves', regime: 'limited', shift, supplyDir: dir, demandDir: dir, supplySize: size, demandSize: size }).after!.y
+          expect([shift, dir, size, y > low + 0.2 && y < high - 0.2]).toEqual([shift, dir, size, true])
+        }
+      }
+    }
+  })
+
+  it('shifts the demand for reserves right or left with limited reserves, the policy rate with it', () => {
+    for (const demandDir of DIRECTIONS) {
+      const g = build({ graph: 'reserves', regime: 'limited', shift: 'demand', demandDir, arrows: 2 })
+      expect(g.after!.x).toBeCloseTo(g.before!.x)
+      expect(demandDir === 'increase' ? g.after!.y > g.before!.y : g.after!.y < g.before!.y).toBe(true)
+      // Arrows across, on the slope, and both drawn.
+      const p = g.figure.panels[0]
+      expect(p.arrows).toHaveLength(2)
+      for (const a of p.arrows) expect(a.y1).toBe(a.y2)
+      expect(g.label).toContain(`demand for reserves ${demandDir}s`)
+    }
+  })
+
+  it('moves the curves further for a larger shift, every size its own', () => {
+    for (const graph of GRAPHS) {
+      for (const regime of REGIMES) {
+        for (const shift of ['supply', 'demand'] as const) {
+          for (const dir of DIRECTIONS) {
+            const at = SHIFT_SIZES.map((size) => {
+              const g = build({ graph, regime, shift, supplyDir: dir, demandDir: dir, supplySize: size, demandSize: size })
+              expect(g.notes).toEqual([])
+              // How far the moving curve went: across, or up for the demand for reserves with ample reserves.
+              const p = g.figure.panels[0]
+              const paths = p.curves.map((c) => c.paths.join(' '))
+              return paths.join('|')
+            })
+            expect([graph, regime, shift, dir, new Set(at).size]).toEqual([graph, regime, shift, dir, 3])
+          }
+        }
+      }
+    }
   })
 
   it('keeps an upright supply curve on the graph however far it shifts', () => {
@@ -169,14 +222,125 @@ describe('money markets', () => {
       expect(demand).toHaveLength(2)
       for (const c of demand) expect(+c.paths[0].match(/^M([\d.]+)/)![1]).toBeCloseTo(p.grid.x, 0)
     }
-    // With limited reserves cut as far as they go, the policy rate is on that flat top.
-    expect(build({ graph: 'reserves', regime: 'limited', shift: 'both', supplyDir: 'decrease', demandDir: 'increase', supplySize: 'large', demandSize: 'large' }).after!.y).toBeCloseTo(RESERVES_TOP)
+    // With limited reserves cut as far as they go and demand up as far as it goes, the policy rate is the discount rate, the flat top.
+    expect(build({ graph: 'reserves', regime: 'limited', shift: 'both', supplyDir: 'decrease', demandDir: 'increase', supplySize: 'large', demandSize: 'large' }).after!.y).toBeCloseTo(RESERVES.limited.high)
     for (const graph of ['money', 'funds'] as const) {
       const p = panel({ graph, shift: 'demand', demandDir: 'decrease', demandSize: 'large' })
       const axis = p.xAxis.y
       for (const c of p.curves) {
         const ys = [...c.paths[0].matchAll(/,([\d.]+)/g)].map((m) => +m[1])
         if (c.color === p.curves[0].color) expect(Math.max(...ys)).toBeLessThan(axis - 15)
+      }
+    }
+  })
+
+  it('draws both curves through every crossing, however far both shift', () => {
+    for (const graph of GRAPHS) {
+      for (const regime of REGIMES) {
+        for (const [supplyDir, demandDir] of [['increase', 'increase'], ['increase', 'decrease'], ['decrease', 'increase'], ['decrease', 'decrease']] as const) {
+          for (const size of SHIFT_SIZES) {
+            const p = panel({ graph, regime, shift: 'both', supplyDir, demandDir, supplySize: size, demandSize: size, points: true })
+            for (const d of p.dots) {
+              for (const color of new Set(p.curves.map((c) => c.color))) {
+                const near = Math.min(...p.curves.filter((c) => c.color === color).flatMap((c) => segmentsOf(c.paths)).map((l) => toSegment(d, l)))
+                expect([graph, regime, supplyDir, demandDir, size, near < 1.5]).toEqual([graph, regime, supplyDir, demandDir, size, true])
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+
+  it('keeps shift arrows off the guides, and guides out of arrows', () => {
+    for (const graph of GRAPHS) {
+      for (const regime of REGIMES) {
+        for (const shift of ['supply', 'demand', 'both'] as const) {
+          for (const dir of DIRECTIONS) {
+            for (const size of ['small', 'medium'] as const) {
+              for (const labelSize of ['medium', 'large'] as const) {
+                const p = panel({ graph, regime, shift, supplyDir: dir, demandDir: dir, supplySize: size, demandSize: size, points: true, labelSize })
+                for (const a of p.arrows) {
+                  for (const l of p.guides) {
+                    const along = a.y1 === a.y2 && l.y1 === l.y2 ? Math.abs(a.y1 - l.y1) < 10 && Math.min(a.x1, a.x2) < Math.max(l.x1, l.x2) && Math.max(a.x1, a.x2) > Math.min(l.x1, l.x2)
+                      : a.x1 === a.x2 && l.x1 === l.x2 ? Math.abs(a.x1 - l.x1) < 10 && Math.min(a.y1, a.y2) < Math.max(l.y1, l.y2) && Math.max(a.y1, a.y2) > Math.min(l.y1, l.y2)
+                      : false
+                    const cut = shift !== 'both' && crosses({ x1: l.x1, y1: l.y1, x2: l.x2, y2: l.y2 }, { x0: Math.min(a.x1, a.x2), x1: Math.max(a.x1, a.x2), y0: Math.min(a.y1, a.y2), y1: Math.max(a.y1, a.y2) })
+                    expect([graph, regime, shift, dir, size, labelSize, along, cut]).toEqual([graph, regime, shift, dir, size, labelSize, false, false])
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+
+  it('draws as many arrows as asked for, spread apart', () => {
+    for (const graph of GRAPHS) {
+      for (const regime of REGIMES) {
+        for (const shift of ['supply', 'demand', 'both'] as const) {
+          for (const dir of DIRECTIONS) {
+            const p = panel({ graph, regime, shift, supplyDir: dir, demandDir: dir, arrows: 2 })
+            // Both curves crossing the slope of the demand for reserves leave room for one arrow on its slope.
+            const want = shift === 'both' ? (graph === 'reserves' && regime === 'limited' ? 3 : 4) : 2
+            expect([graph, regime, shift, dir, p.arrows.length >= want]).toEqual([graph, regime, shift, dir, true])
+            if (shift === 'both') expect(new Set(p.arrows.map((a) => a.color)).size).toBe(2)
+            for (const a of p.arrows) for (const b of p.arrows) if (a !== b && a.color === b.color) expect(Math.hypot(a.x1 - b.x1, a.y1 - b.y1)).toBeGreaterThan(30)
+          }
+        }
+      }
+    }
+  })
+
+  it('runs one guide to each rate and quantity, never two on top of each other', () => {
+    for (const graph of GRAPHS) {
+      for (const regime of REGIMES) {
+        for (const shift of SHIFTS) {
+          for (const dir of DIRECTIONS) {
+            const p = panel({ graph, regime, shift, supplyDir: dir, demandDir: dir })
+            const across = p.guides.filter((l) => l.y1 === l.y2).map((l) => l.y1)
+            const down = p.guides.filter((l) => l.x1 === l.x2).map((l) => l.x1)
+            expect([graph, regime, shift, dir, new Set(across).size, new Set(down).size]).toEqual([graph, regime, shift, dir, across.length, down.length])
+          }
+        }
+      }
+    }
+  })
+
+  it('names the crossings clear of every curve, written or blank', () => {
+    for (const graph of GRAPHS) {
+      const blanks = Object.fromEntries(labelKeysOf(graph).map((k) => [`${k}Mode`, 'blank']))
+      for (const regime of REGIMES) {
+        for (const shift of SHIFTS) {
+          for (const dir of DIRECTIONS) {
+            for (const labelSize of ['small', 'medium', 'large'] as const) {
+              for (const words of [{}, blanks]) {
+                const f = build({ graph, regime, shift, supplyDir: dir, demandDir: dir, points: true, labelSize, ink: 'bw', ...words }).figure
+                const p = f.panels[0]
+                const lines = p.curves.flatMap((c) => segmentsOf(c.paths))
+                // The crossings' names are the labels nearest the dots.
+                for (const d of p.dots) {
+                  const box = labelBoxes(f).sort((a, b) => Math.hypot((a.x0 + a.x1) / 2 - d.x, (a.y0 + a.y1) / 2 - d.y) - Math.hypot((b.x0 + b.x1) / 2 - d.x, (b.y0 + b.y1) / 2 - d.y))[0]
+                  const hit = lines.some((l) => crosses(l, box))
+                  expect([graph, regime, shift, dir, labelSize, box.text, hit]).toEqual([graph, regime, shift, dir, labelSize, box.text, false])
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+
+  it('writes Q₁ and Q₂ side by side, and r₁ and r₂ apart, after a medium shift in loanable funds', () => {
+    for (const shift of ['supply', 'demand'] as const) {
+      for (const labelSize of ['small', 'medium', 'large'] as const) {
+        const p = panel({ graph: 'funds', shift, points: true, labelSize })
+        const at = (t: string) => p.labels.find((l) => l.runs?.map((r) => r.text).join('') === t)!
+        expect(at('Q1').y).toBe(at('Q2').y)
+        expect(Math.abs(at('r1').y - at('r2').y)).toBeGreaterThan(p.labelFs * 1.2)
       }
     }
   })

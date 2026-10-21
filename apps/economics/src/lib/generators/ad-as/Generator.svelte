@@ -35,6 +35,8 @@
   let svg = $state<SVGSVGElement>()
 
   const numeric = $derived(clean.look === 'numeric')
+  // Three-range aggregate supply turns vertical at full employment, drawn with no LRAS line of its own.
+  const three = $derived(!numeric && clean.asShape === 'three')
   const built = $derived(buildAdAs(clean))
 
   function chooseSetup(id: string) {
@@ -88,10 +90,10 @@
     [
       ['adLabel', 'Aggregate demand'],
       ['asLabel', 'Aggregate supply'],
-      ...(clean.lras ? [['lrasLabel', 'Long-run aggregate supply']] : []),
+      ...(clean.lras && !three ? [['lrasLabel', 'Long-run aggregate supply']] : []),
       ['eLabel', 'Equilibrium point'],
       ...(clean.guides ? [['plLabel', 'Price level at the axis'], ['gdpLabel', 'Real GDP at the axis']] : []),
-      ...(clean.lras || (built.gap && clean.brace) ? [['yfLabel', 'Full-employment output']] : []),
+      ...(clean.lras || three || (built.gap && clean.brace) ? [['yfLabel', 'Full-employment output']] : []),
       ...(built.gap && clean.brace ? [built.gap.kind === 'recession' ? ['recessionLabel', 'Recessionary gap'] : ['inflationLabel', 'Inflationary gap']] : []),
     ] as [LabelKey, string][],
   )
@@ -127,7 +129,8 @@
         <h2 class="card-head">Economy</h2>
         <HelpTip id="adas-tip" label="How the curves are drawn">
           Schematic graphs have no numbers, as AP graphs are drawn: AD and SRAS are straight lines (or aggregate supply
-          is flat, then curving up, then nearly vertical), and LRAS stands at full-employment output, Y<sub>f</sub>.
+          is flat, then curving up, then vertical at full-employment output), and LRAS stands at full-employment output,
+          Y<sub>f</sub>. A cost shock moves the three-range curve up or down.
           Numbered graphs go through the schedule's rows, with LRAS at potential GDP. A gap is braced under the axis
           from output to Y<sub>f</sub>. "To Y<sub>f</sub>" shifts a curve just far enough to bring output to full
           employment, as policy closing a gap or the economy adjusting in the long run would. In any label, _ lowers
@@ -184,7 +187,7 @@
           </label>
         {/if}
       {/if}
-      <label class="check"><input type="checkbox" bind:checked={s.lras} /> Long-run aggregate supply (LRAS)</label>
+      {#if !three}<label class="check"><input type="checkbox" bind:checked={s.lras} /> Long-run aggregate supply (LRAS)</label>{/if}
 
       {#each built.notes as note}<p class="problem">{note}</p>{/each}
       {#if built.readout.length}

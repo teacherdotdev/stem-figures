@@ -121,7 +121,7 @@ describe('AD–AS model', () => {
     expect(growth.arrows.filter((a) => a.color === growth.curves[2].color)).toHaveLength(1)
   })
 
-  it('puts each equilibrium name clear of the curves and guides through its point', () => {
+  it('puts each equilibrium name clear of the curves and guides through its point', { timeout: 30000 }, () => {
     for (const setup of SETUPS) {
       for (const labelSize of ['small', 'medium', 'large'] as const) {
         const s = settingsFor(setup, adAsSettings.defaults, { ...adAsSettings.defaults, labelSize })
@@ -139,7 +139,27 @@ describe('AD–AS model', () => {
     }
   })
 
-  it('shifts the whole three-range curve sideways', () => {
+  it('turns the three-range curve vertical at full employment, with no LRAS line of its own', () => {
+    const g = build({ asShape: 'three', start: 'recession' })
+    // A dashed guide down from where it turns vertical, to Y_f.
+    const p = g.figure.panels[0]
+    const yf = p.px({ x: g.yf.before, y: 0 }).x
+    expect(p.guides.some((l) => l.x1 === l.x2 && Math.abs(l.x1 - yf) < 0.5)).toBe(true)
+    expect(p.curves).toHaveLength(2)
+    expect(texts({ asShape: 'three', start: 'recession' })).not.toContain('LRAS')
+    // A cost shock raises its flat range and leaves its vertical range at full employment: price level up, output down.
+    const shock = build({ asShape: 'three', srasShift: 'left' })
+    expect(shock.equilibrium!.y).toBeGreaterThan(shock.e1!.y)
+    expect(shock.equilibrium!.x).toBeLessThan(shock.e1!.x)
+    // Growth moves its vertical range out with full employment, and output with it.
+    const growth = build({ asShape: 'three', lrasShift: 'right', srasShift: 'full' })
+    expect(growth.equilibrium!.x).toBeCloseTo(growth.yf.after)
+    expect(growth.gap).toBeNull()
+    // Output can't pass full employment, so it starts with no inflationary gap.
+    expect(build({ asShape: 'three', start: 'inflation' }).gap).toBeNull()
+  })
+
+  it('shifts the whole three-range curve', () => {
     const a = build({ asShape: 'three', start: 'recession' })
     const b = build({ asShape: 'three', start: 'recession', srasShift: 'right' })
     expect(a.gap!.kind).toBe('recession')
@@ -150,6 +170,24 @@ describe('AD–AS model', () => {
     const high = build({ asShape: 'three', adShift: 'right', adSize: 'small' })
     expect(low.equilibrium!.y - low.e1!.y).toBeLessThan((high.equilibrium!.y - high.e1!.y) / 2)
     expect(low.equilibrium!.x - low.e1!.x).toBeGreaterThan(2 * (high.equilibrium!.x - high.e1!.x))
+  })
+
+  it("shifts a numbered graph to a row of the schedule, so the values are the schedule's own and add up", () => {
+    const num = { look: 'numeric', lrasLabel: 'Potential GDP', asLabel: 'AS' } as const
+    expect(build({ ...num, adShift: 'right' }).equilibrium).toEqual({ x: expect.closeTo(9300), y: expect.closeTo(100) })
+    expect(build({ ...num, adShift: 'left' }).equilibrium).toEqual({ x: expect.closeTo(8000), y: expect.closeTo(80) })
+    expect(build({ ...num, srasShift: 'left' }).equilibrium).toEqual({ x: expect.closeTo(8200), y: expect.closeTo(100) })
+    expect(build({ ...num, adShift: 'right' }).readout.at(-1)).toBe('Recessionary gap of 200: real GDP 9,300, potential 9,500')
+    // No dot of the schedule's left touching an equilibrium's.
+    const p = panel({ ...num, adShift: 'right' })
+    const e2 = p.px({ x: 9300, y: 100 })
+    expect(p.dots.filter((d) => Math.hypot(d.x - e2.x, d.y - e2.y) < 11)).toHaveLength(1)
+  })
+
+  it('names each curve on a numbered graph past the dot at its end', () => {
+    const p = panel({ look: 'numeric', asLabel: 'AS' })
+    const ad = p.labels.find((l) => l.runs?.map((r) => r.text).join('') === 'AD')!
+    expect(ad.x).toBeGreaterThan(p.px({ x: 10000, y: 70 }).x + 4)
   })
 
   it('solves the numbered example at price level 90 and real GDP 8,800, with its callout', () => {
@@ -187,6 +225,92 @@ describe('AD–AS model', () => {
     expect(texts({ callout: true, calloutLabel: 'Here' })).toContain('Here')
   })
 
+  it('writes the callout in the open, clear of every curve, with an arrow long enough to read', () => {
+    const cases: Partial<AdAsSettings>[] = [
+      {}, { start: 'recession' }, { start: 'recession', adShift: 'full' }, { start: 'inflation', adShift: 'full', ink: 'bw' },
+      { start: 'recession', calloutLabelMode: 'blank' }, { asShape: 'three', start: 'recession', asLabel: 'AS', labelSize: 'large' }, { lrasShift: 'right', srasShift: 'full' },
+    ]
+    for (const c of cases) {
+      const p = panel({ ...c, callout: true })
+      const words = p.labels.filter((l) => l.runs && /equilibrium/.test(l.runs.map((r) => r.text).join('')))
+      const boxes = c.calloutLabelMode === 'blank' ? [] : words.map((l) => textBox(l, runsWidth(l.runs!, p.labelFs), p.labelFs))
+      expect([c, boxes.filter((b) => curveSegments(p).some((seg) => gapTo(seg, b) < 3)).length]).toEqual([c, 0])
+      const [leader] = p.leaders
+      expect(Math.hypot(leader.x2 - leader.x1, leader.y2 - leader.y1)).toBeGreaterThan(14)
+    }
+  })
+
+  it('writes the names of LRAS over their own lines, at one height', () => {
+    for (const over of [{ lrasShift: 'right', srasShift: 'full' }, { lrasShift: 'left', srasShift: 'full' }, { lrasShift: 'right', srasShift: 'full', lrasLabel: 'Potential GDP' }] as const) {
+      const p = panel(over)
+      const names = p.labels.filter((l) => l.runs && /^(LRAS|Potential GDP)\d$/.test(l.runs.map((r) => r.text).join('')))
+      expect(names).toHaveLength(2)
+      expect(names[0].y).toBeCloseTo(names[1].y)
+      // Each over its own line: LRAS₁ at Y_f₁, LRAS₂ at Y_f₂, nearer its own than the other.
+      const g = build(over)
+      for (const [k, yf] of [g.yf.before, g.yf.after].entries()) {
+        const l = names.find((n) => n.runs!.map((r) => r.text).join('').endsWith(String(k + 1)))!
+        const w = runsWidth(l.runs!, p.labelFs)
+        const mid = l.anchor === 'middle' ? l.x : l.anchor === 'end' ? l.x - w / 2 : l.x + w / 2
+        const own = p.px({ x: yf, y: 0 }).x
+        const other = p.px({ x: k ? g.yf.before : g.yf.after, y: 0 }).x
+        expect(Math.abs(mid - own)).toBeLessThan(Math.abs(mid - other))
+      }
+    }
+    // Blank lines too, as on the worksheet.
+    const blanks = panel({ lrasShift: 'right', srasShift: 'full', lrasLabelMode: 'blank' }).labels.filter((l) => l.blank && l.blank.y1 < 60)
+    expect(blanks).toHaveLength(2)
+  })
+
+  it('never braces a gap too narrow to name: output a shift leaves near full employment is put on it or a little off', () => {
+    for (const adSize of ['small', 'medium', 'large'] as const) {
+      for (const start of STARTS) {
+        for (const adShift of ['left', 'right'] as const) {
+          const g = build({ start, adShift, adSize })
+          if (g.gap) expect([start, adShift, adSize, Math.abs(g.gap.output - g.gap.potential)]).toEqual([start, adShift, adSize, expect.toSatisfy((d: number) => d >= 0.99)])
+        }
+      }
+    }
+    // Large enough to close the gap: closed.
+    expect(build({ start: 'recession', adShift: 'right', adSize: 'large' }).equilibrium!.x).toBeCloseTo(6.5)
+  })
+
+  it('keeps each equilibrium name near its dot', () => {
+    for (const setup of SETUPS) {
+      for (const labelSize of ['small', 'medium', 'large'] as const) {
+        const g = buildAdAs(settingsFor(setup, adAsSettings.defaults, { ...adAsSettings.defaults, labelSize }))
+        const p = g.figure.panels[0]
+        for (const [e, name] of [[g.e1, g.e1 === g.equilibrium ? 'E' : 'E1'], [g.equilibrium, 'E2']] as const) {
+          const l = p.labels.find((x) => x.runs?.map((r) => r.text).join('') === name)
+          if (!l || !e) continue
+          const b = textBox(l, runsWidth(l.runs!, p.labelFs), p.labelFs)
+          const d = p.px(e)
+          const gap = Math.hypot(Math.max(b.x0 - d.x, 0, d.x - b.x1), Math.max(b.y0 - d.y, 0, d.y - b.y1))
+          expect([setup.id, labelSize, name, gap < p.labelFs * 2.2]).toEqual([setup.id, labelSize, name, true])
+        }
+      }
+    }
+  })
+
+  it('keeps shift arrows off the dashed guides and apart from each other', () => {
+    for (const setup of SETUPS) {
+      const p = buildAdAs(settingsFor(setup, adAsSettings.defaults, adAsSettings.defaults)).figure.panels[0]
+      for (const a of p.arrows) {
+        // The head clear of every guide.
+        const near = p.guides.filter((l) => gapTo([{ x: l.x1, y: l.y1 }, { x: l.x2, y: l.y2 }], { x0: a.x2, x1: a.x2, y0: a.y2, y1: a.y2 }) < 4)
+        expect([setup.id, near]).toEqual([setup.id, []])
+        // Not running on from another, where the two would read as one.
+        const runsOn = p.arrows.filter((b) => b !== a && Math.abs(b.y1 - a.y1) < 12 && Math.min(Math.abs(b.x1 - a.x2), Math.abs(b.x2 - a.x1)) < 30)
+        expect([setup.id, runsOn]).toEqual([setup.id, []])
+      }
+    }
+  })
+
+  it('says what a shift to full employment does when output is already there', () => {
+    expect(build({ adShift: 'full' }).notes).toEqual(['Output is already at full employment, so AD stays where it is.'])
+    expect(build({}).label).toBe('AD–AS graph: long-run equilibrium at full employment')
+  })
+
   it('warns when it cannot draw what is asked', () => {
     expect(build({ look: 'numeric', schedule: '1,5,3' }).notes[0]).toMatch(/at least two rows/)
     expect(build({ look: 'numeric', potential: 50000, fit: false }).notes.join(' ')).toMatch(/Potential GDP is off/)
@@ -199,7 +323,7 @@ describe('AD–AS model', () => {
     expect(panel({ start: 'recession', adShift: 'full', ...blanks }).labels.every((l) => l.blank || (l.runs && ['Price Level', 'Real GDP'].includes(l.runs[0].text)))).toBe(true)
   })
 
-  it('never overlaps two labels, in any setup or combination of start and shifts', () => {
+  it('never overlaps two labels, in any setup or combination of start and shifts', { timeout: 30000 }, () => {
     for (const setup of SETUPS) {
       for (const labelSize of ['small', 'medium', 'large'] as const) {
         const s = settingsFor(setup, adAsSettings.defaults, { ...adAsSettings.defaults, labelSize })

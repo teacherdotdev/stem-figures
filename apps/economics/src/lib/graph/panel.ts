@@ -121,6 +121,12 @@ export type PanelSpec = {
   arrows?: ArrowSpec[]
   braces?: BraceSpec[]
   callouts?: CalloutSpec[]
+  /**
+   * set by buildFigure for panels side by side: how far under the grid's
+   * top the x-axis's word under its end and the caption go at least, so
+   * they line up across the panels
+   */
+  floor?: { word?: number; caption?: number }
 }
 
 /** A label on the figure: written text in runs, or a write-on line for students. */
@@ -132,6 +138,8 @@ const DOT_R = 4.5
 const BLANK_W = 46 // a write-on line for a label left blank
 const SIDE_BLANK_W = 36 // the same, at an axis
 const ARROW_GAP = 5 // how far shift arrows stop short of the curves
+/** How far back from its tip an arrowhead's line ends, where the head is wider than the line. */
+export const ARROW_BACK = 3
 const BRACE_DEPTH = 7
 const BRACE_GAP = 6 // between a brace and the line it's under or over
 const ROOM_RIGHT = 56 // past the grid, for curve names at their ends, at medium labels
@@ -170,7 +178,7 @@ export function buildPanel(spec: PanelSpec) {
   const yUnits = spec.every.y && spec.units?.y ? spec.units.y : ''
   const xUnits = spec.every.x && spec.units?.x ? spec.units.x : ''
   const numbersW = base.grid.x - PAD + (yUnits ? textWidth(yUnits, fs) : 0)
-  // An x-axis crossing inside the grid (inflation below 0) has its numbers under it, on the grid.
+  // An x-axis crossing inside the grid (inflation below 0) has its numbers under the grid, as if it ran along its bottom.
   const xInside = base.xAxis.y < base.grid.y + base.grid.h - 0.5
   const numbersH = xInside ? (spec.every.x ? fs + 8 : 0) : base.height - base.grid.y - base.grid.h - PAD
   const title = spec.title && shows(spec.title) ? spec.title : undefined
@@ -266,6 +274,8 @@ export function buildPanel(spec: PanelSpec) {
   const guides: Segment[] = []
   for (const g of spec.guides ?? []) {
     for (const l of guidesFrom(px(g.from), axisX, axisY, { x: g.x, y: g.y })) {
+      // Down to the x-axis's numbers and values under the grid, past an x-axis crossing it.
+      if (xInside && l.x1 === l.x2) l.y2 = gridBottom
       guides.push(l)
       place.line([{ x: l.x1, y: l.y1 }, { x: l.x2, y: l.y2 }])
     }
@@ -321,12 +331,12 @@ export function buildPanel(spec: PanelSpec) {
   )
   for (const m of ys) sideLabel(axisX - numbersW - 7, m.at + LFS * 0.35, 'end', m.name)
   const xMarks = rowsUnder(marks.filter((m) => m.axis === 'x').map((m) => ({ ...m, x: px({ x: m.at, y: box.y0 }).x, half: widthOf(m.name, SIDE_BLANK_W) / 2 })))
-  // Under an x-axis crossing the grid, they go under the grid, clear of the lines running on down to its bottom.
-  const marksFrom = xInside ? Math.max(gridBottom, axisY + numbersH) : axisY + numbersH
+  // Under an x-axis crossing the grid, they go under the grid and its numbers, where the guides run down to.
+  const marksFrom = xInside ? gridBottom + numbersH : axisY + numbersH
   for (const m of xMarks.placed) sideLabel(m.x, marksFrom + LFS + 5 + m.row * X_ROW(LFS), 'middle', m.name)
   const xMarksH = marksFrom - axisY + (xMarks.rows ? LFS + 8 + (xMarks.rows - 1) * X_ROW(LFS) : 0)
 
-  // The numbers, with their units; on the grid (under an x-axis crossing it), labels keep off them and the values there.
+  // The numbers, with their units.
   // Where the axes meet away from 0 (6,000 and 60), each axis's first number
   // is written where its others are: the x-axis's centered under the corner,
   // the y-axis's level with its line, rather than nudged apart as the shared
@@ -337,36 +347,33 @@ export function buildPanel(spec: PanelSpec) {
     const corner = Math.abs(n.x - (base.yAxis.x - 8)) < 0.01
     const onX = n.anchor === 'middle' || corner
     const text = withCommas(n.text)
-    // With the x-axis crossing the grid, the 0 there goes with the y-axis's numbers, clear of those under it.
-    if (corner && xInside) return { ...n, x: base.yAxis.x - 6 + dx, y: base.xAxis.y + fs * 0.35 + dy, text: text + (yUnits || xUnits) }
-    if (corner && liftedY) return { ...n, x: base.yAxis.x + dx, anchor: 'middle' as const, y: n.y + dy, text: text + xUnits }
-    if (n === liftedY) return { ...n, x: n.x + dx, y: base.xAxis.y + fs * 0.35 + dy, text: text + yUnits }
-    return { ...n, x: n.x + dx, y: n.y + dy, text: text + (onX ? xUnits : yUnits) }
+    // With the x-axis crossing the grid, the 0 there goes with the y-axis's numbers, and the others under the grid.
+    if (corner && xInside) return { ...n, x: base.yAxis.x - 6 + dx, y: base.xAxis.y + fs * 0.35 + dy, text: text + (yUnits || xUnits), onX: false }
+    if (corner && liftedY) return { ...n, x: base.yAxis.x + dx, anchor: 'middle' as const, y: n.y + dy, text: text + xUnits, onX: true }
+    if (n === liftedY) return { ...n, x: n.x + dx, y: base.xAxis.y + fs * 0.35 + dy, text: text + yUnits, onX: false }
+    if (onX && !corner && xInside) return { ...n, x: n.x + dx, y: gridBottom + (n.y - base.xAxis.y), text: text + xUnits, onX }
+    return { ...n, x: n.x + dx, y: n.y + dy, text: text + (onX ? xUnits : yUnits), onX: onX && !corner }
   })
-  // Under an x-axis crossing the grid, its numbers sit on the graph: one a
-  // curve, guide, arrow or point runs through goes just above the axis
-  // instead, or is left out if something's there too.
-  const numberBox = (n: (typeof laid)[number]) => textBox({ x: n.x, y: n.y, anchor: n.anchor }, textWidth(n.text, fs), fs)
-  const inTheWay = (b: Box) =>
-    [...drawn, ...guides, ...arrows].some((l) => crosses(l, b)) || dots.some((d) => d.x > b.x0 - DOT_R && d.x < b.x1 + DOT_R && d.y > b.y0 - DOT_R && d.y < b.y1 + DOT_R)
-  const numbers = !xInside
-    ? laid
-    : laid.flatMap((n) => {
-        if (n.anchor !== 'middle' || !inTheWay(numberBox(n))) return [n]
-        const above = { ...n, y: base.xAxis.y + dy - 6 }
-        return inTheWay(numberBox(above)) ? [] : [above]
-      })
-  if (xInside) {
-    for (const n of numbers) place.keep(numberBox(n))
-    for (const l of sideLabels) place.keep(textBox(l, l.runs ? runsWidth(l.runs, LFS) : SIDE_BLANK_W, LFS))
+  // x-axis numbers too wide to fit at every line are written at every
+  // second (or third…), keeping those at the axes' corner, or at 0 if it's
+  // written there.
+  const xs = laid.filter((n) => n.onX && n.anchor === 'middle').sort((a, b) => a.x - b.x)
+  const fromCorner = xs.length > 0 && Math.abs(xs[0].x - axisX) < 0.5 ? 0 : 1
+  const fits = (k: number) => {
+    const kept = xs.filter((_, i) => (i + fromCorner) % k === 0)
+    return kept.every((n, i) => i === 0 || kept[i - 1].x + textWidth(kept[i - 1].text, fs) / 2 + 8 <= n.x - textWidth(n.text, fs) / 2)
   }
+  let step = 1
+  while (step < xs.length && !fits(step)) step++
+  const dropped = new Set(xs.filter((_, i) => (i + fromCorner) % step !== 0))
+  const numbers = laid.filter((n) => !dropped.has(n)).map(({ onX: _, ...n }) => n)
 
   // Labels on the graph, most important first: points, braces, curve names,
   // levels' names, regions' names, then callouts.
   for (const p of spec.points ?? []) {
     if (!shows(p.name)) continue
     const q = px(p.at)
-    put(p.spots ? p.spots(q, LFS) : p.side ? [...overSpots(q, LFS, p.side), ...besidePoint(q, LFS, 9)] : besidePoint(q, LFS, 9), p.name)
+    put(p.spots ? p.spots(q, LFS) : [...(p.side ? overSpots(q, LFS, p.side) : []), ...besidePoint(q, LFS, 9), ...aroundPoint(q, LFS, 15), ...aroundPoint(q, LFS, 22)], p.name)
   }
   for (const b of braces) {
     if (!shows(b.name)) continue
@@ -415,6 +422,7 @@ export function buildPanel(spec: PanelSpec) {
     ], l.name)
   }
   // Callouts, on the drawing: those asked for, and regions' names with no room inside them.
+  const backs: Box[] = []
   const calls: (Omit<CalloutSpec, 'at'> & { p: Point })[] = (spec.callouts ?? []).filter((c) => shows(c.name)).map((c) => ({ ...c, p: px(c.at) }))
   for (const [k, r] of regions.entries()) {
     if (!shows(r.name)) continue
@@ -427,7 +435,9 @@ export function buildPanel(spec: PanelSpec) {
         continue
       }
     }
-    put(spots, r.name)
+    const spot = put(spots, r.name)
+    // Hatching stops round its name, so no line runs into the letters.
+    if (spec.bw && r.name.mode === 'text') backs.push({ x0: spot.box.x0 - 4, y0: spot.box.y0 - 3, x1: spot.box.x1 + 4, y1: spot.box.y1 })
   }
   // Callouts last: each written where neither its words nor its leader
   // touch anything, the leader staying between the lines that meet at its
@@ -470,14 +480,15 @@ export function buildPanel(spec: PanelSpec) {
       }
       return around
     })
-    // The leader from a label's nearest edge to the point, stopped short of it.
-    const leaderOf = (b: Box, p: Point): Segment | null => {
-      const from = nearestOnBox(b, p, 3)
+    // The leader from a label's nearest edge (a blank's, its line) to the point, stopped short of it.
+    const blank = c.name.mode !== 'text'
+    const leaderOf = (b: Box, p: Point, spot: Spot): Segment | null => {
+      const from = blank ? nearestOnBox({ x0: b.x0, x1: b.x1, y0: spot.y, y1: spot.y }, p, 3) : nearestOnBox(b, p, 3)
       const len = Math.hypot(p.x - from.x, p.y - from.y)
       if (len < stop + 6) return null
       return { x1: round(from.x), y1: round(from.y), x2: round(p.x - ((p.x - from.x) / len) * stop), y2: round(p.y - ((p.y - from.y) / len) * stop) }
     }
-    // What a leader crosses (short of the point itself): a line or dashed guide, or a label (or close by one), counts as much as a label on a line.
+    // What a leader crosses (short of the point itself): a line, another arrow or dashed guide, or a label (or close by one), counts as much as a label on a line.
     const leaderCost = (l: Segment | null) => {
       if (!l) return 0
       const len = Math.hypot(l.x2 - l.x1, l.y2 - l.y1)
@@ -485,13 +496,13 @@ export function buildPanel(spec: PanelSpec) {
       const short = { x1: l.x1, y1: l.y1, x2: l.x1 + (l.x2 - l.x1) * f, y2: l.y1 + (l.y2 - l.y1) * f }
       const near = (b: Box) => ({ x0: b.x0 - 3, y0: b.y0 - 3, x1: b.x1 + 3, y1: b.y1 + 3 })
       // A dashed guide crossed costs less than a curve, so words never move onto a guide to spare their arrow one.
-      return 10 * (drawn.filter((d) => segmentsCross(short, d)).length + taken.filter((b) => crosses(short, near(b))).length) + 4 * guides.filter((d) => segmentsCross(short, d)).length
+      return 10 * ([...drawn, ...arrows, ...leaders].filter((d) => segmentsCross(short, d)).length + taken.filter((b) => crosses(short, near(b))).length) + 4 * guides.filter((d) => segmentsCross(short, d)).length
     }
     // The place where the label and its leader touch least, the first of any as good.
     let best: { spot: Spot; box: Box; leader: Segment | null; score: number } | null = null
     for (const { spot, p } of options) {
       const box = boxAt(spot)
-      const leader = leaderOf(box, p)
+      const leader = leaderOf(box, p, spot)
       const score = place.choose([{ box }], false).score + leaderCost(leader)
       if (!best || score < best.score) best = { spot, box, leader, score }
       if (score === 0) break
@@ -506,7 +517,7 @@ export function buildPanel(spec: PanelSpec) {
         const top = Math.min(axisY - h - 4, Math.max(area.y - ROOM_TOP, p.y - h / 2 + dy * LFS * 1.6))
         const spot: Spot = { x: area.x + area.w + 14, y: top + LFS * 0.78, anchor: 'start' }
         const box = boxAt(spot)
-        const leader = leaderOf(box, p)
+        const leader = leaderOf(box, p, spot)
         const score = 8 + taken.filter((b) => b.x0 < box.x1 + 3 && box.x0 - 3 < b.x1 && b.y0 < box.y1 + 3 && box.y0 - 3 < b.y1).length * 100 + leaderCost(leader)
         if (score < best.score) best = { spot, box, leader, score }
       }
@@ -552,19 +563,34 @@ export function buildPanel(spec: PanelSpec) {
     labels.push(labelAt(spot, b.name, bx))
     under.push(bx)
   }
+  if (spec.floor?.word !== undefined) bottom = Math.max(bottom, area.y + spec.floor.word)
+  const wordFrom = bottom - area.y
   if (xWord) {
     if (xWordBeside) labels.push(labelAt({ x: xEnd + 7, y: axisY + LFS * 0.35, anchor: 'start' }, xWord, textBox({ x: xEnd + 7, y: axisY + LFS * 0.35, anchor: 'start' }, xWordW, LFS)))
     else {
       const spot: Spot = { x: area.x + area.w + Math.min(right - 4, xWordW / 2), y: bottom + LFS + 6, anchor: 'end' }
       spot.x = Math.max(spot.x, area.x + xWordW)
+      // In the row of values under the axis (Y_f, Y₂), if it's clear of them there, rather than under them all.
+      const kept = [...sideLabels.map((l) => textBox(l, l.runs ? runsWidth(l.runs, LFS) : SIDE_BLANK_W, LFS)), ...under, ...numbers.map((n) => textBox(n, textWidth(n.text, fs), fs))]
+      if (spec.floor?.word === undefined) {
+        for (let k = 0; k < xMarks.rows; k++) {
+          const at = { ...spot, y: marksFrom + LFS + 5 + k * X_ROW(LFS) }
+          const b = textBox(at, xWordW, LFS)
+          if (kept.some((u) => u.x0 < b.x1 + 8 && b.x0 - 8 < u.x1 && u.y0 < b.y1 && b.y0 < u.y1)) continue
+          spot.y = at.y
+          break
+        }
+      }
       // Under a brace's label, if the two would meet.
       const wb = textBox(spot, xWordW, LFS)
       if (under.some((u) => u.x0 < wb.x1 + 6 && wb.x0 - 6 < u.x1 && u.y0 < wb.y1 && wb.y0 < u.y1)) spot.y = Math.max(...under.map((u) => u.y1)) + LFS * 0.78 + 6
       labels.push(labelAt(spot, xWord, textBox(spot, xWordW, LFS)))
-      bottom = spot.y + LFS * 0.3
+      bottom = Math.max(bottom, spot.y + LFS * 0.3)
     }
   }
   bottom = Math.max(bottom, ...under.map((u) => u.y1))
+  if (spec.floor?.caption !== undefined) bottom = Math.max(bottom, area.y + spec.floor.caption)
+  const captionFrom = bottom - area.y
   if (spec.caption && shows(spec.caption)) {
     const y = bottom + fs * 1.3 + 8
     if (spec.caption.mode === 'text') big.push({ x: midX, y, anchor: 'middle', runs: runsOf(text(spec.caption), fs * 1.2), big: true })
@@ -586,6 +612,10 @@ export function buildPanel(spec: PanelSpec) {
     grid: area,
     /** where the grid starts, for lining panels up */
     top: area.y,
+    /** how far under the grid's top the x-axis's word and the caption would go, for lining panels up */
+    floors: { word: wordFrom, caption: captionFrom },
+    /** white under regions' names, where hatching stops */
+    backs,
     gridlines: spec.gridlines && numbered,
     vLines: spec.gridlines && numbered ? base.vLines.map((x) => x + dx) : [],
     hLines: spec.gridlines && numbered ? base.hLines.map((y) => y + dy) : [],
@@ -677,6 +707,25 @@ function insideSpots(poly: Point[], c: Point, fs: number): Spot[] {
  * Places straight over a point (`above`) or under it (`below`), clear of a
  * dot on it, then a little to either side, then further off.
  */
+/**
+ * Places `gap` out from a point in eight directions, the diagonals first:
+ * for a point's name when the places just beside it are all taken, so it
+ * stays near its dot rather than on a line.
+ */
+function aroundPoint(p: Point, fs: number, gap: number): Spot[] {
+  const d = gap * 0.7
+  return [
+    { x: p.x + d, y: p.y - d - fs * 0.3, anchor: 'start' },
+    { x: p.x - d, y: p.y - d - fs * 0.3, anchor: 'end' },
+    { x: p.x + d, y: p.y + d + fs * 0.78, anchor: 'start' },
+    { x: p.x - d, y: p.y + d + fs * 0.78, anchor: 'end' },
+    { x: p.x, y: p.y - gap - fs * 0.3, anchor: 'middle' },
+    { x: p.x, y: p.y + gap + fs * 0.78, anchor: 'middle' },
+    { x: p.x + gap, y: p.y + fs * 0.35, anchor: 'start' },
+    { x: p.x - gap, y: p.y + fs * 0.35, anchor: 'end' },
+  ]
+}
+
 function overSpots(p: Point, fs: number, side: 'above' | 'below'): Spot[] {
   const gap = 9
   const y = side === 'above' ? p.y - gap - fs * 0.3 : p.y + gap + fs * 0.78

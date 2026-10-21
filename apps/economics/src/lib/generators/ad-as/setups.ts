@@ -19,7 +19,7 @@ export const SETUPS: Setup[] = [
   { id: 'contractionary', name: 'Contractionary policy closes an inflationary gap', settings: { start: 'inflation', adShift: 'full' } },
   { id: 'self-adjust', name: 'Long-run self-adjustment from a recessionary gap', settings: { start: 'recession', srasShift: 'full' } },
   { id: 'growth', name: 'Economic growth (LRAS shifts right)', settings: { lrasShift: 'right', srasShift: 'full' } },
-  { id: 'keynesian', name: 'Three-range aggregate supply (Keynesian)', settings: { asShape: 'three', start: 'recession', asLabel: 'AS', lrasLabel: 'Potential GDP' } },
+  { id: 'keynesian', name: 'Three-range aggregate supply (Keynesian)', settings: { asShape: 'three', start: 'recession', asLabel: 'AS' } },
   {
     id: 'numbered',
     name: 'Numbered: price level 90, real GDP 8,800',

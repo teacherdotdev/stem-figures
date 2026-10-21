@@ -13,9 +13,11 @@ const BLANKS = Object.fromEntries(LABEL_KEYS.map((k) => [`${k}Mode`, 'blank'])) 
  * A natural monopoly: ATC lowest past where demand meets the quantity axis,
  * so it's still falling everywhere along demand (economies of scale over the
  * whole market), P = MC is a loss and the fair-return price, where demand
- * meets ATC, is between it and the monopoly's.
+ * meets ATC, is between it and the monopoly's. MR meets MC where MC is
+ * rising, well below the socially optimal price, so no guide runs through
+ * it, and the three prices and quantities are well apart.
  */
-const NATURAL = { atcQ: 7.5, atcCost: 2.75, mcSlope: 1, fixed: 0.45, demandTop: 9.6, demandEnd: 6.5 } satisfies Partial<CostRevenueSettings>
+export const NATURAL = { atcQ: 7.5, atcCost: 3.25, mcSlope: 0.7, fixed: 0.9, demandTop: 9.6, demandEnd: 7.4 } satisfies Partial<CostRevenueSettings>
 
 export const SETUPS: Setup[] = [
   { id: 'costs', name: 'Cost curves (MC, ATC, AVC)', settings: {} },

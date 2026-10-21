@@ -77,7 +77,7 @@ export const COPY: Record<string, GeneratorCopy> = {
   'ad-as': {
     heading: 'AD–AS graphs: aggregate demand, SRAS and LRAS with recessionary and inflationary gaps, shocks and policy',
     intro: [
-      'AD–AS Model draws the aggregate demand and aggregate supply model of the whole economy, the price level against real GDP: a downward-sloping aggregate demand curve (AD), an upward-sloping short-run aggregate supply curve (SRAS), and a vertical long-run aggregate supply curve (LRAS) at full-employment output, or potential GDP. Start in long-run equilibrium or with a recessionary or inflationary gap braced under the axis, then shift AD, SRAS or LRAS: a demand shock, a negative supply shock and stagflation, expansionary or contractionary fiscal and monetary policy closing a gap, the economy self-adjusting in the long run, or economic growth. Aggregate supply can also be drawn in three ranges, flat, then curving up, then nearly vertical, as in the Keynesian model.',
+      'AD–AS Model draws the aggregate demand and aggregate supply model of the whole economy, the price level against real GDP: a downward-sloping aggregate demand curve (AD), an upward-sloping short-run aggregate supply curve (SRAS), and a vertical long-run aggregate supply curve (LRAS) at full-employment output, or potential GDP. Start in long-run equilibrium or with a recessionary or inflationary gap braced under the axis, then shift AD, SRAS or LRAS: a demand shock, a negative supply shock and stagflation, expansionary or contractionary fiscal and monetary policy closing a gap, the economy self-adjusting in the long run, or economic growth. Aggregate supply can also be drawn in three ranges, flat, then curving up, then vertical at full-employment output, as in the Keynesian model.',
       'Teachers use it for AP Macroeconomics tests, free-response practice, worksheets and slides. Graphs are schematic, with no numbers, the way AP graphs are drawn, with the curves before and after a shift named AD₁ and AD₂, the equilibria E₁ and E₂, and dashed lines to PL₁, PL₂ and Y₁ at the axes; or numbered from a schedule of price levels and real GDP, with a callout giving the equilibrium. Every label can be written, left as a blank line for students to fill in, or left off, in color or black and white.',
     ],
     settings: [
@@ -104,11 +104,11 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'How does the economy self-adjust in the long run?',
-        a: 'Without policy, wages and other input prices adjust over time. In a recessionary gap, unemployment above the natural rate pushes nominal wages down, SRAS shifts right, and real GDP returns to full employment at a lower price level; in an inflationary gap, wages rise, SRAS shifts left, and real GDP falls back to full employment at a higher price level. Set Short-run aggregate supply (SRAS) to To Yf under Shifts, and it moves just far enough to cross AD on LRAS, from either gap.',
+        a: 'Without policy, wages and other input prices adjust over time. In a recessionary gap, unemployment above the natural rate pushes nominal wages down, SRAS shifts right, and real GDP returns to full employment at a lower price level; in an inflationary gap, wages rise, SRAS shifts left, and real GDP falls back to full employment at a higher price level. Set Short-run aggregate supply (SRAS) to To Yf under Shifts, and the straight SRAS line moves just far enough to cross AD on LRAS, from either gap.',
       },
       {
         q: 'Why is long-run aggregate supply vertical?',
-        a: 'In the long run wages and prices have fully adjusted, so the economy’s output depends on its resources and technology, not on the price level: LRAS is a vertical line at potential, or full-employment, real GDP. Economic growth, from more capital, more labor or better technology, shifts LRAS right. Set Long-run aggregate supply (LRAS) to Right under Shifts, or choose the Economic growth setup, which moves SRAS with it to the new full-employment output, and name the line LRAS, Potential GDP or both under Labels.',
+        a: 'In the long run wages and prices have fully adjusted, so the economy’s output depends on its resources and technology, not on the price level: LRAS is a vertical line at potential, or full-employment, real GDP. Economic growth, from more capital, more labor or better technology, shifts LRAS right. Choose the Economic growth setup, or set Long-run aggregate supply (LRAS) to Right under Shifts with Short-run aggregate supply (SRAS) set to To Yf, so SRAS moves with it to the new full-employment output, and name the line LRAS, Potential GDP or both under Labels.',
       },
       {
         q: 'Can the AD–AS graph have numbers on the axes?',
@@ -130,7 +130,7 @@ export const COPY: Record<string, GeneratorCopy> = {
     ],
     settings: [
       'The graph: the money market, loanable funds or the market for reserves, with ample or limited reserves, and eight common setups from an open-market purchase to crowding out and lower administered rates',
-      'The shift: supply, demand or both, each increasing or decreasing (the demand for reserves shifting up or down), small, medium or large, with no arrows or one to three',
+      'The shift: supply, demand or both, each increasing or decreasing (with ample reserves, the demand for reserves shifting up or down), small, medium or large, with no arrows or one to three',
       'Dashed lines to the axes with the interest rates and quantities, a dot where the curves cross, and equilibrium values named iₑ and Qₑ or i* and Q*',
       'Every curve and value label written in your own words, left as a blank line for students, or left off, one at a time or all at once',
       'The chart and axis titles (or blank lines), color or black and white, arrows at the axes’ ends, and label size',
@@ -190,7 +190,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'What is the difference between a contraction and a recession?',
-        a: 'A contraction is any fall in real GDP from a peak to a trough. A recession is a contraction deep and widespread enough to count: a common rule of thumb is two quarters in a row of falling real GDP, and in the United States the NBER dates recessions by a significant decline in activity across the economy. Many textbooks use the two words for the same phase, and call the early part of an expansion the recovery. Here Contraction points at the fall just after a peak and Recession at the fall nearer the trough; Recovery points at the rise just after the trough and Expansion further up.',
+        a: 'A contraction is any fall in real GDP from a peak to a trough. A recession is a contraction deep and widespread enough to count: a common rule of thumb is two quarters in a row of falling real GDP, and in the United States the NBER dates recessions by a significant decline in activity across the economy. Many textbooks use the two words for the same phase, and call the early part of an expansion the recovery. Here Contraction and Recession are two names for the same fall, from a peak to the trough after it: Contraction points at it from above and Recession from below. Recovery points at the rise just after the trough and Expansion further up.',
       },
       {
         q: 'What does the trend line on a business cycle graph show?',
@@ -269,7 +269,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       'Teachers use it for AP Macroeconomics questions on tests, worksheets and slides. Start from a common setup, like demand-pull inflation, a supply shock or the long-run adjustment back to the LRPC, and draw it schematic, with no numbers, as AP graphs are drawn, or on numbered axes in percent, typing the natural rate, expected inflation and the rates at each point, with the inflation axis running below 0% for deflation. Any label, from SRPC₁ and LRPC to π₁ and uₙ, can be written, left as a blank line for students, or left off, and the graph prints in color or black and white.',
     ],
     settings: [
-      'Common setups: SRPC and LRPC, demand-pull inflation, falling demand, a supply shock, higher expected inflation, the long-run adjustment back to the LRPC, a lower natural rate, a numbered graph with deflation, and a blank-label worksheet',
+      'Common setups: SRPC and LRPC, demand-pull inflation, falling demand, a supply shock, higher expected inflation, the long-run adjustment back to the LRPC, a lower natural rate, a numbered graph, and a blank-label worksheet',
       'Schematic axes with no numbers, as AP graphs are drawn, or numbered axes in percent, fitted to the graph or typed, with the percent signs on the numbers, in the axis titles or left off, and gridlines',
       'The SRPC and LRPC each shown or hidden, how sharply the SRPC bends (gentle, normal or strong), and where the natural rate of unemployment sits; numbered, the natural rate, expected inflation and a second point the SRPC passes through',
       'What moves: nothing, the economy up or down along the SRPC, the SRPC shifting right or left after a supply shock or a change in expected inflation, or the LRPC shifting left or right, with the SRPC moving with it or not; small, medium or large, or to the rates typed on a numbered graph',
@@ -314,7 +314,7 @@ export const COPY: Record<string, GeneratorCopy> = {
     heading: 'Cost and revenue curve graphs: MC, ATC and AVC, perfect competition, monopoly and monopolistic competition',
     intro: [
       'Cost and Revenue Curves draws a firm’s cost curves, marginal cost (MC), average total cost (ATC), average variable cost (AVC) and average fixed cost (AFC), all from one total cost, so MC always crosses AVC and ATC at their lowest points and the gap between ATC and AVC is AFC. Put the firm in a market: a perfectly competitive firm facing the price line D = MR = AR = P, making a profit or a loss, at its break-even or shutdown point, with the market’s supply and demand beside it; a monopoly producing where MR = MC, with consumer surplus, deadweight loss and regulated prices; or a monopolistically competitive firm in the short run or in long-run equilibrium with excess capacity.',
-      'Teachers use it for AP Microeconomics and economics questions on tests, worksheets and slides. Start from a common setup, like a firm at a loss that keeps producing or a regulated natural monopoly, then shape the costs by eye. The axes show shape only, as AP graphs are drawn, with dashed lines to Pₑ, q* and the other prices and quantities. Shade profit or loss, consumer surplus and deadweight loss, in color or hatched for black and white, and leave any label, or every label, as a blank line for students to fill in.',
+      'Teachers use it for AP Microeconomics and economics questions on tests, worksheets and slides. Start from a common setup, like a firm at a loss that keeps producing or a regulated natural monopoly, then shape the costs by eye. The axes show shape only, as AP graphs are drawn, with dashed lines to Pₑ, qₑ and the other prices and quantities. Shade profit or loss, consumer surplus and deadweight loss, in color or hatched for black and white, and leave any label, or every label, as a blank line for students to fill in.',
     ],
     settings: [
       'The graph: cost curves alone, perfect competition, monopoly or monopolistic competition, and eleven common setups, from cost curves with AFC to a regulated natural monopoly and a firm with blank labels',
@@ -333,7 +333,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'How do you show profit or loss on a perfectly competitive firm graph?',
-        a: 'The firm takes the market price as given, so its demand, marginal revenue and average revenue are one horizontal line, D = MR = AR = P, and it produces q* where P = MC. Profit or loss is the rectangle between the price and ATC at q*, out to q*: profit when the price is above ATC, loss when it is below. Choose Perfect competition, pick the Market price, and tick Profit or loss under Shading; tick The market beside the firm, setting the price for the side-by-side market and firm graphs AP questions ask for.',
+        a: 'The firm takes the market price as given, so its demand, marginal revenue and average revenue are one horizontal line, D = MR = AR = P, and it produces qₑ where P = MC. Profit or loss is the rectangle between the price and ATC at qₑ, out to qₑ: profit when the price is above ATC, loss when it is below. Choose Perfect competition, pick the Market price, and tick Profit or loss under Shading; tick The market beside the firm, setting the price for the side-by-side market and firm graphs AP questions ask for.',
       },
       {
         q: 'What is the difference between the break-even point and the shutdown point?',
@@ -349,7 +349,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'Why does a monopolistically competitive firm have excess capacity in the long run?',
-        a: 'Short-run profits draw new firms in and losses drive firms out, shifting each firm’s demand until it just touches ATC, where the firm makes zero economic profit. Because demand slopes down, it touches ATC to the left of ATC’s lowest point, so the firm produces less than the quantity at the lowest ATC: that gap is excess capacity, and the price is above MC as well. Choose Monopolistic competition and Long run, and a brace under the quantity axis marks the excess capacity, from q* to the quantity at the lowest ATC.',
+        a: 'Short-run profits draw new firms in and losses drive firms out, shifting each firm’s demand until it just touches ATC, where the firm makes zero economic profit. Because demand slopes down, it touches ATC to the left of ATC’s lowest point, so the firm produces less than the quantity at the lowest ATC: that gap is excess capacity, and the price is above MC as well. Choose Monopolistic competition and Long run, and a brace under the quantity axis marks the excess capacity, from qₑ to the quantity at the lowest ATC.',
       },
       {
         q: 'How do I make a worksheet where students label the graph?',

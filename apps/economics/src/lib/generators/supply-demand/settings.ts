@@ -76,7 +76,7 @@ export const supplyDemandSettings = defineSettings({
     dLabel: 'D', sLabel: 'S', eLabel: 'E', pLabel: 'P', qLabel: 'Q',
     ceilingLabel: 'Price ceiling', floorLabel: 'Price floor', shortageLabel: 'Shortage', surplusLabel: 'Surplus',
     qdLabel: 'Q_d', qsLabel: 'Q_s',
-    taxLabel: 'S + tax', subsidyLabel: 'S − subsidy', buyerLabel: 'P_b', sellerLabel: 'P_s', qtLabel: 'Q_t',
+    taxLabel: 'S + tax', subsidyLabel: 'S − subsidy', buyerLabel: 'P_b', sellerLabel: 'P_s', qtLabel: 'Q_t', qsubLabel: 'Q_{sub}',
     csLabel: 'CS', psLabel: 'PS', dwlLabel: 'DWL', revenueLabel: 'Tax revenue', costLabel: 'Subsidy cost',
   }),
   ...lookFields({
@@ -90,7 +90,7 @@ export type SupplyDemandSettings = typeof supplyDemandSettings.defaults
 /** The label keys, for making every label blank at once. */
 export const LABEL_KEYS = [
   'dLabel', 'sLabel', 'eLabel', 'pLabel', 'qLabel', 'ceilingLabel', 'floorLabel', 'shortageLabel', 'surplusLabel', 'qdLabel', 'qsLabel',
-  'taxLabel', 'subsidyLabel', 'buyerLabel', 'sellerLabel', 'qtLabel', 'csLabel', 'psLabel', 'dwlLabel', 'revenueLabel', 'costLabel',
+  'taxLabel', 'subsidyLabel', 'buyerLabel', 'sellerLabel', 'qtLabel', 'qsubLabel', 'csLabel', 'psLabel', 'dwlLabel', 'revenueLabel', 'costLabel',
 ] as const
 
 /** A schedule's rows, sorted by price, leaving out any that aren't three numbers. */
