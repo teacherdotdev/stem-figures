@@ -14,7 +14,7 @@ import { along, graphOf, intersect, type Box, type Curve } from '$lib/graph/curv
 import { buildFigure } from '$lib/graph/figure'
 import { niceAxis, rangesOf } from '$lib/graph/fit'
 import { buildPanel, inks, shows, type ArrowSpec, type CurveSpec, type GuideSpec, type MarkSpec, type PanelSpec, type PointSpec, type Words } from '$lib/graph/panel'
-import { SCHEMATIC, panelBase, wordsOf } from '$lib/graph/settings'
+import { SCHEMATIC, nth, panelBase, wordsOf, type NumberFrom } from '$lib/graph/settings'
 import { SHIFT_SHARE } from '$lib/graph/shifts'
 import { readAxes, axisEnd } from '$shared/graph/axes'
 import type { Curvature, PhillipsSettings } from './settings'
@@ -340,12 +340,13 @@ function gapBetween(a: Point, b: Point, c: Point, d: Point) {
   return Math.min(distanceTo(a, c, d), distanceTo(b, c, d), distanceTo(c, a, b), distanceTo(d, a, b))
 }
 
-/** A label with a number lowered after it: SRPC and 2 make SRPC₂; u_n and 1 make u_{n1}. */
-function numbered(w: Words, k: number | null): Words {
+/** A label with a number lowered after it: SRPC and 2 make SRPC₂ (SRPC₁, numbered `from` 0); u_n and 1 make u_{n1}. */
+function numbered(w: Words, k: number | null, from: NumberFrom): Words {
   if (w.mode !== 'text' || !w.text.trim() || k === null) return w
   const t = w.text.trim()
+  const n = nth(k, from)
   const m = t.match(/^(.*)_\{([^}]*)\}$/) ?? t.match(/^(.*)_(.)$/)
-  return { ...w, text: m ? `${m[1]}_{${m[2]}${k}}` : `${t}_${k}` }
+  return { ...w, text: m ? `${m[1]}_{${m[2]}${n}}` : `${t}_${n}` }
 }
 
 /** How wide the graph library draws a label left as a blank line. */
@@ -379,15 +380,15 @@ export function buildPhillips(s: PhillipsSettings) {
   const c2 = srpc2 ? curveOf(srpc2, drawBox) : []
   // Each SRPC's name by its lower right end, so both are named alike.
   if (s.srpc) {
-    curves.push({ pts: c1, name: numbered(srpcName, srpc2 ? 1 : null), color: ink.demand, nameHugsEnd: true })
-    if (srpc2) curves.push({ pts: c2, name: numbered(srpcName, 2), color: ink.demand, nameHugsEnd: true })
+    curves.push({ pts: c1, name: numbered(srpcName, srpc2 ? 1 : null, s.numberFrom), color: ink.demand, nameHugsEnd: true })
+    if (srpc2) curves.push({ pts: c2, name: numbered(srpcName, 2, s.numberFrom), color: ink.demand, nameHugsEnd: true })
   }
   // The LRPCs, named once the graph is laid out (below).
   const lrpcOf = (u: number): Curve => [{ x: u, y: box.y0 }, { x: u, y: lrpcTop }]
   const lrpcLines: { u: number; name: Words; pts: Curve }[] = []
   if (s.lrpc) {
-    if (un > box.x0 && un < box.x1) lrpcLines.push({ u: un, name: numbered(lrpcName, un2 !== null ? 1 : null), pts: lrpcOf(un) })
-    if (un2 !== null && un2 > box.x0 && un2 < box.x1) lrpcLines.push({ u: un2, name: numbered(lrpcName, 2), pts: lrpcOf(un2) })
+    if (un > box.x0 && un < box.x1) lrpcLines.push({ u: un, name: numbered(lrpcName, un2 !== null ? 1 : null, s.numberFrom), pts: lrpcOf(un) })
+    if (un2 !== null && un2 > box.x0 && un2 < box.x1) lrpcLines.push({ u: un2, name: numbered(lrpcName, 2, s.numberFrom), pts: lrpcOf(un2) })
   }
   for (const l of lrpcLines) curves.push({ pts: l.pts, color: ink.supply })
 
@@ -417,17 +418,17 @@ export function buildPhillips(s: PhillipsSettings) {
   const naturals = [un, ...(un2 !== null ? [un2] : [])]
   const natural = (u: number) => naturals.findIndex((v) => near(v, u))
   const nruName = wordsOf(s, 'nruLabel')
-  const nruMark = (k: number) => numbered(nruName, naturals.length > 1 ? k + 1 : null)
+  const nruMark = (k: number) => numbered(nruName, naturals.length > 1 ? k + 1 : null, s.numberFrom)
   // The natural rate under the LRPC, whether or not a point is on it.
   if (s.lrpc) naturals.forEach((u, k) => u > box.x0 && u < box.x1 && marks.push({ axis: 'x', at: u, name: nruMark(k) }))
   if (s.guides && s.values) {
     const distinct = (vs: number[]) => vs.filter((v, k) => vs.findIndex((w) => near(w, v)) === k)
     const pis = distinct(atAxes.map((p) => p.y))
     const piName = wordsOf(s, 'piLabel')
-    for (const [k, y] of pis.entries()) marks.push({ axis: 'y', at: y, name: numbered(piName, pis.length > 1 ? k + 1 : null) })
+    for (const [k, y] of pis.entries()) marks.push({ axis: 'y', at: y, name: numbered(piName, pis.length > 1 ? k + 1 : null, s.numberFrom) })
     const us = distinct(atAxes.map((p) => p.x).filter((u) => natural(u) < 0))
     const uName = wordsOf(s, 'uLabel')
-    for (const [k, x] of us.entries()) marks.push({ axis: 'x', at: x, name: numbered(uName, k + 1) })
+    for (const [k, x] of us.entries()) marks.push({ axis: 'x', at: x, name: numbered(uName, k + 1, s.numberFrom) })
     if (!s.lrpc) {
       for (const u of distinct(atAxes.map((p) => p.x).filter((u) => natural(u) >= 0))) marks.push({ axis: 'x', at: u, name: nruMark(natural(u)) })
     }

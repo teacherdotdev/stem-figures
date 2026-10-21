@@ -63,7 +63,7 @@ describe('money markets', () => {
     expect(panel({ graph: 'funds' }).guides).toHaveLength(2)
   })
 
-  it('draws the ample reserves market: S_R on the flat bottom, D_R shifting down lowers the policy rate', () => {
+  it('draws the ample reserves market: SR on the flat bottom, DR shifting down lowers the policy rate', () => {
     const g = build({ graph: 'reserves', shift: 'demand', demandDir: 'decrease' })
     expect(g.before!.x).toBeCloseTo(RESERVES.ample.supply)
     expect(g.before!.y).toBeCloseTo(RESERVES.ample.low)
@@ -79,9 +79,31 @@ describe('money markets', () => {
       expect(a.x1).toBe(a.x2)
       expect(a.y2).toBeGreaterThan(a.y1)
     }
-    // Two dashed guides across to PR₁ and PR₂, none down S_R.
+    // Two dashed guides across to PR₁ and PR₂, none down SR.
     expect(p.guides).toHaveLength(2)
     for (const l of p.guides) expect(l.y1).toBe(l.y2)
+  })
+
+  it('moves only the flat parts of the demand for reserves with ample reserves, the slope staying where it is', () => {
+    for (const demandDir of DIRECTIONS) {
+      for (const demandSize of SHIFT_SIZES) {
+        const p = panel({ graph: 'reserves', shift: 'demand', demandDir, demandSize })
+        const [d1, d2] = p.curves.slice(0, 2).map((c) => [...c.paths.join(' ').matchAll(/([\d.]+),([\d.]+)/g)].map((m) => ({ x: +m[1], y: +m[2] })))
+        // Each curve's sharp corners: the right end of its flat top and the left end of its flat bottom.
+        const corners = (pts: { x: number; y: number }[]) => {
+          const top = Math.min(...pts.map((q) => q.y))
+          const bottom = Math.max(...pts.map((q) => q.y))
+          return [pts.filter((q) => q.y === top).at(-1)!, pts.find((q) => q.y === bottom)!]
+        }
+        const [[a1, a2], [b1, b2]] = [corners(d1), corners(d2)]
+        // DR₂'s corners on DR₁'s slope, further along it.
+        for (const q of [b1, b2]) {
+          const x = a1.x + ((q.y - a1.y) / (a2.y - a1.y)) * (a2.x - a1.x)
+          expect([demandDir, demandSize, Math.abs(x - q.x) < 0.5]).toEqual([demandDir, demandSize, true])
+        }
+        expect(Math.abs(b1.x - a1.x)).toBeGreaterThan(5)
+      }
+    }
   })
 
   it("keeps the policy rate where it is when the supply of reserves shifts with ample reserves, however far, clear of the kink", () => {
@@ -190,7 +212,7 @@ describe('money markets', () => {
     for (const t of tops) expect(p.labels.some((l) => l.blank && l.y < t.top && Math.abs((l.blank.x1 + l.blank.x2) / 2 - t.x) < 0.01)).toBe(true)
   })
 
-  it('puts both S_R names the same way over their curves in the limited reserves open-market purchase', () => {
+  it('puts both SR names the same way over their curves in the limited reserves open-market purchase', () => {
     const setup = SETUPS.find((x) => x.id === 'limited-purchase')!
     const p = buildMoneyMarkets(settingsFor(setup, moneyMarketsSettings.defaults, moneyMarketsSettings.defaults)).figure.panels[0]
     const names = ['SR1', 'SR2'].map((t) => p.labels.find((l) => l.runs?.map((r) => r.text).join('') === t)!)
@@ -366,10 +388,28 @@ describe('money markets', () => {
   })
 
   it('joins a shift number to a subscript already there', () => {
-    expect(curveNamed({ text: 'D_R', mode: 'text' }, 1).text).toBe('D_{R1}')
-    expect(curveNamed({ text: 'S_{LF}', mode: 'text' }, 2).text).toBe('S_{LF2}')
-    expect(curveNamed({ text: 'MS', mode: 'text' }, 2).text).toBe('MS_2')
-    expect(curveNamed({ text: 'MS', mode: 'text' }, 0).text).toBe('MS')
+    // The default names write the number alone under the line: DR₁, SLF₂.
+    expect(texts({ graph: 'reserves', shift: 'demand' })).toEqual(expect.arrayContaining(['SR', 'DR1', 'DR2']))
+    const runs = panel({ graph: 'reserves', shift: 'demand' }).labels.find((l) => l.runs?.map((r) => r.text).join('') === 'DR1')!.runs!
+    expect(runs.map((r) => [r.text, !!r.sub])).toEqual([['DR', false], ['1', true]])
+    // A name typed with a subscript has the number join it: D_R becomes D_{R1}.
+    expect(curveNamed({ text: 'D_R', mode: 'text' }, 1, '1').text).toBe('D_{R1}')
+    expect(curveNamed({ text: 'S_{LF}', mode: 'text' }, 2, '1').text).toBe('S_{LF2}')
+    expect(curveNamed({ text: 'MS', mode: 'text' }, 2, '1').text).toBe('MS_2')
+    expect(curveNamed({ text: 'MS', mode: 'text' }, 0, '1').text).toBe('MS')
+    expect(curveNamed({ text: 'D_R', mode: 'text' }, 1, '0').text).toBe('D_{R0}')
+    expect(curveNamed({ text: 'MS', mode: 'text' }, 0, '0').text).toBe('MS')
+  })
+
+  it('numbers a shift from 0 when asked: before 0, after 1, on the curves, the axes and the y-axis by the demand for reserves', () => {
+    expect(texts({ shift: 'supply', numberFrom: '0' })).toEqual(expect.arrayContaining(['MS0', 'MS1', 'MD', 'i0', 'i1', 'Q0', 'Q1']))
+    expect(texts({ shift: 'supply', numberFrom: '0' })).not.toContain('MS2')
+    const t = texts({ graph: 'reserves', shift: 'demand', numberFrom: '0' })
+    expect(t.filter((x) => x === 'DR0')).toHaveLength(2)
+    expect(t.filter((x) => x === 'DR1')).toHaveLength(2)
+    expect(t).toEqual(expect.arrayContaining(['PR0', 'PR1', 'Q0']))
+    // One equilibrium has no number either way.
+    expect(texts({ numberFrom: '0' })).toEqual(expect.arrayContaining(['MS', 'MD', 'ie', 'Qe']))
   })
 
   it('draws every label as a blank line when asked', () => {

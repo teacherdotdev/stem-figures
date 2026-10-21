@@ -15,7 +15,7 @@ import { along, crossings, intersect, lineThrough, shifted, vertical, xAt, yAt, 
 import { buildFigure } from '$lib/graph/figure'
 import { niceAxis, rangesOf } from '$lib/graph/fit'
 import { inks, shows, wrapped, type ArrowSpec, type BraceSpec, type CalloutSpec, type CurveSpec, type GuideSpec, type MarkSpec, type PanelSpec, type PointSpec, type Words } from '$lib/graph/panel'
-import { SCHEMATIC, panelBase, wordsOf } from '$lib/graph/settings'
+import { SCHEMATIC, nth, panelBase, wordsOf, type NumberFrom } from '$lib/graph/settings'
 import { SHIFT_SHARE, type ShiftSize } from '$lib/graph/shifts'
 import { smoothThrough } from '$lib/graph/smooth'
 import { readAxes, axisEnd } from '$shared/graph/axes'
@@ -81,24 +81,25 @@ export function axesOf(s: AdAsSettings) {
   return readAxes(rangesOf(s, fitOf(s)))
 }
 
-/** A label's words with a number lowered after it: Y_f becomes Y_{f1}, AD becomes AD_1. */
-function numbered(w: Words, k: 1 | 2): Words {
+/** A label's words with a number lowered after it: Y_f becomes Y_{f1}, AD becomes AD_1 (or, numbered `from` 0, Y_{f0} and AD_0). */
+function numbered(w: Words, k: 1 | 2, from: NumberFrom): Words {
   if (w.mode !== 'text' || !w.text.trim()) return w
   const t = w.text.trim()
+  const n = nth(k, from)
   const braced = t.match(/^(.*)_\{([^}]*)\}$/)
-  if (braced) return { ...w, text: `${braced[1]}_{${braced[2]}${k}}` }
+  if (braced) return { ...w, text: `${braced[1]}_{${braced[2]}${n}}` }
   const one = t.match(/^(.*)_(.)$/u)
-  if (one) return { ...w, text: `${one[1]}_{${one[2]}${k}}` }
-  return { ...w, text: `${t}_${k}` }
+  if (one) return { ...w, text: `${one[1]}_{${one[2]}${n}}` }
+  return { ...w, text: `${t}_${n}` }
 }
 /** A value's name before and after a change (PL₁, PL₂), or at the one equilibrium (PLₑ or PL*). */
-function named(w: Words, k: 0 | 1 | 2, style: AdAsSettings['eqStyle']): Words {
+function named(w: Words, k: 0 | 1 | 2, style: AdAsSettings['eqStyle'], from: NumberFrom): Words {
   if (w.mode !== 'text' || !w.text.trim()) return w
-  if (k) return numbered(w, k)
+  if (k) return numbered(w, k, from)
   return { ...w, text: style === 'star' ? `${w.text.trim()}*` : `${w.text.trim()}_e` }
 }
 /** A curve's or point's name, numbered only when there's a before and an after. */
-const maybe = (w: Words, k: 0 | 1 | 2): Words => (k ? numbered(w, k) : w)
+const maybe = (w: Words, k: 0 | 1 | 2, from: NumberFrom): Words => (k ? numbered(w, k, from) : w)
 
 /** A number as written in a callout or the readout: 8,800 and 90. */
 export const fmt = (v: number) => Number(v.toPrecision(4)).toLocaleString('en-US', { maximumFractionDigits: 6 })
@@ -612,10 +613,10 @@ export function buildAdAs(s: AdAsSettings) {
   if (lras1.length) curves.push({ pts: lras1, color: ink.third })
   if (lras2.length) curves.push({ pts: lras2, color: ink.third })
   const named1 = (c: CurveSpec, w: Words) => (numeric && s.dots ? c : { ...c, name: w })
-  curves.push(named1({ pts: as1Drawn, color: ink.supply }, maybe(asName, asMoves ? 1 : 0)))
-  if (asMoves) curves.push(named1({ pts: as2Drawn, color: ink.supply }, maybe(asName, 2)))
-  curves.push(named1({ pts: ad1Drawn, color: ink.demand }, maybe(adName, adMoves ? 1 : 0)))
-  if (adMoves) curves.push(named1({ pts: ad2Drawn, color: ink.demand }, maybe(adName, 2)))
+  curves.push(named1({ pts: as1Drawn, color: ink.supply }, maybe(asName, asMoves ? 1 : 0, s.numberFrom)))
+  if (asMoves) curves.push(named1({ pts: as2Drawn, color: ink.supply }, maybe(asName, 2, s.numberFrom)))
+  curves.push(named1({ pts: ad1Drawn, color: ink.demand }, maybe(adName, adMoves ? 1 : 0, s.numberFrom)))
+  if (adMoves) curves.push(named1({ pts: ad2Drawn, color: ink.demand }, maybe(adName, 2, s.numberFrom)))
 
   // Equilibrium points, the dots at a numbered graph's rows (left off where
   // one would touch an equilibrium's), and the guides to the axes.
@@ -668,7 +669,7 @@ export function buildAdAs(s: AdAsSettings) {
   const yfMarked = lrasShown || three || (!!gap && s.brace)
   if (yfMarked) {
     yfs.forEach((yf, k) => {
-      if (yfOn(yf)) mark('x', yf, maybe(yfName, lrasMoves ? ((k + 1) as 1 | 2) : 0))
+      if (yfOn(yf)) mark('x', yf, maybe(yfName, lrasMoves ? ((k + 1) as 1 | 2) : 0, s.numberFrom))
     })
   }
   // Every line drawn near the points, for their names to keep clear of: the axes, the curves, the arrows and the guides.
@@ -683,18 +684,18 @@ export function buildAdAs(s: AdAsSettings) {
   const braced = !!gap && s.brace && yfOn(gap.yf)
   const equilibrium = (e: Point | null, k: 0 | 1 | 2) => {
     if (!onGraph(e)) return
-    const name = maybe(eName, k)
+    const name = maybe(eName, k, s.numberFrom)
     points.push({ at: e, name, spots: clearOf(e, name, lines, [...ePoints, ...rowDots], scale, nameBoxes, points.length) })
     if (s.guides) {
       guides.push({ from: e })
-      mark('y', e.y, named(plName, k, s.eqStyle))
+      mark('y', e.y, named(plName, k, s.eqStyle, s.numberFrom))
     }
     // Output at full employment is Y_f, already written, unless it's also the output a gap is braced from
     // (LRAS moving away from it): Y_f₁ = Yₑ. Output at the other end of the gap is written there even with
     // no guides, so the brace is named at both ends.
     const atYf = yfs.some((yf) => Math.abs(e.x - yf) < tol) && yfMarked
     const gapEnd = braced && e === gap!.e
-    if ((!atYf || (gapEnd && Math.abs(e.x - gap!.yf) > tol)) && (s.guides || gapEnd)) mark('x', e.x, named(gdpName, k, s.eqStyle))
+    if ((!atYf || (gapEnd && Math.abs(e.x - gap!.yf) > tol)) && (s.guides || gapEnd)) mark('x', e.x, named(gdpName, k, s.eqStyle, s.numberFrom))
   }
   equilibrium(e1, shifted2 ? 1 : 0)
   if (shifted2) equilibrium(e2, 2)
@@ -704,16 +705,16 @@ export function buildAdAs(s: AdAsSettings) {
   const topOf = (l: Point[]) => (l.length ? l.reduce((p, z) => (z.y > p.y ? z : p)) : null)
   const tops = [topOf(lras1), topOf(lras2)]
   tops.forEach((top, k) => {
-    const name = maybe(lrasName, lrasMoves ? ((k + 1) as 1 | 2) : 0)
+    const name = maybe(lrasName, lrasMoves ? ((k + 1) as 1 | 2) : 0, s.numberFrom)
     if (!top || !shows(name)) return
     const o = tops[1 - k]
-    const other = o ? { dx: (o.x - top.x) * scale.x, name: maybe(lrasName, (2 - k) as 1 | 2) } : null
+    const other = o ? { dx: (o.x - top.x) * scale.x, name: maybe(lrasName, (2 - k) as 1 | 2, s.numberFrom) } : null
     points.push({ at: top, name, dot: false, spots: overTop(name, other) })
   })
   // On a numbered graph with a dot at each row, each curve's name past the dot at its end.
   if (numeric && s.dots) {
     const ends: [Point[], Words][] = [
-      [as1Drawn, maybe(asName, asMoves ? 1 : 0)], [as2Drawn, maybe(asName, 2)], [ad1Drawn, maybe(adName, adMoves ? 1 : 0)], [ad2Drawn, maybe(adName, 2)],
+      [as1Drawn, maybe(asName, asMoves ? 1 : 0, s.numberFrom)], [as2Drawn, maybe(asName, 2, s.numberFrom)], [ad1Drawn, maybe(adName, adMoves ? 1 : 0, s.numberFrom)], [ad2Drawn, maybe(adName, 2, s.numberFrom)],
     ]
     for (const [run, name] of ends) {
       if (run.length < 2 || !shows(name)) continue

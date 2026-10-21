@@ -18,7 +18,7 @@ import { fitted, rangesOf } from '$lib/graph/fit'
 import {
   inks, shows, words, type ArrowSpec, type CalloutSpec, type CurveSpec, type GuideSpec, type LevelSpec, type MarkSpec, type PanelSpec, type PointSpec, type Words,
 } from '$lib/graph/panel'
-import { SCHEMATIC, panelBase, wordsOf } from '$lib/graph/settings'
+import { SCHEMATIC, nth, panelBase, wordsOf, type NumberFrom } from '$lib/graph/settings'
 import { SHIFT_SHARE } from '$lib/graph/shifts'
 import { pointsOf, type PointRow, type PpcSettings } from './settings'
 
@@ -331,8 +331,8 @@ function outward(p: Point, span: Point): Point {
 const NAME_AT = [12, 22]
 const CAPTION_AT = [40, 60, 85]
 
-/** A curve's name before and after it shifts: PPC₁ and PPC₂, or PPC. */
-const curveNamed = (w: Words, k: 0 | 1 | 2): Words => (w.mode === 'text' && w.text.trim() && k ? { ...w, text: `${w.text.trim()}_${k}` } : w)
+/** A curve's name before and after it shifts: PPC₁ and PPC₂ (or PPC₀ and PPC₁, numbered `from` 0), or PPC. */
+const curveNamed = (w: Words, k: 0 | 1 | 2, from: NumberFrom): Words => (w.mode === 'text' && w.text.trim() && k ? { ...w, text: `${w.text.trim()}_${nth(k, from)}` } : w)
 
 /** A good's name for the readout, from its axis title. */
 const goodOf = (title: string, fallback: string) => {
@@ -571,7 +571,7 @@ function buildOne(s: PpcSettings) {
         const d = drawnOff(at, o)
         return around(wayAt(o), NAME_AT, [side])({ x: q.x + d.x, y: q.y + d.y }, fs)
       })
-    const label = curveNamed(name, k)
+    const label = curveNamed(name, k, s.numberFrom)
     const own = traced(X, Y)
     const other = k === 1 ? traced(X2, Y2) : k === 2 ? traced(X1, Y1) : []
     curveNames.push({

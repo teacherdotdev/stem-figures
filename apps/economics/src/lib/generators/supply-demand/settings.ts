@@ -4,7 +4,7 @@
 // per-unit tax or subsidy, the regions shaded, and every label's words.
 
 import { bool, choice, defineSettings, number, text } from '$shared/settings'
-import { labels, lookFields } from '$lib/graph/settings'
+import { NUMBER_FROMS, labels, lookFields } from '$lib/graph/settings'
 import { SHIFT_SIZES } from '$lib/graph/shifts'
 
 /** A curve's slope on a schematic graph, from perfectly inelastic (upright) to perfectly elastic (flat). */
@@ -72,6 +72,7 @@ export const supplyDemandSettings = defineSettings({
 
   guides: bool(true),
   eqStyle: choice(EQ_STYLES, 'e'),
+  numberFrom: choice(NUMBER_FROMS, '1'),
   ...labels({
     dLabel: 'D', sLabel: 'S', eLabel: 'E', pLabel: 'P', qLabel: 'Q',
     ceilingLabel: 'Price ceiling', floorLabel: 'Price floor', shortageLabel: 'Shortage', surplusLabel: 'Surplus',

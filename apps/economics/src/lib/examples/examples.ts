@@ -144,9 +144,9 @@ export const EXAMPLES: Example[] = [
     {
       slug: 'market-for-reserves-graph-ample-reserves-lower-administered-rates',
       title: 'Ample reserves graph: the Fed lowers its administered rates',
-      alt: 'Market for reserves graph with no numbers on the axes, Policy rate up the side and Quantity of reserves along the bottom: a demand for reserves curve DR₁ (blue) flat at the top, sloping down, then flat along the bottom, a second curve DR₂ the same shape lower down, two arrows pointing down from DR₁ to DR₂ on their flat parts, a vertical supply of reserves curve SR (red) crossing both flat bottoms, dashed lines across to PR₁ and the lower PR₂ on the vertical axis, and Q₁ under SR',
+      alt: 'Market for reserves graph with no numbers on the axes, Policy rate up the side and Quantity of reserves along the bottom: a demand for reserves curve DR₁ (blue) flat at the top, sloping down, then flat along the bottom, a second curve DR₂ with both flat parts lower, its slope on the same line as DR₁’s, each curve named both at its flat top by the vertical axis and at the end of its flat bottom, two arrows pointing down from DR₁ to DR₂ on their flat parts, a vertical supply of reserves curve SR (red) crossing both flat bottoms, dashed lines across to PR₁ and the lower PR₂ on the vertical axis, and Q₁ under SR',
       caption:
-        'The market for reserves with ample reserves: the vertical supply of reserves SR crosses the flat bottom of the demand for reserves. When the Fed lowers its administered rates, the demand for reserves shifts down from DR₁ to DR₂. The policy rate falls from PR₁ to PR₂ while the quantity of reserves stays at Q₁.',
+        'The market for reserves with ample reserves: the vertical supply of reserves SR crosses the flat bottom of the demand for reserves. When the Fed lowers its administered rates, the flat parts of the demand for reserves shift down from DR₁ to DR₂ while its slope stays where it is. The policy rate falls from PR₁ to PR₂ while the quantity of reserves stays at Q₁.',
       settings: { graph: 'reserves', shift: 'demand', demandDir: 'decrease' },
     },
     {

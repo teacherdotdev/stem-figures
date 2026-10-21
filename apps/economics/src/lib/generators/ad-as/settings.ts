@@ -5,7 +5,7 @@
 // and every label's words.
 
 import { bool, choice, defineSettings, number, text } from '$shared/settings'
-import { labels, lookFields } from '$lib/graph/settings'
+import { NUMBER_FROMS, labels, lookFields } from '$lib/graph/settings'
 import { SHIFT_SIZES } from '$lib/graph/shifts'
 
 /** Aggregate supply as a straight upward line (the AP short-run curve), or flat, then curving up, then nearly vertical. */
@@ -68,6 +68,7 @@ export const adAsSettings = defineSettings({
 
   guides: bool(true),
   eqStyle: choice(EQ_STYLES, 'e'),
+  numberFrom: choice(NUMBER_FROMS, '1'),
   ...labels({
     adLabel: 'AD', asLabel: 'SRAS', lrasLabel: 'LRAS', eLabel: 'E', plLabel: 'PL', gdpLabel: 'Y', yfLabel: 'Y_f',
     recessionLabel: 'Recessionary gap', inflationLabel: 'Inflationary gap', calloutLabel: '',
