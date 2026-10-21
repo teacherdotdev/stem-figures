@@ -9,10 +9,13 @@
 // run or the long run, with its excess capacity.
 
 import { clipPath, type Point } from '$shared/graph/grid'
-import { plainOf } from '$shared/graph/runs'
+import { crosses, textBox, type Segment, type Spot } from '$shared/graph/labels'
+import { plainOf, runsOf, runsWidth } from '$shared/graph/runs'
 import { areaOf, graphOf, lineThrough, type Box, type Curve } from '$lib/graph/curves'
 import { buildFigure, type Connector } from '$lib/graph/figure'
-import { inks, type BraceSpec, type CalloutSpec, type CurveSpec, type GuideSpec, type MarkSpec, type PanelSpec, type PointSpec, type RegionSpec, type Words } from '$lib/graph/panel'
+import {
+  buildPanel, inks, type BraceSpec, type CalloutSpec, type CurveSpec, type GuideSpec, type MarkSpec, type PanelSpec, type PointSpec, type RegionSpec, type Words,
+} from '$lib/graph/panel'
 import { SCHEMATIC, panelBase, wordsOf } from '$lib/graph/settings'
 import {
   afc, atc, avc, costsOf, demandMeetsATC, demandMeetsMC, longRunDemand, mc, minATC, minAVC, mrOn, onRisingMC, priceMaker, priceOn,
@@ -272,6 +275,7 @@ export function buildCostRevenue(s: CostRevenueSettings) {
     callouts,
     caption: market ? w('firmLabel') : undefined,
   }
+  firm.callouts = untangled(firm)
   const label = s.titleMode === 'text' && s.title.trim() ? plainOf(s.title.trim()) : `${story}${shaded.length ? `; shaded ${shaded.join(', ')}` : ''}`
   return {
     figure: buildFigure(market ? [market, firm] : [firm], connectors),
@@ -282,6 +286,139 @@ export function buildCostRevenue(s: CostRevenueSettings) {
 }
 
 export type CostRevenueFigure = ReturnType<typeof buildCostRevenue>
+
+/** How far from its point, on the drawing, a callout's words may go, nearest first, and how many ways round it. */
+const REACH = [30, 44, 60, 80, 100, 125]
+const TURNS = 16
+/** A write-on line's width, as the graph library draws one for a callout left blank. */
+const BLANK_W = 46
+/** How far short of its point a callout's arrow stops, as the graph library draws it, and how much nearer the point the curves through it may cross it. */
+const STOP = 4
+const NEAR_POINT = 8
+
+/** Whether two segments cross, away from their ends. */
+function cross(a: Segment, b: Segment) {
+  const side = (s: Segment, x: number, y: number) => Math.sign((s.x2 - s.x1) * (y - s.y1) - (s.y2 - s.y1) * (x - s.x1))
+  return side(a, b.x1, b.y1) * side(a, b.x2, b.y2) < 0 && side(b, a.x1, a.y1) * side(b, a.x2, a.y2) < 0
+}
+
+const grow = (b: Box, by: number): Box => ({ x0: b.x0 - by, y0: b.y0 - by, x1: b.x1 + by, y1: b.y1 + by })
+const holds = (b: Box, x: number, y: number) => x >= b.x0 && x <= b.x1 && y >= b.y0 && y <= b.y1
+const overlap = (a: Box, b: Box) => a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1
+
+/** A segment cut `by` short at its second end. */
+function cut(l: Segment, by: number): Segment {
+  const len = Math.hypot(l.x2 - l.x1, l.y2 - l.y1)
+  const f = Math.max(0, (len - by) / len)
+  return { x1: l.x1, y1: l.y1, x2: l.x1 + (l.x2 - l.x1) * f, y2: l.y1 + (l.y2 - l.y1) * f }
+}
+
+/**
+ * A panel laid out, with the lines on it an arrow could cross (the dashed
+ * guides, and the curves in steps about as long as a dash: close enough,
+ * and quick to check); how many of them the arrows cross, with how many
+ * labels found no clear place; and how many each callout's own arrow
+ * crosses. An arrow may cross the curves through its point near it, and
+ * counts the labels it runs through as lines.
+ */
+function tangles(spec: PanelSpec) {
+  const p = buildPanel(spec)
+  const guides = p.guides
+  const curves: Segment[] = []
+  for (const c of spec.curves ?? []) {
+    let from: Point | null = null
+    for (const [k, q] of c.pts.map(p.px).entries()) {
+      const far = from ? Math.hypot(q.x - from.x, q.y - from.y) >= 4 : true
+      if (from && (far || k === c.pts.length - 1)) curves.push({ x1: from.x, y1: from.y, x2: q.x, y2: q.y })
+      if (far) from = q
+    }
+  }
+  // Every label's box, a little bigger; an arrow's own words are where it starts.
+  const fs = p.labelFs
+  const boxes = p.labels.map((l) => grow(textBox(l, l.runs ? runsWidth(l.runs, fs) : Math.abs((l.blank?.x2 ?? 0) - (l.blank?.x1 ?? 0)), fs), 3))
+  const crossed = (l: Segment, skip: Box[] = []) =>
+    guides.filter((d) => cross(l, d)).length +
+    curves.filter((d) => cross(cut(l, NEAR_POINT), d)).length +
+    boxes.filter((b) => !skip.includes(b) && !holds(grow(b, 4), l.x1, l.y1) && crosses(cut(l, NEAR_POINT), b)).length
+  const leaderOf = (c: CalloutSpec) => {
+    const at = p.px(c.at)
+    return p.leaders.find((l) => Math.hypot(l.x2 - at.x, l.y2 - at.y) < STOP + 2)
+  }
+  const each = (spec.callouts ?? []).map((c) => {
+    const l = leaderOf(c)
+    return l ? crossed(l) : 0
+  })
+  return { n: p.crowded + p.leaders.reduce((n, l) => n + crossed(l), 0), each, p, guides, curves, boxes, crossed, leaderOf }
+}
+
+/**
+ * The places round a callout's point where its words would touch no line
+ * and no other label, and its arrow would cross fewest lines and labels
+ * (fewer than `now`), nearest first (those well clear of other labels
+ * before those close by them), on a panel as laid out.
+ */
+function betterSpots(c: CalloutSpec, t: ReturnType<typeof tangles>, now: number): Spot[] {
+  const { p, crossed } = t
+  const lines = [...t.guides, ...t.curves]
+  const fs = p.labelFs
+  const at = p.px(c.at)
+  const width = c.name.mode === 'text' ? runsWidth(runsOf(c.name.text.trim(), fs), fs) * 1.04 + 2 : BLANK_W
+  // Every other label as it's laid out now (the callout's own is where its arrow starts), and the dots.
+  const own = t.leaderOf(c)
+  const mine = t.boxes.filter((b) => own && holds(grow(b, 4), own.x1, own.y1))
+  const dots = p.dots.map((d) => grow({ x0: d.x, y0: d.y, x1: d.x, y1: d.y }, 8))
+  const others = [...t.boxes.filter((b) => !mine.includes(b)), ...dots]
+  let least = now
+  let out: Spot[] = []
+  let tight: Spot[] = []
+  for (const r of REACH) {
+    for (let k = 0; k < TURNS; k++) {
+      const dx = Math.cos((2 * Math.PI * k) / TURNS)
+      const dy = Math.sin((2 * Math.PI * k) / TURNS)
+      // The words out the way they go from the point, or centered there, or back toward it if there's no room.
+      const way: Spot['anchor'] = dx > 0.3 ? 'start' : dx < -0.3 ? 'end' : 'middle'
+      for (const anchor of [way, ...(['middle', 'start', 'end'] as const).filter((a) => a !== way)]) {
+        const spot: Spot = { x: at.x + r * dx, y: at.y + r * dy + (dy > 0.3 ? fs : dy > -0.3 ? fs * 0.35 : 0), anchor }
+        const box = textBox(spot, width, fs)
+        if (holds(grow(box, 6), at.x, at.y)) continue
+        if (box.x0 < p.yAxis.x || box.x1 > p.width || box.y0 < p.top - 16 || box.y1 > p.xAxis.y - 2) continue
+        if (lines.some((l) => crosses(l, grow(box, 3))) || others.some((o) => overlap(box, o))) continue
+        // The arrow, from the words' nearest edge to just short of the point.
+        const from = { x: Math.min(box.x1 + 3, Math.max(box.x0 - 3, at.x)), y: Math.min(box.y1 + 3, Math.max(box.y0 - 3, at.y)) }
+        const arrow = cut({ x1: from.x, y1: from.y, x2: at.x, y2: at.y }, STOP)
+        const n = Math.hypot(at.x - from.x, at.y - from.y) < STOP + 6 ? 0 : crossed(arrow, mine) + dots.filter((d) => crosses(cut(arrow, NEAR_POINT), d)).length
+        if (n < least) [least, out, tight] = [n, [], []]
+        // Words well clear of the other labels first, so two callouts' words don't read as one.
+        const room = grow(box, fs * 0.8)
+        if (n === least && least < now) (others.some((o) => overlap(room, o)) ? tight : out).push(spot)
+      }
+    }
+  }
+  return [...out, ...tight]
+}
+
+/**
+ * The callouts (the break-even and shutdown points'), each kept to the
+ * places where its arrow crosses fewest lines when it would cross a dashed
+ * guide or a curve, if that leaves the figure less tangled: the graph
+ * library keeps arrows off curves but not off guides, so a crowded graph
+ * can send one across a guide.
+ */
+function untangled(spec: PanelSpec): CalloutSpec[] {
+  let best = spec.callouts ?? []
+  if (!best.length) return best
+  let now = tangles(spec)
+  for (const i of best.keys()) {
+    if (!now.each[i]) continue
+    const spots = betterSpots(best[i], now, now.each[i])
+    if (!spots.length) continue
+    const from = now.p.px(best[i].at)
+    const tried = best.map((c, j) => (j === i ? { ...c, spots: (at: Point) => spots.map((s) => ({ ...s, x: s.x - from.x + at.x, y: s.y - from.y + at.y })) } : c))
+    const next = tangles({ ...spec, callouts: tried })
+    if (next.n < now.n) [best, now] = [tried, next]
+  }
+  return best
+}
 
 /** The market a perfectly competitive firm takes its price from: supply and demand crossing at that price. */
 function marketPanel(s: CostRevenueSettings, price: number): PanelSpec {
