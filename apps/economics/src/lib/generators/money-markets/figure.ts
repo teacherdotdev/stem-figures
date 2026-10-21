@@ -9,10 +9,10 @@
 import { clipPath, type Point } from '$shared/graph/grid'
 import { besidePoint, type Spot } from '$shared/graph/labels'
 import { plainOf } from '$shared/graph/runs'
-import { along, crossings as crossingsOf, flatSlopeFlat, intersect, shifted, xAt, yAt, type Box, type Curve } from '$lib/graph/curves'
+import { along, crossings as crossingsOf, flatSlopeFlat, intersect, shifted, yAt, type Box, type Curve } from '$lib/graph/curves'
 import { buildFigure } from '$lib/graph/figure'
 import { inks, type ArrowSpec, type CurveSpec, type GuideSpec, type MarkSpec, type PanelSpec, type PointSpec, type Words } from '$lib/graph/panel'
-import { SCHEMATIC, panelBase, wordsOf } from '$lib/graph/settings'
+import { SCHEMATIC, nth, panelBase, wordsOf, type NumberFrom } from '$lib/graph/settings'
 import { SHIFT_SHARE } from '$lib/graph/shifts'
 import { KEYS, axisWordsOf, type Graph, type MoneyMarketsSettings, type Regime } from './settings'
 
@@ -56,9 +56,36 @@ const STRAIGHT_BOTTOM = 0.3
  * down it, so it stays on the slope.
  */
 export const RESERVES: Record<Regime, { x0: number; x1: number; high: number; low: number; supply: number }> = {
-  ample: { x0: 1, x1: 4, high: 6.8, low: 3.2, supply: 6.7 },
+  ample: { x0: 2.1, x1: 3.38, high: 6.6, low: 3.4, supply: 7 },
   limited: { x0: 0.8, x1: 6, high: 7.2, low: 2.8, supply: 3.4 },
 }
+/** How round the demand for reserves' corners are with ample reserves, in the graph's units up and down. */
+const CORNER = 0.6
+
+/** Where the ample demand for reserves' straight slope, through (`x0`, `high`) and (`x1`, `low`), is at the rate `y`. */
+export const slopeX = (R: (typeof RESERVES)[Regime], y: number) => R.x0 + ((R.high - y) * (R.x1 - R.x0)) / (R.high - R.low)
+
+/** The smaller of two values, rounded off within `k` of each other. */
+function softMin(a: number, b: number, k: number) {
+  const h = Math.max(k - Math.abs(a - b), 0) / k
+  return Math.min(a, b) - (h * h * k) / 4
+}
+
+/**
+ * The demand for reserves with ample reserves, its rates `dy` up: one
+ * straight slope that never moves, cut off by the discount rate over it
+ * and the administered rate under it, with round corners. Raising the
+ * rates moves both flat parts up, their corners up the slope, as AP draws it.
+ */
+function ampleDemand(R: (typeof RESERVES)[Regime], dy: number): Curve {
+  const high = R.high + dy
+  const low = R.low + dy
+  const line = (x: number) => R.high + ((x - R.x0) * (R.low - R.high)) / (R.x1 - R.x0)
+  const y = (x: number) => -softMin(-low, -softMin(high, line(x), CORNER), CORNER)
+  const xs = [-FAR, ...Array.from({ length: 601 }, (_, k) => -1 + k * 0.02), FAR]
+  return xs.map((x) => ({ x, y: x < -1 ? high : x > 11 ? low : y(x) }))
+}
+
 /**
  * How far a shift moves a curve, as a share (small, medium or large) of
  * this: the axis on the money market; more on loanable funds, where both
@@ -89,24 +116,26 @@ const near = (a: number, b: number) => Math.abs(a - b) < 1e-6
 export const demandUpDown = (s: Pick<MoneyMarketsSettings, 'graph' | 'regime'>) => s.graph === 'reserves' && s.regime === 'ample'
 
 /**
- * A curve's name before and after it shifts: MS₁ and MS₂, with the number
- * joining a subscript already there (D_R → D_{R1}), or the name alone.
+ * A curve's name before and after it shifts: MS₁ and MS₂ (or, numbered
+ * `from` 0, MS₀ and MS₁), with the number joining a subscript already there
+ * (D_R → D_{R1}), or the name alone.
  */
-export function curveNamed(w: Words, k: 0 | 1 | 2): Words {
+export function curveNamed(w: Words, k: 0 | 1 | 2, from: NumberFrom): Words {
   const t = w.text.trim()
   if (w.mode !== 'text' || !t || !k) return w
   const braced = t.match(/^(.*)_\{([^}]*)\}$/)
-  if (braced) return { ...w, text: `${braced[1]}_{${braced[2]}${k}}` }
+  const n = nth(k, from)
+  if (braced) return { ...w, text: `${braced[1]}_{${braced[2]}${n}}` }
   const one = t.match(/^(.*)_(.)$/)
-  if (one) return { ...w, text: `${one[1]}_{${one[2]}${k}}` }
-  return { ...w, text: `${t}_${k}` }
+  if (one) return { ...w, text: `${one[1]}_{${one[2]}${n}}` }
+  return { ...w, text: `${t}_${n}` }
 }
 
 /** A value's name at one equilibrium (iₑ or i*), or before and after a shift (i₁, i₂). */
-function valueNamed(w: Words, k: 0 | 1 | 2, style: MoneyMarketsSettings['eqStyle']): Words {
+function valueNamed(w: Words, k: 0 | 1 | 2, style: MoneyMarketsSettings['eqStyle'], from: NumberFrom): Words {
   const t = w.text.trim()
   if (w.mode !== 'text' || !t) return w
-  return { ...w, text: k ? `${t}_${k}` : style === 'star' ? `${t}*` : `${t}_e` }
+  return { ...w, text: k ? `${t}_${nth(k, from)}` : style === 'star' ? `${t}*` : `${t}_e` }
 }
 
 /** A straight curve: the whole line, for where it crosses others, and the stretch across that's drawn. */
@@ -157,11 +186,11 @@ export function buildMoneyMarkets(s: MoneyMarketsSettings) {
   const sStraight = g === 'funds' ? [straight(STRAIGHT.funds.supply), straight(STRAIGHT.funds.supply, sShift.dx)] : null
   const dStraight = g === 'money' ? STRAIGHT.money.demand : g === 'funds' ? STRAIGHT.funds.demand : null
   const dStraights = dStraight ? [straight(dStraight), straight(dStraight, dShift.dx)] : null
-  const reservesDemand = flatSlopeFlat(R.x0, R.x1, R.high, R.low, FAR, -FAR)
+  const reservesDemand = upDown ? ampleDemand(R, 0) : flatSlopeFlat(R.x0, R.x1, R.high, R.low, FAR, -FAR)
   const s1: Curve = sStraight ? sStraight[0].line : upright(q1)
   const s2: Curve = sStraight ? sStraight[1].line : upright(q1 + sShift.dx)
   const d1: Curve = dStraights ? dStraights[0].line : reservesDemand
-  const d2: Curve = dStraights ? dStraights[1].line : shifted(reservesDemand, dShift.dx, dShift.dy)
+  const d2: Curve = dStraights ? dStraights[1].line : upDown ? ampleDemand(R, dShift.dy) : shifted(reservesDemand, dShift.dx, dShift.dy)
 
   const e1 = intersect(s1, d1)
   const e2 = anyShift ? intersect(s2, d2) : e1
@@ -185,7 +214,7 @@ export function buildMoneyMarkets(s: MoneyMarketsSettings) {
   const sideways = reserves && !upDown && dMoves
   const cut = sideways ? (dShift.dx > 0 ? 1 : 0) : -1
   for (const k of dMoves ? [0, 1] : [0]) {
-    const name = curveNamed(dName, dMoves ? ((k + 1) as 1 | 2) : 0)
+    const name = curveNamed(dName, dMoves ? ((k + 1) as 1 | 2) : 0, s.numberFrom)
     if (k !== cut) {
       curves.push({ pts: dRuns[k], name, color: ink.demand })
       continue
@@ -207,8 +236,8 @@ export function buildMoneyMarkets(s: MoneyMarketsSettings) {
     } else curves.push({ pts, name, color: ink.supply })
   }
   const sRun = (k: 0 | 1) => (sStraight ? straightPiece(sStraight[k], crossings) : drawn(k ? s2 : s1, supplyBox))
-  supplyCurve(sRun(0), curveNamed(sName, sMoves ? 1 : 0), !sMoves ? 'alone' : sShift.dx > 0 ? 'left' : 'right')
-  if (sMoves) supplyCurve(sRun(1), curveNamed(sName, 2), sShift.dx > 0 ? 'right' : 'left')
+  supplyCurve(sRun(0), curveNamed(sName, sMoves ? 1 : 0, s.numberFrom), !sMoves ? 'alone' : sShift.dx > 0 ? 'left' : 'right')
+  if (sMoves) supplyCurve(sRun(1), curveNamed(sName, 2, s.numberFrom), sShift.dx > 0 ? 'right' : 'left')
   // The left one's name first, so by the y-axis it can lean right before the other's takes the room.
   tops.sort((a, b) => a.at.x - b.at.x)
 
@@ -227,7 +256,7 @@ export function buildMoneyMarkets(s: MoneyMarketsSettings) {
     : []
 
   // Shift arrows: across from a curve, or for the demand for reserves with
-  // ample reserves up or down on its flat parts, as AP draws them. Arrows
+  // ample reserves up or down on its flat parts (its slope stays put), as AP draws them. Arrows
   // across keep off the other curves, the guides, the other arrows, and
   // clear of where the curves cross, which have names by them.
   const arrows: ArrowSpec[] = []
@@ -255,14 +284,16 @@ export function buildMoneyMarkets(s: MoneyMarketsSettings) {
   }
   const equilibrium = (e: Point | null, k: 0 | 1 | 2) => {
     if (!onGraph(e)) return
-    if (s.points) points.push({ at: e, name: curveNamed(eName, k), spots: supplyUpright ? besideUpright : overCrossing })
+    if (s.points) points.push({ at: e, name: curveNamed(eName, k, s.numberFrom), spots: supplyUpright ? besideUpright : overCrossing })
     if (!s.guides) return
     if (across(e) || down(e)) guides.push({ from: e, x: down(e), y: across(e) })
-    mark('y', e.y, valueNamed(rateName, k, s.eqStyle))
-    mark('x', e.x, valueNamed(qName, k, s.eqStyle))
+    mark('y', e.y, valueNamed(rateName, k, s.eqStyle, s.numberFrom))
+    mark('x', e.x, valueNamed(qName, k, s.eqStyle, s.numberFrom))
   }
   equilibrium(e1, anyShift ? 1 : 0)
   if (anyShift) equilibrium(e2, 2)
+  // The demand for reserves with ample reserves is named at the y-axis too, by its flat top.
+  if (upDown) for (const k of dMoves ? [0, 1] : [0]) mark('y', R.high + (k ? dShift.dy : 0), curveNamed(dName, dMoves ? ((k + 1) as 1 | 2) : 0, s.numberFrom))
 
   const spec: PanelSpec = {
     ...panelBase({ ...s, ...axisWordsOf(s), look: 'schematic' }),
@@ -396,25 +427,24 @@ const roomFor = (from: Point, to: Point, room: Room, lenient = false, crowded = 
   room.taken.every((a) => gapBetween({ a: from, b: to }, { a: a.from, b: a.to }) >= GUIDE_ROOM * (crowded ? 0.6 : 1))
 
 /**
- * Arrows from the demand for reserves to where it moves, `dy` up: one on its
- * flat bottom (clear of the supply curves at `avoid`), then one on its flat
- * top by the y-axis, then one on its slope, high enough to clear the
- * guides across, leaving out any a supply curve runs too close to or that
- * would cut a guide.
+ * Arrows from the demand for reserves to where its flat parts move, `dy`
+ * up: one on its flat bottom (clear of the supply curves at `avoid`), then
+ * one on its flat top by the y-axis, then one more on the flat bottom, past
+ * both curves' corners, leaving out any a supply curve runs too close to
+ * or that would cut a guide. Its slope doesn't move, so has none.
  */
 function reserveArrows(R: (typeof RESERVES)[Regime], dy: number, count: number, avoid: number[], room: Room, color: string): ArrowSpec[] {
-  const { x0, x1, high, low } = R
-  // The widest stretch of the bottom with no supply curve in it.
-  const cuts = [x1, ...avoid.filter((x) => x > x1 && x < DRAW.x1).sort((a, b) => a - b), DRAW.x1]
-  let best = { a: cuts[0], b: cuts[1] }
-  for (let k = 2; k < cuts.length; k++) if (cuts[k] - cuts[k - 1] > best.b - best.a) best = { a: cuts[k - 1], b: cuts[k] }
-  // On the slope above the guide across from the flat bottom, before or after the shift, so the arrow cuts neither.
-  const slopeY = Math.min(high - SLOPE_ROOM, Math.max((high + low) / 2, low + Math.abs(dy) + 0.3))
-  const curve = flatSlopeFlat(x0, x1, high, low, FAR, -FAR)
+  const { high, low } = R
+  // Where both curves' flat parts are flat, clear of their round corners.
+  const top = Math.min(slopeX(R, high), slopeX(R, high + dy)) - CORNER / 2
+  const bottom = Math.max(slopeX(R, low), slopeX(R, low + dy)) + CORNER / 2
+  // The stretches of the bottom with no supply curve in them, widest first.
+  const cuts = [bottom, ...avoid.filter((x) => x > bottom && x < DRAW.x1).sort((a, b) => a - b), DRAW.x1]
+  const stretches = cuts.slice(1).map((b, k) => ({ a: cuts[k], b })).sort((p, q) => q.b - q.a - (p.b - p.a))
   const at: Point[] = [
-    { x: (best.a + best.b) / 2, y: low },
-    { x: x0 / 2, y: high },
-    { x: xAt(curve.filter((p) => p.x >= x0), slopeY) ?? (x0 + x1) / 2, y: slopeY },
+    ...stretches.slice(0, 1).map((t) => ({ x: (t.a + t.b) / 2, y: low })),
+    { x: top / 2, y: high },
+    ...stretches.slice(1, 2).filter((t) => t.b - t.a >= 2 * CLEAR).map((t) => ({ x: (t.a + t.b) / 2, y: low })),
   ]
   // A guide runs under a flat part, so only one cutting across the arrow's middle counts.
   const cutsGuide = (p: Point) => room.guides.some((l) => near(l.a.y, l.b.y) && Math.min(l.a.x, l.b.x) < p.x && Math.max(l.a.x, l.b.x) > p.x && l.a.y > Math.min(p.y, p.y + dy) + 0.3 && l.a.y < Math.max(p.y, p.y + dy) - 0.3)

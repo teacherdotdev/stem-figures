@@ -19,7 +19,7 @@
   import LookSettings from '$lib/graph/LookSettings.svelte'
   import NumberSettings from '$lib/graph/NumberSettings.svelte'
   import { rangesOf, typeRange } from '$lib/graph/fit'
-  import { filenameOf } from '$lib/graph/settings'
+  import { NUMBER_FROMS, NUMBER_FROM_NAMES, filenameOf } from '$lib/graph/settings'
   import { SHIFT_SIZES, SHIFT_SIZE_NAMES } from '$lib/graph/shifts'
   import PhillipsFigure from './PhillipsFigure.svelte'
   import { axesOf, buildPhillips, fitOf } from './figure'
@@ -246,6 +246,10 @@
     </Section>
 
     <Section title="Labels" icon={Tags} summary={labelSummary}>
+      <div class="field">
+        <span>Before and after</span>
+        {@render segmented('Before and after', NUMBER_FROMS, NUMBER_FROM_NAMES, s.numberFrom, (v) => (s.numberFrom = v))}
+      </div>
       <div class="field">
         <span>Every label</span>
         <div class="segmented" role="group" aria-label="Every label">

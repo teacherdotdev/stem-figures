@@ -84,6 +84,30 @@ describe('money markets', () => {
     for (const l of p.guides) expect(l.y1).toBe(l.y2)
   })
 
+  it('moves only the flat parts of the demand for reserves with ample reserves, the slope staying where it is', () => {
+    for (const demandDir of DIRECTIONS) {
+      for (const demandSize of SHIFT_SIZES) {
+        const p = panel({ graph: 'reserves', shift: 'demand', demandDir, demandSize })
+        const [d1, d2] = p.curves.slice(0, 2).map((c) => segmentsOf(c.paths).flatMap((l) => [{ x: l.x1, y: l.y1 }]))
+        // The points of each curve on its slope, clear of its round corners.
+        const slope = (pts: { x: number; y: number }[]) => {
+          const top = Math.min(...pts.map((q) => q.y))
+          const bottom = Math.max(...pts.map((q) => q.y))
+          const room = (bottom - top) * 0.25
+          return pts.filter((q) => q.y > top + room && q.y < bottom - room)
+        }
+        const [a, b] = [slope(d1), slope(d2)]
+        const line = { x1: a[0].x, y1: a[0].y, x2: a.at(-1)!.x, y2: a.at(-1)!.y }
+        // Both slopes on the same line, D_R2's corners further along it.
+        for (const q of b) {
+          const t = (q.y - line.y1) / (line.y2 - line.y1)
+          expect([demandDir, demandSize, Math.abs(line.x1 + t * (line.x2 - line.x1) - q.x) < 0.5]).toEqual([demandDir, demandSize, true])
+        }
+        expect(Math.abs(b[0].x - a[0].x)).toBeGreaterThan(5)
+      }
+    }
+  })
+
   it("keeps the policy rate where it is when the supply of reserves shifts with ample reserves, however far, clear of the kink", () => {
     for (const supplyDir of DIRECTIONS) {
       for (const supplySize of SHIFT_SIZES) {
@@ -366,10 +390,23 @@ describe('money markets', () => {
   })
 
   it('joins a shift number to a subscript already there', () => {
-    expect(curveNamed({ text: 'D_R', mode: 'text' }, 1).text).toBe('D_{R1}')
-    expect(curveNamed({ text: 'S_{LF}', mode: 'text' }, 2).text).toBe('S_{LF2}')
-    expect(curveNamed({ text: 'MS', mode: 'text' }, 2).text).toBe('MS_2')
-    expect(curveNamed({ text: 'MS', mode: 'text' }, 0).text).toBe('MS')
+    expect(curveNamed({ text: 'D_R', mode: 'text' }, 1, '1').text).toBe('D_{R1}')
+    expect(curveNamed({ text: 'S_{LF}', mode: 'text' }, 2, '1').text).toBe('S_{LF2}')
+    expect(curveNamed({ text: 'MS', mode: 'text' }, 2, '1').text).toBe('MS_2')
+    expect(curveNamed({ text: 'MS', mode: 'text' }, 0, '1').text).toBe('MS')
+    expect(curveNamed({ text: 'D_R', mode: 'text' }, 1, '0').text).toBe('D_{R0}')
+    expect(curveNamed({ text: 'MS', mode: 'text' }, 0, '0').text).toBe('MS')
+  })
+
+  it('numbers a shift from 0 when asked: before 0, after 1, on the curves, the axes and the y-axis by the demand for reserves', () => {
+    expect(texts({ shift: 'supply', numberFrom: '0' })).toEqual(expect.arrayContaining(['MS0', 'MS1', 'MD', 'i0', 'i1', 'Q0', 'Q1']))
+    expect(texts({ shift: 'supply', numberFrom: '0' })).not.toContain('MS2')
+    const t = texts({ graph: 'reserves', shift: 'demand', numberFrom: '0' })
+    expect(t.filter((x) => x === 'DR0')).toHaveLength(2)
+    expect(t.filter((x) => x === 'DR1')).toHaveLength(2)
+    expect(t).toEqual(expect.arrayContaining(['PR0', 'PR1', 'Q0']))
+    // One equilibrium has no number either way.
+    expect(texts({ numberFrom: '0' })).toEqual(expect.arrayContaining(['MS', 'MD', 'ie', 'Qe']))
   })
 
   it('draws every label as a blank line when asked', () => {

@@ -6,7 +6,7 @@
 // label's words.
 
 import { bool, choice, defineSettings, number } from '$shared/settings'
-import { labels, lookFields } from '$lib/graph/settings'
+import { NUMBER_FROMS, labels, lookFields } from '$lib/graph/settings'
 import { SHIFT_SIZES } from '$lib/graph/shifts'
 
 /** How sharply the short-run curve bends. */
@@ -82,6 +82,7 @@ export const phillipsSettings = defineSettings({
   guides: bool(true),
   /** the inflation and unemployment rates written where the guides meet the axes */
   values: bool(true),
+  numberFrom: choice(NUMBER_FROMS, '1'),
   ...labels({ srpcLabel: 'SRPC', lrpcLabel: 'LRPC', nruLabel: 'u_n', aLabel: 'A', bLabel: 'B', cLabel: 'C', piLabel: 'π', uLabel: 'u' }),
   ...look,
   // Numbered every other line across, where the numbers with % signs would crowd.

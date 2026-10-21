@@ -7,7 +7,7 @@
 
 import { TITLE_MODES } from '$shared/graph/axes'
 import { bool, choice, defineSettings, number, text } from '$shared/settings'
-import { labels, lookFields } from '$lib/graph/settings'
+import { NUMBER_FROMS, labels, lookFields } from '$lib/graph/settings'
 import { SHIFT_SIZES } from '$lib/graph/shifts'
 
 /** The curve's shape: bowed out (increasing opportunity cost), straight (constant) or bowed in (decreasing). */
@@ -78,6 +78,7 @@ export const ppcSettings = defineSettings({
 
   pointMode: choice(TITLE_MODES, 'text'),
   captionMode: choice(TITLE_MODES, 'text'),
+  numberFrom: choice(NUMBER_FROMS, '1'),
   ...labels({ curveLabel: 'PPC', aName: 'Country A', bName: 'Country B' }),
   ...lookFields({
     xTitle: 'Consumer goods', yTitle: 'Capital goods',

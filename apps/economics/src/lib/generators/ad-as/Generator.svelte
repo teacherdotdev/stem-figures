@@ -19,7 +19,7 @@
   import LookSettings from '$lib/graph/LookSettings.svelte'
   import NumberSettings from '$lib/graph/NumberSettings.svelte'
   import { rangesOf, typeRange } from '$lib/graph/fit'
-  import { filenameOf } from '$lib/graph/settings'
+  import { NUMBER_FROMS, NUMBER_FROM_NAMES, filenameOf } from '$lib/graph/settings'
   import { SHIFT_SIZES, SHIFT_SIZE_NAMES } from '$lib/graph/shifts'
   import AdAsFigure from './AdAsFigure.svelte'
   import { axesOf, buildAdAs, fitOf } from './figure'
@@ -251,6 +251,10 @@
       <div class="field">
         <span>Equilibrium values</span>
         {@render segmented('Equilibrium values', ['e', 'star'] as const, { e: 'PLₑ and Yₑ', star: 'PL* and Y*' }, s.eqStyle, (v) => (s.eqStyle = v))}
+      </div>
+      <div class="field">
+        <span>Before and after</span>
+        {@render segmented('Before and after', NUMBER_FROMS, NUMBER_FROM_NAMES, s.numberFrom, (v) => (s.numberFrom = v))}
       </div>
       <div class="field">
         <span>Every label</span>

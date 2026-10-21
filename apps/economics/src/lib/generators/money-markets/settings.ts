@@ -4,7 +4,7 @@
 // words, each graph with its own curve names and axis words.
 
 import { bool, choice, defineSettings, number } from '$shared/settings'
-import { labels, lookFields } from '$lib/graph/settings'
+import { NUMBER_FROMS, labels, lookFields } from '$lib/graph/settings'
 import { SHIFT_SIZES } from '$lib/graph/shifts'
 
 export const GRAPHS = ['money', 'funds', 'reserves'] as const
@@ -45,6 +45,7 @@ export const moneyMarketsSettings = defineSettings({
   guides: bool(true),
   points: bool(false),
   eqStyle: choice(EQ_STYLES, 'e'),
+  numberFrom: choice(NUMBER_FROMS, '1'),
   ...labels({
     msLabel: 'MS', mdLabel: 'MD', iLabel: 'i',
     slfLabel: 'S_{LF}', dlfLabel: 'D_{LF}', rLabel: 'r',

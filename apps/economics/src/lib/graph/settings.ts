@@ -18,6 +18,13 @@ export const LOOK_NAMES: Record<Look, string> = { schematic: 'Schematic', numeri
 export const INKS = ['color', 'bw'] as const
 export type Ink = (typeof INKS)[number]
 
+/** Whether a change's before and after are numbered 1 and 2 (D₁ and D₂) or 0 and 1 (D₀ and D₁). */
+export const NUMBER_FROMS = ['1', '0'] as const
+export type NumberFrom = (typeof NUMBER_FROMS)[number]
+export const NUMBER_FROM_NAMES: Record<NumberFrom, string> = { '1': '1 and 2', '0': '0 and 1' }
+/** The number written for the `k`th of a change's curves or values, the first 1, numbered from `from`. */
+export const nth = (k: number, from: NumberFrom) => k - 1 + Number(from)
+
 /** The hidden grid a schematic graph is drawn on: 0 to 10 each way. */
 export const SCHEMATIC: Axes = {
   x: { start: 0, step: 1, blocks: 10, numbering: 'decimal' },

@@ -13,7 +13,7 @@ import { along, areaOf, centroidOf, intersect, lineThrough, xAt, yAt, type Box, 
 import { buildFigure } from '$lib/graph/figure'
 import { fitted, rangesOf } from '$lib/graph/fit'
 import { inks, shows, type ArrowSpec, type BraceSpec, type CalloutSpec, type CurveSpec, type GuideSpec, type LevelSpec, type MarkSpec, type PanelSpec, type PointSpec, type RegionSpec, type Words } from '$lib/graph/panel'
-import { SCHEMATIC, panelBase, wordsOf } from '$lib/graph/settings'
+import { SCHEMATIC, nth, panelBase, wordsOf, type NumberFrom } from '$lib/graph/settings'
 import { SHIFT_SHARE } from '$lib/graph/shifts'
 import { readAxes, axisEnd } from '$shared/graph/axes'
 import { rowsOf, type LABEL_KEYS, type Shape, type SupplyDemandSettings } from './settings'
@@ -189,13 +189,13 @@ function drawingOf(bounds: PxBox) {
 }
 
 /** The name of a value before and after a shift (P₁, P₂), or at the one equilibrium (Pₑ or P*). */
-function named(w: Words, k: 0 | 1 | 2, style: SupplyDemandSettings['eqStyle']): Words {
+function named(w: Words, k: 0 | 1 | 2, style: SupplyDemandSettings['eqStyle'], from: NumberFrom): Words {
   if (w.mode !== 'text' || !w.text.trim()) return w
   const t = w.text.trim()
-  return { ...w, text: k ? `${t}_${k}` : style === 'star' ? `${t}*` : `${t}_e` }
+  return { ...w, text: k ? `${t}_${nth(k, from)}` : style === 'star' ? `${t}*` : `${t}_e` }
 }
-/** A curve's name before and after it shifts: D₁ and D₂, or D. */
-const curveNamed = (w: Words, k: 0 | 1 | 2): Words => (w.mode === 'text' && w.text.trim() && k ? { ...w, text: `${w.text.trim()}_${k}` } : w)
+/** A curve's name before and after it shifts: D₁ and D₂ (or D₀ and D₁, numbered `from` 0), or D. */
+const curveNamed = (w: Words, k: 0 | 1 | 2, from: NumberFrom): Words => (w.mode === 'text' && w.text.trim() && k ? { ...w, text: `${w.text.trim()}_${nth(k, from)}` } : w)
 
 export function buildSupplyDemand(s: SupplyDemandSettings) {
   const numeric = s.look === 'numeric'
@@ -327,10 +327,10 @@ export function buildSupplyDemand(s: SupplyDemandSettings) {
   const curves: CurveSpec[] = []
   const dName = wordsOf(s, 'dLabel')
   const sName = wordsOf(s, 'sLabel')
-  curves.push({ pts: dRun1, name: curveNamed(dName, dMoves ? 1 : 0), color: ink.demand })
-  if (dMoves) curves.push({ pts: dRun2, name: curveNamed(dName, 2), color: ink.demand })
-  curves.push({ pts: sRun1, name: curveNamed(sName, sMoves ? 1 : 0), color: ink.supply })
-  if (sMoves) curves.push({ pts: sRun2, name: curveNamed(sName, 2), color: ink.supply })
+  curves.push({ pts: dRun1, name: curveNamed(dName, dMoves ? 1 : 0, s.numberFrom), color: ink.demand })
+  if (dMoves) curves.push({ pts: dRun2, name: curveNamed(dName, 2, s.numberFrom), color: ink.demand })
+  curves.push({ pts: sRun1, name: curveNamed(sName, sMoves ? 1 : 0, s.numberFrom), color: ink.supply })
+  if (sMoves) curves.push({ pts: sRun2, name: curveNamed(sName, 2, s.numberFrom), color: ink.supply })
   // S + tax and S − subsidy are long: each goes just past its curve's end, with room made for it, not back over S.
   if (sT) curves.push({ pts: tRun, name: wordsOf(s, s.tax === 'tax' ? 'taxLabel' : 'subsidyLabel'), color: ink.supply, dash: '10 6', namePast: true })
 
@@ -361,19 +361,19 @@ export function buildSupplyDemand(s: SupplyDemandSettings) {
   const eLabels: { at: Point; name: Words; spots: Spot[] }[] = []
   const equilibrium = (e: Point | null, k: 0 | 1 | 2) => {
     if (!onGraph(e)) return
-    const name = k ? { ...eName, text: eName.mode === 'text' && eName.text.trim() ? `${eName.text.trim()}_${k}` : eName.text } : eName
+    const name = curveNamed(eName, k, s.numberFrom)
     const label = { at: e, name, spots: [] as Spot[] }
     eLabels.push(label)
     points.push({ at: e, name, spots: (at) => (label.spots.length ? shifted_(label.spots, at, e) : besidePoint(at, LFS, 9)) })
     if (!s.guides) return
     if (noPrice(e)) {
       guides.push({ from: e, y: false }, { from: { x: box.x0 + 12 / sx, y: e.y }, x: false })
-      mark('y', e.y, named(pName, k, s.eqStyle))
+      mark('y', e.y, named(pName, k, s.eqStyle, s.numberFrom))
     } else {
       guides.push({ from: e })
-      mark('y', e.y, named(pName, k, s.eqStyle))
+      mark('y', e.y, named(pName, k, s.eqStyle, s.numberFrom))
     }
-    mark('x', e.x, named(qName, k, s.eqStyle))
+    mark('x', e.x, named(qName, k, s.eqStyle, s.numberFrom))
   }
   // Labels' places are worked out from the grid's top left corner; the library's drawing is moved from there.
   const P = (p: Point): Point => ({ x: (p.x - box.x0) * sx, y: (box.y1 - p.y) * sy })
