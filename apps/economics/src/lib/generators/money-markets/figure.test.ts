@@ -1,12 +1,18 @@
 import { describe, expect, it } from 'vitest'
-import { overlaps } from '$lib/graph/testing'
+import { labelBoxes, overlaps } from '$lib/graph/testing'
 import { SHIFT_SIZES } from '$lib/graph/shifts'
-import { RESERVES, SUPPLY_AT, buildMoneyMarkets, curveNamed } from './figure'
+import { RESERVES, RESERVES_TOP, SUPPLY_AT, buildMoneyMarkets, curveNamed } from './figure'
 import { DIRECTIONS, GRAPHS, LABEL_KEYS, REGIMES, SHIFTS, labelKeysOf, moneyMarketsSettings, type MoneyMarketsSettings } from './settings'
 import { SETUPS, settingsFor } from './setups'
 
 const build = (over: Partial<MoneyMarketsSettings> = {}) => buildMoneyMarkets(moneyMarketsSettings.tidy({ ...moneyMarketsSettings.defaults, ...over }))
 const panel = (over: Partial<MoneyMarketsSettings> = {}) => build(over).figure.panels[0]
+/** The upright curves on a panel: where each is across, and its top, on the drawing. */
+const uprights = (p: { curves: { paths: string[] }[] }) =>
+  p.curves.flatMap((c) => {
+    const m = c.paths[0]?.match(/^M([\d.]+),([\d.]+)L\1,([\d.]+)$/)
+    return m ? [{ x: +m[1], top: Math.min(+m[2], +m[3]) }] : []
+  })
 const texts = (over: Partial<MoneyMarketsSettings>) => panel(over).labels.map((l) => l.runs?.map((r) => r.text).join('') ?? '')
 
 describe('money markets', () => {
@@ -92,6 +98,104 @@ describe('money markets', () => {
           expect(g.notes).toEqual([])
           expect(g.after!.x).toBeGreaterThan(0)
           expect(g.after!.x).toBeLessThan(9.4)
+        }
+      }
+    }
+  })
+
+  it("names each upright supply curve over its own top, written or blank, however far it moves", () => {
+    for (const graph of ['money', 'reserves'] as const) {
+      const blanks = Object.fromEntries(labelKeysOf(graph).map((k) => [`${k}Mode`, 'blank']))
+      for (const regime of REGIMES) {
+        for (const shift of ['supply', 'both'] as const) {
+          for (const dir of DIRECTIONS) {
+            for (const size of SHIFT_SIZES) {
+              for (const labelSize of ['small', 'medium', 'large'] as const) {
+                for (const words of [{}, blanks]) {
+                  const f = build({ graph, regime, shift, supplyDir: dir, demandDir: dir, supplySize: size, demandSize: size, points: true, labelSize, ...words }).figure
+                  const tops = uprights(f.panels[0])
+                  expect(tops).toHaveLength(2)
+                  const boxes = labelBoxes(f)
+                  for (const t of tops) {
+                    // Over the top, across its own curve and not the other.
+                    const named = boxes.some((b) => b.y1 <= t.top && b.x0 <= t.x && t.x <= b.x1 && tops.every((o) => o === t || o.x < b.x0 || o.x > b.x1))
+                    expect([graph, regime, shift, dir, size, labelSize, t.x, named]).toEqual([graph, regime, shift, dir, size, labelSize, t.x, true])
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+
+  it('centers both blank money supply lines over their curves when the money supply decreases', () => {
+    const blanks = Object.fromEntries(labelKeysOf('money').map((k) => [`${k}Mode`, 'blank']))
+    const p = panel({ shift: 'supply', supplyDir: 'decrease', ...blanks })
+    const tops = uprights(p)
+    for (const t of tops) expect(p.labels.some((l) => l.blank && l.y < t.top && Math.abs((l.blank.x1 + l.blank.x2) / 2 - t.x) < 0.01)).toBe(true)
+  })
+
+  it('puts both S_R names the same way over their curves in the limited reserves open-market purchase', () => {
+    const setup = SETUPS.find((x) => x.id === 'limited-purchase')!
+    const p = buildMoneyMarkets(settingsFor(setup, moneyMarketsSettings.defaults, moneyMarketsSettings.defaults)).figure.panels[0]
+    const names = ['SR1', 'SR2'].map((t) => p.labels.find((l) => l.runs?.map((r) => r.text).join('') === t)!)
+    const tops = uprights(p)
+    expect(names.map((l) => l.anchor)).toEqual(['middle', 'middle'])
+    expect(names.map((l) => l.x)).toEqual(tops.map((t) => t.x))
+    expect(names[0].y).toBe(names[1].y)
+    expect(names[0].y).toBeLessThan(tops[0].top)
+  })
+
+  it('draws an upright supply curve up to where the curves cross, however high', () => {
+    for (const graph of ['money', 'reserves'] as const) {
+      for (const regime of REGIMES) {
+        for (const size of SHIFT_SIZES) {
+          const p = panel({ graph, regime, shift: 'both', supplyDir: 'decrease', demandDir: 'increase', supplySize: size, demandSize: size, points: true })
+          const top = Math.min(...uprights(p).map((t) => t.top))
+          expect(p.dots).toHaveLength(2)
+          for (const d of p.dots) expect(d.y).toBeGreaterThan(top)
+        }
+      }
+    }
+  })
+
+  it('keeps the demand for reserves on the graph, and a sloping demand curve off the x-axis', () => {
+    for (const regime of REGIMES) {
+      // Shifted up as far as it goes, its flat top is still drawn, from the y-axis.
+      const p = panel({ graph: 'reserves', regime, shift: 'demand', demandDir: 'increase', demandSize: 'large' })
+      const demand = p.curves.filter((c) => !uprights({ curves: [c] }).length)
+      expect(demand).toHaveLength(2)
+      for (const c of demand) expect(+c.paths[0].match(/^M([\d.]+)/)![1]).toBeCloseTo(p.grid.x, 0)
+    }
+    // With limited reserves cut as far as they go, the policy rate is on that flat top.
+    expect(build({ graph: 'reserves', regime: 'limited', shift: 'both', supplyDir: 'decrease', demandDir: 'increase', supplySize: 'large', demandSize: 'large' }).after!.y).toBeCloseTo(RESERVES_TOP)
+    for (const graph of ['money', 'funds'] as const) {
+      const p = panel({ graph, shift: 'demand', demandDir: 'decrease', demandSize: 'large' })
+      const axis = p.xAxis.y
+      for (const c of p.curves) {
+        const ys = [...c.paths[0].matchAll(/,([\d.]+)/g)].map((m) => +m[1])
+        if (c.color === p.curves[0].color) expect(Math.max(...ys)).toBeLessThan(axis - 15)
+      }
+    }
+  })
+
+  it('ends every shift arrow on the curve it points to, clear of the other curves and the dots', () => {
+    for (const graph of GRAPHS) {
+      for (const shift of ['supply', 'demand', 'both'] as const) {
+        for (const dir of DIRECTIONS) {
+          for (const size of SHIFT_SIZES) {
+            const g = build({ graph, regime: 'limited', shift, supplyDir: dir, demandDir: dir, supplySize: size, demandSize: size, points: true, arrows: 3 })
+            const p = g.figure.panels[0]
+            for (const a of p.arrows) {
+              // Nothing past the grid's right, where the curves stop.
+              expect(Math.max(a.x1, a.x2)).toBeLessThan(p.grid.x + p.grid.w * 0.95)
+              for (const d of p.dots) expect(Math.hypot((a.x1 + a.x2) / 2 - d.x, (a.y1 + a.y2) / 2 - d.y)).toBeGreaterThan(8)
+            }
+            // The demand for reserves' arrows keep off the supply curves.
+            if (graph === 'reserves') for (const a of p.arrows.filter((a) => a.x1 === a.x2)) for (const t of uprights(p)) expect(Math.abs(a.x1 - t.x)).toBeGreaterThan(8)
+          }
         }
       }
     }
