@@ -6,8 +6,9 @@
 // gap), shifts of each curve and where the economy ends up, the output gap
 // braced under the axis, a callout giving the equilibrium, and every label.
 
-import { clipPath, type Point } from '$shared/graph/grid'
-import { plainOf } from '$shared/graph/runs'
+import { CELL, clipPath, type Point } from '$shared/graph/grid'
+import { crosses, type Box as DrawnBox, type Spot } from '$shared/graph/labels'
+import { plainOf, runsOf, runsWidth } from '$shared/graph/runs'
 import { along, crossings, intersect, lineThrough, vertical, xAt, yAt, type Box, type Curve } from '$lib/graph/curves'
 import { buildFigure } from '$lib/graph/figure'
 import { niceAxis, rangesOf } from '$lib/graph/fit'
@@ -97,35 +98,149 @@ const ARROWS_AT: Record<number, number[]> = { 1: [0.2], 2: [0.15, 0.85], 3: [0.1
 
 /**
  * `count` arrows from curve `c` to where it shifts, `dx` across, from the
- * part of it in `b`: spread along it, each kept off the `avoid` curves and
- * clear of the `at` points where curves cross.
+ * part of it in `b`: spread along it, each crossing none of the `avoid`
+ * curves, clear of the `at` points where curves cross, and not where the
+ * curve, or where it shifts to, runs level close by on the drawing (`scale`
+ * across and up), where an arrow would lie along it, nor along a guide
+ * running across from one of the `guided` points to the y-axis at `x0`.
+ * Where there's room for fewer arrows that cross nothing (SRAS following a
+ * shifted LRAS across both LRAS lines), it draws only those; where every
+ * place crosses something, only those crossing least.
  */
-function arrowsAlong(c: Curve, dx: number, count: number, color: string, b: Box, avoid: Curve[], at: Point[]): ArrowSpec[] {
+function arrowsAlong(
+  c: Curve, dx: number, count: number, color: string, b: Box, avoid: Curve[], at: Point[], scale: Point, guided: Point[], x0: number,
+): ArrowSpec[] {
   const run = clipPath(c, b).sort((p, q) => q.length - p.length)[0]
   const n = Math.max(0, Math.min(3, Math.round(count)))
   if (!run || run.length < 2 || !dx || !n) return []
   const near = Math.abs(dx) * 0.35
-  const options: { t: number; from: Point; to: Point; cost: number }[] = []
+  const both = [c, c.map((p) => ({ x: p.x + dx, y: p.y }))]
+  const h = Math.abs(dx) * 0.05
+  const options: { t: number; from: Point; to: Point; crossed: number; cost: number }[] = []
+  /** Whether curve `k` runs level at `x`, within 8 of height `y`, on the drawing. */
+  const levelBy = (k: Curve, x: number, y: number) => {
+    const [ky, y0, y1] = [x, x - h, x + h].map((v) => yAt(k, v))
+    return ky !== null && y0 !== null && y1 !== null && Math.abs(ky - y) * scale.y < 8 && Math.abs(y1 - y0) * scale.y < 0.4 * 2 * h * scale.x
+  }
   for (let t = 0.06; t <= 0.945; t += 0.02) {
-    const from = along(run, t).at
+    const { at: from, dir } = along(run, t)
     const to = { x: from.x + dx, y: from.y }
+    // Lying along a curve, where it runs level here or partway along (three-range supply's flat range), is worse than crossing one.
+    const level = Math.abs(dir.y * scale.y) < 0.4 * Math.abs(dir.x * scale.x) || [0.2, 0.4, 0.6, 0.8].some((u) => both.some((k) => levelBy(k, from.x + u * dx, from.y)))
+    // Within 8 of a guide across, on the drawing.
+    const onGuide = guided.some((p) => Math.abs(p.y - from.y) * scale.y < 8 && Math.min(from.x, to.x) < p.x && Math.max(from.x, to.x) > x0)
+    const crossed = avoid.reduce((k, a) => k + crossings([from, to], a).length, (level ? 5 : 0) + (onGuide ? 1 : 0))
     let cost = 0
-    for (const a of avoid) cost += crossings([from, to], a).length * 10
     for (const p of at) {
       // How close the arrow comes to a point.
       const u = Math.max(0, Math.min(1, (p.x - from.x) / dx))
       const d = Math.hypot(from.x + u * dx - p.x, from.y - p.y)
       if (d < near) cost += (near - d) * 20
     }
-    options.push({ t, from, to, cost })
+    options.push({ t, from, to, crossed, cost })
   }
+  const fewest = Math.min(...options.map((o) => o.crossed))
   const picked: typeof options = []
   for (const ideal of ARROWS_AT[n]) {
-    const free = options.filter((o) => picked.every((p) => Math.abs(p.t - o.t) > 0.22))
+    const free = options.filter((o) => o.crossed === fewest && picked.every((p) => Math.abs(p.t - o.t) > 0.22))
     const best = free.sort((a, z) => a.cost + Math.abs(a.t - ideal) * 3 - (z.cost + Math.abs(z.t - ideal) * 3))[0]
     if (best) picked.push(best)
   }
   return picked.sort((a, z) => a.t - z.t).map((o) => ({ from: o.from, to: o.to, color }))
+}
+
+/**
+ * How far an equilibrium's name keeps from every line, as drawn: CLEAR if it
+ * can, or at least NEAR (just past the 3 the library keeps labels off lines)
+ * a little farther round; how far across or up it keeps from every dot (4.5
+ * round, which the library keeps 3 clear of); and how far from another name.
+ */
+const CLEAR = 4
+const NEAR = 3.3
+const OFF_DOT = 8
+const OFF_NAME = 4
+/** How wide the library draws a blank line for a name. */
+const BLANK_W = 46
+
+/** How far a box is from a point, as drawn (0 inside it). */
+const boxGap = (b: DrawnBox, p: Point) => Math.hypot(Math.max(b.x0 - p.x, 0, p.x - b.x1), Math.max(b.y0 - p.y, 0, p.y - b.y1))
+/** How far a box is from a point (or another box) across or up, whichever is farther, as drawn. */
+const boxOff = (b: DrawnBox, p: Point) => Math.max(b.x0 - p.x, p.x - b.x1, b.y0 - p.y, p.y - b.y1)
+const boxesOff = (a: DrawnBox, b: DrawnBox) => Math.max(a.x0 - b.x1, b.x0 - a.x1, a.y0 - b.y1, b.y0 - a.y1)
+/** How far a segment from `a` to `c` is from a point. */
+function segGap(a: Point, c: Point, p: Point) {
+  const len = (c.x - a.x) ** 2 + (c.y - a.y) ** 2
+  const u = len ? Math.max(0, Math.min(1, ((p.x - a.x) * (c.x - a.x) + (p.y - a.y) * (c.y - a.y)) / len)) : 0
+  return Math.hypot(a.x + u * (c.x - a.x) - p.x, a.y + u * (c.y - a.y) - p.y)
+}
+/** How far a segment is from a box, as drawn (0 through it). */
+function segBoxGap(a: Point, c: Point, b: DrawnBox) {
+  if (crosses({ x1: a.x, y1: a.y, x2: c.x, y2: c.y }, b)) return 0
+  const corners = [{ x: b.x0, y: b.y0 }, { x: b.x1, y: b.y0 }, { x: b.x0, y: b.y1 }, { x: b.x1, y: b.y1 }]
+  return Math.min(boxGap(b, a), boxGap(b, c), ...corners.map((k) => segGap(a, c, k)))
+}
+
+/**
+ * Where the name of a point where curves cross goes, as drawn: the place
+ * all round it nearest the point that's clear of every line and dot, and
+ * of the names placed before it (`placed`, by point, this one's `k`), so
+ * the name sits in a gap between the curves through the point rather than
+ * against one; beside it on the right before the left. Just the one place,
+ * so the library takes it rather than one farther off that's a little
+ * clearer still. If no place near the point is clear, the places that come
+ * nearest follow, for the library to choose from. `lines` and `dots` are in
+ * the graph's units, `scale` how far one of them is across and up on the
+ * drawing.
+ */
+function clearOf(e: Point, name: Words, lines: Point[][], dots: Point[], scale: Point, placed: (DrawnBox | undefined)[], k: number) {
+  return (q: Point, fs: number): Spot[] => {
+    const width = name.mode === 'text' ? runsWidth(runsOf(name.text.trim(), fs), fs) * 1.04 + 2 : BLANK_W
+    const drawn = (p: Point) => ({ x: q.x + (p.x - e.x) * scale.x, y: q.y - (p.y - e.y) * scale.y })
+    const reach = width + fs * 3
+    const segs: [Point, Point][] = []
+    for (const line of lines) {
+      const pts = line.map(drawn)
+      for (let j = 1; j < pts.length; j++) if (segGap(pts[j - 1], pts[j], q) < reach) segs.push([pts[j - 1], pts[j]])
+    }
+    const dotsNear = dots.map(drawn).filter((d) => Math.hypot(d.x - q.x, d.y - q.y) < reach)
+    const before = placed.slice(0, k).filter((b): b is DrawnBox => !!b)
+    const boxAt = (c: Point): DrawnBox => ({ x0: c.x - width / 2, x1: c.x + width / 2, y0: c.y - fs * 0.54, y1: c.y + fs * 0.54 })
+    let best: { c: Point; cost: number } | null = null
+    const close: { c: Point; gap: number }[] = []
+    for (let a = 0; a < 24; a++) {
+      const way = { x: Math.cos((a * Math.PI) / 12), y: Math.sin((a * Math.PI) / 12) }
+      // Beside the point on the right before the left.
+      const bias = (1 - way.x) * 4
+      let nearest: { c: Point; gap: number } | null = null
+      let near = false
+      // Out from the point a step at a time, or as far as the gap to the nearest line says nothing nearer can be clear.
+      for (let r = 0, step = 1; r < 100; r += step) {
+        step = 1
+        const c = { x: q.x + way.x * r, y: q.y + way.y * r }
+        const b = boxAt(c)
+        const d = boxGap(b, q)
+        if (d > OFF_DOT + fs * 2) break
+        if (dotsNear.some((p) => boxOff(b, p) < OFF_DOT) || before.some((o) => boxesOff(b, o) < OFF_NAME)) continue
+        let gap = Infinity
+        for (const [p, z] of segs) if ((gap = Math.min(gap, segBoxGap(p, z, b))) === 0) break
+        step = Math.max(1, (near ? CLEAR : NEAR) - gap)
+        // Only just clear counts as a little farther than it is.
+        const cost = gap >= CLEAR ? d + bias : gap >= NEAR && !near ? d + bias + 4 : Infinity
+        if (cost < (best?.cost ?? Infinity)) best = { c, cost }
+        if (gap >= NEAR) near = true
+        if (gap >= CLEAR) break
+        if (!nearest || gap > nearest.gap) nearest = { c, gap }
+      }
+      if (nearest && !near) close.push(nearest)
+    }
+    const spotAt = (c: Point): Spot => ({ x: c.x, y: c.y + fs * 0.24, anchor: 'middle' })
+    if (best) {
+      placed[k] = boxAt(best.c)
+      return [spotAt(best.c)]
+    }
+    placed[k] = undefined
+    return close.sort((p, z) => z.gap - p.gap).map((o) => spotAt(o.c))
+  }
 }
 
 export function buildAdAs(s: AdAsSettings) {
@@ -135,6 +250,8 @@ export function buildAdAs(s: AdAsSettings) {
   const box: Box = { x0: axes.x.start, x1: axisEnd(axes.x), y0: axes.y.start, y1: axisEnd(axes.y) }
   const spanX = box.x1 - box.x0
   const spanY = box.y1 - box.y0
+  // How far one of the graph's units is across and up, as drawn.
+  const scale = { x: CELL / axes.x.step, y: CELL / axes.y.step }
   // Schematic curves stop a little short of the grid's top and right, leaving room for their names.
   const drawBox: Box = numeric ? box : { x0: 0, x1: 9.4, y0: 0.4, y1: 9.6 }
   const tol = spanX * 0.004
@@ -222,7 +339,9 @@ export function buildAdAs(s: AdAsSettings) {
   const lrasBox = { ...drawBox, y0: box.y0 }
   const lras1 = s.lras && yfOn(yf1) ? drawn(vertical(yf1, -FAR * spanY, FAR * spanY), lrasBox) : []
   const lras2 = s.lras && lrasMoves && yfOn(yf2) ? drawn(vertical(yf2, -FAR * spanY, FAR * spanY), lrasBox) : []
-  const [as1Drawn, as2Drawn, ad1Drawn, ad2Drawn] = [drawn(as1), asMoves ? drawn(as2) : [], drawn(ad1), adMoves ? drawn(ad2) : []]
+  // AD stops higher over the schematic axis, so a name at its end has room under it too.
+  const adBox = numeric ? drawBox : { ...drawBox, y0: 0.9 }
+  const [as1Drawn, as2Drawn, ad1Drawn, ad2Drawn] = [drawn(as1), asMoves ? drawn(as2) : [], drawn(ad1, adBox), adMoves ? drawn(ad2, adBox) : []]
   const curves: CurveSpec[] = []
   const lrasName = wordsOf(s, 'lrasLabel')
   const adName = wordsOf(s, 'adLabel')
@@ -239,9 +358,12 @@ export function buildAdAs(s: AdAsSettings) {
   const others = (...not: Curve[]) => curves.map((c) => c.pts).filter((c) => !not.includes(c))
   const at = [e1, e2].filter(onGraph)
   const within = (b: Box, dx: number): Box => ({ ...b, x0: Math.max(b.x0, b.x0 - dx), x1: Math.min(b.x1, b.x1 - dx) })
-  if (adMoves) arrows.push(...arrowsAlong(ad1, adDx, s.arrows, ink.demand, within(drawBox, adDx), others(ad1Drawn, ad2Drawn), at))
-  if (asMoves) arrows.push(...arrowsAlong(as1, asDx, s.arrows, ink.supply, within(drawBox, asDx), others(as1Drawn, as2Drawn), at))
-  if (lras1.length && lras2.length) arrows.push(...arrowsAlong(lras1, lrasDx, s.arrows, ink.third, { ...lrasBox, y0: box.y0 + spanY * 0.06 }, others(lras1, lras2), at))
+  const guided = s.guides ? at : []
+  if (adMoves) arrows.push(...arrowsAlong(ad1, adDx, s.arrows, ink.demand, within(drawBox, adDx), others(ad1Drawn, ad2Drawn), at, scale, guided, box.x0))
+  if (asMoves) arrows.push(...arrowsAlong(as1, asDx, s.arrows, ink.supply, within(drawBox, asDx), others(as1Drawn, as2Drawn), at, scale, guided, box.x0))
+  if (lras1.length && lras2.length) {
+    arrows.push(...arrowsAlong(lras1, lrasDx, s.arrows, ink.third, { ...lrasBox, y0: box.y0 + spanY * 0.06 }, others(lras1, lras2), at, scale, guided, box.x0))
+  }
 
   // Equilibrium points, their guides to the axes, and the price levels and outputs written there.
   const points: PointSpec[] = []
@@ -265,22 +387,36 @@ export function buildAdAs(s: AdAsSettings) {
       if (yfOn(yf)) mark('x', yf, maybe(yfName, lrasMoves ? ((k + 1) as 1 | 2) : 0))
     })
   }
+  // Every line drawn near the points, for their names to keep clear of: the axes, the curves, the arrows and the guides.
+  const ePoints = [e1, ...(shifted ? [e2] : [])].filter(onGraph)
+  const lines = [
+    [{ x: box.x0, y: box.y1 }, { x: box.x0, y: box.y0 }, { x: box.x1, y: box.y0 }],
+    ...curves.map((c) => c.pts),
+    ...arrows.map((a) => [a.from, a.to]),
+    ...(s.guides ? ePoints.flatMap((e) => [[{ x: box.x0, y: e.y }, e], [e, { x: e.x, y: box.y0 }]]) : []),
+  ]
+  // Each point's name's box as it's placed, for the next to keep off.
+  const nameBoxes: (DrawnBox | undefined)[] = []
+  const braced = !!gap && s.brace && yfOn(gap.yf)
   const equilibrium = (e: Point | null, k: 0 | 1 | 2) => {
     if (!onGraph(e)) return
-    points.push({ at: e, name: maybe(eName, k) })
-    if (!s.guides) return
-    guides.push({ from: e })
-    mark('y', e.y, named(plName, k, s.eqStyle))
-    // Output at full employment is Y_f, already written.
+    const name = maybe(eName, k)
+    points.push({ at: e, name, spots: clearOf(e, name, lines, ePoints, scale, nameBoxes, points.length) })
+    if (s.guides) {
+      guides.push({ from: e })
+      mark('y', e.y, named(plName, k, s.eqStyle))
+    }
+    // Output at full employment is Y_f, already written. Output at the other end of the gap is
+    // written there even with no guides, so the brace is named at both ends.
     const atYf = yfs.some((yf) => Math.abs(e.x - yf) < tol) && (s.lras || (gap && s.brace))
-    if (!atYf) mark('x', e.x, named(gdpName, k, s.eqStyle))
+    if (!atYf && (s.guides || (braced && e === gap!.e))) mark('x', e.x, named(gdpName, k, s.eqStyle))
   }
   equilibrium(e1, shifted ? 1 : 0)
   if (shifted) equilibrium(e2, 2)
 
   // The gap braced under the axis, from output to full employment.
   const braces: BraceSpec[] = []
-  if (gap && s.brace && yfOn(gap.yf)) {
+  if (braced) {
     braces.push({
       from: { x: Math.min(gap.y, gap.yf), y: box.y0 },
       to: { x: Math.max(gap.y, gap.yf), y: box.y0 },
