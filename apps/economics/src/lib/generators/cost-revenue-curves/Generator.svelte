@@ -17,13 +17,13 @@
   import LookSettings from '$lib/graph/LookSettings.svelte'
   import { filenameOf } from '$lib/graph/settings'
   import CostRevenueFigure from './CostRevenueFigure.svelte'
-  import { buildCostRevenue, pricesOf } from './figure'
+  import { buildCostRevenue, natural, pricesOf } from './figure'
   import { costsOf } from './model'
   import {
     GRAPHS, GRAPH_NAMES, OUTCOMES, PRICES, PRICE_LINE_NAMES, PRICE_NAMES, REGULATIONS, REGULATION_NAMES, RUNS, costRevenueSettings,
-    type CostRevenueSettings, type Graph, type LabelKey, type Price,
+    type CostRevenueSettings, type Graph, type LabelKey, type Price, type Regulation,
   } from './settings'
-  import { SETUPS, settingsFor } from './setups'
+  import { NATURAL, SETUPS, settingsFor } from './setups'
 
   const gen = generatorState(costRevenueSettings, 'cost-revenue-curves')
   const s = gen.s
@@ -57,6 +57,16 @@
     s.price = p
   }
 
+  /**
+   * Regulation is drawn on a natural monopoly, as it's taught: choosing it
+   * for any other monopoly takes the natural monopoly's costs and demand
+   * (and, with both prices marked, leaves profit unshaded, as the setup does).
+   */
+  function chooseRegulation(r: Regulation) {
+    if (r !== 'none' && !natural(clean)) Object.assign(s, NATURAL, r === 'both' ? { profit: false } : {})
+    s.regulation = r
+  }
+
   const costSummary = $derived(
     [graph === 'costs' || graph === 'perfect' || clean.avc ? 'MC, ATC, AVC' : 'MC, ATC', clean.afc ? 'AFC' : ''].filter(Boolean).join(', '),
   )
@@ -64,7 +74,14 @@
     [clean.profit && 'profit or loss', powered && clean.cs && 'CS', powered && clean.dwl && 'DWL'].filter(Boolean) as string[],
   )
   const shadeSummary = $derived(shaded.length ? shaded.join(', ').replace(/^./, (c) => c.toUpperCase()) : 'Nothing shaded')
-  const labelSummary = $derived([clean.eqStyle === 'e' ? 'Pₑ, Qₑ' : 'P*, Q*', clean.guides ? 'guides to the axes' : 'no guides'].join(' · '))
+  /** Pₑ and P* are only on the competitive firms' graphs; the cost curves alone have no guides, only the dots. */
+  const eqShown = $derived(graph === 'perfect' || graph === 'monopolistic')
+  const labelSummary = $derived(
+    [
+      eqShown && (clean.eqStyle === 'e' ? 'Pₑ, Qₑ' : 'P*, Q*'),
+      graph === 'costs' ? (clean.minimums ? 'dots at the lowest AVC and ATC' : 'no dots') : clean.guides ? 'guides to the axes' : 'no guides',
+    ].filter(Boolean).join(' · ').replace(/^./, (c) => c.toUpperCase()),
+  )
   const filename = $derived(filenameOf(clean, 'cost-and-revenue-curves'))
 
   /** The labels on the figure as it is, each with its name in the panel. */
@@ -103,8 +120,9 @@
     return list
   })
   const mode = (key: LabelKey) => `${key}Mode` as `${LabelKey}Mode`
+  /** Every label but the market's price axis, an axis title like the firm's, which follows the firm's. */
   function allLabels(m: TitleMode) {
-    for (const [key] of labelList) s[mode(key)] = m
+    for (const [key] of labelList) if (key !== 'marketYLabel') s[mode(key)] = m
   }
 
   /** The chart title's placeholder: the graph chosen. */
@@ -171,7 +189,9 @@
         {@render slider('Demand would meet the quantity axis at', 6, 25, 0.1, s.demandEnd, (v) => (s.demandEnd = v))}
         <label class="field">
           <span>Regulation</span>
-          <select bind:value={s.regulation}>{#each REGULATIONS as v}<option value={v}>{REGULATION_NAMES[v]}</option>{/each}</select>
+          <select value={clean.regulation} onchange={(e) => chooseRegulation(e.currentTarget.value as Regulation)}>
+            {#each REGULATIONS as v}<option value={v}>{REGULATION_NAMES[v]}</option>{/each}
+          </select>
         </label>
       {:else if graph === 'monopolistic'}
         <div class="field">
@@ -213,14 +233,18 @@
     {/if}
 
     <Section title="Labels" icon={Tags} summary={labelSummary}>
-      <label class="check"><input type="checkbox" bind:checked={s.guides} /> Dashed lines to the axes, with prices and quantities</label>
+      {#if graph !== 'costs'}
+        <label class="check"><input type="checkbox" bind:checked={s.guides} /> Dashed lines to the axes, with prices and quantities</label>
+      {/if}
       {#if graph === 'costs' || graph === 'perfect'}
         <label class="check"><input type="checkbox" bind:checked={s.minimums} /> Dots where MC crosses AVC and ATC</label>
       {/if}
-      <div class="field">
-        <span>Equilibrium values</span>
-        {@render segmented('Equilibrium values', ['e', 'star'] as const, { e: 'Pₑ and Qₑ', star: 'P* and Q*' }, s.eqStyle, (v) => (s.eqStyle = v))}
-      </div>
+      {#if eqShown}
+        <div class="field">
+          <span>Equilibrium values</span>
+          {@render segmented('Equilibrium values', ['e', 'star'] as const, { e: 'Pₑ and Qₑ', star: 'P* and Q*' }, s.eqStyle, (v) => (s.eqStyle = v))}
+        </div>
+      {/if}
       {#if graph === 'perfect'}
         <div class="field">
           <span>Name the price line</span>

@@ -314,7 +314,7 @@ export const COPY: Record<string, GeneratorCopy> = {
     heading: 'Cost and revenue curve graphs: MC, ATC and AVC, perfect competition, monopoly and monopolistic competition',
     intro: [
       'Cost and Revenue Curves draws a firm’s cost curves, marginal cost (MC), average total cost (ATC), average variable cost (AVC) and average fixed cost (AFC), all from one total cost, so MC always crosses AVC and ATC at their lowest points and the gap between ATC and AVC is AFC. Put the firm in a market: a perfectly competitive firm facing the price line D = MR = AR = P, making a profit or a loss, at its break-even or shutdown point, with the market’s supply and demand beside it; a monopoly producing where MR = MC, with consumer surplus, deadweight loss and regulated prices; or a monopolistically competitive firm in the short run or in long-run equilibrium with excess capacity.',
-      'Teachers use it for AP Microeconomics and economics questions on tests, worksheets and slides. Start from a common setup, like a firm at a loss that keeps producing or a regulated natural monopoly, then shape the costs by eye. The axes show shape only, as AP graphs are drawn, with dashed lines to Pₑ, q* and the other prices and quantities. Shade profit or loss, consumer surplus and deadweight loss, in color or hatched for black and white, and leave any label, or every label, as a blank line for students to fill in.',
+      'Teachers use it for AP Microeconomics and economics questions on tests, worksheets and slides. Start from a common setup, like a firm at a loss that keeps producing or a regulated natural monopoly, then shape the costs by eye. The axes show shape only, as AP graphs are drawn, with dashed lines to Pₑ, qₑ and the other prices and quantities. Shade profit or loss, consumer surplus and deadweight loss, in color or hatched for black and white, and leave any label, or every label, as a blank line for students to fill in.',
     ],
     settings: [
       'The graph: cost curves alone, perfect competition, monopoly or monopolistic competition, and eleven common setups, from cost curves with AFC to a regulated natural monopoly and a firm with blank labels',
@@ -333,7 +333,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'How do you show profit or loss on a perfectly competitive firm graph?',
-        a: 'The firm takes the market price as given, so its demand, marginal revenue and average revenue are one horizontal line, D = MR = AR = P, and it produces q* where P = MC. Profit or loss is the rectangle between the price and ATC at q*, out to q*: profit when the price is above ATC, loss when it is below. Choose Perfect competition, pick the Market price, and tick Profit or loss under Shading; tick The market beside the firm, setting the price for the side-by-side market and firm graphs AP questions ask for.',
+        a: 'The firm takes the market price as given, so its demand, marginal revenue and average revenue are one horizontal line, D = MR = AR = P, and it produces qₑ where P = MC. Profit or loss is the rectangle between the price and ATC at qₑ, out to qₑ: profit when the price is above ATC, loss when it is below. Choose Perfect competition, pick the Market price, and tick Profit or loss under Shading; tick The market beside the firm, setting the price for the side-by-side market and firm graphs AP questions ask for.',
       },
       {
         q: 'What is the difference between the break-even point and the shutdown point?',
@@ -349,7 +349,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'Why does a monopolistically competitive firm have excess capacity in the long run?',
-        a: 'Short-run profits draw new firms in and losses drive firms out, shifting each firm’s demand until it just touches ATC, where the firm makes zero economic profit. Because demand slopes down, it touches ATC to the left of ATC’s lowest point, so the firm produces less than the quantity at the lowest ATC: that gap is excess capacity, and the price is above MC as well. Choose Monopolistic competition and Long run, and a brace under the quantity axis marks the excess capacity, from q* to the quantity at the lowest ATC.',
+        a: 'Short-run profits draw new firms in and losses drive firms out, shifting each firm’s demand until it just touches ATC, where the firm makes zero economic profit. Because demand slopes down, it touches ATC to the left of ATC’s lowest point, so the firm produces less than the quantity at the lowest ATC: that gap is excess capacity, and the price is above MC as well. Choose Monopolistic competition and Long run, and a brace under the quantity axis marks the excess capacity, from qₑ to the quantity at the lowest ATC.',
       },
       {
         q: 'How do I make a worksheet where students label the graph?',
