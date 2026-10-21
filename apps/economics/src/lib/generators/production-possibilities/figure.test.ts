@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { labelBoxes, overlaps } from '$lib/graph/testing'
-import { buildPpc, curvesOf, onCurve, placesOf } from './figure'
+import { bendOf, buildPpc, curvesOf, onCurve, placesOf } from './figure'
 import { SHAPES, pointsOf, pointsText, ppcSettings, type PpcSettings } from './settings'
 import { SETUPS, settingsFor } from './setups'
 
@@ -22,7 +22,7 @@ describe('production possibilities curve', () => {
     const line = placesOf(tidy({ look: 'numeric', shape: 'straight', points: 'A,on,0.2;B,on,0.7' }))
     for (const p of line) expect(p.x + p.y).toBeCloseTo(100)
     // Bowed in, the middle of the curve sags under the straight line.
-    expect(onCurve(100, 100, 0.5, 0.5).y).toBeLessThan(50)
+    expect(onCurve(100, 100, bendOf({ shape: 'in', bow: 2 }), 0.5).y).toBeLessThan(50)
   })
 
   it('shifts out, in, or pivots on one axis only', () => {
@@ -166,7 +166,8 @@ describe('production possibilities curve', () => {
     for (const shiftDir of ['out', 'in'] as const) {
       const s = tidy({ shift: 'both', shiftDir, points: 'A,on,0.55' })
       const p = buildPpc(s).figure.panels[0]
-      const { n, X1, Y1, X2, Y2 } = curvesOf(s)
+      const { X1, Y1, X2, Y2 } = curvesOf(s)
+      const n = s.bow
       const [inner, outer] = (X1 < X2 ? [[X1, Y1, 1], [X2, Y2, 2]] : [[X2, Y2, 2], [X1, Y1, 1]]) as [number, number, number][]
       // Where a label's middle is, in the graph's units, against a curve: below 1 inside it.
       const against = (t: string, X: number, Y: number) => {
@@ -189,16 +190,20 @@ describe('production possibilities curve', () => {
         const s = { ...settingsFor(setup, ppcSettings.defaults, ppcSettings.defaults), look }
         const f = buildPpc(s).figure
         expect([setup.id, look, overlaps(f)]).toEqual([setup.id, look, []])
-        // (The first of the numbered steps' sizes is a hair's breadth from its lines.)
-        expect([setup.id, look, f.panels.reduce((a, q) => a + q.crowded, 0)]).toEqual([setup.id, look, setup.id === 'increasing' && look === 'numeric' ? 1 : 0])
+        // (The first of the numbered steps' sizes is a hair's breadth from its lines, and, numbered straight, the
+        // last step's loss, over what it gains, from the line.)
+        const crowded = look === 'numeric' && (setup.id === 'increasing' || setup.id === 'constant') ? 1 : 0
+        expect([setup.id, look, f.panels.reduce((a, q) => a + q.crowded, 0)]).toEqual([setup.id, look, crowded])
       }
     }
     for (const shape of SHAPES) {
       for (const shift of ['none', 'both', 'x', 'y'] as const) {
         const f = build({ shape, shift, steps: true }).figure
         expect([shape, shift, overlaps(f)]).toEqual([shape, shift, []])
-        // And every label clear of every line too, but for a bowed-in curve squeezed by a shift out.
-        if (shape !== 'in' || shift === 'none') expect([shape, shift, f.panels[0].crowded]).toEqual([shape, shift, 0])
+        // And every label clear of every line too: with the steps, unless there's a shift, whose old curve's
+        // name goes in among them; without, unless it's a bowed-in curve squeezed by a shift.
+        if (shift === 'none') expect([shape, shift, f.panels[0].crowded]).toEqual([shape, shift, 0])
+        if (shape !== 'in') expect([shape, shift, build({ shape, shift }).figure.panels[0].crowded]).toEqual([shape, shift, 0])
       }
     }
     // Two countries whose lines cross, where one is outside the other, and where they share an intercept.
@@ -208,6 +213,89 @@ describe('production possibilities curve', () => {
         expect([countries, aX, aY, bX, bY, overlaps(f)]).toEqual([countries, aX, aY, bX, bY, []])
       }
     }
+  })
+
+  it('puts a point outside the curve past every curve drawn, so it is still unattainable after growth', () => {
+    for (const look of ['schematic', 'numeric'] as const) {
+      const s = tidy({ look, shift: 'both', points: 'A,outside,0.4,,Unattainable;B,inside,0.4,,Inefficient' })
+      const { X1, Y1, X2, Y2 } = curvesOf(s)
+      const [a, b] = placesOf(s)
+      const past = (p: { x: number; y: number }, X: number, Y: number) => Math.hypot(p.x / X, p.y / Y) > 1
+      expect([look, past(a, X2, Y2), past(b, X1, Y1)]).toEqual([look, true, false])
+    }
+  })
+
+  it('bows in meeting each axis at an angle, not running along it', () => {
+    for (const bow of [1.2, 2, 4]) {
+      const bend = bendOf({ shape: 'in', bow })
+      // Neither upright at the y-axis nor flat at the x-axis.
+      expect((1 - bend.height(0.001)) / 0.001).toBeLessThan(10)
+      expect(bend.height(0.999) / 0.001).toBeGreaterThan(0.1)
+      expect(bend.height(0.5)).toBeLessThan(0.5)
+    }
+  })
+
+  it('writes each step size by its own step, with commas in thousands, or not at all', () => {
+    const cases = [
+      { shape: 'in' as const, points: 'A,on,0;B,on,0.25;C,on,0.5;D,on,0.75;E,on,1' },
+      { xMax: 37, yMax: 23, points: 'A,on,0;B,on,0.3;C,on,0.6;D,on,0.9' },
+      { shape: 'straight' as const, labelSize: 'large' as const, points: 'A,on,0;B,on,0.25;C,on,0.5;D,on,0.75;E,on,1' },
+      { labelSize: 'large' as const, bow: 1.5, yMax: 120, points: 'A,on,0;B,on,0.25;C,on,0.5;D,on,0.75;E,on,1' },
+    ]
+    for (const c of cases) {
+      const s = tidy({ look: 'numeric', steps: true, ...c })
+      const p = buildPpc(s).figure.panels[0]
+      expect(overlaps(buildPpc(s).figure)).toEqual([])
+      // What each gives up right of its own upright line, level with it.
+      const on = placesOf(s).map((q) => p.px(q))
+      for (const l of p.labels.filter((l) => l.runs?.[0]?.text.startsWith('−'))) {
+        const k = on.findIndex((q, j) => j > 0 && l.y > on[j - 1].y && l.y - p.labelFs < q.y + 2)
+        expect([c, l.x > on[k - 1].x]).toEqual([c, true])
+      }
+    }
+    expect(texts({ look: 'numeric', xMax: 5000, yMax: 2000, steps: true, points: 'A,on,0;B,on,0.4;C,on,0.8' })).toEqual(expect.arrayContaining(['+2,000']))
+  })
+
+  it('keeps names inside a numbered grid, and an inner country named toward the origin', () => {
+    for (const over of [{ look: 'numeric' as const }, settingsFor(SETUPS.find((x) => x.id === 'increasing')!, ppcSettings.defaults, ppcSettings.defaults)]) {
+      const p = panel(over)
+      const ppc = labelBoxes({ ...build(over).figure, panels: [{ ...p, at: { x: 0, y: 0 } }] }).find((b) => b.text === 'PPC')!
+      expect(ppc.x1).toBeLessThanOrEqual(p.grid.x + p.grid.w)
+    }
+    const p = panel({ countries: 'together', aX: 40, aY: 20, bX: 20, bY: 10 })
+    const b = labelBoxes({ ...build({ countries: 'together', aX: 40, aY: 20, bX: 20, bY: 10 }).figure, panels: [{ ...p, at: { x: 0, y: 0 } }] }).find((l) => l.text === 'Country B')!
+    const o = p.px({ x: 0, y: 0 })
+    const e = p.px({ x: 1, y: 1 })
+    const mid = { x: ((b.x0 + b.x1) / 2 - o.x) / (e.x - o.x), y: ((b.y0 + b.y1) / 2 - o.y) / (e.y - o.y) }
+    expect(mid.x / 20 + mid.y / 10).toBeLessThan(1)
+  })
+
+  it('draws a straight line shifting with arrows alike, square to it', () => {
+    const [a, b] = panel({ shape: 'straight', shift: 'both', points: 'A,on,0.5;B,on2,0.5' }).arrows
+    const way = (s: { x1: number; y1: number; x2: number; y2: number }) => Math.atan2(s.y2 - s.y1, s.x2 - s.x1)
+    expect(way(a)).toBeCloseTo(way(b), 2)
+    expect(way(a)).toBeCloseTo(-Math.PI / 4, 1)
+  })
+
+  it('keeps guides from running all but along each other', () => {
+    const s = tidy({ guides: true, points: 'A,on,0.35,,Efficient;B,inside,0.55,,Inefficient;C,outside,0.7,,Unattainable' })
+    const [a, b] = placesOf(s)
+    expect(Math.abs(a.x - b.x)).toBeGreaterThanOrEqual(0.3)
+    // Not moved without guides.
+    expect(placesOf({ ...s, guides: false })[1].x).toBeCloseTo(onCurve(8, 8, bendOf(s), 0.55).x * 0.6)
+  })
+
+  it('says in words only what is drawn, and which way a shift or pivot goes', () => {
+    const efficiency = 'A,on,0.35,,Efficient;B,inside,0.55,,Inefficient;C,outside,0.7,,Unattainable'
+    expect(build({ points: efficiency }).label).toMatch(/points A \(efficient\), B \(inefficient\) and C \(unattainable\)/)
+    const blank = build({ points: efficiency, captionMode: 'blank' }).label
+    expect(blank).toMatch(/points A, B and C, each with an arrow from a blank line/)
+    expect(blank).not.toMatch(/efficient|unattainable/i)
+    expect(build({ points: efficiency, pointMode: 'none', captionMode: 'none' }).label).toMatch(/: 3 points$/)
+    expect(build({ shift: 'x', points: '' }).label).toMatch(/the consumer goods intercept moves out; the curve pivots on the capital goods intercept/)
+    expect(build({ shift: 'y', shiftDir: 'in', points: '' }).label).toMatch(/the capital goods intercept moves in; the curve pivots on the consumer goods intercept/)
+    expect(build({ look: 'numeric', shift: 'both', xMax2: 80, yMax2: 70, points: '' }).label).toMatch(/the curve shifts in/)
+    expect(build({ look: 'numeric', shift: 'both', xMax2: 80, yMax2: 120, points: '' }).label).toMatch(/the consumer goods intercept in and the capital goods intercept out/)
   })
 
   it('reads and writes point rows', () => {
