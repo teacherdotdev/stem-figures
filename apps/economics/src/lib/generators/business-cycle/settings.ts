@@ -31,8 +31,8 @@ export const businessCycleSettings = defineSettings(
   {
     cycles: number({ min: 1, max: 4, fallback: 1.5 }),
     start: choice(STARTS, 'rising'),
-    /** how far real GDP swings above and below the trend, in the graph's units */
-    amplitude: number({ min: 0.3, max: 2.5, fallback: 1.5 }),
+    /** how far real GDP swings above and below the trend, in the graph's units: from 0.5, the least that still falls into a cycle at the default trend */
+    amplitude: number({ min: 0.5, max: 2.5, fallback: 1.5 }),
     /** how steeply the trend rises: the graph's units up for each across */
     trend: number({ min: 0, max: 0.6, fallback: 0.3 }),
     /** 0 for even cycles, up to 1 for heights and lengths that vary the most */

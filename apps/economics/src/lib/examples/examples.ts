@@ -179,9 +179,9 @@ export const EXAMPLES: Example[] = [
     {
       slug: 'business-cycle-phases-graph-recession-recovery-long-run-trend',
       title: 'Phases of the business cycle: expansion, peak, contraction, recession, trough and recovery',
-      alt: 'Business cycle graph with Real GDP up the side, Time along the bottom and no numbers on the axes: a blue wave of real GDP around a dashed, upward-sloping trend line, with two high points labeled Peak and a low point labeled Trough; on the fall after the first peak, arrows labeled Contraction near the peak and Recession near the trough; on the rise after the trough, arrows labeled Recovery near the trough and Expansion near the second peak; and an arrow up to the dashed line labeled Long-run trend',
+      alt: 'Business cycle graph with Real GDP up the side, Time along the bottom and no numbers on the axes: a blue wave of real GDP around a dashed, upward-sloping trend line, with two high points labeled Peak and a low point labeled Trough; on the fall after the first peak, an arrow from above labeled Contraction and an arrow from below labeled Recession; on the rise after the trough, arrows labeled Recovery near the trough and Expansion near the second peak; and an arrow up to the dashed line labeled Long-run trend',
       caption:
-        'Every term of the business cycle on one graph of real GDP over time. Real GDP rises to a peak, falls to a trough and rises to a second, higher peak, around a dashed line labeled Long-run trend. The fall is labeled Contraction just after the peak and Recession nearer the trough, and the rise is labeled Recovery just after the trough and Expansion nearer the second peak.',
+        'Every term of the business cycle on one graph of real GDP over time. Real GDP rises to a peak, falls to a trough and rises to a second, higher peak, around a dashed line labeled Long-run trend. The fall is labeled both Contraction, from above, and Recession, from below, two names for the same phase, and the rise is labeled Recovery just after the trough and Expansion nearer the second peak.',
       settings: { recessionLabelMode: 'text', recoveryLabelMode: 'text', trendLabelMode: 'text' },
     },
     {
