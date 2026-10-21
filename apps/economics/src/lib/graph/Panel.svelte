@@ -54,6 +54,7 @@
     <path d={r.d} fill="url(#{id}-hatch-{r.hatch})" />
   {/if}
 {/each}
+{#each p.backs as b}<rect x={b.x0} y={b.y0} width={b.x1 - b.x0} height={b.y1 - b.y0} fill="#fff" />{/each}
 
 <g stroke={INK} stroke-width="2.4">
   <line x1={p.xAxis.x1} y1={p.xAxis.y} x2={p.xAxis.x2} y2={p.xAxis.y} marker-end={cap(p.ends.x)} />

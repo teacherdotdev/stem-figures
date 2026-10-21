@@ -682,7 +682,7 @@ function buildTwo(s: PpcSettings) {
       marks: marked ? marksOf([c]) : [],
       caption: c.name,
     }))
-    // One chart title over both graphs would need its own place: it goes over the first.
+    // One chart title over both graphs: buildFigure centres it over them.
     specs[0].title = base.title
   }
 

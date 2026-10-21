@@ -121,6 +121,12 @@ export type PanelSpec = {
   arrows?: ArrowSpec[]
   braces?: BraceSpec[]
   callouts?: CalloutSpec[]
+  /**
+   * set by buildFigure for panels side by side: how far under the grid's
+   * top the x-axis's word under its end and the caption go at least, so
+   * they line up across the panels
+   */
+  floor?: { word?: number; caption?: number }
 }
 
 /** A label on the figure: written text in runs, or a write-on line for students. */
@@ -416,6 +422,7 @@ export function buildPanel(spec: PanelSpec) {
     ], l.name)
   }
   // Callouts, on the drawing: those asked for, and regions' names with no room inside them.
+  const backs: Box[] = []
   const calls: (Omit<CalloutSpec, 'at'> & { p: Point })[] = (spec.callouts ?? []).filter((c) => shows(c.name)).map((c) => ({ ...c, p: px(c.at) }))
   for (const [k, r] of regions.entries()) {
     if (!shows(r.name)) continue
@@ -428,7 +435,9 @@ export function buildPanel(spec: PanelSpec) {
         continue
       }
     }
-    put(spots, r.name)
+    const spot = put(spots, r.name)
+    // Hatching stops round its name, so no line runs into the letters.
+    if (spec.bw && r.name.mode === 'text') backs.push({ x0: spot.box.x0 - 4, y0: spot.box.y0 - 3, x1: spot.box.x1 + 4, y1: spot.box.y1 })
   }
   // Callouts last: each written where neither its words nor its leader
   // touch anything, the leader staying between the lines that meet at its
@@ -471,14 +480,15 @@ export function buildPanel(spec: PanelSpec) {
       }
       return around
     })
-    // The leader from a label's nearest edge to the point, stopped short of it.
-    const leaderOf = (b: Box, p: Point): Segment | null => {
-      const from = nearestOnBox(b, p, 3)
+    // The leader from a label's nearest edge (a blank's, its line) to the point, stopped short of it.
+    const blank = c.name.mode !== 'text'
+    const leaderOf = (b: Box, p: Point, spot: Spot): Segment | null => {
+      const from = blank ? nearestOnBox({ x0: b.x0, x1: b.x1, y0: spot.y, y1: spot.y }, p, 3) : nearestOnBox(b, p, 3)
       const len = Math.hypot(p.x - from.x, p.y - from.y)
       if (len < stop + 6) return null
       return { x1: round(from.x), y1: round(from.y), x2: round(p.x - ((p.x - from.x) / len) * stop), y2: round(p.y - ((p.y - from.y) / len) * stop) }
     }
-    // What a leader crosses (short of the point itself): a line or dashed guide, or a label (or close by one), counts as much as a label on a line.
+    // What a leader crosses (short of the point itself): a line, another arrow or dashed guide, or a label (or close by one), counts as much as a label on a line.
     const leaderCost = (l: Segment | null) => {
       if (!l) return 0
       const len = Math.hypot(l.x2 - l.x1, l.y2 - l.y1)
@@ -486,13 +496,13 @@ export function buildPanel(spec: PanelSpec) {
       const short = { x1: l.x1, y1: l.y1, x2: l.x1 + (l.x2 - l.x1) * f, y2: l.y1 + (l.y2 - l.y1) * f }
       const near = (b: Box) => ({ x0: b.x0 - 3, y0: b.y0 - 3, x1: b.x1 + 3, y1: b.y1 + 3 })
       // A dashed guide crossed costs less than a curve, so words never move onto a guide to spare their arrow one.
-      return 10 * (drawn.filter((d) => segmentsCross(short, d)).length + taken.filter((b) => crosses(short, near(b))).length) + 4 * guides.filter((d) => segmentsCross(short, d)).length
+      return 10 * ([...drawn, ...arrows, ...leaders].filter((d) => segmentsCross(short, d)).length + taken.filter((b) => crosses(short, near(b))).length) + 4 * guides.filter((d) => segmentsCross(short, d)).length
     }
     // The place where the label and its leader touch least, the first of any as good.
     let best: { spot: Spot; box: Box; leader: Segment | null; score: number } | null = null
     for (const { spot, p } of options) {
       const box = boxAt(spot)
-      const leader = leaderOf(box, p)
+      const leader = leaderOf(box, p, spot)
       const score = place.choose([{ box }], false).score + leaderCost(leader)
       if (!best || score < best.score) best = { spot, box, leader, score }
       if (score === 0) break
@@ -507,7 +517,7 @@ export function buildPanel(spec: PanelSpec) {
         const top = Math.min(axisY - h - 4, Math.max(area.y - ROOM_TOP, p.y - h / 2 + dy * LFS * 1.6))
         const spot: Spot = { x: area.x + area.w + 14, y: top + LFS * 0.78, anchor: 'start' }
         const box = boxAt(spot)
-        const leader = leaderOf(box, p)
+        const leader = leaderOf(box, p, spot)
         const score = 8 + taken.filter((b) => b.x0 < box.x1 + 3 && box.x0 - 3 < b.x1 && b.y0 < box.y1 + 3 && box.y0 - 3 < b.y1).length * 100 + leaderCost(leader)
         if (score < best.score) best = { spot, box, leader, score }
       }
@@ -553,19 +563,34 @@ export function buildPanel(spec: PanelSpec) {
     labels.push(labelAt(spot, b.name, bx))
     under.push(bx)
   }
+  if (spec.floor?.word !== undefined) bottom = Math.max(bottom, area.y + spec.floor.word)
+  const wordFrom = bottom - area.y
   if (xWord) {
     if (xWordBeside) labels.push(labelAt({ x: xEnd + 7, y: axisY + LFS * 0.35, anchor: 'start' }, xWord, textBox({ x: xEnd + 7, y: axisY + LFS * 0.35, anchor: 'start' }, xWordW, LFS)))
     else {
       const spot: Spot = { x: area.x + area.w + Math.min(right - 4, xWordW / 2), y: bottom + LFS + 6, anchor: 'end' }
       spot.x = Math.max(spot.x, area.x + xWordW)
+      // In the row of values under the axis (Y_f, Y₂), if it's clear of them there, rather than under them all.
+      const kept = [...sideLabels.map((l) => textBox(l, l.runs ? runsWidth(l.runs, LFS) : SIDE_BLANK_W, LFS)), ...under, ...numbers.map((n) => textBox(n, textWidth(n.text, fs), fs))]
+      if (spec.floor?.word === undefined) {
+        for (let k = 0; k < xMarks.rows; k++) {
+          const at = { ...spot, y: marksFrom + LFS + 5 + k * X_ROW(LFS) }
+          const b = textBox(at, xWordW, LFS)
+          if (kept.some((u) => u.x0 < b.x1 + 8 && b.x0 - 8 < u.x1 && u.y0 < b.y1 && b.y0 < u.y1)) continue
+          spot.y = at.y
+          break
+        }
+      }
       // Under a brace's label, if the two would meet.
       const wb = textBox(spot, xWordW, LFS)
       if (under.some((u) => u.x0 < wb.x1 + 6 && wb.x0 - 6 < u.x1 && u.y0 < wb.y1 && wb.y0 < u.y1)) spot.y = Math.max(...under.map((u) => u.y1)) + LFS * 0.78 + 6
       labels.push(labelAt(spot, xWord, textBox(spot, xWordW, LFS)))
-      bottom = spot.y + LFS * 0.3
+      bottom = Math.max(bottom, spot.y + LFS * 0.3)
     }
   }
   bottom = Math.max(bottom, ...under.map((u) => u.y1))
+  if (spec.floor?.caption !== undefined) bottom = Math.max(bottom, area.y + spec.floor.caption)
+  const captionFrom = bottom - area.y
   if (spec.caption && shows(spec.caption)) {
     const y = bottom + fs * 1.3 + 8
     if (spec.caption.mode === 'text') big.push({ x: midX, y, anchor: 'middle', runs: runsOf(text(spec.caption), fs * 1.2), big: true })
@@ -587,6 +612,10 @@ export function buildPanel(spec: PanelSpec) {
     grid: area,
     /** where the grid starts, for lining panels up */
     top: area.y,
+    /** how far under the grid's top the x-axis's word and the caption would go, for lining panels up */
+    floors: { word: wordFrom, caption: captionFrom },
+    /** white under regions' names, where hatching stops */
+    backs,
     gridlines: spec.gridlines && numbered,
     vLines: spec.gridlines && numbered ? base.vLines.map((x) => x + dx) : [],
     hLines: spec.gridlines && numbered ? base.hLines.map((y) => y + dy) : [],
