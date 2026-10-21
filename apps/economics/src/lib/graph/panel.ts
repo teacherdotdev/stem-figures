@@ -484,7 +484,8 @@ export function buildPanel(spec: PanelSpec) {
       const f = Math.max(0, (len - 8) / len)
       const short = { x1: l.x1, y1: l.y1, x2: l.x1 + (l.x2 - l.x1) * f, y2: l.y1 + (l.y2 - l.y1) * f }
       const near = (b: Box) => ({ x0: b.x0 - 3, y0: b.y0 - 3, x1: b.x1 + 3, y1: b.y1 + 3 })
-      return 10 * ([...drawn, ...guides].filter((d) => segmentsCross(short, d)).length + taken.filter((b) => crosses(short, near(b))).length)
+      // A dashed guide crossed costs less than a curve, so words never move onto a guide to spare their arrow one.
+      return 10 * (drawn.filter((d) => segmentsCross(short, d)).length + taken.filter((b) => crosses(short, near(b))).length) + 4 * guides.filter((d) => segmentsCross(short, d)).length
     }
     // The place where the label and its leader touch least, the first of any as good.
     let best: { spot: Spot; box: Box; leader: Segment | null; score: number } | null = null
