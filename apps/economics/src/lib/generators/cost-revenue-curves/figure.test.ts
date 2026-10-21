@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { areaOf } from '$lib/graph/curves'
 import { overlaps } from '$lib/graph/testing'
-import type { Segment } from '$shared/graph/labels'
-import { buildCostRevenue, demandOf, pricesOf } from './figure'
+import { textBox, type Segment } from '$shared/graph/labels'
+import { runsWidth } from '$shared/graph/runs'
+import { buildCostRevenue, demandOf, natural, pricesOf } from './figure'
 import {
   afc, atc, avc, costsOf, demandMeetsATC, demandMeetsMC, mc, minATC, minAVC, minMC, mrOn, priceMaker, priceOn, priceTaker, tc,
   type Costs,
@@ -19,6 +20,20 @@ const costs = (over: Partial<CostRevenueSettings> = {}) => {
   return costsOf({ q: s.atcQ, cost: s.atcCost, slope: s.mcSlope, fixed: s.fixed })
 }
 const slopeOf = (f: (q: number) => number, q: number, h = 1e-5) => (f(q + h) - f(q - h)) / (2 * h)
+/** Whether two segments cross, away from their ends. */
+const crossing = (a: Segment, b: Segment) => {
+  const side = (s: Segment, x: number, y: number) => Math.sign((s.x2 - s.x1) * (y - s.y1) - (s.y2 - s.y1) * (x - s.x1))
+  return side(a, b.x1, b.y1) * side(a, b.x2, b.y2) < 0 && side(b, a.x1, a.y1) * side(b, a.x2, a.y2) < 0
+}
+type Panel = ReturnType<typeof firm>
+type Box = { x0: number; y0: number; x1: number; y1: number }
+/** A written label on a panel, by its words, as a box on the drawing. */
+const boxOf = (p: Panel, text: string): Box => {
+  const l = p.labels.find((x) => x.runs?.map((r) => r.text).join('') === text)!
+  return textBox(l, runsWidth(l.runs!, p.labelFs), p.labelFs)
+}
+/** How far a point is from a box. */
+const gapTo = (b: Box, q: { x: number; y: number }) => Math.hypot(Math.max(b.x0 - q.x, 0, q.x - b.x1), Math.max(b.y0 - q.y, 0, q.y - b.y1))
 const NATURAL = SETUPS.find((x) => x.id === 'regulated')!.settings
 
 /** A spread of the teacher's cost controls, across their ranges. */
@@ -70,6 +85,15 @@ describe('the cost curves, from one total cost', () => {
     expect(build({ atcQ: 7.5, atcCost: 2.5, mcSlope: 2.5, fixed: 0.9 }).notes[0]).toMatch(/less steep/)
   })
 
+  it('by default has AFC well clear of the lowest AVC, so AFC, AVC and MC never seem to meet at the shutdown point', () => {
+    const k = costs().costs
+    const low = minAVC(k)
+    expect(low.v - afc(k, low.q)).toBeGreaterThan(0.6)
+    // Nor do MR = MC and AFC meet on the default monopoly.
+    const m = priceMaker(k, demandOf(settings({ graph: 'monopoly' }), k).d)!
+    expect(mc(k, m.q) - afc(k, m.q)).toBeGreaterThan(0.4)
+  })
+
   it('draws MC, ATC and AVC (and AFC when asked), with dots where MC crosses the averages', () => {
     expect(texts({})).toEqual(expect.arrayContaining(['MC', 'ATC', 'AVC']))
     expect(texts({})).not.toContain('AFC')
@@ -115,16 +139,16 @@ describe('a perfectly competitive firm', () => {
   it('shades profit or loss between price and ATC, out to q*, and names it', () => {
     const p = firm({ graph: 'perfect', price: 'profit' })
     expect(p.regions).toHaveLength(1)
-    expect(texts({ graph: 'perfect', price: 'profit' })).toEqual(expect.arrayContaining(['Profit', 'D = MR = AR = P', 'Pe', 'q*', 'ATC', 'Break-even point', 'Shutdown point']))
+    expect(texts({ graph: 'perfect', price: 'profit' })).toEqual(expect.arrayContaining(['Profit', 'D = MR = AR = P', 'Pe', 'qe', 'ATC', 'Break-even point', 'Shutdown point']))
     expect(texts({ graph: 'perfect', price: 'loss' })).toContain('Loss')
     expect(firm({ graph: 'perfect', price: 'breakeven' }).regions).toHaveLength(0)
     expect(firm({ graph: 'perfect', price: 'profit', profit: false }).regions).toHaveLength(0)
-    expect(texts({ graph: 'perfect', price: 'profit', eqStyle: 'star' })).toContain('P*')
+    expect(texts({ graph: 'perfect', price: 'profit', eqStyle: 'star' })).toEqual(expect.arrayContaining(['P*', 'q*']))
   })
 
   it('shuts the firm down below AVC, with no quantity made', () => {
     const g = build({ graph: 'perfect', price: 'shutdown' })
-    expect(texts({ graph: 'perfect', price: 'shutdown' })).not.toContain('q*')
+    expect(texts({ graph: 'perfect', price: 'shutdown' })).not.toContain('qe')
     expect(g.figure.panels[0].regions).toHaveLength(0)
   })
 
@@ -194,6 +218,30 @@ describe('a monopoly', () => {
     expect(fair.labels.map((l) => l.runs?.map((r) => r.text).join(''))).not.toContain('Profit')
   })
 
+  it('as a natural monopoly, meets MC with MR well below the socially optimal price, where MC is rising, its quantities and prices well apart', () => {
+    const s = settings({ graph: 'monopoly', ...NATURAL })
+    const k2 = costsOf({ q: s.atcQ, cost: s.atcCost, slope: s.mcSlope, fixed: s.fixed }).costs
+    const d2 = demandOf(s, k2).d
+    const m = priceMaker(k2, d2)!
+    const qFR = demandMeetsATC(k2, d2)!
+    const qSO = demandMeetsMC(k2, d2)!
+    // So the P_SO guide doesn't run through where MR meets MC, as though P_SO were read off it.
+    expect(priceOn(d2, qSO) - mc(k2, m.q)).toBeGreaterThan(0.5)
+    expect(slopeOf((q) => mc(k2, q), m.q)).toBeGreaterThan(0)
+    expect(Math.min(qFR - m.q, qSO - qFR)).toBeGreaterThan(1.15)
+    expect(Math.min(m.p - priceOn(d2, qFR), priceOn(d2, qFR) - priceOn(d2, qSO))).toBeGreaterThan(0.9)
+    expect(natural(s)).toBe(true)
+    expect(natural(settings({ graph: 'monopoly' }))).toBe(false)
+  })
+
+  it('shades a loss rather than consumer surplus over it, and says so', () => {
+    const over = { graph: 'monopoly', demandTop: 5, cs: true, dwl: true } as const
+    expect(texts(over)).toContain('Loss')
+    expect(texts(over)).not.toContain('CS')
+    expect(build(over).notes.join(' ')).toMatch(/Consumer surplus is not shaded/)
+    expect(texts({ ...over, profit: false })).toContain('CS')
+  })
+
   it('shades a loss when demand is below ATC, and says when demand is too low to make anything or no price breaks even', () => {
     expect(texts({ graph: 'monopoly', demandTop: 5.5, demandEnd: 10 })).toContain('Loss')
     expect(build({ graph: 'monopoly', demandTop: 5, demandEnd: 6, atcCost: 6.5 }).notes.join(' ')).toMatch(/too low for MR ever to reach MC|shut down/)
@@ -217,7 +265,7 @@ describe('a monopolistically competitive firm', () => {
     for (let x = 0.5; x < 12; x += 0.25) expect(priceOn(d, x)).toBeLessThanOrEqual(atc(k, x) + 1e-9)
     expect(q).toBeLessThan(minATC(k).q)
     expect(m.p).toBeGreaterThan(mc(k, q))
-    expect(texts({ graph: 'monopolistic', run: 'long' })).toEqual(expect.arrayContaining(['Excess capacity', 'q*', 'qmin ATC', 'Pe']))
+    expect(texts({ graph: 'monopolistic', run: 'long' })).toEqual(expect.arrayContaining(['Excess capacity', 'qe', 'qmin ATC', 'Pe']))
     expect(firm({ graph: 'monopolistic', run: 'long' }).braces).toHaveLength(1)
   })
 
@@ -275,6 +323,65 @@ describe('the figure', () => {
     }
   })
 
+  it("writes each curve's name by its own curve's end, the names at the right edge in the curves' order", () => {
+    const cases: Partial<CostRevenueSettings>[] = [
+      {}, { afc: true }, { graph: 'perfect' }, { graph: 'perfect', price: 'breakeven' }, { graph: 'perfect', price: 'breakeven', market: true },
+      // ATC and AVC ending close together, by the price line.
+      { graph: 'perfect', atcQ: 7.5, atcCost: 6.5, mcSlope: 0.6, fixed: 0.2 },
+      // MC ending at the top, by the price line.
+      { graph: 'perfect', price: 'custom', priceAt: 9.5 },
+      { graph: 'monopoly', cs: true, dwl: true }, { graph: 'monopoly', ...NATURAL, regulation: 'both', profit: false },
+      { graph: 'monopolistic', run: 'long' }, { graph: 'monopolistic', run: 'long', avc: true, afc: true },
+    ]
+    for (const c of cases) {
+      const s = settings(c)
+      const k = costsOf({ q: s.atcQ, cost: s.atcCost, slope: s.mcSlope, fixed: s.fixed }).costs
+      const p = firm(c)
+      const { d } = demandOf(s, k)
+      const fns: [string, (q: number) => number, number][] = [['MC', (q) => mc(k, q), 0.25], ['ATC', (q) => atc(k, q), 0.25]]
+      if (s.graph === 'costs' || s.graph === 'perfect' || s.avc) fns.push(['AVC', (q) => avc(k, q), 0.25])
+      if (s.afc) fns.push(['AFC', (q) => afc(k, q), 0.25])
+      if (s.graph === 'monopoly' || s.graph === 'monopolistic') fns.push(['D = AR', (q) => priceOn(d, q), 0], ['MR', (q) => mrOn(d, q), 0])
+      // Each curve's end on the drawing: where it leaves the part of the graph curves are drawn in.
+      const ends = fns.map(([name, f, from]) => {
+        let q = from
+        while (q < 9.4 && f(q) > 9.6) q += 0.005
+        while (q + 0.005 <= 9.4 && f(q + 0.005) >= 0.4 && f(q + 0.005) <= 9.6) q += 0.005
+        return { name, at: p.px({ x: q, y: f(q) }) }
+      })
+      for (const e of ends) {
+        const own = gapTo(boxOf(p, e.name), e.at)
+        expect([c, e.name, own < 30]).toEqual([c, e.name, true])
+        for (const o of ends) if (o !== e) expect([c, e.name, o.name, own <= gapTo(boxOf(p, e.name), o.at) + 1]).toEqual([c, e.name, o.name, true])
+      }
+      // Names past the right edge keep their curves' order, top to bottom.
+      const right = ends.filter((e) => e.at.x > p.px({ x: 9.39, y: 0 }).x).sort((a, b) => a.at.y - b.at.y)
+      const ys = right.map((e) => boxOf(p, e.name).y0)
+      expect([c, ys]).toEqual([c, [...ys].sort((a, b) => a - b)])
+    }
+  })
+
+  it("keeps the callouts' arrows off the guides, and the words they start from off them too, on the default graphs and the shipped examples", () => {
+    const cases: Partial<CostRevenueSettings>[] = [
+      { graph: 'perfect' }, { graph: 'perfect', market: true }, { graph: 'perfect', price: 'loss' }, { graph: 'perfect', price: 'shutdown' },
+      { graph: 'perfect', labelSize: 'small' }, { graph: 'monopoly', cs: true, dwl: true },
+      { graph: 'monopolistic', run: 'long', cs: true, dwl: true }, { graph: 'monopoly', ...NATURAL, regulation: 'both', cs: true, dwl: true },
+      // A guide ran through Shutdown point at the steepest MC from the lowest cost; tucked into the corner, its arrow has to cross it instead.
+      { graph: 'perfect', atcQ: 4, atcCost: 2.5, mcSlope: 2.5, fixed: 0.9 },
+    ]
+    for (const c of cases) {
+      const p = firm(c)
+      const words = p.labels.filter((l) => l.runs).map((l) => ({ text: l.runs!.map((r) => r.text).join(''), box: textBox(l, runsWidth(l.runs!, p.labelFs), p.labelFs) }))
+      for (const l of p.leaders) {
+        const from = words.find((w) => gapTo(w.box, { x: l.x1, y: l.y1 }) < 5)!
+        const across = (g: Segment) =>
+          crossing(g, { x1: from.box.x0, y1: from.box.y0, x2: from.box.x1, y2: from.box.y1 }) || crossing(g, { x1: from.box.x0, y1: from.box.y1, x2: from.box.x1, y2: from.box.y0 })
+        const crossed = c.atcCost === 2.5 ? [] : p.guides.filter((g) => crossing(l, g))
+        expect([c, from.text, crossed, p.guides.filter(across)]).toEqual([c, from.text, [], []])
+      }
+    }
+  })
+
   it('keeps every curve and region on the graph', () => {
     for (const setup of SETUPS) {
       const p = buildCostRevenue(settingsFor(setup, costRevenueSettings.defaults, costRevenueSettings.defaults)).figure.panels.at(-1)!
@@ -295,6 +402,10 @@ describe('the figure', () => {
     const blanks = Object.fromEntries(LABEL_KEYS.map((k) => [`${k}Mode`, 'blank']))
     const words = ['Price and costs', 'Quantity']
     expect(firm({ graph: 'perfect', ...blanks }).labels.every((l) => l.blank || (l.runs && words.includes(l.runs[0].text)))).toBe(true)
+    // The market's price axis is an axis title, written as the firm's is, and a blank only when that is.
+    const market = (over: Partial<CostRevenueSettings>) => build({ graph: 'perfect', market: true, ...blanks, ...over }).figure.panels[0]
+    expect(market({}).labels.map((l) => l.runs?.map((r) => r.text).join(''))).toContain('Price')
+    expect(market({ yTitleMode: 'blank' }).labels.map((l) => l.runs?.map((r) => r.text).join(''))).not.toContain('Price')
   })
 
   it('describes itself for screen readers', () => {

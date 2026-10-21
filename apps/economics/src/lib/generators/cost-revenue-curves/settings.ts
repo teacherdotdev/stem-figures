@@ -43,7 +43,7 @@ export type Run = (typeof RUNS)[number]
 export const OUTCOMES = ['profit', 'loss'] as const
 export type ShortRun = (typeof OUTCOMES)[number]
 
-/** How equilibrium values are named: Pₑ and Qₑ, or P* and Q*. */
+/** How equilibrium values are named: Pₑ and Qₑ (and the firm's qₑ), or P*, Q* and q*. */
 export const EQ_STYLES = ['e', 'star'] as const
 export type EqStyle = (typeof EQ_STYLES)[number]
 
@@ -59,7 +59,7 @@ export const costRevenueSettings = defineSettings({
   /** MC's slope where it crosses ATC */
   mcSlope: number({ min: 0.6, max: 2.5, fallback: 1.5 }),
   /** fixed cost, as a share of as much as AVC can carry and keep its dip: from a little (0.2) to a lot (0.9) */
-  fixed: number({ min: 0.2, max: 0.9, fallback: 0.7 }),
+  fixed: number({ min: 0.2, max: 0.9, fallback: 0.6 }),
   /** AVC on a monopoly's or monopolistic competitor's graph (it's always on the others) */
   avc: bool(false),
   afc: bool(false),
@@ -87,7 +87,7 @@ export const costRevenueSettings = defineSettings({
   ...labels({
     mcLabel: 'MC', atcLabel: 'ATC', avcLabel: 'AVC', afcLabel: 'AFC',
     priceLineLabel: 'D = MR = AR = P', dLabel: 'D = AR', mrLabel: 'MR',
-    pLabel: 'P', qLabel: 'Q', qFirmLabel: 'q*', costLabel: 'ATC',
+    pLabel: 'P', qLabel: 'Q', qFirmLabel: 'q', costLabel: 'ATC',
     pmLabel: 'P_M', qmLabel: 'Q_M', psoLabel: 'P_{SO}', qsoLabel: 'Q_{SO}', pfrLabel: 'P_{FR}', qfrLabel: 'Q_{FR}',
     profitLabel: 'Profit', lossLabel: 'Loss', csLabel: 'CS', dwlLabel: 'DWL',
     breakEvenLabel: 'Break-even point', shutdownLabel: 'Shutdown point',
@@ -102,11 +102,11 @@ export const costRevenueSettings = defineSettings({
 
 export type CostRevenueSettings = typeof costRevenueSettings.defaults
 
-/** The label keys, for making every label blank at once. */
+/** The label keys, for making every label blank at once: all but the market's price axis, which is an axis title, as the firm's are. */
 export const LABEL_KEYS = [
   'mcLabel', 'atcLabel', 'avcLabel', 'afcLabel', 'priceLineLabel', 'dLabel', 'mrLabel', 'pLabel', 'qLabel', 'qFirmLabel', 'costLabel',
   'pmLabel', 'qmLabel', 'psoLabel', 'qsoLabel', 'pfrLabel', 'qfrLabel', 'profitLabel', 'lossLabel', 'csLabel', 'dwlLabel',
-  'breakEvenLabel', 'shutdownLabel', 'excessLabel', 'qMinLabel', 'marketDLabel', 'marketSLabel', 'marketYLabel', 'marketLabel', 'firmLabel',
+  'breakEvenLabel', 'shutdownLabel', 'excessLabel', 'qMinLabel', 'marketDLabel', 'marketSLabel', 'marketLabel', 'firmLabel',
 ] as const
 
-export type LabelKey = (typeof LABEL_KEYS)[number]
+export type LabelKey = (typeof LABEL_KEYS)[number] | 'marketYLabel'

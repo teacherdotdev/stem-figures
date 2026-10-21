@@ -316,9 +316,9 @@ export const EXAMPLES: Example[] = [
     {
       slug: 'perfect-competition-side-by-side-graphs-market-and-firm-profit',
       title: 'Perfect competition side-by-side graphs: market and firm making an economic profit',
-      alt: 'Side-by-side graphs with no numbers on the axes. Left, labeled Market: supply S and demand D crossing at a dot, with dashed lines to Pₑ on the Price axis and Qₑ on the Quantity axis. The dashed line at Pₑ runs across to the right graph, labeled Firm, where it becomes the horizontal price line D = MR = AR = P. On the firm’s graph of Price and costs against Quantity, MC, ATC and AVC curves, MC meeting the price line at a dot above q*, a green rectangle labeled Profit between the price line and a dashed line at ATC on the price axis, and arrows to dots labeled Shutdown point, at the lowest AVC, and Break-even point, at the lowest ATC.',
+      alt: 'Side-by-side graphs with no numbers on the axes. Left, labeled Market: supply S and demand D crossing at a dot, with dashed lines to Pₑ on the Price axis and Qₑ on the Quantity axis. The dashed line at Pₑ runs across to the right graph, labeled Firm, where it becomes the horizontal price line D = MR = AR = P. On the firm’s graph of Price and costs against Quantity, MC, ATC and AVC curves, MC meeting the price line at a dot above qₑ, a green rectangle labeled Profit between the price line and a dashed line at ATC on the price axis, and arrows to dots labeled Shutdown point, at the lowest AVC, and Break-even point, at the lowest ATC.',
       caption:
-        'A perfectly competitive market beside one of its firms. Market supply and demand set the price Pₑ, and the dashed line carries it across to the firm, where it is the horizontal line D = MR = AR = P. The firm produces q*, where MC meets the price line, and the shaded rectangle between the price and ATC out to q* is its economic profit. The shutdown point (the lowest AVC) and the break-even point (the lowest ATC) are marked where MC crosses them.',
+        'A perfectly competitive market beside one of its firms. Market supply and demand set the price Pₑ, and the dashed line carries it across to the firm, where it is the horizontal line D = MR = AR = P. The firm produces qₑ, where MC meets the price line, and the shaded rectangle between the price and ATC out to qₑ is its economic profit. The shutdown point (the lowest AVC) and the break-even point (the lowest ATC) are marked where MC crosses them.',
       settings: { graph: 'perfect', market: true },
     },
     {
@@ -343,14 +343,14 @@ export const EXAMPLES: Example[] = [
       alt: 'Graph of Price and costs against Quantity with no numbers on the axes: demand D = AR, a dashed MR curve, and MC and ATC curves, ATC still falling where demand crosses MC. Three dots on demand, each with dashed lines to both axes: PM and QM above where MR meets MC; PFR and QFR where demand crosses ATC the second time; and PSO and QSO where demand crosses MC, the lowest price and the largest quantity (M, FR and SO subscripts).',
       caption:
         'A natural monopoly, whose ATC is still falling where demand meets MC, at the three prices it could charge. Unregulated, it produces QM, where MR = MC, and charges PM. At the fair-return price PFR, where demand meets ATC, it produces QFR and breaks even; at the socially optimal price PSO, where demand meets MC, it produces the most, QSO, at a price below ATC.',
-      settings: { graph: 'monopoly', regulation: 'both', profit: false, atcQ: 7.5, atcCost: 2.75, mcSlope: 1, fixed: 0.45, demandTop: 9.6, demandEnd: 6.5 },
+      settings: { graph: 'monopoly', regulation: 'both', profit: false, atcQ: 7.5, atcCost: 3.25, mcSlope: 0.7, fixed: 0.9, demandTop: 9.6, demandEnd: 7.4 },
     },
     {
       slug: 'monopolistic-competition-long-run-equilibrium-graph-excess-capacity',
       title: 'Monopolistic competition long-run equilibrium graph with excess capacity',
-      alt: 'Graph of Price and costs against Quantity with no numbers on the axes: a downward-sloping demand curve D = AR just touching a U-shaped ATC curve at a dot, a dashed MR curve, and MC crossing MR directly below the dot. Dashed lines run from the dot to Pₑ on the price axis and q* on the quantity axis, and from a dot at the lowest point of ATC, where MC crosses it, down to q with the subscript min ATC. A brace under the quantity axis from q* to q min ATC is labeled Excess capacity.',
+      alt: 'Graph of Price and costs against Quantity with no numbers on the axes: a downward-sloping demand curve D = AR just touching a U-shaped ATC curve at a dot, a dashed MR curve, and MC crossing MR directly below the dot. Dashed lines run from the dot to Pₑ on the price axis and qₑ on the quantity axis, and from a dot at the lowest point of ATC, where MC crosses it, down to q with the subscript min ATC. A brace under the quantity axis from qₑ to q min ATC is labeled Excess capacity.',
       caption:
-        'A monopolistically competitive firm in long-run equilibrium. It produces q*, where MR meets MC, and its demand curve just touches ATC there, so the price Pₑ equals ATC and the firm makes zero economic profit. q* is less than the quantity at ATC’s lowest point, and the gap between them is bracketed as excess capacity.',
+        'A monopolistically competitive firm in long-run equilibrium. It produces qₑ, where MR meets MC, and its demand curve just touches ATC there, so the price Pₑ equals ATC and the firm makes zero economic profit. qₑ is less than the quantity at ATC’s lowest point, and the gap between them is bracketed as excess capacity.',
       settings: { graph: 'monopolistic', run: 'long' },
     },
     {
