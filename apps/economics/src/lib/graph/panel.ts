@@ -324,13 +324,21 @@ export function buildPanel(spec: PanelSpec) {
   const xMarksH = marksFrom - axisY + (xMarks.rows ? LFS + 8 + (xMarks.rows - 1) * X_ROW(LFS) : 0)
 
   // The numbers, with their units; on the grid (under an x-axis crossing it), labels keep off them and the values there.
+  // Where the axes meet away from 0 (6,000 and 60), each axis's first number
+  // is written where its others are: the x-axis's centered under the corner,
+  // the y-axis's level with its line, rather than nudged apart as the shared
+  // grid does for a 0 written once.
+  const liftedY = base.numbers.find((n) => n.anchor === 'end' && Math.abs(n.y - (base.xAxis.y - 5)) < 0.01)
   const numbers = base.numbers.map((n) => {
     // x-axis numbers are centered under their lines, but for the one where the axes cross, just left of it.
     const corner = Math.abs(n.x - (base.yAxis.x - 8)) < 0.01
     const onX = n.anchor === 'middle' || corner
+    const text = withCommas(n.text)
     // With the x-axis crossing the grid, the 0 there goes with the y-axis's numbers, clear of those under it.
-    if (corner && xInside) return { ...n, x: base.yAxis.x - 6 + dx, y: base.xAxis.y + fs * 0.35 + dy, text: n.text + (yUnits || xUnits) }
-    return { ...n, x: n.x + dx, y: n.y + dy, text: n.text + (onX ? xUnits : yUnits) }
+    if (corner && xInside) return { ...n, x: base.yAxis.x - 6 + dx, y: base.xAxis.y + fs * 0.35 + dy, text: text + (yUnits || xUnits) }
+    if (corner && liftedY) return { ...n, x: base.yAxis.x + dx, anchor: 'middle' as const, y: n.y + dy, text: text + xUnits }
+    if (n === liftedY) return { ...n, x: n.x + dx, y: base.xAxis.y + fs * 0.35 + dy, text: text + yUnits }
+    return { ...n, x: n.x + dx, y: n.y + dy, text: text + (onX ? xUnits : yUnits) }
   })
   if (xInside) {
     for (const n of numbers) place.keep(textBox({ x: n.x, y: n.y, anchor: n.anchor }, textWidth(n.text, fs), fs))
@@ -609,6 +617,8 @@ function byEnd(run: Point[], fs: number): Spot[] {
   const prev = run[Math.max(0, run.length - 6)]
   const rising = end.y < prev.y - 0.5
   const upright = Math.abs(end.x - prev.x) < 1
+  // A curve ending flat (demand for reserves) gets its name level with it.
+  const flat = Math.abs(end.y - prev.y) < Math.abs(end.x - prev.x) * 0.15
   return upright
     ? [
         { x: end.x, y: end.y - 7, anchor: 'middle' },
@@ -616,7 +626,8 @@ function byEnd(run: Point[], fs: number): Spot[] {
         { x: end.x - 6, y: end.y + fs * 0.8, anchor: 'end' },
       ]
     : [
-        { x: end.x + 5, y: end.y + (rising ? 0 : fs * 0.6), anchor: 'start' },
+        // Level with a flat end, far enough past it not to count as close to its own line.
+        { x: end.x + (flat ? 8 : 5), y: end.y + (flat ? fs * 0.35 : rising ? 0 : fs * 0.6), anchor: 'start' },
         { x: end.x + 4, y: end.y - 6, anchor: 'start' },
         { x: end.x + 4, y: end.y + fs + 2, anchor: 'start' },
         { x: end.x, y: end.y - 8, anchor: 'middle' },
@@ -660,6 +671,9 @@ function overSpots(p: Point, fs: number, side: 'above' | 'below'): Spot[] {
     { x: p.x, y: further, anchor: 'middle' },
   ]
 }
+
+/** A number of four or more digits with commas in it, as economics graphs write them: 8800 → 8,800. */
+const withCommas = (text: string) => text.replace(/^([−-]?)(\d{4,})/, (_, sign: string, digits: string) => sign + digits.replace(/\B(?=(\d{3})+(?!\d))/g, ','))
 
 /** Whether two segments cross. */
 function segmentsCross(a: Segment, b: Segment) {

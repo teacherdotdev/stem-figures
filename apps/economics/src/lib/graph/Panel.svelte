@@ -39,6 +39,14 @@
   </g>
 {/if}
 
+<!-- White under the guides' dashes, so one along a gridline still reads as
+     dashed; drawn before the axes, so it doesn't notch them where a guide ends. -->
+{#if p.guides.length}
+  <g stroke="#fff" stroke-width="4">
+    {#each p.guides as l}<line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />{/each}
+  </g>
+{/if}
+
 <g stroke={INK} stroke-width="2.4">
   <line x1={p.xAxis.x1} y1={p.xAxis.y} x2={p.xAxis.x2} y2={p.xAxis.y} marker-end={cap(p.ends.x)} />
   <line x1={p.yAxis.x} y1={p.yAxis.y1} x2={p.yAxis.x} y2={p.yAxis.y2} marker-end={cap(p.ends.y)} />
@@ -49,11 +57,7 @@
   </g>
 {/if}
 
-<!-- White under the dashes, so a guide along a gridline still reads as dashed. -->
 {#if p.guides.length}
-  <g stroke="#fff" stroke-width="4">
-    {#each p.guides as l}<line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />{/each}
-  </g>
   <g stroke={INK} stroke-width="1.4" stroke-dasharray="5 4">
     {#each p.guides as l}<line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />{/each}
   </g>
