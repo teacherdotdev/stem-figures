@@ -474,14 +474,14 @@ export function buildPanel(spec: PanelSpec) {
       if (len < stop + 6) return null
       return { x1: round(from.x), y1: round(from.y), x2: round(p.x - ((p.x - from.x) / len) * stop), y2: round(p.y - ((p.y - from.y) / len) * stop) }
     }
-    // What a leader crosses (short of the point itself): a line, or a label (or close by one), counts as much as a label on a line.
+    // What a leader crosses (short of the point itself): a line or dashed guide, or a label (or close by one), counts as much as a label on a line.
     const leaderCost = (l: Segment | null) => {
       if (!l) return 0
       const len = Math.hypot(l.x2 - l.x1, l.y2 - l.y1)
       const f = Math.max(0, (len - 8) / len)
       const short = { x1: l.x1, y1: l.y1, x2: l.x1 + (l.x2 - l.x1) * f, y2: l.y1 + (l.y2 - l.y1) * f }
       const near = (b: Box) => ({ x0: b.x0 - 3, y0: b.y0 - 3, x1: b.x1 + 3, y1: b.y1 + 3 })
-      return 10 * (drawn.filter((d) => segmentsCross(short, d)).length + taken.filter((b) => crosses(short, near(b))).length)
+      return 10 * ([...drawn, ...guides].filter((d) => segmentsCross(short, d)).length + taken.filter((b) => crosses(short, near(b))).length)
     }
     // The place where the label and its leader touch least, the first of any as good.
     let best: { spot: Spot; box: Box; leader: Segment | null; score: number } | null = null
