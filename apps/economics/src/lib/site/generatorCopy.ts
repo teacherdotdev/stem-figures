@@ -130,7 +130,7 @@ export const COPY: Record<string, GeneratorCopy> = {
     ],
     settings: [
       'The graph: the money market, loanable funds or the market for reserves, with ample or limited reserves, and eight common setups from an open-market purchase to crowding out and lower administered rates',
-      'The shift: supply, demand or both, each increasing or decreasing (the demand for reserves shifting up or down), small, medium or large, with no arrows or one to three',
+      'The shift: supply, demand or both, each increasing or decreasing (with ample reserves, the demand for reserves shifting up or down), small, medium or large, with no arrows or one to three',
       'Dashed lines to the axes with the interest rates and quantities, a dot where the curves cross, and equilibrium values named iₑ and Qₑ or i* and Q*',
       'Every curve and value label written in your own words, left as a blank line for students, or left off, one at a time or all at once',
       'The chart and axis titles (or blank lines), color or black and white, arrows at the axes’ ends, and label size',

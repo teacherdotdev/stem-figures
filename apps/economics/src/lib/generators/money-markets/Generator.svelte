@@ -17,7 +17,7 @@
   import { filenameOf } from '$lib/graph/settings'
   import { SHIFT_SIZES, SHIFT_SIZE_NAMES } from '$lib/graph/shifts'
   import MoneyMarketsFigure from './MoneyMarketsFigure.svelte'
-  import { buildMoneyMarkets } from './figure'
+  import { buildMoneyMarkets, demandUpDown } from './figure'
   import { DIRECTIONS, GRAPHS, GRAPH_NAMES, KEYS, REGIMES, REGIME_NAMES, SHIFTS, moneyMarketsSettings, type MoneyMarketsSettings } from './settings'
   import { SETUPS, settingsFor } from './setups'
 
@@ -51,8 +51,8 @@
   } as const
   const names = $derived(CURVES[clean.graph])
   const moving = (kind: 'supply' | 'demand') => clean.shift === kind || clean.shift === 'both'
-  /** The demand for reserves moves up and down with the administered rates; everything else right and left. */
-  const upDown = (kind: 'supply' | 'demand') => kind === 'demand' && clean.graph === 'reserves'
+  /** The demand for reserves with ample reserves moves up and down with the administered rates; everything else right and left. */
+  const upDown = (kind: 'supply' | 'demand') => kind === 'demand' && demandUpDown(clean)
   const dirNames = (kind: 'supply' | 'demand') => (upDown(kind) ? { increase: 'Shifts up', decrease: 'Shifts down' } : { increase: 'Increases', decrease: 'Decreases' })
 
   const dirWord = (kind: 'supply' | 'demand') => {
@@ -107,7 +107,7 @@
           flat at the top (the discount rate), slopes, then is flat at the bottom (the interest paid on reserves). With
           ample reserves, supply crosses that flat bottom, so the Fed moves the policy rate by changing its administered
           rates, which shifts demand up or down. With limited reserves, supply crosses the slope, so buying and selling
-          bonds moves the rate. In any label, _ lowers the next letter (MS_1 is MS₁) and _{'{…}'} lowers everything in
+          bonds moves the rate, and so does demand shifting right or left, as when reserve requirements change. In any label, _ lowers the next letter (MS_1 is MS₁) and _{'{…}'} lowers everything in
           the braces.
         </HelpTip>
       </div>
