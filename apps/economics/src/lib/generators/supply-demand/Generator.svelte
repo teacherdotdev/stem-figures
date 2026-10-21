@@ -95,13 +95,14 @@
   )
   const controlSummary = $derived(clean.control === 'none' ? 'None' : CONTROL_NAMES[clean.control])
   const taxSummary = $derived(TAX_NAMES[clean.tax])
-  const shaded = $derived([clean.cs && 'CS', clean.ps && 'PS', clean.dwl && 'DWL', clean.revenue && clean.tax !== 'none' && (clean.tax === 'tax' ? 'tax revenue' : 'subsidy cost')].filter(Boolean))
+  // A deadweight loss is only shaded with a tax, a subsidy or a price control to make one.
+  const shaded = $derived([clean.cs && 'CS', clean.ps && 'PS', clean.dwl && (clean.tax !== 'none' || clean.control !== 'none') && 'DWL', clean.revenue && clean.tax !== 'none' && (clean.tax === 'tax' ? 'tax revenue' : 'subsidy cost')].filter(Boolean))
   const shadeSummary = $derived(shaded.length ? shaded.join(', ') : 'Nothing shaded')
   const labelSummary = $derived([clean.eqStyle === 'e' ? 'Pₑ, Qₑ' : 'P*, Q*', clean.guides ? 'guides to the axes' : 'no guides'].join(' · '))
   const filename = $derived(filenameOf(clean, 'supply-and-demand'))
 
   type LabelKey = 'dLabel' | 'sLabel' | 'eLabel' | 'pLabel' | 'qLabel' | 'ceilingLabel' | 'floorLabel' | 'shortageLabel' | 'surplusLabel'
-    | 'qdLabel' | 'qsLabel' | 'taxLabel' | 'subsidyLabel' | 'buyerLabel' | 'sellerLabel' | 'qtLabel' | 'csLabel' | 'psLabel' | 'dwlLabel'
+    | 'qdLabel' | 'qsLabel' | 'taxLabel' | 'subsidyLabel' | 'buyerLabel' | 'sellerLabel' | 'qtLabel' | 'qsubLabel' | 'csLabel' | 'psLabel' | 'dwlLabel'
     | 'revenueLabel' | 'costLabel'
   /** The labels on the figure as it is, each with its name in the panel. */
   const labelList = $derived(
@@ -112,7 +113,7 @@
       ...(clean.control !== 'none' && clean.brace ? [[clean.control === 'ceiling' ? 'shortageLabel' : 'surplusLabel', clean.control === 'ceiling' ? 'Shortage' : 'Surplus']] : []),
       ...(clean.control !== 'none' && clean.guides ? [['qdLabel', 'Quantity demanded'], ['qsLabel', 'Quantity supplied']] : []),
       ...(clean.tax !== 'none' ? [[clean.tax === 'tax' ? 'taxLabel' : 'subsidyLabel', clean.tax === 'tax' ? 'Supply with the tax' : 'Supply with the subsidy']] : []),
-      ...(clean.tax !== 'none' && clean.guides ? [['buyerLabel', 'Price buyers pay'], ['sellerLabel', 'Price sellers keep'], ['qtLabel', 'Quantity sold']] : []),
+      ...(clean.tax !== 'none' && clean.guides ? [['buyerLabel', 'Price buyers pay'], ['sellerLabel', 'Price sellers keep'], [clean.tax === 'tax' ? 'qtLabel' : 'qsubLabel', 'Quantity sold']] : []),
       ...(clean.cs ? [['csLabel', 'Consumer surplus']] : []),
       ...(clean.ps ? [['psLabel', 'Producer surplus']] : []),
       ...(clean.dwl ? [['dwlLabel', 'Deadweight loss']] : []),
