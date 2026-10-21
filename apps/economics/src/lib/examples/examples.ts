@@ -230,10 +230,10 @@ export const EXAMPLES: Example[] = [
     {
       slug: 'production-possibilities-curve-increasing-opportunity-cost-numbered',
       title: 'Increasing opportunity cost on a numbered production possibilities curve',
-      alt: 'Production possibilities curve on numbered axes with gridlines, capital goods on the y-axis and consumer goods on the x-axis, each from 0 to 110: a bowed-out curve labeled PPC from 100 capital goods to 100 consumer goods, with points A to E on it at 0, 25, 50, 75 and 100 consumer goods, joined by dashed steps labeled −8.52 and +25, −16.7 and +25, −25.1 and +25, and −49.7 and +25',
+      alt: 'Production possibilities curve on numbered axes with gridlines, capital goods on the y-axis from 0 to 140 and consumer goods on the x-axis from 0 to 110: a bowed-out curve labeled PPC from 120 capital goods to 100 consumer goods, with points A to E on it at 0, 25, 50, 75 and 100 consumer goods and 120, 110, 90, 60 and 0 capital goods, joined by dashed steps labeled −10 and +25, −20 and +25, −30 and +25, and −60 and +25',
       caption:
-        'A bowed-out production possibilities curve on numbered axes, meeting the capital goods axis at 100 and the consumer goods axis at 100. Points A to E sit on the curve at 0, 25, 50, 75 and 100 consumer goods, joined by dashed steps down and across. Each step gains 25 consumer goods and gives up more capital goods than the one before: 8.52, 16.7, 25.1 and then 49.7, written beside the steps.',
-      settings: { look: 'numeric', bow: 1.5, steps: true, points: 'A,on,0;B,on,0.25;C,on,0.5;D,on,0.75;E,on,1' },
+        'A bowed-out production possibilities curve on numbered axes, meeting the capital goods axis at 120 and the consumer goods axis at 100. Points A to E sit on the curve at 0, 25, 50, 75 and 100 consumer goods, joined by dashed steps down and across. Each step gains 25 consumer goods and gives up more capital goods than the one before: 10, 20, 30 and then 60, written beside the steps.',
+      settings: { look: 'numeric', bow: 1.5, yMax: 120, steps: true, points: 'A,on,0;B,on,0.25;C,on,0.5;D,on,0.75;E,on,1' },
     },
     {
       slug: 'production-possibilities-curve-comparative-advantage-two-countries',

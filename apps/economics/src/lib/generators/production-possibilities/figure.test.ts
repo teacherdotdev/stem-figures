@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { overlaps } from '$lib/graph/testing'
+import { labelBoxes, overlaps } from '$lib/graph/testing'
 import { buildPpc, curvesOf, onCurve, placesOf } from './figure'
 import { SHAPES, pointsOf, pointsText, ppcSettings, type PpcSettings } from './settings'
 import { SETUPS, settingsFor } from './setups'
@@ -49,12 +49,48 @@ describe('production possibilities curve', () => {
     const given = g.readout.map((l) => Number(l.match(/: ([\d.]+) capital goods given up/)?.[1]))
     expect(given).toHaveLength(4)
     for (let k = 1; k < given.length; k++) expect(given[k]).toBeGreaterThan(given[k - 1])
-    expect(g.readout[0]).toMatch(/^A to B: 3.18 capital goods given up for 25 consumer goods/)
-    expect(texts({ look: 'numeric', steps: true, points: 'A,on,0;B,on,0.5' })).toEqual(expect.arrayContaining(['−13.4', '+50']))
+    // Read off the grid to whole numbers (B is at 96.8, so 97), each step from the last's reading, so they add up.
+    expect(g.readout[0]).toBe('A to B: 3 capital goods given up for 25 consumer goods (0.12 each)')
+    expect(given.reduce((a, b) => a + b)).toBe(100)
+    expect(texts({ look: 'numeric', steps: true, points: 'A,on,0;B,on,0.5' })).toEqual(expect.arrayContaining(['−13', '+50']))
+    // Finer when the curve's ends are typed finer.
+    expect(build({ look: 'numeric', steps: true, xMax: 37.5, points: 'A,on,0;B,on,1' }).readout[0]).toMatch(/for 37.5 consumer goods/)
     // Straight, every step costs the same.
     const flat = build({ look: 'numeric', shape: 'straight', steps: true, points: 'A,on,0;B,on,0.5;C,on,1' })
     expect(flat.readout[0]).toMatch(/^Each unit of consumer goods costs 1 capital goods/)
     expect(build({ steps: true, points: 'A,on,0.5' }).notes[0]).toMatch(/at least two points/)
+  })
+
+  it('makes whole, classroom steps of the increasing opportunity cost setup, each size by its own step', () => {
+    const s = settingsFor(SETUPS.find((x) => x.id === 'increasing')!, ppcSettings.defaults, ppcSettings.defaults)
+    const g = buildPpc(s)
+    expect(g.readout).toEqual([
+      'A to B: 10 capital goods given up for 25 consumer goods (0.4 each)',
+      'B to C: 20 capital goods given up for 25 consumer goods (0.8 each)',
+      'C to D: 30 capital goods given up for 25 consumer goods (1.2 each)',
+      'D to E: 60 capital goods given up for 25 consumer goods (2.4 each)',
+    ])
+    // The points on the curve drawn are within half a unit (a sixth of a millimetre or so) of those whole numbers.
+    const ys = placesOf(s).map((p) => p.y)
+    ys.forEach((y, k) => expect(Math.abs(y - [120, 110, 90, 60, 0][k])).toBeLessThan(0.5))
+    // What each step gives up is right of its upright line, inside the step; what it gains under its level line
+    // (or, along the x-axis, over it).
+    const p = g.figure.panels[0]
+    const at = (t: string) => p.labels.filter((l) => l.runs?.map((r) => r.text).join('') === t)
+    const places = placesOf(s)
+    for (const [k, t] of ['−10', '−20', '−30', '−60'].entries()) {
+      const [l] = at(t)
+      expect(l.anchor).toBe('start')
+      expect(l.x).toBeGreaterThan(p.px(places[k]).x)
+      expect(l.x).toBeLessThan(p.px(places[k + 1]).x)
+    }
+    const gains = at('+25').sort((a, b) => a.x - b.x)
+    expect(gains).toHaveLength(4)
+    gains.forEach((l, k) => {
+      expect(l.x).toBeGreaterThan(p.px(places[k]).x)
+      expect(l.x).toBeLessThan(p.px(places[k + 1]).x)
+      if (k < 3) expect(l.y).toBeGreaterThan(p.px(places[k + 1]).y)
+    })
   })
 
   it("gives each country's opportunity costs", () => {
@@ -97,17 +133,72 @@ describe('production possibilities curve', () => {
     expect(panel({ points: 'A,on,0.35,,Efficient', captionMode: 'none' }).leaders).toHaveLength(0)
   })
 
+  it("keeps each caption with its own point, clear of the others' names", () => {
+    const cases = [
+      'A,on,0.35,,Efficient;B,on,0.7,,Efficient;C,inside,0.5,,Inefficient;D,outside,0.55,,Unattainable',
+      'A,on,0.25,,Efficient;B,on,0.75,,Efficient;C,inside,0.35,,Inefficient;D,outside,0.55,,Unattainable',
+      'A,on,0.35,,Efficient;B,inside,0.55,,Inefficient;C,outside,0.7,,Unattainable',
+    ]
+    for (const points of cases) {
+      for (const captionMode of ['blank', 'text'] as const) {
+        const p = panel({ points, captionMode, curveLabelMode: 'blank' })
+        const boxes = labelBoxes({ ...build({ points }).figure, panels: [{ ...p, at: { x: 0, y: 0 } }] })
+        const names = boxes.filter((b) => /^[A-D]$/.test(b.text))
+        const gap = (b: (typeof boxes)[number], q: { x: number; y: number }) => Math.hypot(Math.max(b.x0 - q.x, 0, q.x - b.x1), Math.max(b.y0 - q.y, 0, q.y - b.y1))
+        const close: string[] = []
+        for (const l of p.leaders) {
+          // The caption the arrow comes from, and the point it goes to.
+          const from = { x: l.x1, y: l.y1 }
+          const caption = boxes.filter((b) => !/^[A-D]$/.test(b.text)).reduce((a, b) => (gap(b, from) < gap(a, from) ? b : a))
+          const to = p.dots.reduce((a, b) => (Math.hypot(b.x - l.x2, b.y - l.y2) < Math.hypot(a.x - l.x2, a.y - l.y2) ? b : a))
+          const own = gap(caption, to)
+          const name = names.find((n) => gap(n, to) < 30)
+          // Nearer its own point, by a good way, than any other point or name.
+          for (const d of p.dots.filter((d) => d !== to)) if (gap(caption, d) - own < 10) close.push(`${caption.text} by a point`)
+          for (const n of names.filter((n) => n !== name)) if (gap(caption, { x: (n.x0 + n.x1) / 2, y: (n.y0 + n.y1) / 2 }) - own < 10) close.push(`${caption.text} by ${n.text}`)
+        }
+        expect([points, captionMode, close]).toEqual([points, captionMode, []])
+      }
+    }
+  })
+
+  it("names the inner curve inside it and the outer outside, never across the other from a point", () => {
+    for (const shiftDir of ['out', 'in'] as const) {
+      const s = tidy({ shift: 'both', shiftDir, points: 'A,on,0.55' })
+      const p = buildPpc(s).figure.panels[0]
+      const { n, X1, Y1, X2, Y2 } = curvesOf(s)
+      const [inner, outer] = (X1 < X2 ? [[X1, Y1, 1], [X2, Y2, 2]] : [[X2, Y2, 2], [X1, Y1, 1]]) as [number, number, number][]
+      // Where a label's middle is, in the graph's units, against a curve: below 1 inside it.
+      const against = (t: string, X: number, Y: number) => {
+        const l = labelBoxes({ ...buildPpc(s).figure, panels: [{ ...p, at: { x: 0, y: 0 } }] }).find((b) => b.text === t)!
+        const o = p.px({ x: 0, y: 0 })
+        const e = p.px({ x: 1, y: 1 })
+        const g = { x: ((l.x0 + l.x1) / 2 - o.x) / (e.x - o.x), y: ((l.y0 + l.y1) / 2 - o.y) / (e.y - o.y) }
+        return Math.pow(g.x / X, n) + Math.pow(g.y / Y, n)
+      }
+      expect(against(`PPC${inner[2]}`, inner[0], inner[1])).toBeLessThan(1)
+      expect(against(`PPC${outer[2]}`, outer[0], outer[1])).toBeGreaterThan(1)
+      // A, on the inner curve after a shift out, named between it and the outer curve, not past it.
+      if (shiftDir === 'out') expect(against('A', outer[0], outer[1])).toBeLessThan(1)
+    }
+  })
+
   it('never overlaps two labels, in any setup or curve shape', () => {
     for (const setup of SETUPS) {
       for (const look of ['schematic', 'numeric'] as const) {
         const s = { ...settingsFor(setup, ppcSettings.defaults, ppcSettings.defaults), look }
-        expect([setup.id, look, overlaps(buildPpc(s).figure)]).toEqual([setup.id, look, []])
+        const f = buildPpc(s).figure
+        expect([setup.id, look, overlaps(f)]).toEqual([setup.id, look, []])
+        // (The first of the numbered steps' sizes is a hair's breadth from its lines.)
+        expect([setup.id, look, f.panels.reduce((a, q) => a + q.crowded, 0)]).toEqual([setup.id, look, setup.id === 'increasing' && look === 'numeric' ? 1 : 0])
       }
     }
     for (const shape of SHAPES) {
       for (const shift of ['none', 'both', 'x', 'y'] as const) {
         const f = build({ shape, shift, steps: true }).figure
         expect([shape, shift, overlaps(f)]).toEqual([shape, shift, []])
+        // And every label clear of every line too, but for a bowed-in curve squeezed by a shift out.
+        if (shape !== 'in' || shift === 'none') expect([shape, shift, f.panels[0].crowded]).toEqual([shape, shift, 0])
       }
     }
     // Two countries whose lines cross, where one is outside the other, and where they share an intercept.
