@@ -48,9 +48,9 @@ export const EXAMPLES: Example[] = [
     {
       slug: 'supply-and-demand-per-unit-tax-incidence-deadweight-loss-tax-revenue',
       title: 'Per-unit tax graph: tax incidence, tax revenue and deadweight loss',
-      alt: 'Supply and demand graph with no numbers on the axes, Price up the side and Quantity along the bottom: demand D and supply S crossing at E, and a dashed curve S + tax above S. Dashed lines mark Pb above Pₑ and Ps below it on the price axis, and Qt left of Qₑ on the quantity axis. Shaded regions are labeled CS in blue above Pb, Tax revenue in green between Ps and Pb out to Qt, PS in red below Ps, and DWL in orange in the small triangle between Qt and Qₑ',
+      alt: 'Supply and demand graph with no numbers on the axes, Price up the side and Quantity along the bottom: demand D and supply S crossing at E, and a dashed curve S + tax above S. Dashed lines mark Pb and Ps on the price axis, above and below the height of E, and Qt left of Qₑ on the quantity axis. Shaded regions are labeled CS in blue above Pb, Tax revenue in green between Ps and Pb out to Qt, PS in red below Ps, and DWL in orange, written below and right of the small triangle between Qt and Qₑ with an arrow to it',
       caption:
-        'A per-unit tax shifts the supply curve up from S to the dashed S + tax. Buyers now pay Pb, above the old equilibrium price Pₑ, sellers keep Ps, below it, and the quantity sold falls from Qₑ to Qt. The shaded areas show consumer surplus (CS), producer surplus (PS), the tax revenue between Ps and Pb, and the deadweight loss (DWL) between Qt and Qₑ.',
+        'A per-unit tax shifts the supply curve up from S to the dashed S + tax. Buyers now pay Pb, more than the price at the old equilibrium E, sellers keep Ps, less than it, and the quantity sold falls from Qₑ to Qt. The shaded areas show consumer surplus (CS), producer surplus (PS), the tax revenue between Ps and Pb, and the deadweight loss (DWL) between Qt and Qₑ.',
       settings: { tax: 'tax', cs: true, ps: true, dwl: true, revenue: true },
     },
     {
