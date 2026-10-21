@@ -6,13 +6,14 @@
 // the shaded surplus, deadweight loss and tax revenue, and every label.
 
 import { clipPath, type Point } from '$shared/graph/grid'
+import { besidePoint, type Spot } from '$shared/graph/labels'
 import { plainOf } from '$shared/graph/runs'
-import { areaOf, intersect, lineThrough, xAt, yAt, type Box, type Curve } from '$lib/graph/curves'
+import { along, areaOf, centroidOf, intersect, lineThrough, xAt, yAt, type Box, type Curve } from '$lib/graph/curves'
 import { buildFigure } from '$lib/graph/figure'
 import { fitted, rangesOf } from '$lib/graph/fit'
-import { inks, type ArrowSpec, type BraceSpec, type CurveSpec, type GuideSpec, type LevelSpec, type MarkSpec, type PanelSpec, type PointSpec, type RegionSpec, type Words } from '$lib/graph/panel'
+import { inks, shows, type ArrowSpec, type BraceSpec, type CalloutSpec, type CurveSpec, type GuideSpec, type LevelSpec, type MarkSpec, type PanelSpec, type PointSpec, type RegionSpec, type Words } from '$lib/graph/panel'
 import { SCHEMATIC, panelBase, wordsOf } from '$lib/graph/settings'
-import { SHIFT_SHARE, shiftArrows } from '$lib/graph/shifts'
+import { SHIFT_SHARE } from '$lib/graph/shifts'
 import { readAxes, axisEnd } from '$shared/graph/axes'
 import { rowsOf, type LABEL_KEYS, type Shape, type SupplyDemandSettings } from './settings'
 
@@ -54,6 +55,41 @@ function schematicCurve(kind: 'demand' | 'supply', shape: Shape): Curve {
 }
 
 const near = (a: number, b: number, span: number) => Math.abs(a - b) < span * 1e-6
+
+/** Where along a curve its shift arrows would go, by how many there are (as $lib/graph/shifts places them). */
+const ARROWS_AT: Record<number, number[]> = { 0: [], 1: [0.2], 2: [0.2, 0.8], 3: [0.15, 0.5, 0.85] }
+
+/**
+ * Places for a name with an arrow to a tax's deadweight loss (as drawn,
+ * from its middle): in the middle itself, needing no arrow, then out to its
+ * right, below it or over it, nearest first; never level with it, where the
+ * arrow would run through the equilibrium at its point.
+ */
+function inOrRightOf(at: Point, fs: number): Spot[] {
+  const spots: Spot[] = [{ x: at.x, y: at.y + fs * 0.35, anchor: 'middle' }]
+  for (const r of [34, 48, 64, 84, 110, 140]) {
+    spots.push(
+      { x: at.x + r * 0.6, y: at.y + r * 0.8 + fs * 0.8, anchor: 'start' },
+      { x: at.x + r * 0.3, y: at.y + r + fs * 0.8, anchor: 'start' },
+      { x: at.x + r * 0.6, y: at.y - r * 0.8, anchor: 'start' },
+    )
+  }
+  return spots
+}
+
+/** Whether segment a–b crosses segment p–q. */
+function segmentsCross(a: Point, b: Point, p: Point, q: Point) {
+  const side = (s: Point, e: Point, x: Point) => Math.sign((e.x - s.x) * (x.y - s.y) - (e.y - s.y) * (x.x - s.x))
+  return side(a, b, p) * side(a, b, q) < 0 && side(p, q, a) * side(p, q, b) < 0
+}
+
+/** How far a point is from segment a–b. */
+function distanceTo(p: Point, a: Point, b: Point) {
+  const dx = b.x - a.x
+  const dy = b.y - a.y
+  const t = dx || dy ? Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy))) : 0
+  return Math.hypot(p.x - a.x - t * dx, p.y - a.y - t * dy)
+}
 
 /** The name of a value before and after a shift (P₁, P₂), or at the one equilibrium (Pₑ or P*). */
 function named(w: Words, k: 0 | 1 | 2, style: SupplyDemandSettings['eqStyle']): Words {
@@ -162,10 +198,6 @@ export function buildSupplyDemand(s: SupplyDemandSettings) {
   if (sMoves) curves.push({ pts: drawn(s2), name: curveNamed(sName, 2), color: ink.supply })
   if (sT) curves.push({ pts: drawn(sT), name: wordsOf(s, s.tax === 'tax' ? 'taxLabel' : 'subsidyLabel'), color: ink.supply, dash: '10 6' })
 
-  const arrows: ArrowSpec[] = []
-  if (dMoves) arrows.push(...shiftArrows(d1, dShift.dx, dShift.dy, s.arrows, ink.demand, drawBox))
-  if (sMoves) arrows.push(...shiftArrows(s1, sShift.dx, sShift.dy, s.arrows, ink.supply, drawBox))
-
   // Equilibrium points, their guides to the axes, and the prices and quantities written there.
   const points: PointSpec[] = []
   const guides: GuideSpec[] = []
@@ -180,12 +212,32 @@ export function buildSupplyDemand(s: SupplyDemandSettings) {
     if (!same) marks.push({ axis, at, name })
     else if (same.name.mode === 'text' && name.mode === 'text' && same.name.text !== name.text) same.name = { ...same.name, text: `${same.name.text} = ${name.text}` }
   }
+  // With a tax or subsidy's revenue or deadweight loss shaded, the market's
+  // untaxed equilibrium keeps only its quantity guide, as textbooks draw it:
+  // a guide across to Pₑ would run through the middle of both regions and
+  // leave their names no clear place. Pb and Ps still show who pays the tax.
+  const noPrice = (e: Point | null) => !!eT && e === eF && (s.revenue || s.dwl)
+  /**
+   * Places for an equilibrium's name: beside it, then further out in the
+   * gaps right of it and over it between the curves crossing there, so it
+   * sits clear of both rather than on one.
+   */
+  const eSpots = (at: Point, fs: number): Spot[] => [
+    ...besidePoint(at, fs, 9),
+    ...[1.1, 1.6, 2.2, 3].flatMap((k) => [
+      { x: at.x + fs * k, y: at.y + fs * 0.35, anchor: 'start' as const },
+      { x: at.x, y: at.y - fs * (k + 0.3), anchor: 'middle' as const },
+    ]),
+  ]
   const equilibrium = (e: Point | null, k: 0 | 1 | 2) => {
     if (!onGraph(e)) return
-    points.push({ at: e, name: k ? { ...eName, text: eName.mode === 'text' && eName.text.trim() ? `${eName.text.trim()}_${k}` : eName.text } : eName })
+    points.push({ at: e, name: k ? { ...eName, text: eName.mode === 'text' && eName.text.trim() ? `${eName.text.trim()}_${k}` : eName.text } : eName, spots: eSpots })
     if (!s.guides) return
-    guides.push({ from: e })
-    mark('y', e.y, named(pName, k, s.eqStyle))
+    if (noPrice(e)) guides.push({ from: e, y: false })
+    else {
+      guides.push({ from: e })
+      mark('y', e.y, named(pName, k, s.eqStyle))
+    }
     mark('x', e.x, named(qName, k, s.eqStyle))
   }
   equilibrium(e1, shifted ? 1 : 0)
@@ -195,7 +247,9 @@ export function buildSupplyDemand(s: SupplyDemandSettings) {
   const levels: LevelSpec[] = []
   const braces: BraceSpec[] = []
   if (control !== 'none' && controlP > box.y0 && controlP < box.y1) {
-    const x1 = numeric ? box.x1 : drawBox.x1
+    // Schematic, the line stops a little past the curves, its name just past its end as textbooks write it.
+    const past = Math.max(...[xAt(dF, controlP), xAt(sF, controlP)].filter((x): x is number => x !== null), box.x0) + spanX * 0.05
+    const x1 = numeric ? box.x1 : Math.min(drawBox.x1, Math.max(past, box.x0 + spanX * 0.5))
     levels.push({ pts: [{ x: box.x0, y: controlP }, { x: x1, y: controlP }], name: wordsOf(s, control === 'ceiling' ? 'ceilingLabel' : 'floorLabel'), color: ink.black })
     if (binding && qd !== null && qs !== null) {
       for (const [q, key] of [[qd, 'qdLabel'], [qs, 'qsLabel']] as const) {
@@ -229,9 +283,80 @@ export function buildSupplyDemand(s: SupplyDemandSettings) {
     }
   }
 
+  // Shift arrows, from the old curve to the new, where both are drawn (a
+  // supply curve shifted left is cut off at the y-axis, so an arrow from low
+  // on the old one would end on the axis, not the curve), each moved along
+  // the curve from where it would go until it's clear of the points, the
+  // guides and the other curves.
+  const arrows: ArrowSpec[] = []
+  const unit = (p: Point) => ({ x: (p.x - box.x0) / spanX, y: (p.y - box.y0) / spanY })
+  const lines: [Point, Point][] = []
+  for (const g of guides) {
+    if (g.y !== false) lines.push([{ x: box.x0, y: g.from.y }, g.from])
+    if (g.x !== false) lines.push([{ x: g.from.x, y: box.y0 }, g.from])
+  }
+  for (const l of levels) lines.push([l.pts[0], l.pts.at(-1)!])
+  const segmentsOf = (c: Point[]) => c.slice(1).map((q, k): [Point, Point] => [c[k], q])
+  const shiftArrowsOf = (old: Curve, m: { dx: number; dy: number }, color: string, others: Point[][]) => {
+    const from: Box = {
+      x0: drawBox.x0 + Math.max(0, -m.dx),
+      x1: drawBox.x1 - Math.max(0, m.dx),
+      y0: drawBox.y0 + Math.max(0, -m.dy),
+      y1: drawBox.y1 - Math.max(0, m.dy),
+    }
+    const run = clipPath(old, from).sort((a, b) => b.length - a.length)[0]
+    if (!run || run.length < 2) return []
+    // The other curves and the arrows already drawn, each a line an arrow mustn't cross or run along.
+    const blocks = [...others.flatMap(segmentsOf), ...arrows.map((x): [Point, Point] => [x.from, x.to])].map(([p, q]) => [unit(p), unit(q)])
+    /** What an arrow at `t` along the curve touches: other lines most, then points, then guides it would run along. */
+    const cost = (t: number) => {
+      const a = unit(along(run, t).at)
+      const b = { x: a.x + m.dx / spanX, y: a.y + m.dy / spanY }
+      let c = 10 * blocks.filter(([p, q]) => segmentsCross(a, b, p, q) || Math.min(distanceTo(p, a, b), distanceTo(q, a, b), distanceTo(a, p, q), distanceTo(b, p, q)) < 0.045).length
+      c += 5 * points.filter((p) => distanceTo(unit(p.at), a, b) < 0.08).length
+      // Along a guide or a line across, the two would read as one.
+      const lo = { x: Math.min(a.x, b.x), y: Math.min(a.y, b.y) }
+      const hi = { x: Math.max(a.x, b.x), y: Math.max(a.y, b.y) }
+      for (const [p, q] of lines) {
+        const [u, v] = [unit(p), unit(q)]
+        if (!m.dy && u.y === v.y && Math.abs(a.y - u.y) < 0.05 && Math.min(u.x, v.x) < hi.x && Math.max(u.x, v.x) > lo.x) c += 3
+        if (!m.dx && u.x === v.x && Math.abs(a.x - u.x) < 0.05 && Math.min(u.y, v.y) < hi.y && Math.max(u.y, v.y) > lo.y) c += 3
+      }
+      return c
+    }
+    const wants = ARROWS_AT[Math.max(0, Math.min(3, Math.round(s.arrows)))] ?? []
+    // Kept well apart along the curve, so two don't bunch up on one side of where the curves cross.
+    const gap = wants.length > 2 ? 0.25 : 0.35
+    // The places that touch least between them, each as near where it would go as it can be,
+    // and none at the curve's far end, where its name goes.
+    const ts = Array.from({ length: 34 }, (_, k) => 0.05 + k * 0.025)
+    const costs = ts.map(cost)
+    let best = { at: [] as number[], score: Infinity }
+    const pick = (k: number, from: number, at: number[], score: number) => {
+      if (score >= best.score) return
+      if (k === wants.length) {
+        best = { at, score }
+        return
+      }
+      for (let i = from; i < ts.length; i++) {
+        if (at.length && ts[i] - at.at(-1)! < gap - 1e-9) continue
+        pick(k + 1, i + 1, [...at, ts[i]], score + costs[i] + 4 * Math.abs(ts[i] - wants[k]))
+      }
+    }
+    pick(0, 0, [], 0)
+    return best.at.map((t) => {
+      const at = along(run, t).at
+      return { from: at, to: { x: at.x + m.dx, y: at.y + m.dy }, color }
+    })
+  }
+  if (dMoves) arrows.push(...shiftArrowsOf(d1, dShift, ink.demand, [drawn(s1), drawn(s2), ...(sT ? [drawn(sT)] : [])]))
+  if (sMoves) arrows.push(...shiftArrowsOf(s1, sShift, ink.supply, [drawn(d1), drawn(d2), ...(sT ? [drawn(sT)] : [])]))
+
   // The shaded regions, as the market ends up.
   const regions: RegionSpec[] = []
-  const clampY = (poly: Point[]) => poly.map((p) => ({ x: p.x, y: Math.max(box.y0, Math.min(box.y1, p.y)) }))
+  const callouts: CalloutSpec[] = []
+  // Clamped to where the curves are drawn, so no shading runs up past a curve cut off at the top.
+  const clampY = (poly: Point[]) => poly.map((p) => ({ x: p.x, y: Math.max(box.y0, Math.min(drawBox.y1, p.y)) }))
   const startX = (c: Curve) => (numeric ? Math.max(box.x0, Math.min(...c.map((p) => p.x))) : box.x0)
   /** The region between a curve and a price, from where the curve starts to `q`. */
   const toPrice = (c: Curve, price: number, q: number) => {
@@ -247,8 +372,9 @@ export function buildSupplyDemand(s: SupplyDemandSettings) {
     pts.push({ x: q, y: price })
     return clampY(pts)
   }
-  const add = (on: boolean, poly: Point[], color: string, hatch: number, key: (typeof LABEL_KEYS)[number]) => {
-    if (on && poly.length > 2 && areaOf(poly) > spanX * spanY * 1e-4) regions.push({ poly, color, hatch, name: wordsOf(s, key) })
+  // A deadweight loss too small to hold its name has it outside, with an arrow to it.
+  const add = (on: boolean, poly: Point[], color: string, hatch: number, key: (typeof LABEL_KEYS)[number], named = true) => {
+    if (on && poly.length > 2 && areaOf(poly) > spanX * spanY * 1e-4) regions.push({ poly, color, hatch, name: named ? wordsOf(s, key) : undefined, leader: key === 'dwlLabel' })
   }
   if (eF && traded !== null && buyers !== null && sellers !== null && onGraph(eF)) {
     const flatD = demandFlat
@@ -278,7 +404,15 @@ export function buildSupplyDemand(s: SupplyDemandSettings) {
         if (ys !== null) bottom.push({ x, y: ys })
       }
       if (uprightS) bottom.push({ x: b, y: box.y0 }, { x: a, y: box.y0 })
-      add(true, clampY([...top, ...bottom.reverse()]), ink.region.orange, 0, 'dwlLabel')
+      const poly = clampY([...top, ...bottom.reverse()])
+      const name = wordsOf(s, 'dwlLabel')
+      if (eT && s.tax === 'tax' && shows(name)) {
+        // A tax's is seldom big enough to hold its name. Then the name goes
+        // to its right with an arrow to it, rather than out over the tax
+        // revenue beside it, where it would read as that region's.
+        add(true, poly, ink.region.orange, 0, 'dwlLabel', false)
+        if (regions.at(-1)?.poly === poly) callouts.push({ at: centroidOf(poly), name, spots: inOrRightOf })
+      } else add(true, poly, ink.region.orange, 0, 'dwlLabel')
     }
   }
 
@@ -293,6 +427,7 @@ export function buildSupplyDemand(s: SupplyDemandSettings) {
     guides,
     arrows,
     braces,
+    callouts,
   }
   // On a numbered graph, a dot at each row of the schedule.
   if (numeric && s.dots) {
