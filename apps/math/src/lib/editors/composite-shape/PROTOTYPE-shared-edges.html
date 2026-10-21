@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PROTOTYPE · Shared edges and multi-select</title>
+<style>
+  :root { --ink: #111827; --muted: #6b7280; --line: #e5e7eb; --blue: #2563eb; --blue-soft: #eff6ff; --red: #dc2626; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.5 system-ui, -apple-system, sans-serif; color: var(--ink); background: #f8fafc; }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 60px; }
+  h1 { font-size: 1.35rem; margin: 0 0 4px; }
+  .lede { color: var(--muted); margin: 0 0 18px; max-width: 70ch; }
+  .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; color: #b45309; background: #fef3c7; border-radius: 6px; padding: 1px 7px; margin-bottom: 8px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+  .rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px 18px; margin-bottom: 16px; }
+  .rule .q { font-weight: 700; font-size: 0.85rem; }
+  .rule .seg { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .seg button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 4px 9px; font: inherit; font-size: 0.82rem; cursor: pointer; }
+  .seg button.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .seg button .rec { font-size: 0.7rem; opacity: 0.8; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 16px; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  .tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+  .tabs button { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 4px 11px; font: inherit; font-size: 0.82rem; cursor: pointer; }
+  .tabs button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .scenario h2 { font-size: 1rem; margin: 0 0 4px; }
+  .scenario p { margin: 0 0 10px; color: #374151; }
+  .steps { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+  .steps button, .tools button { border: 1px solid var(--blue); background: var(--blue-soft); color: #1e40af; border-radius: 9px; padding: 5px 11px; font: inherit; font-size: 0.84rem; cursor: pointer; }
+  .steps button.done { background: #fff; color: var(--muted); border-color: var(--line); }
+  .steps button:disabled, .tools button:disabled { opacity: 0.45; cursor: default; }
+  .steps .restart { border-color: var(--line); background: #fff; color: var(--ink); }
+  .tools { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 10px 0 0; }
+  .tools .danger { border-color: #fca5a5; background: #fff; color: var(--red); }
+  .tools .why { color: var(--muted); font-size: 0.8rem; }
+  svg { width: 100%; height: 440px; display: block; background: #fff; border: 1px solid var(--line); border-radius: 12px; touch-action: none; user-select: none; }
+  .note { margin-top: 10px; padding: 8px 12px; border-radius: 10px; background: #f1f5f9; min-height: 2.4em; }
+  .note.bad { background: #fef2f2; color: #991b1b; }
+  .pieces { list-style: none; margin: 0; padding: 0; }
+  .pieces li { padding: 7px 0; border-bottom: 1px solid var(--line); }
+  .pieces li:last-child { border-bottom: 0; }
+  .pieces .name { font-weight: 700; }
+  .pieces .sel { color: var(--blue); font-size: 0.75rem; font-weight: 700; margin-left: 4px; }
+  .pieces .meta { color: var(--muted); font-size: 0.82rem; }
+  .pieces li.changed { background: #fefce8; }
+  .help { color: var(--muted); font-size: 0.8rem; margin-top: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <span class="tag">PROTOTYPE · throw away once decided</span>
+  <h1>Composite Shape Editor: what moves when you resize, and selecting several pieces</h1>
+  <p class="lede">
+    Should a piece ever move or resize because of the piece it sits on? Which pieces share an edge and resize with it? And what can you do with
+    several pieces selected (delete, resize together, merge)? Pick an answer for each question below, then run a scenario or play freely.
+    Recommended answers are marked <b>★</b>.
+  </p>
+
+  <section class="card rules" id="rules"></section>
+
+  <div class="layout">
+    <div>
+      <div class="card">
+        <div class="tabs" id="tabs"></div>
+        <div class="scenario" id="scenario"></div>
+      </div>
+      <div style="margin-top:12px">
+        <svg id="stage" aria-label="The shape"></svg>
+        <div class="tools">
+          <button id="undo">Undo</button>
+          <button class="danger" id="del" disabled>Delete selected</button>
+          <button id="merge" disabled>Merge</button>
+          <span id="across"></span>
+          <span class="why" id="mergeWhy"></span>
+        </div>
+        <div class="help">Click a piece to select it, Shift-click to add or remove one. Drag the white handles. Everything snaps to whole units.</div>
+        <div class="note" id="note"></div>
+      </div>
+    </div>
+    <aside class="card">
+      <strong>The pieces now</strong>
+      <ul class="pieces" id="pieces"></ul>
+    </aside>
+  </div>
+</main>
+
+<script>
+// ===== The logic: pure functions over a plain list of pieces. Nothing here touches the page. =====
+// Coordinates are in units, y down. A rectangle is {x, y, w, h}. A triangle or semicircle sits with its base
+// along the top of the piece it's on (`host`): base from x to x + w at height y. A quarter circle sits in a corner:
+// centered at (cx, cy) on its host's top, reaching right and up by r, its upright side against `wall`.
+const Model = (() => {
+  const clone = (s) => JSON.parse(JSON.stringify(s))
+  const byId = (s, id) => s.pieces.find((p) => p.id === id)
+  const MIN = 1
+  const right = (r) => r.x + r.w
+  const bottom = (r) => r.y + r.h
+  const overlap1 = (a1, a2, b1, b2) => Math.min(a2, b2) - Math.max(a1, b1)
+
+  /** Moves one side of a rectangle to `at`. */
+  function setSide(r, side, at) {
+    if (side === 'left') (r.w = right(r) - at), (r.x = at)
+    if (side === 'right') r.w = at - r.x
+    if (side === 'top') (r.h = bottom(r) - at), (r.y = at)
+    if (side === 'bottom') r.h = at - r.y
+  }
+
+  /** What a piece sits on: one piece, or several whose tops line up (see addAcross). */
+  const hostsOf = (c) => c.hosts ?? (c.host ? [c.host] : [])
+  /** The stretch of top a piece's hosts make together: from the leftmost to the rightmost. */
+  const extent = (s, ids) => {
+    const hs = ids.map((id) => byId(s, id)).filter(Boolean)
+    return { x1: Math.min(...hs.map((h) => h.x)), x2: Math.max(...hs.map(right)), y: hs[0]?.y }
+  }
+
+  /** The spread of a resize (from `prev` to `next`, with `ids` changed) to what sits on what changed. */
+  function spread(prev, next, ids, rules, notes) {
+    for (const c of next.pieces) {
+      const hosts = hostsOf(c)
+      if (c.kind !== 'quarter' && hosts.some((id) => ids.includes(id))) {
+        const [was, now] = [extent(prev, hosts), extent(next, hosts)]
+        const names = hosts.map((id) => byId(next, id).name).join(' and ')
+        // Sitting on its top: it rides up and down with that top.
+        const y0 = c.y
+        if (c.kind === 'rect') c.y = now.y - c.h
+        else c.y = now.y
+        if (c.y !== y0) notes.push(`${c.name} rode ${c.y < y0 ? 'up' : 'down'} with the top it sits on.`)
+        const covered = c.x === was.x1 && c.x + c.w === was.x2
+        const moved = was.x1 !== now.x1 || was.x2 !== now.x2
+        const shares = c.kind === 'rect' ? rules.q1 === 'b' : rules.q2 === 'share'
+        if (covered && shares && moved) {
+          c.x = now.x1
+          c.w = now.x2 - now.x1
+          notes.push(`${c.name} covered the whole top of ${names}, so it stretched with it.`)
+        } else if (covered && moved) notes.push(`${c.name} stayed where it was.`)
+        if (overlap1(c.x, c.x + c.w, now.x1, now.x2) <= 0) {
+          if (rules.q4 === 'stop') return `Stopped: ${c.name} would no longer sit on ${names}.`
+          c.host = null
+          delete c.hosts
+          notes.push(`${c.name} no longer sits on ${names}, so it now stands on its own.`)
+        }
+      }
+    }
+    for (const id of ids) {
+      const [was, now] = [byId(prev, id), byId(next, id)]
+      const stop = spreadQuarter(next, was, now, rules, notes)
+      if (stop) return stop
+    }
+    return null
+  }
+  function spreadQuarter(next, was, now, rules, notes) {
+    for (const c of next.pieces) {
+      if (c.kind === 'quarter') {
+        if (c.host === now.id) {
+          c.cy = now.y
+          // Shares the edge it sits on: it covered from its corner to the end of that side.
+          if (rules.q3 === 'sits' && c.cx + c.r === right(was) && right(was) !== right(now)) {
+            c.r = right(now) - c.cx
+            notes.push(`${c.name} covered the rest of ${now.name}'s top, so its radius followed it (now ${c.r}).`)
+          }
+          if (c.cx >= right(now)) {
+            if (rules.q4 === 'stop') return `Stopped: ${c.name} would no longer sit on ${now.name}.`
+            c.host = null
+            notes.push(`${c.name} no longer sits on ${now.name}, so it now stands on its own.`)
+          }
+        }
+        if (c.wall === now.id && rules.q3 === 'wall' && c.cy - was.y === c.r && was.y !== now.y) {
+          c.r = c.cy - now.y
+          notes.push(`${c.name}'s upright side ran the whole height of ${now.name}, so its radius followed it (now ${c.r}).`)
+        }
+        if (c.r < MIN) return `Stopped: ${c.name} would be too small.`
+      }
+    }
+    return null
+  }
+
+  /** Rectangles overlapping, which can't be. */
+  function overlapping(s) {
+    const rs = s.pieces.filter((p) => p.kind === 'rect')
+    for (let i = 0; i < rs.length; i++)
+      for (let j = i + 1; j < rs.length; j++) {
+        const [a, b] = [rs[i], rs[j]]
+        if (overlap1(a.x, right(a), b.x, right(b)) > 0 && overlap1(a.y, bottom(a), b.y, bottom(b)) > 0) return `${a.name} and ${b.name}`
+      }
+    return null
+  }
+
+  /** Moves the given side of each rectangle in `ids` to `at`, and spreads it by the rules. */
+  function resize(state, ids, side, at, rules) {
+    const next = clone(state)
+    const notes = []
+    for (const id of ids) {
+      const r = byId(next, id)
+      setSide(r, side, at)
+      if (r.w < MIN || r.h < MIN) return { state, note: `Stopped: ${r.name} would be too small.`, bad: true }
+    }
+    const stop = spread(state, next, ids, rules, notes)
+    if (stop) return { state, note: stop, bad: true }
+    const clash = overlapping(next)
+    if (clash) return { state, note: `Stopped: ${clash} would overlap.`, bad: true }
+    const what = ids.length > 1 ? `Those ${ids.length} sides moved together.` : 'Only the dragged side moved.'
+    return { state: next, note: notes.length ? `${what} ${notes.join(' ')}` : `${what} Nothing else changed.` }
+  }
+
+  /** Resizes a triangle's or semicircle's base from its right end; when it covers all of its host's top and edges are shared, the host follows. */
+  function resizeBase(state, id, at, rules) {
+    const c = byId(state, id)
+    const host = c.host && byId(state, c.host)
+    if (host && c.x === host.x && c.w === host.w && rules.q2 === 'share') {
+      const r = resize(state, [host.id], 'right', at, rules)
+      return { ...r, note: r.bad ? r.note : `${c.name} covers all of ${host.name}'s top, so ${host.name}'s top followed its base. ` + r.note }
+    }
+    const next = clone(state)
+    const n = byId(next, id)
+    n.w = at - n.x
+    if (n.w < MIN) return { state, note: `Stopped: ${n.name} would be too small.`, bad: true }
+    return { state: next, note: `${n.name}'s base changed; nothing else did.` }
+  }
+
+  /** Moves the edge where two selected rectangles meet: one grows, the other shrinks. */
+  function moveSeam(state, seam, at, rules) {
+    const next = clone(state)
+    const [a, b] = [byId(next, seam.a), byId(next, seam.b)]
+    setSide(a, seam.axis === 'x' ? 'right' : 'bottom', at)
+    setSide(b, seam.axis === 'x' ? 'left' : 'top', at)
+    if (a.w < MIN || a.h < MIN || b.w < MIN || b.h < MIN) return { state, note: 'Stopped: one of them would be too small.', bad: true }
+    const notes = []
+    const stop = spread(state, next, [seam.a, seam.b], rules, notes)
+    if (stop) return { state, note: stop, bad: true }
+    return { state: next, note: `The edge where ${a.name} and ${b.name} meet moved: one grew and the other shrank. ` + notes.join(' ') }
+  }
+
+  /** The one unbroken top edge the selected rectangles make, side by side with their tops level, or null. */
+  function sharedTop(state, ids) {
+    const rs = ids.map((id) => byId(state, id))
+    if (rs.length < 2 || rs.some((p) => p.kind !== 'rect')) return null
+    if (rs.some((p) => p.y !== rs[0].y)) return null
+    const sorted = [...rs].sort((a, b) => a.x - b.x)
+    for (let i = 1; i < sorted.length; i++) if (sorted[i].x !== right(sorted[i - 1])) return null
+    return { x1: sorted[0].x, x2: right(sorted.at(-1)), y: rs[0].y }
+  }
+
+  /** A new piece across the whole of that edge, sitting on all of them. */
+  function addAcross(state, ids, kind) {
+    const top = sharedTop(state, ids)
+    if (!top) return { state, note: 'Their tops have to make one unbroken edge.', bad: true }
+    const next = clone(state)
+    const w = top.x2 - top.x1
+    const id = 'n' + Date.now().toString(36)
+    const name = { tri: 'New triangle', semi: 'New semicircle', rect: 'New rectangle' }[kind]
+    const piece =
+      kind === 'rect' ? { id, name, kind, x: top.x1, y: top.y - 2, w, h: 2, hosts: [...ids] }
+      : kind === 'tri' ? { id, name, kind, x: top.x1, y: top.y, w, h: 3, hosts: [...ids] }
+      : { id, name, kind, x: top.x1, y: top.y, w, hosts: [...ids] }
+    next.pieces.push(piece)
+    const clash = overlapping(next)
+    if (clash) return { state, note: `There’s no room: ${clash} would overlap.`, bad: true }
+    return { state: next, sel: [id], note: `${name} added across the whole top of ${ids.map((i) => byId(state, i).name).join(' and ')}, sitting on all of them.` }
+  }
+
+  /** Deletes the selected pieces; what sat on them stays where it is, standing on its own. */
+  function remove(state, ids) {
+    const next = clone(state)
+    const gone = new Set(ids)
+    const names = next.pieces.filter((p) => gone.has(p.id)).map((p) => p.name)
+    next.pieces = next.pieces.filter((p) => !gone.has(p.id))
+    const freed = []
+    for (const p of next.pieces) {
+      if (p.host && gone.has(p.host)) (p.host = null), freed.push(p.name)
+      if (p.hosts) {
+        p.hosts = p.hosts.filter((h) => !gone.has(h))
+        if (!p.hosts.length) delete p.hosts, freed.push(p.name)
+      }
+      if (p.wall && gone.has(p.wall)) p.wall = null
+    }
+    return { state: next, note: `Deleted ${names.join(' and ')}.` + (freed.length ? ` ${freed.join(', ')} stayed put, standing on ${freed.length > 1 ? 'their' : 'its'} own.` : '') }
+  }
+
+  /** Whether the selection can merge: rectangles only, two or more, filling exactly one rectangle. */
+  function mergeable(state, ids) {
+    const ps = ids.map((id) => byId(state, id))
+    if (ps.length < 2) return { ok: false, why: 'Select two or more rectangles to merge.' }
+    if (ps.some((p) => p.kind !== 'rect')) return { ok: false, why: 'Only rectangles merge.' }
+    const box = { x: Math.min(...ps.map((p) => p.x)), y: Math.min(...ps.map((p) => p.y)) }
+    box.w = Math.max(...ps.map(right)) - box.x
+    box.h = Math.max(...ps.map(bottom)) - box.y
+    const area = ps.reduce((a, p) => a + p.w * p.h, 0)
+    if (Math.abs(area - box.w * box.h) > 1e-9) return { ok: false, why: "These don't make one rectangle." }
+    return { ok: true, box }
+  }
+
+  function merge(state, ids) {
+    const m = mergeable(state, ids)
+    if (!m.ok) return { state, note: m.why, bad: true }
+    const next = clone(state)
+    const gone = new Set(ids)
+    const host = ids.map((id) => byId(state, id)).find((p) => p.host)?.host ?? null
+    const merged = { id: 'm' + Date.now().toString(36), name: 'Merged rectangle', kind: 'rect', ...m.box, host: host && !gone.has(host) ? host : null }
+    next.pieces = [...next.pieces.filter((p) => !gone.has(p.id)), merged]
+    const notes = []
+    for (const p of next.pieces) {
+      if (p.host && gone.has(p.host)) {
+        const base = p.kind === 'quarter' ? p.cy : p.kind === 'rect' ? bottom(p) : p.y
+        const x1 = p.kind === 'quarter' ? p.cx : p.x
+        const x2 = p.kind === 'quarter' ? p.cx + p.r : p.x + p.w
+        if (base === merged.y && overlap1(x1, x2, merged.x, right(merged)) > 0) (p.host = merged.id), notes.push(`${p.name} stayed where it was, now on the merged rectangle.`)
+        else (p.host = null), notes.push(`${p.name} stayed where it was, standing on its own.`)
+      }
+      if (p.wall && gone.has(p.wall)) p.wall = merged.id
+      if (p.hosts?.some((h) => gone.has(h))) {
+        p.hosts = [...new Set(p.hosts.map((h) => (gone.has(h) ? merged.id : h)))]
+        if (p.hosts.length === 1) (p.host = p.hosts[0]), delete p.hosts
+        notes.push(`${p.name} stayed where it was, now on the merged rectangle.`)
+      }
+    }
+    return { state: next, note: 'Merged into one rectangle. The edge between them is gone. ' + notes.join(' ') }
+  }
+
+  const Model_hosted = (r) => hostsOf(r).length > 0
+  /** The handles to show for a selection. */
+  function handles(state, sel, rules) {
+    const ps = sel.map((id) => byId(state, id)).filter(Boolean)
+    const out = []
+    if (ps.length === 1) {
+      const p = ps[0]
+      if (p.kind === 'rect') {
+        out.push({ kind: 'side', ids: [p.id], side: 'left', x: p.x, y: p.y + p.h / 2 }, { kind: 'side', ids: [p.id], side: 'right', x: right(p), y: p.y + p.h / 2 })
+        out.push({ kind: 'side', ids: [p.id], side: 'top', x: p.x + p.w / 2, y: p.y })
+        if (!p.host) out.push({ kind: 'side', ids: [p.id], side: 'bottom', x: p.x + p.w / 2, y: bottom(p) })
+      } else if (p.kind !== 'quarter') out.push({ kind: 'base', id: p.id, x: p.x + p.w, y: p.y })
+      return out
+    }
+    const rs = ps.filter((p) => p.kind === 'rect')
+    // Sides of selected rectangles lining up: one handle moves them all.
+    for (const side of ['left', 'right', 'top', 'bottom']) {
+      const at = (r) => (side === 'left' ? r.x : side === 'right' ? right(r) : side === 'top' ? r.y : bottom(r))
+      const groups = new Map()
+      // A piece's bottom stays on what it sits on.
+      for (const r of rs) if (!(side === 'bottom' && Model_hosted(r))) groups.set(at(r), [...(groups.get(at(r)) ?? []), r])
+      for (const [v, g] of groups) {
+        if (g.length < 2) continue
+        const along = side === 'left' || side === 'right'
+        const lo = Math.min(...g.map((r) => (along ? r.y : r.x)))
+        const hi = Math.max(...g.map((r) => (along ? bottom(r) : right(r))))
+        out.push({ kind: 'side', ids: g.map((r) => r.id), side, x: along ? v : (lo + hi) / 2, y: along ? (lo + hi) / 2 : v, aligned: true })
+      }
+    }
+    if (rules.q6 === 'both')
+      for (const a of rs)
+        for (const b of rs) {
+          if (right(a) === b.x && overlap1(a.y, bottom(a), b.y, bottom(b)) > 0)
+            out.push({ kind: 'seam', seam: { a: a.id, b: b.id, axis: 'x' }, x: b.x, y: (Math.max(a.y, b.y) + Math.min(bottom(a), bottom(b))) / 2 })
+          if (bottom(a) === b.y && overlap1(a.x, right(a), b.x, right(b)) > 0)
+            out.push({ kind: 'seam', seam: { a: a.id, b: b.id, axis: 'y' }, x: (Math.max(a.x, b.x) + Math.min(right(a), right(b))) / 2, y: b.y })
+        }
+    return out
+  }
+
+  return { resize, resizeBase, moveSeam, remove, mergeable, merge, sharedTop, addAcross, handles, byId, clone, hostsOf }
+})()
+
+// ===== The page: a thin shell over Model. =====
+const RULES = [
+  { key: 'q1', q: 'Q1 · A rectangle on a side that changes', opts: [['a', 'Stays where it is', true], ['b', 'Stretches if it covered the whole side', false]] },
+  { key: 'q2', q: 'Q2 · Triangles and semicircles (also across several)', opts: [['share', 'Share the side they cover all of', true], ['none', 'Never share', false]] },
+  { key: 'q3', q: 'Q3 · The one edge a quarter circle shares', opts: [['sits', 'The side it sits on', true], ['wall', 'The corner’s other side', false], ['none', 'Neither', false]] },
+  { key: 'q4', q: 'Q4 · A side shrinks out from under a piece', opts: [['free', 'Piece stands on its own', true], ['stop', 'The drag stops', false]] },
+  { key: 'q6', q: 'Q6 · Resizing several selected rectangles', opts: [['both', 'Lined-up sides and the edge between', true], ['aligned', 'Lined-up sides only', false]] },
+]
+let rules = Object.fromEntries(RULES.map((r) => [r.key, r.opts.find((o) => o[2])[0]]))
+
+const R = (id, name, x, y, w, h, host = null) => ({ id, name, kind: 'rect', x, y, w, h, host })
+const T = (id, name, x, y, w, h, host) => ({ id, name, kind: 'tri', x, y, w, h, host })
+const S = (id, name, x, y, w, host) => ({ id, name, kind: 'semi', x, y, w, host })
+const Q = (id, name, cx, cy, r, host, wall) => ({ id, name, kind: 'quarter', cx, cy, r, host, wall })
+
+const step = (label, run) => ({ label, run })
+const select = (ids) => (s) => ({ state: s, sel: ids, note: `Selected ${ids.map((id) => Model.byId(s, id).name).join(' and ')}.` })
+
+const SCENARIOS = [
+  {
+    tab: 'Q1', title: 'A rectangle sitting on a side that changes',
+    text: 'Your screenshot: the upright on the base, beside a block that covers the base’s whole top on the right. Widen and narrow the base and watch the pieces on it. Flip Q1 above and restart to compare.',
+    start: () => ({ pieces: [R('base', 'Base', 0, 4, 8, 3), R('up', 'Upright', 0, 0, 3, 4, 'base'), R('blk', 'Small base', 10, 4, 4, 3), R('cov', 'Block covering it', 10, 2, 4, 2, 'blk')] }),
+    steps: [
+      step('Drag the Base’s left side 1 to the left', (s) => Model.resize(s, ['base'], 'left', -1, rules)),
+      step('Drag the Base’s top up 1', (s) => Model.resize(s, ['base'], 'top', 3, rules)),
+      step('Widen the Small base by 2 (its whole top is covered)', (s) => Model.resize(s, ['blk'], 'right', 16, rules)),
+    ],
+  },
+  {
+    tab: 'Q2', title: 'Triangles and semicircles share the side they cover all of',
+    text: 'A house: the roof covers the whole top of its rectangle. Next to it, a semicircle covers only part of its rectangle’s top. Resize and watch which follow.',
+    start: () => ({ pieces: [R('h', 'House', 0, 3, 6, 4), T('roof', 'Roof', 0, 3, 6, 3, 'h'), R('b2', 'Second rectangle', 8, 3, 6, 4), S('arch', 'Small arch', 9, 3, 3, 'b2')] }),
+    steps: [
+      step('Widen the House by 2', (s) => Model.resize(s, ['h'], 'right', 8, rules)),
+      step('Shrink the Roof’s base to 5', (s) => Model.resizeBase(s, 'roof', 5, rules)),
+      step('Widen the Second rectangle by 2 (arch covers only part)', (s) => Model.resize(s, ['b2'], 'right', 16, rules)),
+    ],
+  },
+  {
+    tab: 'Q3', title: 'Which one edge a quarter circle shares',
+    text: 'A quarter circle in the L’s inside corner. It sits on the lower arm’s top (covering all of it) and its upright side runs the full height of the upright. Flip Q3 between “the side it sits on”, “the corner’s other side” and “neither”, then restart and run the steps.',
+    start: () => ({ pieces: [R('base', 'Lower arm', 0, 4, 7, 3), R('up', 'Upright', 0, 0, 3, 4, 'base'), Q('q', 'Quarter circle', 3, 4, 4, 'base', 'up')] }),
+    steps: [
+      step('Widen the lower arm by 2', (s) => Model.resize(s, ['base'], 'right', 9, rules)),
+      step('Raise the upright’s top by 1', (s) => Model.resize(s, ['up'], 'top', -1, rules)),
+    ],
+  },
+  {
+    tab: 'Q4', title: 'A side shrinks out from under a piece',
+    text: 'The upright sits on the right end of the base. Shrink the base until the upright no longer sits on it. Flip Q4 to compare.',
+    start: () => ({ pieces: [R('base', 'Base', 0, 4, 8, 3), R('up', 'Upright', 5, 1, 3, 3, 'base')] }),
+    steps: [
+      step('Drag the Base’s right side to 6 (still under it)', (s) => Model.resize(s, ['base'], 'right', 6, rules)),
+      step('Drag it on to 4 (no longer under it)', (s) => Model.resize(s, ['base'], 'right', 4, rules)),
+    ],
+  },
+  {
+    tab: 'Q5', title: 'Shift-click to select several, then delete them together',
+    text: 'Select the upright, Shift-click the quarter circle, then delete both. The roof on the upright stays put, standing on its own.',
+    start: () => ({ pieces: [R('base', 'Base', 0, 4, 8, 3), R('up', 'Upright', 0, 1, 3, 3, 'base'), T('roof', 'Roof', 0, 1, 3, 2, 'up'), Q('q', 'Quarter circle', 3, 4, 3, 'base', 'up')] }),
+    steps: [
+      step('Click the Upright', select(['up'])),
+      step('Shift-click the Quarter circle', select(['up', 'q'])),
+      step('Delete selected', (s, sel) => Model.remove(s, sel)),
+    ],
+  },
+  {
+    tab: 'Q6', title: 'Resizing several selected rectangles together',
+    text: 'Two rectangles side by side on a base, sharing an edge. Select both: one handle moves their lined-up tops together, and a handle on the edge between them moves that edge.',
+    start: () => ({ pieces: [R('base', 'Base', 0, 4, 8, 3), R('a', 'Left block', 0, 1, 4, 3, 'base'), R('b', 'Right block', 4, 1, 4, 3, 'base')] }),
+    steps: [
+      step('Select both blocks', select(['a', 'b'])),
+      step('Drag their lined-up tops up 1', (s, sel) => Model.resize(s, sel, 'top', 0, rules)),
+      step('Drag the edge between them right 1', (s) => Model.moveSeam(s, { a: 'a', b: 'b', axis: 'x' }, 5, rules)),
+    ],
+  },
+  {
+    tab: 'Q7', title: 'Which pieces can merge',
+    text: 'Three rectangles in a row, the same height, make one rectangle, so Merge works. Then a pair of different heights: Merge stays off and says why.',
+    start: () => ({ pieces: [R('a', 'Left', 0, 2, 2, 3), R('b', 'Middle', 2, 2, 3, 3), R('c', 'Right', 5, 2, 3, 3), R('d', 'Short', 10, 3, 2, 2), R('e', 'Tall', 12, 1, 2, 4)] }),
+    steps: [
+      step('Select Left, Middle and Right', select(['a', 'b', 'c'])),
+      step('Merge', (s, sel) => Model.merge(s, sel)),
+      step('Select Short and Tall', select(['d', 'e'])),
+      step('Try to merge', (s, sel) => Model.merge(s, sel)),
+    ],
+  },
+  {
+    tab: 'Q8', title: 'What happens to what sat on merged pieces',
+    text: 'Two blocks on a base, a roof on the left block, a small arch on the right block. Merge the blocks: the roof and arch stay exactly where they are, now sitting on the merged rectangle.',
+    start: () => ({ pieces: [R('base', 'Base', 0, 4, 8, 3), R('a', 'Left block', 0, 2, 4, 2, 'base'), R('b', 'Right block', 4, 2, 4, 2, 'base'), T('roof', 'Roof', 0, 2, 4, 2, 'a'), S('arch', 'Arch', 5, 2, 2, 'b')] }),
+    steps: [
+      step('Select both blocks', select(['a', 'b'])),
+      step('Merge', (s, sel) => Model.merge(s, sel)),
+      step('Widen the merged rectangle by 2', (s) => Model.resize(s, [s.pieces.find((p) => p.name === 'Merged rectangle').id], 'right', 10, rules)),
+    ],
+  },
+  {
+    tab: 'New', title: 'Add a piece across a shared edge',
+    text: 'Two blocks side by side on a base, their tops level. Select both: their tops make one unbroken edge, so you can add a triangle, semicircle or rectangle across all of it. It sits on both blocks. Then widen one block and watch the roof (Q2 decides whether it follows).',
+    start: () => ({ pieces: [R('base', 'Base', 0, 4, 9, 3), R('a', 'Left block', 0, 1, 4, 3, 'base'), R('b', 'Right block', 4, 1, 4, 3, 'base')] }),
+    steps: [
+      step('Select both blocks', select(['a', 'b'])),
+      step('Add a triangle across their tops', (s, sel) => Model.addAcross(s, sel, 'tri')),
+      step('Widen the Right block by 1', (s) => Model.resize(s, ['b'], 'right', 9, rules)),
+    ],
+  },
+]
+
+let tab = 0
+let state, sel, past, done, note, bad, changed
+
+function restart() {
+  state = SCENARIOS[tab].start()
+  sel = []
+  past = []
+  done = 0
+  note = 'Ready. Press the first step, or play freely.'
+  bad = false
+  changed = new Set()
+  render()
+}
+function apply(r) {
+  const before = state
+  if (r.state !== state) past.push({ state, sel })
+  state = r.state
+  if (r.sel) sel = r.sel
+  sel = sel.filter((id) => state.pieces.some((p) => p.id === id))
+  note = r.note
+  bad = !!r.bad
+  changed = new Set(state.pieces.filter((p) => JSON.stringify(p) !== JSON.stringify(before.pieces.find((q) => q.id === p.id))).map((p) => p.id))
+  render()
+}
+
+// ----- Drawing
+const svg = document.getElementById('stage')
+const K = 40
+let view = { x: -2, y: -3, w: 20, h: 11 }
+function fitView() {
+  const xs = [], ys = []
+  for (const p of state.pieces) {
+    if (p.kind === 'quarter') xs.push(p.cx, p.cx + p.r), ys.push(p.cy - p.r, p.cy)
+    else if (p.kind === 'rect') xs.push(p.x, p.x + p.w), ys.push(p.y, p.y + p.h)
+    else xs.push(p.x, p.x + p.w), ys.push(p.y - (p.kind === 'semi' ? p.w / 2 : p.h), p.y)
+  }
+  if (!xs.length) return
+  const [x1, x2, y1, y2] = [Math.min(...xs) - 2, Math.max(...xs) + 2, Math.min(...ys) - 2, Math.max(...ys) + 2]
+  const w = Math.max(x2 - x1, (y2 - y1) * 2.2)
+  view = { x: x1 - (w - (x2 - x1)) / 2, y: y1, w, h: Math.max(y2 - y1, w / 2.2) }
+}
+function shapePath(p) {
+  const k = (v) => (v * K).toFixed(1)
+  if (p.kind === 'rect') return `M${k(p.x)},${k(p.y)} h${k(p.w)} v${k(p.h)} h${k(-p.w)} Z`
+  if (p.kind === 'tri') return `M${k(p.x)},${k(p.y)} L${k(p.x + p.w)},${k(p.y)} L${k(p.x + p.w / 2)},${k(p.y - p.h)} Z`
+  if (p.kind === 'semi') return `M${k(p.x)},${k(p.y)} A${k(p.w / 2)},${k(p.w / 2)} 0 0 1 ${k(p.x + p.w)},${k(p.y)} Z`
+  return `M${k(p.cx)},${k(p.cy)} L${k(p.cx + p.r)},${k(p.cy)} A${k(p.r)},${k(p.r)} 0 0 0 ${k(p.cx)},${k(p.cy - p.r)} Z`
+}
+function centerOf(p) {
+  if (p.kind === 'rect') return [p.x + p.w / 2, p.y + p.h / 2]
+  if (p.kind === 'quarter') return [p.cx + p.r * 0.38, p.cy - p.r * 0.38]
+  return [p.x + p.w / 2, p.y - (p.kind === 'semi' ? p.w / 5 : p.h / 3)]
+}
+function render() {
+  // Rules
+  const rulesEl = document.getElementById('rules')
+  rulesEl.innerHTML = ''
+  for (const r of RULES) {
+    const div = document.createElement('div')
+    div.className = 'rule'
+    div.innerHTML = `<div class="q">${r.q}</div>`
+    const seg = document.createElement('div')
+    seg.className = 'seg'
+    for (const [v, label, rec] of r.opts) {
+      const b = document.createElement('button')
+      b.className = rules[r.key] === v ? 'on' : ''
+      b.innerHTML = `${label}${rec ? ' <span class="rec">★</span>' : ''}`
+      b.onclick = () => ((rules = { ...rules, [r.key]: v }), restart())
+      seg.appendChild(b)
+    }
+    div.appendChild(seg)
+    rulesEl.appendChild(div)
+  }
+  // Tabs and scenario
+  const tabs = document.getElementById('tabs')
+  tabs.innerHTML = ''
+  SCENARIOS.forEach((s, i) => {
+    const b = document.createElement('button')
+    b.textContent = s.tab
+    b.className = i === tab ? 'on' : ''
+    b.onclick = () => ((tab = i), fitAfter = true, restart())
+    tabs.appendChild(b)
+  })
+  const sc = SCENARIOS[tab]
+  const el = document.getElementById('scenario')
+  el.innerHTML = `<h2>${sc.title}</h2><p>${sc.text}</p>`
+  const steps = document.createElement('div')
+  steps.className = 'steps'
+  sc.steps.forEach((s, i) => {
+    const b = document.createElement('button')
+    b.textContent = `${i + 1}. ${s.label}`
+    b.className = i < done ? 'done' : ''
+    b.disabled = i !== done
+    b.onclick = () => {
+      apply(s.run(state, sel))
+      done = i + 1
+      render()
+    }
+    steps.appendChild(b)
+  })
+  const re = document.createElement('button')
+  re.className = 'restart'
+  re.textContent = 'Restart'
+  re.onclick = restart
+  steps.appendChild(re)
+  el.appendChild(steps)
+
+  // Stage
+  if (fitAfter) fitView(), (fitAfter = false)
+  svg.setAttribute('viewBox', `${view.x * K} ${view.y * K} ${view.w * K} ${view.h * K}`)
+  let html = ''
+  for (let x = Math.ceil(view.x); x <= view.x + view.w; x++)
+    for (let y = Math.ceil(view.y); y <= view.y + view.h; y++) html += `<circle cx="${x * K}" cy="${y * K}" r="1.6" fill="#cbd5e1"/>`
+  for (const p of state.pieces) {
+    const on = sel.includes(p.id)
+    html += `<path data-id="${p.id}" d="${shapePath(p)}" fill="${on ? 'rgba(37,99,235,0.14)' : changed.has(p.id) ? 'rgba(250,204,21,0.18)' : 'rgba(241,245,249,0.7)'}" stroke="${on ? '#2563eb' : '#111827'}" stroke-width="${on ? 3 : 2.2}" stroke-linejoin="round" style="cursor:pointer"/>`
+  }
+  for (const p of state.pieces) {
+    const [cx, cy] = centerOf(p)
+    html += `<text x="${cx * K}" y="${cy * K}" text-anchor="middle" font-size="13" fill="#475569" pointer-events="none">${p.name}</text>`
+  }
+  for (const h of Model.handles(state, sel, rules)) {
+    const horiz = h.kind === 'seam' ? h.seam.axis === 'y' : h.side === 'top' || h.side === 'bottom'
+    const [w, hh] = h.kind === 'base' ? [12, 12] : horiz ? [26, 10] : [10, 26]
+    html += `<rect class="handle" data-h='${JSON.stringify(h)}' x="${h.x * K - w / 2}" y="${h.y * K - hh / 2}" width="${w}" height="${hh}" rx="5" fill="${h.kind === 'seam' ? '#dbeafe' : '#fff'}" stroke="#2563eb" stroke-width="2" style="cursor:${horiz ? 'ns-resize' : 'ew-resize'}"/>`
+  }
+  svg.innerHTML = html
+
+  // Tools
+  document.getElementById('del').disabled = !sel.length
+  const m = Model.mergeable(state, sel)
+  const mb = document.getElementById('merge')
+  mb.disabled = !m.ok
+  document.getElementById('mergeWhy').textContent = sel.length >= 2 && !m.ok ? m.why : ''
+  const across = document.getElementById('across')
+  across.innerHTML = ''
+  if (Model.sharedTop(state, sel))
+    for (const [kind, label] of [['tri', 'Triangle'], ['semi', 'Semicircle'], ['rect', 'Rectangle']]) {
+      const b = document.createElement('button')
+      b.textContent = `Add ${label.toLowerCase()} across their tops`
+      b.onclick = () => apply(Model.addAcross(state, sel, kind))
+      across.appendChild(b)
+    }
+  document.getElementById('undo').disabled = !past.length
+  const n = document.getElementById('note')
+  n.textContent = note
+  n.className = 'note' + (bad ? ' bad' : '')
+
+  // State
+  const name = (id) => Model.byId(state, id)?.name ?? '—'
+  document.getElementById('pieces').innerHTML = state.pieces
+    .map((p) => {
+      const size = p.kind === 'rect' ? `${p.w} wide × ${p.h} tall` : p.kind === 'quarter' ? `radius ${p.r}` : p.kind === 'semi' ? `base ${p.w}` : `base ${p.w}, height ${p.h}`
+      const kind = { rect: 'Rectangle', tri: 'Triangle', semi: 'Semicircle', quarter: 'Quarter circle' }[p.kind]
+      const hosts = Model.hostsOf(p)
+      const where = hosts.length ? `sits on ${hosts.map(name).join(' and ')}` : 'stands on its own'
+      return `<li class="${changed.has(p.id) ? 'changed' : ''}"><span class="name">${p.name}</span>${sel.includes(p.id) ? '<span class="sel">SELECTED</span>' : ''}<div class="meta">${kind}, ${size}; ${where}${p.wall ? `, against ${name(p.wall)}` : ''}</div></li>`
+    })
+    .join('')
+}
+let fitAfter = true
+
+// ----- Pointer: selecting and dragging handles
+const toWorld = (e) => {
+  const pt = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse())
+  return [pt.x / K, pt.y / K]
+}
+let dragging = null
+svg.addEventListener('pointerdown', (e) => {
+  const hEl = e.target.closest?.('.handle')
+  if (hEl) {
+    dragging = { h: JSON.parse(hEl.dataset.h), from: state, sel }
+    svg.setPointerCapture(e.pointerId)
+    return
+  }
+  const id = e.target.dataset?.id
+  if (!id) return void ((sel = []), render())
+  if (e.shiftKey) sel = sel.includes(id) ? sel.filter((x) => x !== id) : [...sel, id]
+  else sel = [id]
+  note = sel.length > 1 ? `${sel.length} pieces selected.` : `${Model.byId(state, id).name} selected.`
+  bad = false
+  render()
+})
+svg.addEventListener('pointermove', (e) => {
+  if (!dragging) return
+  const [x, y] = toWorld(e)
+  const h = dragging.h
+  let r
+  if (h.kind === 'side') r = Model.resize(dragging.from, h.ids, h.side, Math.round(h.side === 'left' || h.side === 'right' ? x : y), rules)
+  else if (h.kind === 'seam') r = Model.moveSeam(dragging.from, h.seam, Math.round(h.seam.axis === 'x' ? x : y), rules)
+  else r = Model.resizeBase(dragging.from, h.id, Math.round(x), rules)
+  state = r.state
+  note = r.note
+  bad = !!r.bad
+  changed = new Set()
+  render()
+})
+svg.addEventListener('pointerup', () => {
+  if (!dragging) return
+  if (dragging.from !== state) past.push({ state: dragging.from, sel: dragging.sel })
+  dragging = null
+  render()
+})
+document.getElementById('undo').onclick = () => {
+  const last = past.pop()
+  if (!last) return
+  state = last.state
+  sel = last.sel
+  note = 'Undone.'
+  bad = false
+  changed = new Set()
+  render()
+}
+document.getElementById('del').onclick = () => apply(Model.remove(state, sel))
+document.getElementById('merge').onclick = () => apply(Model.merge(state, sel))
+
+restart()
+</script>
+</body>
+</html>
