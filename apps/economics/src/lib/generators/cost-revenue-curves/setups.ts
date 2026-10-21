@@ -9,8 +9,13 @@ export type Setup = { id: string; name: string; settings: Partial<CostRevenueSet
 /** Every label a blank line for students to write on. */
 const BLANKS = Object.fromEntries(LABEL_KEYS.map((k) => [`${k}Mode`, 'blank'])) as Partial<CostRevenueSettings>
 
-/** A natural monopoly: ATC still falling where demand meets MC, so P = MC is a loss and the fair-return price is between it and the monopoly's. */
-const NATURAL = { atcQ: 7.5, atcCost: 3.5, mcSlope: 1.2, fixed: 0.6, demandEnd: 9 } satisfies Partial<CostRevenueSettings>
+/**
+ * A natural monopoly: ATC lowest past where demand meets the quantity axis,
+ * so it's still falling everywhere along demand (economies of scale over the
+ * whole market), P = MC is a loss and the fair-return price, where demand
+ * meets ATC, is between it and the monopoly's.
+ */
+const NATURAL = { atcQ: 7.5, atcCost: 2.75, mcSlope: 1, fixed: 0.45, demandTop: 9.6, demandEnd: 6.5 } satisfies Partial<CostRevenueSettings>
 
 export const SETUPS: Setup[] = [
   { id: 'costs', name: 'Cost curves (MC, ATC, AVC)', settings: {} },

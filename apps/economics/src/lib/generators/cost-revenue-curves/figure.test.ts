@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { areaOf } from '$lib/graph/curves'
 import { overlaps } from '$lib/graph/testing'
+import type { Segment } from '$shared/graph/labels'
 import { buildCostRevenue, demandOf, pricesOf } from './figure'
 import {
   afc, atc, avc, costsOf, demandMeetsATC, demandMeetsMC, mc, minATC, minAVC, minMC, mrOn, priceMaker, priceOn, priceTaker, tc,
@@ -179,7 +180,10 @@ describe('a monopoly', () => {
     expect(m.q).toBeLessThan(qFR)
     expect(qFR).toBeLessThan(qSO)
     expect(priceOn(d2, qSO)).toBeLessThan(atc(k2, qSO))
+    // ATC still falling everywhere along demand, out to where it meets the quantity axis: economies of scale over the whole market.
     expect(qSO).toBeLessThan(minATC(k2).q)
+    expect(d2.top / d2.slope).toBeLessThan(minATC(k2).q)
+    for (const q of [m.q, qFR, qSO]) expect(slopeOf((x) => atc(k2, x), q)).toBeLessThan(-0.1)
     expect(texts({ graph: 'monopoly', ...NATURAL, regulation: 'both' })).toEqual(expect.arrayContaining(['PM', 'QM', 'PSO', 'QSO', 'PFR', 'QFR']))
     // Regulated to P = MC there's a loss to shade and no deadweight loss; at P = ATC, no profit but some deadweight loss.
     const optimal = firm({ graph: 'monopoly', ...NATURAL, regulation: 'optimal', profit: true, dwl: true })
@@ -245,6 +249,29 @@ describe('the figure', () => {
         const over = { ...g, atcQ: c.q, atcCost: c.cost, mcSlope: c.slope, fixed: c.fixed }
         expect([over, overlaps(build(over).figure)]).toEqual([over, []])
       }
+    }
+  }, 30_000)
+
+  it("keeps the break-even and shutdown points' arrows off the dashed guides, where there's a clear place", () => {
+    const crossing = (a: Segment, b: Segment) => {
+      const side = (s: Segment, x: number, y: number) => Math.sign((s.x2 - s.x1) * (y - s.y1) - (s.y2 - s.y1) * (x - s.x1))
+      return side(a, b.x1, b.y1) * side(a, b.x2, b.y2) < 0 && side(b, a.x1, a.y1) * side(b, a.x2, a.y2) < 0
+    }
+    const cases: Partial<CostRevenueSettings>[] = [
+      { price: 'loss' }, { price: 'breakeven' }, { price: 'breakeven', market: true },
+      // The largest fixed cost with the gentlest MC: AVC and MC nearly flat, the guides close in round the points.
+      { price: 'loss', fixed: 0.9, mcSlope: 0.6 }, { price: 'breakeven', fixed: 0.9, mcSlope: 0.6 }, { price: 'shutdown', fixed: 0.9, mcSlope: 0.6 },
+      // There every way out of the break-even point crosses a line, and it takes the one crossing fewest: AVC, under it, not the price line and ATC's guide over it.
+      { price: 'profit', fixed: 0.9, mcSlope: 0.6 },
+    ]
+    for (const c of cases) {
+      const p = firm({ graph: 'perfect', ...c })
+      // The arrows to the two points (not a region's, like the loss's, which the graph library places).
+      const k = costs(c).costs
+      const ends = [minATC(k), minAVC(k)].map((m) => p.px({ x: m.q, y: m.v }))
+      const arrows = p.leaders.filter((l) => ends.some((e) => Math.hypot(l.x2 - e.x, l.y2 - e.y) < 6))
+      expect(arrows).toHaveLength(2)
+      expect([c, arrows.filter((l) => p.guides.some((g) => crossing(l, g)))]).toEqual([c, []])
     }
   })
 

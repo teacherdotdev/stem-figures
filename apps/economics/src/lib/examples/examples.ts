@@ -344,7 +344,7 @@ export const EXAMPLES: Example[] = [
       alt: 'Graph of Price and costs against Quantity with no numbers on the axes: demand D = AR, a dashed MR curve, and MC and ATC curves, ATC still falling where demand crosses MC. Three dots on demand, each with dashed lines to both axes: PM and QM above where MR meets MC; PFR and QFR where demand crosses ATC the second time; and PSO and QSO where demand crosses MC, the lowest price and the largest quantity (M, FR and SO subscripts).',
       caption:
         'A natural monopoly, whose ATC is still falling where demand meets MC, at the three prices it could charge. Unregulated, it produces QM, where MR = MC, and charges PM. At the fair-return price PFR, where demand meets ATC, it produces QFR and breaks even; at the socially optimal price PSO, where demand meets MC, it produces the most, QSO, at a price below ATC.',
-      settings: { graph: 'monopoly', regulation: 'both', profit: false, atcQ: 7.5, atcCost: 3.5, mcSlope: 1.2, fixed: 0.6, demandEnd: 9 },
+      settings: { graph: 'monopoly', regulation: 'both', profit: false, atcQ: 7.5, atcCost: 2.75, mcSlope: 1, fixed: 0.45, demandTop: 9.6, demandEnd: 6.5 },
     },
     {
       slug: 'monopolistic-competition-long-run-equilibrium-graph-excess-capacity',

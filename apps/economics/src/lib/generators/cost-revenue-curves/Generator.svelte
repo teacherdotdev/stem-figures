@@ -21,7 +21,7 @@
   import { costsOf } from './model'
   import {
     GRAPHS, GRAPH_NAMES, OUTCOMES, PRICES, PRICE_LINE_NAMES, PRICE_NAMES, REGULATIONS, REGULATION_NAMES, RUNS, costRevenueSettings,
-    type CostRevenueSettings, type LabelKey, type Price,
+    type CostRevenueSettings, type Graph, type LabelKey, type Price,
   } from './settings'
   import { SETUPS, settingsFor } from './setups'
 
@@ -105,6 +105,14 @@
   const mode = (key: LabelKey) => `${key}Mode` as `${LabelKey}Mode`
   function allLabels(m: TitleMode) {
     for (const [key] of labelList) s[mode(key)] = m
+  }
+
+  /** The chart title's placeholder: the graph chosen. */
+  const TITLES: Record<Graph, string> = {
+    costs: "A firm's costs",
+    perfect: 'A perfectly competitive firm',
+    monopoly: 'A monopoly',
+    monopolistic: 'A monopolistically competitive firm',
   }
 </script>
 
@@ -242,7 +250,7 @@
     <TitleSettings
       bind:title={s.title} bind:titleMode={s.titleMode} bind:xTitle={s.xTitle} bind:xTitleMode={s.xTitleMode}
       bind:yTitle={s.yTitle} bind:yTitleMode={s.yTitleMode}
-      placeholders={{ title: 'A perfectly competitive firm', xTitle: 'Quantity', yTitle: 'Price and costs' }}
+      placeholders={{ title: TITLES[graph], xTitle: 'Quantity', yTitle: 'Price and costs' }}
     />
     <LookSettings bind:ink={s.ink} bind:xEndCap={s.xEndCap} bind:yEndCap={s.yEndCap} />
   {/snippet}
