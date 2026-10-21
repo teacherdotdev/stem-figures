@@ -11,6 +11,22 @@ const panel = (over: Partial<PhillipsSettings> = {}) => build(over).figure.panel
 const texts = (over: Partial<PhillipsSettings>) => panel(over).labels.map((l) => l.runs?.map((r) => r.text).join('') ?? '')
 const numbered = { look: 'numeric' } as const
 
+type Seg = { x1: number; y1: number; x2: number; y2: number }
+/** Whether two segments on the drawing cross or touch. */
+const segmentsMeet = (a: Seg, b: Seg) => gap(a, b) < 0.5
+/** How far apart two segments on the drawing come. */
+function gap(a: Seg, b: Seg) {
+  const side = (s: Seg, x: number, y: number) => Math.sign((s.x2 - s.x1) * (y - s.y1) - (s.y2 - s.y1) * (x - s.x1))
+  if (side(a, b.x1, b.y1) * side(a, b.x2, b.y2) < 0 && side(b, a.x1, a.y1) * side(b, a.x2, a.y2) < 0) return 0
+  const to = (px: number, py: number, s: Seg) => {
+    const dx = s.x2 - s.x1
+    const dy = s.y2 - s.y1
+    const t = Math.max(0, Math.min(1, ((px - s.x1) * dx + (py - s.y1) * dy) / (dx * dx + dy * dy || 1)))
+    return Math.hypot(px - s.x1 - t * dx, py - s.y1 - t * dy)
+  }
+  return Math.min(to(a.x1, a.y1, b), to(a.x2, a.y2, b), to(b.x1, b.y1, a), to(b.x2, b.y2, a))
+}
+
 describe('phillips curve', () => {
   it('draws a convex SRPC sloping down, crossing a vertical LRPC at the natural rate', () => {
     const m = modelOf(tidy())
@@ -151,6 +167,114 @@ describe('phillips curve', () => {
         }
       }
     }
+  })
+
+  it('moves a schematic SRPC as far up as right, with stagflation that grows with the size of the shock', () => {
+    for (const size of ['small', 'medium', 'large'] as const) {
+      const m = modelOf(tidy({ movement: 'srpc', cause: 'shock', size }))
+      // B is up and right of A on the new curve, by a clear share of each axis.
+      expect(m.B!.x - m.A.x).toBeGreaterThan(0.08 * 10)
+      expect(m.B!.y - m.A.y).toBeCloseTo(m.B!.x - m.A.x)
+      expect(inflationAt(m.srpc2!, m.B!.x)).toBeCloseTo(m.B!.y)
+      // Shift arrows all the same length: the curve moved as a whole.
+      const lengths = panel({ movement: 'srpc', size }).arrows.filter((a) => a.color === '#2563eb').map((a) => Math.hypot(a.x2 - a.x1, a.y2 - a.y1))
+      expect(Math.max(...lengths) - Math.min(...lengths)).toBeLessThan(1)
+    }
+    const small = modelOf(tidy({ movement: 'srpc', cause: 'shock', size: 'small' }))
+    const large = modelOf(tidy({ movement: 'srpc', cause: 'shock', size: 'large' }))
+    expect(large.B!.y - large.A.y).toBeGreaterThan(small.B!.y - small.A.y)
+    // Expectations: B on the LRPC; the long run: C on the LRPC at B's inflation.
+    const e = modelOf(tidy({ movement: 'srpc', cause: 'expectations', srpcSide: 'left' }))
+    expect(inflationAt(e.srpc2!, e.A.x)).toBeCloseTo(e.B!.y)
+    const lr = modelOf(tidy({ movement: 'along', along: 'down', longRun: true }))
+    expect(inflationAt(lr.srpc2!, lr.A.x)).toBeCloseTo(lr.B!.y)
+  })
+
+  it('keeps the economy at A when the LRPC shifts without the SRPC, and says only what is drawn', () => {
+    const m = modelOf(tidy({ movement: 'lrpc', withSrpc: false }))
+    expect(m.B).toBeNull()
+    expect(texts({ movement: 'lrpc', withSrpc: false })).not.toContain('B')
+    expect(modelOf(tidy({ ...numbered, movement: 'lrpc', nru2: 7, withSrpc: false })).B).toBeNull()
+    expect(build({ movement: 'along', longRun: true, lrpc: false }).label).not.toMatch(/long-run curve/)
+    expect(build({ movement: 'srpc', srpc: false }).label).not.toMatch(/short-run curve shifts/)
+    // No arrow from a point that isn't drawn.
+    expect(panel({ movement: 'along', longRun: true, pointA: false }).arrows.filter((a) => a.color === '#111827')).toHaveLength(1)
+    expect(build({ ...numbered, movement: 'srpc', uShock: 4 }).notes.join(' ')).toMatch(/above the natural rate/)
+  })
+
+  it('keeps the curves and the natural rates off the y-axis, and no SRPC starts at the top of an LRPC', () => {
+    for (const nruAt of [0.4, 0.5, 0.7]) {
+      for (const size of ['small', 'medium', 'large'] as const) {
+        for (const curvature of CURVATURES) {
+          for (const over of [
+            { movement: 'lrpc', lrpcSide: 'left' }, { movement: 'lrpc', lrpcSide: 'right' },
+            { movement: 'srpc', srpcSide: 'left' }, { movement: 'srpc', srpcSide: 'right' },
+            { movement: 'along', along: 'down', longRun: true }, { movement: 'along', along: 'up', longRun: true },
+          ] as Partial<PhillipsSettings>[]) {
+            const s = tidy({ nruAt, size, curvature, ...over })
+            const m = modelOf(s)
+            const p = buildPhillips(s).figure.panels[0]
+            const at = [over, nruAt, size, curvature]
+            const left = p.px({ x: 0.6, y: 0 }).x
+            for (const c of p.curves) for (const d of c.paths) expect([...at, Math.min(...[...d.matchAll(/[ML]([\d.]+),/g)].map((x) => Number(x[1]))) >= left]).toEqual([...at, true])
+            if (m.un2 !== null) expect([...at, m.un2 >= 1.4 && m.un2 <= 8.4]).toEqual([...at, true])
+          }
+        }
+      }
+    }
+  })
+
+  it('keeps shift arrows off the dashed guides, the point-to-point arrows and each other', () => {
+    const cases: Partial<PhillipsSettings>[] = [
+      ...SETUPS.map((x) => x.settings),
+      { ...numbered, movement: 'along', longRun: true, expected: 6, u2: 8, pi2: 2 },
+      { ...numbered, movement: 'along', longRun: true, u2: 8, pi2: -1 },
+      { movement: 'along', along: 'down', longRun: true, size: 'large' },
+      { movement: 'srpc', cause: 'shock', nruAt: 0.7 },
+      { movement: 'lrpc', lrpcSide: 'right', arrows: 3 },
+      { movement: 'srpc', arrows: 3 },
+    ]
+    for (const over of cases) {
+      const p = panel(over)
+      const shifts = p.arrows.filter((a) => a.color !== '#111827')
+      const paths = p.arrows.filter((a) => a.color === '#111827')
+      for (const a of shifts) {
+        for (const g of p.guides) expect([over, segmentsMeet(a, g)]).toEqual([over, false])
+        for (const b of [...paths, ...shifts.filter((b) => b !== a)]) expect([over, gap(a, b) > 8]).toEqual([over, true])
+      }
+    }
+  })
+
+  it('names each LRPC at its own top, clear of the other', () => {
+    for (const over of [
+      { movement: 'lrpc', lrpcSide: 'left' }, { movement: 'lrpc', lrpcSide: 'right' }, { movement: 'lrpc', lrpcSide: 'left', labelSize: 'large' },
+      { movement: 'lrpc', size: 'small' }, { ...numbered, movement: 'lrpc', nru2: 6.5 }, { ...numbered, movement: 'lrpc' },
+    ] as Partial<PhillipsSettings>[]) {
+      const p = panel(over)
+      const lrpcs = p.curves.filter((c) => c.color === '#dc2626').map((c) => c.paths[0].match(/[\d.]+/g)!.map(Number))
+      for (const [k, name] of ['LRPC1', 'LRPC2'].entries()) {
+        const l = p.labels.find((x) => x.runs?.map((r) => r.text).join('') === name)!
+        const box = textBox(l, textWidth(name, p.labelFs), p.labelFs)
+        // Off every LRPC, and nearer the top of its own than of the other.
+        for (const [x1, y1, x2, y2] of lrpcs) expect([over, name, crosses({ x1, y1, x2, y2 }, box)]).toEqual([over, name, false])
+        const own = lrpcs.find(([x]) => Math.abs(x - p.px({ x: k ? modelOf(tidy(over)).un2! : modelOf(tidy(over)).un, y: 0 }).x) < 0.5)!
+        const other = lrpcs.find((c) => c !== own)!
+        // How far the line's top is from the name.
+        const d = ([x1, y1, , y2]: number[]) => {
+          const y = Math.min(y1, y2)
+          return Math.hypot(Math.max(box.x0 - x1, 0, x1 - box.x1), Math.max(box.y0 - y, 0, y - box.y1))
+        }
+        expect([over, name, d(own) < d(other)]).toEqual([over, name, true])
+      }
+    }
+  })
+
+  it('runs a numbered graph only a little below 0 for the curves’ tails', () => {
+    expect(Number(fitOf(tidy({ ...numbered, movement: 'along', longRun: true, expected: 6, u2: 8, pi2: 2 })).yFrom)).toBeGreaterThanOrEqual(-2)
+    expect(Number(fitOf(tidy(numbered)).yFrom)).toBe(-1)
+    // Ending on a numbered line.
+    const f = fitOf(tidy({ ...numbered, movement: 'along', longRun: true, expected: 6, u2: 8, pi2: 2 }))
+    expect((Number(f.xTo) / Number(f.xStep)) % 2).toBe(0)
   })
 
   it('keeps the defaults out of the address, and reads back what it wrote', () => {

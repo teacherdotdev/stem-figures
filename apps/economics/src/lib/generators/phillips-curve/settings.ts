@@ -45,7 +45,7 @@ export const phillipsSettings = defineSettings({
   lrpc: bool(true),
   curvature: choice(CURVATURES, 'normal'),
   /** schematic: the natural rate, as a share of the way along the x-axis */
-  nruAt: number({ min: 0.3, max: 0.7, fallback: 0.5 }),
+  nruAt: number({ min: 0.4, max: 0.7, fallback: 0.5 }),
   /** numbered: the natural rate of unemployment and expected inflation (where the curves cross), in % */
   nru: number({ min: 0, max: 1e6, fallback: 5 }),
   expected: number({ min: -1e6, max: 1e6, fallback: 2 }),
