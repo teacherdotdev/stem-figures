@@ -14,6 +14,7 @@
   import { generatorState } from '$shared/generatorState.svelte'
   import TitleSettings from '$shared/graph/TitleSettings.svelte'
   import type { TitleMode } from '$shared/graph/axes'
+  import { plainOf } from '$shared/graph/runs'
   import AxesPicker from '$lib/graph/AxesPicker.svelte'
   import LookSettings from '$lib/graph/LookSettings.svelte'
   import NumberSettings from '$lib/graph/NumberSettings.svelte'
@@ -61,6 +62,8 @@
   const shock = $derived(clean.movement === 'srpc' && clean.cause === 'shock')
   const longRun = $derived(along && clean.longRun)
   const shifting = $derived(clean.movement === 'srpc' || clean.movement === 'lrpc' || longRun)
+  // With the LRPC shifting and the SRPC left where it is, the economy stays at A: there's no B.
+  const hasB = $derived(clean.movement !== 'none' && (clean.movement !== 'lrpc' || clean.withSrpc))
 
   const moveSummary = $derived(
     clean.movement === 'none' ? 'No movement'
@@ -70,11 +73,11 @@
   )
   const pointNames = $derived([
     clean.pointA && 'A',
-    clean.movement !== 'none' && clean.pointB && 'B',
+    hasB && clean.pointB && 'B',
     longRun && clean.pointC && 'C',
   ].filter(Boolean))
   const pointSummary = $derived([pointNames.length ? `Points ${pointNames.join(', ')}` : 'No points', clean.guides ? 'guides to the axes' : 'no guides'].join(' · '))
-  const labelSummary = $derived([clean.srpcLabel, clean.lrpcLabel, clean.nruLabel].map((t) => t.replace(/_\{?([^}]*)\}?/g, '$1')).filter(Boolean).join(', ') || 'No labels')
+  const labelSummary = $derived([clean.srpcLabel, clean.lrpcLabel, clean.nruLabel].map((t) => plainOf(t.trim())).filter(Boolean).join(', ') || 'No labels')
   const filename = $derived(filenameOf(clean, 'phillips-curve'))
 
   type LabelKey = 'srpcLabel' | 'lrpcLabel' | 'nruLabel' | 'aLabel' | 'bLabel' | 'cLabel' | 'piLabel' | 'uLabel'
@@ -85,7 +88,7 @@
       ...(clean.lrpc ? [['lrpcLabel', 'Long-run Phillips curve']] : []),
       ...(clean.lrpc || (clean.guides && clean.values) ? [['nruLabel', 'Natural rate at the axis']] : []),
       ...(clean.pointA ? [['aLabel', 'Point A']] : []),
-      ...(clean.movement !== 'none' && clean.pointB ? [['bLabel', 'Point B']] : []),
+      ...(hasB && clean.pointB ? [['bLabel', 'Point B']] : []),
       ...(longRun && clean.pointC ? [['cLabel', 'Point C']] : []),
       ...(clean.guides && clean.values ? [['piLabel', 'Inflation at the axis'], ['uLabel', 'Unemployment at the axis']] : []),
     ] as [LabelKey, string][],
@@ -157,7 +160,7 @@
       {:else}
         <label class="field">
           <span>Natural rate of unemployment</span>
-          <div class="slider"><input type="range" min="0.3" max="0.7" step="0.01" bind:value={s.nruAt} aria-label="Natural rate of unemployment" /></div>
+          <div class="slider"><input type="range" min="0.4" max="0.7" step="0.01" bind:value={s.nruAt} aria-label="Natural rate of unemployment" /></div>
         </label>
       {/if}
 
@@ -230,7 +233,7 @@
 
     <Section title="Points" icon={MapPin} summary={pointSummary}>
       <label class="check"><input type="checkbox" bind:checked={s.pointA} /> A, where the economy starts</label>
-      {#if clean.movement !== 'none'}
+      {#if hasB}
         <label class="check"><input type="checkbox" bind:checked={s.pointB} /> B, {clean.movement === 'lrpc' ? 'after the natural rate changes' : clean.movement === 'srpc' && clean.cause === 'expectations' ? 'after expectations change' : 'in the short run'}</label>
       {/if}
       {#if longRun}

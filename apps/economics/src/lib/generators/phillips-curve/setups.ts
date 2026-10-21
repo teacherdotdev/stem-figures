@@ -19,7 +19,7 @@ export const SETUPS: Setup[] = [
   { id: 'lower-nru', name: 'Lower natural rate (LRPC shifts left)', settings: { movement: 'lrpc', lrpcSide: 'left' } },
   {
     id: 'numbered',
-    name: 'Numbered, with deflation (A to B to C)',
+    name: 'Numbered, A to B to C',
     settings: { look: 'numeric', movement: 'along', longRun: true, nru: 5, expected: 2, u2: 3, pi2: 6 },
   },
   { id: 'blank', name: 'Students label a movement (blank labels)', settings: { movement: 'along', along: 'up', longRun: true, ...BLANKS } },
