@@ -7,15 +7,15 @@
 // countries' straight-line curves on one graph or side by side with where
 // each meets the axes written there.
 
-import type { Point } from '$shared/graph/grid'
-import type { Spot } from '$shared/graph/labels'
-import { plainOf } from '$shared/graph/runs'
+import { CELL, type Point } from '$shared/graph/grid'
+import { crosses, textBox, type Spot } from '$shared/graph/labels'
+import { plainOf, runsOf, runsWidth } from '$shared/graph/runs'
 import { axisEnd, readAxes, type Axes } from '$shared/graph/axes'
 import { bowed, type Box, type Curve } from '$lib/graph/curves'
 import { buildFigure } from '$lib/graph/figure'
 import { fitted, rangesOf } from '$lib/graph/fit'
 import {
-  inks, words, type ArrowSpec, type CalloutSpec, type CurveSpec, type GuideSpec, type LevelSpec, type MarkSpec, type PanelSpec, type PointSpec, type Words,
+  inks, shows, words, type ArrowSpec, type CalloutSpec, type CurveSpec, type GuideSpec, type LevelSpec, type MarkSpec, type PanelSpec, type PointSpec, type Words,
 } from '$lib/graph/panel'
 import { SCHEMATIC, panelBase, wordsOf } from '$lib/graph/settings'
 import { SHIFT_SHARE } from '$lib/graph/shifts'
@@ -84,14 +84,17 @@ export function placesOf(s: PpcSettings, rows: PointRow[] = pointsOf(s.points), 
   })
 }
 
-/** The ranges a numbered graph fits to: from 0 to a little past the farthest curve or point. */
+/**
+ * The ranges a numbered graph fits to: from 0 to a little past the farthest curve or point, in about 10
+ * blocks, or 12 with the opportunity cost steps drawn, to give each step's size room beside it.
+ */
 export function fitOf(s: PpcSettings) {
   if (s.countries !== 'one') return fitted(0, Math.max(1, s.aX, s.bX) * 1.1, 0, Math.max(1, s.aY, s.bY) * 1.1, 10)
   const c = curvesOf(s, true)
   const pts = placesOf(s, undefined, true)
   const x = Math.max(1e-9, c.X1, c.X2, ...pts.map((p) => p.x))
   const y = Math.max(1e-9, c.Y1, c.Y2, ...pts.map((p) => p.y))
-  return fitted(0, x * 1.1, 0, y * 1.1, 10)
+  return fitted(0, x * 1.1, 0, y * 1.1, s.steps ? 12 : 10)
 }
 
 /** The axes drawn, and anything typed into their ranges to fix. */
@@ -110,18 +113,95 @@ const spotOut = (p: Point, d: Point, r: number, fs: number): Spot => ({
   anchor: d.x > 0.3 ? 'start' : d.x < -0.3 ? 'end' : 'middle',
 })
 
-/** Places for a label all round a point as drawn, at each distance in `radii`, those the way `dir` goes first. */
-function around(dir: Point, radii: number[]) {
+/**
+ * Places for a label all round a point as drawn, at each distance in `radii`: those on the side `dir`
+ * goes first, nearest first and the nearer `dir` the sooner, then (unless `sides` leaves them out) those
+ * on the other side.
+ */
+function around(dir: Point, radii: number[], sides = [true, false]) {
   const ways = Array.from({ length: 16 }, (_, k) => ({ x: Math.cos((k * Math.PI) / 8), y: Math.sin((k * Math.PI) / 8) }))
   ways.sort((a, b) => b.x * dir.x + b.y * dir.y - (a.x * dir.x + a.y * dir.y))
-  return (p: Point, fs: number): Spot[] => radii.flatMap((r) => ways.map((d) => spotOut(p, d, r, fs)))
+  const half = (side: boolean) => ways.filter((d) => d.x * dir.x + d.y * dir.y > -1e-9 === side)
+  return (p: Point, fs: number): Spot[] => sides.flatMap((side) => radii.flatMap((r) => half(side).map((d) => spotOut(p, d, r, fs))))
 }
 
-/** Places for a step's size: beside an upright step, or under or over a level one. */
-const besideStep = (upright: boolean) => (p: Point, fs: number): Spot[] =>
-  upright
-    ? [6, 14].flatMap((g) => [{ x: p.x - g, y: p.y + fs * 0.35, anchor: 'end' as const }, { x: p.x + g, y: p.y + fs * 0.35, anchor: 'start' as const }])
-    : [3, 10].flatMap((g) => [{ x: p.x, y: p.y + fs * 0.78 + g, anchor: 'middle' as const }, { x: p.x, y: p.y - fs * 0.3 - g, anchor: 'middle' as const }])
+/**
+ * Places for a step's size, on its own side of the step's dashed lines: an upright step's (what's given
+ * up) right of it, inside the step, from halfway down its `half` length toward the corner, then above
+ * halfway; or, when `inside` says its words have no room there, left of it too, under the step before
+ * (by what that one gains), low down, away from it. A level step's (what's gained) goes under it, or
+ * over it, inside the step, when there's no room under it (it's the x-axis).
+ */
+const besideStep = (upright: boolean, half: number, inside = (_fs: number) => true) => (p: Point, fs: number): Spot[] => {
+  if (!upright) {
+    return [
+      ...[3, 10].map((g) => ({ x: p.x, y: p.y + fs * 0.78 + g, anchor: 'middle' as const })),
+      ...[3, 10].flatMap((g) => [0, 0.3, -0.3].map((f) => ({ x: p.x + f * half, y: p.y - fs * 0.3 - g, anchor: 'middle' as const }))),
+    ]
+  }
+  // How far the words can move down from halfway and still be clear of the level step under them.
+  const room = Math.max(0, half - fs * 0.65 - 4)
+  const at = (f: number, g: number, anchor: 'start' | 'end') => ({ x: p.x + (anchor === 'start' ? g : -g), y: p.y + fs * 0.35 + f * room, anchor })
+  return [
+    ...[0, 0.25, 0.5, 0.75, 1, -0.25, -0.5].flatMap((f) => [4, 10, 18, 28].map((g) => at(f, g, 'start'))),
+    ...(inside(fs) ? [] : [0.75, 1, 0.5].flatMap((f) => [6, 14].map((g) => at(f, g, 'end')))),
+  ]
+}
+
+/** A label's width on the drawing, near enough: a blank's write-on line (the graph library's), or its words. */
+const widthOf = (w: Words, fs: number) => (w.mode === 'blank' ? 46 : Math.min(fs * 10, runsWidth(runsOf(w.text.trim(), fs), fs) * 1.04 + 2))
+
+/** How far a point is from a box, on the drawing. */
+const gap = (b: { x0: number; y0: number; x1: number; y1: number }, p: Point) => Math.hypot(Math.max(b.x0 - p.x, 0, p.x - b.x1), Math.max(b.y0 - p.y, 0, p.y - b.y1))
+
+/** Whether the segments from `a` to `b` and from `c` to `d` cross. */
+function cross(a: Point, b: Point, c: Point, d: Point) {
+  const side = (p: Point, q: Point, r: Point) => Math.sign((q.x - p.x) * (r.y - p.y) - (q.y - p.y) * (r.x - p.x))
+  return side(a, b, c) * side(a, b, d) < 0 && side(c, d, a) * side(c, d, b) < 0
+}
+
+/** What a label is kept with and away from: see `clearOf`. */
+type Keep = { own: Point[]; others: { at: Point; r: number }[]; margin: number; walls?: Point[][]; lines?: Point[][] }
+
+/**
+ * Of `spots` by what's drawn at `own` (a point, or a curve's points), those where a label `width` wide
+ * sits plainly with it: nearer it, by `margin` at least, than to any of `others` (other points and their
+ * names, each a circle round where it's drawn, or another curve's points), and not across any of `walls`
+ * (other curves, as drawn) from the first of `own`; those clear of `lines` (the curves, as drawn) first,
+ * otherwise in the order given. When none is, those across a wall, then all of them, the plainest first.
+ */
+function clearOf(spots: Spot[], width: number, fs: number, { own, others, margin, walls = [], lines = [] }: Keep): Spot[] {
+  const rated = spots.map((spot) => {
+    const box = textBox(spot, width, fs)
+    const mid = { x: (box.x0 + box.x1) / 2, y: (box.y0 + box.y1) / 2 }
+    const grown = { x0: box.x0 - 3, y0: box.y0 - 3, x1: box.x1 + 3, y1: box.y1 + 3 }
+    const along = (l: Point[], hit: (a: Point, b: Point) => boolean) => l.some((p, k) => k > 0 && hit(l[k - 1], p))
+    return {
+      spot,
+      slack: Math.min(Infinity, ...others.map((o) => gap(box, o.at) - o.r)) - Math.min(...own.map((q) => gap(box, q))),
+      across: walls.some((w) => along(w, (a, b) => cross(own[0], mid, a, b))),
+      touches: lines.some((l) => along(l, (a, b) => crosses({ x1: a.x, y1: a.y, x2: b.x, y2: b.y }, grown))),
+    }
+  })
+  const plain = rated.filter((r) => r.slack >= margin)
+  const kept = plain.filter((r) => !r.across)
+  if (kept.length) return [...kept.filter((r) => !r.touches), ...kept.filter((r) => r.touches)].map((r) => r.spot)
+  return (plain.length ? plain : rated.sort((a, b) => Number(a.across) - Number(b.across) || b.slack - a.slack)).map((r) => r.spot)
+}
+
+/**
+ * How finely a numbered axis counted by `step` is read off it, for the steps' sizes: to a power of ten
+ * a fifth of a step or less (whole numbers on a grid counted by 5, 10 or 20), never coarser than whole
+ * numbers, and as finely as `typed`, where the curve meets the axis, is written.
+ */
+function unitOf(step: number, typed: number) {
+  let places = 0
+  while (places < 6 && Math.abs(Math.round(typed * 10 ** places) - typed * 10 ** places) > 1e-6) places++
+  return Math.min(1, 10 ** Math.floor(Math.log10(step / 5) + 1e-9), 10 ** -places)
+}
+
+/** `v` to the nearest `unit`, written without stray digits. */
+const toUnit = (v: number, unit: number) => Number((Math.round(v / unit) * unit).toFixed(Math.max(0, Math.round(-Math.log10(unit)))))
 
 /** The way out from a curve meeting the axes at `X` and `Y` at its point `p`, on a drawing `span` units across and up (y down). */
 function outFrom(p: Point, X: number, Y: number, n: number, span: Point): Point {
@@ -184,10 +264,20 @@ function buildOne(s: PpcSettings) {
   const arrows: ArrowSpec[] = []
   if (shifted) {
     const way = s.shift === 'none' ? 'both' : s.shift
-    // Each moved a little along the curves when it would start or end on a point.
+    // Each moved a little along the curves when it would start, end or pass on a point.
     const spots = drawable ? placesOf(s) : []
     const [W, H] = [Math.max(X1, X2), Math.max(Y1, Y2)]
-    const onPoint = (f: number) => [turned(X1, Y1, n, f), turned(X2, Y2, n, f)].some((q) => spots.some((p) => Math.hypot((p.x - q.x) / W, (p.y - q.y) / H) < 0.06))
+    const onPoint = (f: number) => {
+      const a = turned(X1, Y1, n, f)
+      const b = turned(X2, Y2, n, f)
+      const d = { x: (b.x - a.x) / W, y: (b.y - a.y) / H }
+      const len2 = d.x * d.x + d.y * d.y || 1
+      return spots.some((p) => {
+        const q = { x: (p.x - a.x) / W, y: (p.y - a.y) / H }
+        const t = Math.max(0, Math.min(1, (q.x * d.x + q.y * d.y) / len2))
+        return Math.hypot(q.x - t * d.x, q.y - t * d.y) < 0.06
+      })
+    }
     for (const f0 of ARROWS_AT[way][Math.max(0, Math.min(3, Math.round(s.arrows)))] ?? []) {
       const f = [f0, f0 + 0.06, f0 - 0.06, f0 + 0.12, f0 - 0.12].find((g) => g > 0.03 && g < 0.97 && !onPoint(g)) ?? f0
       arrows.push({ from: turned(X1, Y1, n, f), to: turned(X2, Y2, n, f), color: ink.demand })
@@ -202,6 +292,25 @@ function buildOne(s: PpcSettings) {
   const callouts: CalloutSpec[] = []
   const guides: GuideSpec[] = []
   const span = { x: box.x1 - box.x0, y: box.y1 - box.y0 }
+  // Every point and curve name on the drawing, each with the way its name goes from it, so that each
+  // point's name and caption keep clear of the others' and sit plainly with their own.
+  const marked: { at: Point; way: Point; dot: boolean; named: boolean }[] = []
+  /** How far from the point at `from` the one at `to` is drawn (y down). */
+  const drawnOff = (from: Point, to: Point): Point => ({ x: ((to.x - from.x) * CELL) / axes.x.step, y: (-(to.y - from.y) * CELL) / axes.y.step })
+  /** Every other point and name, as circles round where each is drawn, for the point `m` drawn at `q`. */
+  const othersOf = (m: number, q: Point, fs: number, names = true) =>
+    marked.flatMap((o, k) => {
+      if (k === m) return []
+      const d = drawnOff(marked[m].at, o.at)
+      const at = { x: q.x + d.x, y: q.y + d.y }
+      const r = NAME_AT[0] + fs * 0.4
+      return [...(o.dot ? [{ at, r: 5 }] : []), ...(names && o.named ? [{ at: { x: at.x + o.way.x * r, y: at.y + o.way.y * r }, r: fs * 0.6 }] : [])]
+    })
+  /** Points along a curve meeting the axes at `X` and `Y`, close enough together to stand for it. */
+  const traced = (X: number, Y: number) => Array.from({ length: 41 }, (_, k) => turned(X, Y, n, k / 40))
+  const curveLines = [drawable ? traced(X1, Y1) : [], shifted ? traced(X2, Y2) : []]
+  /** The points along `pts` as drawn, for the point `from` drawn at `q`, as circles of nothing round each. */
+  const drawnAlong = (from: Point, q: Point, pts: Point[]) => pts.map((o) => ({ at: { x: q.x + drawnOff(from, o).x, y: q.y + drawnOff(from, o).y }, r: 0 }))
   rows.forEach((r, k) => {
     const p = places[k]
     if (!p) return
@@ -217,26 +326,76 @@ function buildOne(s: PpcSettings) {
     const beyond = r.place === 'outside' || (r.place === 'at' && Math.pow(p.x / X1, n) + Math.pow(p.y / Y1, n) > 1)
     const captioned = !!r.caption && s.captionMode !== 'none'
     const nameWay = captioned && beyond ? { x: -out.x, y: -out.y } : out
-    points.push({ at: p, name: r.name ? words(r.name, s.pointMode) : undefined, spots: around(nameWay, NAME_AT) })
-    if (captioned) callouts.push({ at: p, name: words(r.caption, s.captionMode), spots: around({ x: -nameWay.x, y: -nameWay.y }, CAPTION_AT) })
+    const name = r.name ? words(r.name, s.pointMode) : undefined
+    const m = marked.push({ at: p, way: nameWay, dot: true, named: !!name && shows(name) }) - 1
+    // A name stays on its point's side of every curve but its own: never across one from it.
+    const walls = [drawable && !(onIt && near(X, X1) && near(Y, Y1)) ? traced(X1, Y1) : [], shifted && !(onIt && near(X, X2) && near(Y, Y2)) ? traced(X2, Y2) : []]
+    points.push({
+      at: p,
+      name,
+      spots: (q, fs) => {
+        const drawn = (w: Point[]) => drawnAlong(p, q, w).map((o) => o.at)
+        // (A curve the point's all but on, where the two meet, is no wall between it and its name.)
+        const away = walls.map(drawn).filter((w) => w.every((o) => Math.hypot(o.x - q.x, o.y - q.y) > fs))
+        const keep = { own: [q], others: othersOf(m, q, fs, false), margin: fs * 0.5, walls: away, lines: curveLines.map(drawn) }
+        return clearOf(around(nameWay, [...NAME_AT, 32])(q, fs), name ? widthOf(name, fs) : 0, fs, keep)
+      },
+    })
+    if (captioned) {
+      const caption = words(r.caption, s.captionMode)
+      callouts.push({
+        at: p,
+        name: caption,
+        spots: (q, fs) => clearOf(around({ x: -nameWay.x, y: -nameWay.y }, CAPTION_AT)(q, fs), widthOf(caption, fs), fs, { own: [q], others: othersOf(m, q, fs), margin: fs }),
+      })
+    }
     if (s.guides) guides.push({ from: p })
   })
 
-  // The curves' names, out from each a little way up from its foot (or near its top, when only the y-axis
-  // good grows), wherever along there no point is close by.
+  // The curves' names, out from each (in from the inner one, after a shift, so that it's plainly not the
+  // outer one's) a little way up from its foot (or near its top, when only the y-axis good grows), wherever
+  // along there no point is close by, or failing that wherever else along it there's room, always nearer
+  // its own curve than the other.
   const name = wordsOf(s, 'curveLabel')
-  const tries = s.shift === 'y' && shifted ? [0.3, 0.2, 0.4, 0.12] : [0.85, 0.93, 0.75, 0.65, 0.55]
+  const tries = s.shift === 'y' && shifted ? [0.3, 0.2, 0.4, 0.12, 0.5, 0.6, 0.7] : [0.85, 0.93, 0.75, 0.65, 0.55, 0.45, 0.35, 0.25, 0.15]
   const clear = (at: Point) => Math.min(Infinity, ...places.map((p) => Math.hypot((p.x - at.x) / span.x, (p.y - at.y) / span.y)))
   const curveNames: PointSpec[] = []
   const named: [number, number, 0 | 1 | 2][] = shifted ? [[X1, Y1, 1], [X2, Y2, 2]] : drawable ? [[X1, Y1, 0]] : []
   for (const [X, Y, k] of named) {
-    const spots = tries.map((f) => turned(X, Y, n, f))
-    const at = spots.find((q) => clear(q) > 0.12) ?? spots.reduce((a, b) => (clear(b) > clear(a) ? b : a))
-    curveNames.push({ at, dot: false, name: curveNamed(name, k), spots: around(outFrom(at, X, Y, n, span), NAME_AT) })
+    const inner = k > 0 && X <= Math.min(X1, X2) && Y <= Math.min(Y1, Y2)
+    const wayAt = (q: Point) => {
+      const out = outFrom(q, X, Y, n, span)
+      return inner ? { x: -out.x, y: -out.y } : out
+    }
+    const along = tries.map((f) => turned(X, Y, n, f))
+    const at = along.find((q) => clear(q) > 0.12) ?? along.reduce((a, b) => (clear(b) > clear(a) ? b : a))
+    const order = [at, ...along.filter((q) => q !== at)]
+    marked.push({ at, way: wayAt(at), dot: false, named: shows(name) })
+    const spots = (q: Point, fs: number, side: boolean) =>
+      order.flatMap((o) => {
+        const d = drawnOff(at, o)
+        return around(wayAt(o), NAME_AT, [side])({ x: q.x + d.x, y: q.y + d.y }, fs)
+      })
+    const label = curveNamed(name, k)
+    const own = traced(X, Y)
+    const other = k === 1 ? traced(X2, Y2) : k === 2 ? traced(X1, Y1) : []
+    curveNames.push({
+      at,
+      dot: false,
+      name: label,
+      spots: (q, fs) => {
+        const all = [...spots(q, fs, true), ...spots(q, fs, false)]
+        const drawn = (w: Point[]) => drawnAlong(at, q, w).map((o) => o.at)
+        return clearOf(all, widthOf(label, fs), fs, { own: drawn(own), others: drawnAlong(at, q, other), margin: fs * 0.5, lines: curveLines.map(drawn) })
+      },
+    })
   }
 
-  // The opportunity cost steps: from each point on the curve down to the next one's level, then across to it.
+  // The opportunity cost steps: from each point on the curve down to the next one's level, then across to it,
+  // what each gives up and gains read off the graph as finely as its grid is counted, so they add up.
   const levels: LevelSpec[] = []
+  const gains: PointSpec[] = []
+  const losses: PointSpec[] = []
   const steps: { from: string; to: string; dx: number; dy: number }[] = []
   if (s.steps && drawable) {
     const on = rows
@@ -244,22 +403,42 @@ function buildOne(s: PpcSettings) {
       .filter(({ r, p }) => r.place === 'on' && p && onGraph(p))
       .sort((a, b) => a.p.x - b.p.x || b.p.y - a.p.y)
     if (on.length < 2) notes.push('Put at least two points on the curve to draw the opportunity cost steps.')
+    const ux = unitOf(axes.x.step, X1)
+    const uy = unitOf(axes.y.step, Y1)
     for (let k = 1; k < on.length; k++) {
       const a = on[k - 1].p
       const b = on[k].p
       if (near(a.x, b.x) && near(a.y, b.y)) continue
       const corner = { x: a.x, y: b.y }
       levels.push({ pts: [a, corner, b], color: ink.black, dash: '6 4' })
-      steps.push({ from: on[k - 1].r.name, to: on[k].r.name, dx: b.x - a.x, dy: a.y - b.y })
-      // Each step's size beside it, where the step is big enough to write it by.
+      const dx = toUnit(toUnit(b.x, ux) - toUnit(a.x, ux), ux)
+      const dy = toUnit(toUnit(a.y, uy) - toUnit(b.y, uy), uy)
+      steps.push({ from: on[k - 1].r.name, to: on[k].r.name, dx, dy })
+      // Each step's size beside it, where the step is big enough to write it by: what each gains placed
+      // first, as it has fewer places to go.
       if (numeric && s.deltas) {
-        if (a.y - b.y > span.y * 0.03) points.push({ at: { x: a.x, y: (a.y + b.y) / 2 }, dot: false, name: words(`−${num(a.y - b.y)}`), spots: besideStep(true) })
-        if (b.x - a.x > span.x * 0.03) points.push({ at: { x: (a.x + b.x) / 2, y: b.y }, dot: false, name: words(`+${num(b.x - a.x)}`), spots: besideStep(false) })
+        if (a.y - b.y > span.y * 0.03 && dy > 0) {
+          const half = (((a.y - b.y) / 2) * CELL) / axes.y.step
+          const name = words(`−${dy}`)
+          // Room for the words inside the step: across from the step down to the curve, just over its
+          // corner (and over what it gains, too, when that's inside it, over the x-axis).
+          const inside = (fs: number) => {
+            const lines = b.y <= box.y0 + 1e-9 ? 2 : 1
+            const top = b.y + ((fs * 1.08 + 3) * lines + 8) / (CELL / axes.y.step)
+            const across = top < a.y ? X1 * Math.pow(Math.max(0, 1 - Math.pow(Math.max(0, top) / Y1, n)), 1 / n) - a.x : 0
+            return (across * CELL) / axes.x.step >= widthOf(name, fs) + 14
+          }
+          losses.push({ at: { x: a.x, y: (a.y + b.y) / 2 }, dot: false, name, spots: besideStep(true, half, inside) })
+        }
+        if (b.x - a.x > span.x * 0.03 && dx > 0) {
+          const half = (((b.x - a.x) / 2) * CELL) / axes.x.step
+          gains.push({ at: { x: (a.x + b.x) / 2, y: b.y }, dot: false, name: words(`+${dx}`), spots: besideStep(false, half) })
+        }
       }
     }
   }
 
-  const spec: PanelSpec = { ...panelBase(s), axes, levels, curves, points: [...points, ...curveNames], guides, arrows, callouts }
+  const spec: PanelSpec = { ...panelBase(s), axes, levels, curves, points: [...points, ...gains, ...losses, ...curveNames], guides, arrows, callouts }
   const x = goodOf(s.xTitle, 'the x-axis good')
   const y = goodOf(s.yTitle, 'the y-axis good')
   return {
@@ -363,7 +542,7 @@ function readoutOne(
   if (s.shape === 'straight' && r.X1 > 0) out.push(`Each unit of ${r.x} costs ${num(r.Y1 / r.X1)} ${r.y}`)
   for (const st of r.steps) {
     const between = st.from && st.to ? `${st.from} to ${st.to}: ` : ''
-    out.push(`${between}${num(st.dy)} ${r.y} given up for ${num(st.dx)} ${r.x}${st.dx > 0 ? ` (${num(st.dy / st.dx)} each)` : ''}`)
+    out.push(`${between}${st.dy} ${r.y} given up for ${st.dx} ${r.x}${st.dx > 0 ? ` (${num(st.dy / st.dx)} each)` : ''}`)
   }
   if (r.shifted) {
     const moves = [!near(r.X1, r.X2) && `${num(r.X1)} to ${num(r.X2)} ${r.x}`, !near(r.Y1, r.Y2) && `${num(r.Y1)} to ${num(r.Y2)} ${r.y}`].filter(Boolean)

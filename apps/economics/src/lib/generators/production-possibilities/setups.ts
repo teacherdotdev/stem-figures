@@ -21,7 +21,7 @@ export const SETUPS: Setup[] = [
   {
     id: 'increasing',
     name: 'Increasing opportunity cost (numbered steps)',
-    settings: { look: 'numeric', bow: 1.5, steps: true, points: 'A,on,0;B,on,0.25;C,on,0.5;D,on,0.75;E,on,1' },
+    settings: { look: 'numeric', bow: 1.5, yMax: 120, steps: true, points: 'A,on,0;B,on,0.25;C,on,0.5;D,on,0.75;E,on,1' },
   },
   { id: 'constant', name: 'Constant opportunity cost', settings: { shape: 'straight', steps: true, points: 'A,on,0;B,on,0.25;C,on,0.5;D,on,0.75;E,on,1' } },
   { id: 'technology', name: 'Technology improves for one good', settings: { shift: 'x', shiftDir: 'out', points: '' } },
