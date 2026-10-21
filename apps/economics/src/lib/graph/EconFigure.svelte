@@ -5,6 +5,7 @@
   // they share.
   import { INK } from '$shared/graph/grid'
   import Panel from './Panel.svelte'
+  import { ARROW_BACK } from './panel'
   import type { FigureLayout } from './figure'
 
   interface Props {
@@ -43,9 +44,9 @@
     <marker id="{id}-circle" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse">
       <circle cx="5" cy="5" r="5" fill={INK} />
     </marker>
-    <!-- Shift arrows' and callouts' heads, their tips at the line's end. -->
+    <!-- Shift arrows' and callouts' heads, their tips where the line would end: Panel stops it ARROW_BACK short. -->
     {#each colors as color, k}
-      <marker id="{id}-arrow-{k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto">
+      <marker id="{id}-arrow-{k}" viewBox="0 0 10 10" refX={10 - ARROW_BACK} refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto">
         <path d="M0,1 L10,5 L0,9 z" fill={color} />
       </marker>
     {/each}

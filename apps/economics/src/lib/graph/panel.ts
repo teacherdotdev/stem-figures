@@ -132,6 +132,8 @@ const DOT_R = 4.5
 const BLANK_W = 46 // a write-on line for a label left blank
 const SIDE_BLANK_W = 36 // the same, at an axis
 const ARROW_GAP = 5 // how far shift arrows stop short of the curves
+/** How far back from its tip an arrowhead's line ends, where the head is wider than the line. */
+export const ARROW_BACK = 3
 const BRACE_DEPTH = 7
 const BRACE_GAP = 6 // between a brace and the line it's under or over
 const ROOM_RIGHT = 56 // past the grid, for curve names at their ends, at medium labels
@@ -170,7 +172,7 @@ export function buildPanel(spec: PanelSpec) {
   const yUnits = spec.every.y && spec.units?.y ? spec.units.y : ''
   const xUnits = spec.every.x && spec.units?.x ? spec.units.x : ''
   const numbersW = base.grid.x - PAD + (yUnits ? textWidth(yUnits, fs) : 0)
-  // An x-axis crossing inside the grid (inflation below 0) has its numbers under it, on the grid.
+  // An x-axis crossing inside the grid (inflation below 0) has its numbers under the grid, as if it ran along its bottom.
   const xInside = base.xAxis.y < base.grid.y + base.grid.h - 0.5
   const numbersH = xInside ? (spec.every.x ? fs + 8 : 0) : base.height - base.grid.y - base.grid.h - PAD
   const title = spec.title && shows(spec.title) ? spec.title : undefined
@@ -266,6 +268,8 @@ export function buildPanel(spec: PanelSpec) {
   const guides: Segment[] = []
   for (const g of spec.guides ?? []) {
     for (const l of guidesFrom(px(g.from), axisX, axisY, { x: g.x, y: g.y })) {
+      // Down to the x-axis's numbers and values under the grid, past an x-axis crossing it.
+      if (xInside && l.x1 === l.x2) l.y2 = gridBottom
       guides.push(l)
       place.line([{ x: l.x1, y: l.y1 }, { x: l.x2, y: l.y2 }])
     }
@@ -321,12 +325,12 @@ export function buildPanel(spec: PanelSpec) {
   )
   for (const m of ys) sideLabel(axisX - numbersW - 7, m.at + LFS * 0.35, 'end', m.name)
   const xMarks = rowsUnder(marks.filter((m) => m.axis === 'x').map((m) => ({ ...m, x: px({ x: m.at, y: box.y0 }).x, half: widthOf(m.name, SIDE_BLANK_W) / 2 })))
-  // Under an x-axis crossing the grid, they go under the grid, clear of the lines running on down to its bottom.
-  const marksFrom = xInside ? Math.max(gridBottom, axisY + numbersH) : axisY + numbersH
+  // Under an x-axis crossing the grid, they go under the grid and its numbers, where the guides run down to.
+  const marksFrom = xInside ? gridBottom + numbersH : axisY + numbersH
   for (const m of xMarks.placed) sideLabel(m.x, marksFrom + LFS + 5 + m.row * X_ROW(LFS), 'middle', m.name)
   const xMarksH = marksFrom - axisY + (xMarks.rows ? LFS + 8 + (xMarks.rows - 1) * X_ROW(LFS) : 0)
 
-  // The numbers, with their units; on the grid (under an x-axis crossing it), labels keep off them and the values there.
+  // The numbers, with their units.
   // Where the axes meet away from 0 (6,000 and 60), each axis's first number
   // is written where its others are: the x-axis's centered under the corner,
   // the y-axis's level with its line, rather than nudged apart as the shared
@@ -337,36 +341,33 @@ export function buildPanel(spec: PanelSpec) {
     const corner = Math.abs(n.x - (base.yAxis.x - 8)) < 0.01
     const onX = n.anchor === 'middle' || corner
     const text = withCommas(n.text)
-    // With the x-axis crossing the grid, the 0 there goes with the y-axis's numbers, clear of those under it.
-    if (corner && xInside) return { ...n, x: base.yAxis.x - 6 + dx, y: base.xAxis.y + fs * 0.35 + dy, text: text + (yUnits || xUnits) }
-    if (corner && liftedY) return { ...n, x: base.yAxis.x + dx, anchor: 'middle' as const, y: n.y + dy, text: text + xUnits }
-    if (n === liftedY) return { ...n, x: n.x + dx, y: base.xAxis.y + fs * 0.35 + dy, text: text + yUnits }
-    return { ...n, x: n.x + dx, y: n.y + dy, text: text + (onX ? xUnits : yUnits) }
+    // With the x-axis crossing the grid, the 0 there goes with the y-axis's numbers, and the others under the grid.
+    if (corner && xInside) return { ...n, x: base.yAxis.x - 6 + dx, y: base.xAxis.y + fs * 0.35 + dy, text: text + (yUnits || xUnits), onX: false }
+    if (corner && liftedY) return { ...n, x: base.yAxis.x + dx, anchor: 'middle' as const, y: n.y + dy, text: text + xUnits, onX: true }
+    if (n === liftedY) return { ...n, x: n.x + dx, y: base.xAxis.y + fs * 0.35 + dy, text: text + yUnits, onX: false }
+    if (onX && !corner && xInside) return { ...n, x: n.x + dx, y: gridBottom + (n.y - base.xAxis.y), text: text + xUnits, onX }
+    return { ...n, x: n.x + dx, y: n.y + dy, text: text + (onX ? xUnits : yUnits), onX: onX && !corner }
   })
-  // Under an x-axis crossing the grid, its numbers sit on the graph: one a
-  // curve, guide, arrow or point runs through goes just above the axis
-  // instead, or is left out if something's there too.
-  const numberBox = (n: (typeof laid)[number]) => textBox({ x: n.x, y: n.y, anchor: n.anchor }, textWidth(n.text, fs), fs)
-  const inTheWay = (b: Box) =>
-    [...drawn, ...guides, ...arrows].some((l) => crosses(l, b)) || dots.some((d) => d.x > b.x0 - DOT_R && d.x < b.x1 + DOT_R && d.y > b.y0 - DOT_R && d.y < b.y1 + DOT_R)
-  const numbers = !xInside
-    ? laid
-    : laid.flatMap((n) => {
-        if (n.anchor !== 'middle' || !inTheWay(numberBox(n))) return [n]
-        const above = { ...n, y: base.xAxis.y + dy - 6 }
-        return inTheWay(numberBox(above)) ? [] : [above]
-      })
-  if (xInside) {
-    for (const n of numbers) place.keep(numberBox(n))
-    for (const l of sideLabels) place.keep(textBox(l, l.runs ? runsWidth(l.runs, LFS) : SIDE_BLANK_W, LFS))
+  // x-axis numbers too wide to fit at every line are written at every
+  // second (or third…), keeping those at the axes' corner, or at 0 if it's
+  // written there.
+  const xs = laid.filter((n) => n.onX && n.anchor === 'middle').sort((a, b) => a.x - b.x)
+  const fromCorner = xs.length > 0 && Math.abs(xs[0].x - axisX) < 0.5 ? 0 : 1
+  const fits = (k: number) => {
+    const kept = xs.filter((_, i) => (i + fromCorner) % k === 0)
+    return kept.every((n, i) => i === 0 || kept[i - 1].x + textWidth(kept[i - 1].text, fs) / 2 + 8 <= n.x - textWidth(n.text, fs) / 2)
   }
+  let step = 1
+  while (step < xs.length && !fits(step)) step++
+  const dropped = new Set(xs.filter((_, i) => (i + fromCorner) % step !== 0))
+  const numbers = laid.filter((n) => !dropped.has(n)).map(({ onX: _, ...n }) => n)
 
   // Labels on the graph, most important first: points, braces, curve names,
   // levels' names, regions' names, then callouts.
   for (const p of spec.points ?? []) {
     if (!shows(p.name)) continue
     const q = px(p.at)
-    put(p.spots ? p.spots(q, LFS) : p.side ? [...overSpots(q, LFS, p.side), ...besidePoint(q, LFS, 9)] : besidePoint(q, LFS, 9), p.name)
+    put(p.spots ? p.spots(q, LFS) : [...(p.side ? overSpots(q, LFS, p.side) : []), ...besidePoint(q, LFS, 9), ...aroundPoint(q, LFS, 15), ...aroundPoint(q, LFS, 22)], p.name)
   }
   for (const b of braces) {
     if (!shows(b.name)) continue
@@ -677,6 +678,25 @@ function insideSpots(poly: Point[], c: Point, fs: number): Spot[] {
  * Places straight over a point (`above`) or under it (`below`), clear of a
  * dot on it, then a little to either side, then further off.
  */
+/**
+ * Places `gap` out from a point in eight directions, the diagonals first:
+ * for a point's name when the places just beside it are all taken, so it
+ * stays near its dot rather than on a line.
+ */
+function aroundPoint(p: Point, fs: number, gap: number): Spot[] {
+  const d = gap * 0.7
+  return [
+    { x: p.x + d, y: p.y - d - fs * 0.3, anchor: 'start' },
+    { x: p.x - d, y: p.y - d - fs * 0.3, anchor: 'end' },
+    { x: p.x + d, y: p.y + d + fs * 0.78, anchor: 'start' },
+    { x: p.x - d, y: p.y + d + fs * 0.78, anchor: 'end' },
+    { x: p.x, y: p.y - gap - fs * 0.3, anchor: 'middle' },
+    { x: p.x, y: p.y + gap + fs * 0.78, anchor: 'middle' },
+    { x: p.x + gap, y: p.y + fs * 0.35, anchor: 'start' },
+    { x: p.x - gap, y: p.y + fs * 0.35, anchor: 'end' },
+  ]
+}
+
 function overSpots(p: Point, fs: number, side: 'above' | 'below'): Spot[] {
   const gap = 9
   const y = side === 'above' ? p.y - gap - fs * 0.3 : p.y + gap + fs * 0.78

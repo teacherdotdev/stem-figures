@@ -1,30 +1,28 @@
 <script lang="ts">
-  // One economics graph, as laid out by panel.ts: shaded regions under the
-  // gridlines' level, the axes, dashed guides, lines across, curves, shift
+  // One economics graph, as laid out by panel.ts: the gridlines, shaded
+  // regions, the axes, dashed guides, lines across, curves, shift
   // arrows, braces, points, callouts and every label, with subscripts
   // lowered. Drawn inside EconFigure's <svg>, which holds the arrowheads and
   // hatching it refers to.
   import { INK, SANS } from '$shared/graph/grid'
   import type { Cap } from '$shared/graph/caps'
-  import type { Label, PanelLayout } from './panel'
+  import { ARROW_BACK, type Label, type PanelLayout } from './panel'
 
   let { p, id, arrowId }: { p: PanelLayout; id: string; arrowId: (color: string) => string } = $props()
 
   const cap = (c: Cap) => (c === 'none' ? undefined : `url(#${id}-${c})`)
   const TINT = 0.2
+  /** An arrow's line, ended where its head is wide enough to cover it (ARROW_BACK short of the tip). */
+  const shortEnd = (l: { x1: number; y1: number; x2: number; y2: number }) => {
+    const len = Math.hypot(l.x2 - l.x1, l.y2 - l.y1) || 1
+    const back = Math.min(ARROW_BACK, len / 2)
+    return { x2: l.x2 - ((l.x2 - l.x1) / len) * back, y2: l.y2 - ((l.y2 - l.y1) / len) * back }
+  }
 </script>
 
 {#snippet words(l: Label, fs: number)}
   {#if l.runs}<text x={l.x} y={l.y} text-anchor={l.anchor} font-size={fs}>{#each l.runs as r}<tspan dy={r.dy || undefined} font-size={r.sub ? fs * 0.7 : undefined}>{r.text}</tspan>{/each}</text>{/if}
 {/snippet}
-
-{#each p.regions as r}
-  {#if r.hatch === null}
-    <path d={r.d} fill={r.color} fill-opacity={TINT} />
-  {:else}
-    <path d={r.d} fill="url(#{id}-hatch-{r.hatch})" />
-  {/if}
-{/each}
 
 {#if p.minorV.length}
   <g stroke="#9ca3af" stroke-width="0.5">
@@ -46,6 +44,16 @@
     {#each p.guides as l}<line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />{/each}
   </g>
 {/if}
+
+<!-- Shaded regions over the gridlines and that white, so a guide across one
+     leaves no pale seam in it. -->
+{#each p.regions as r}
+  {#if r.hatch === null}
+    <path d={r.d} fill={r.color} fill-opacity={TINT} />
+  {:else}
+    <path d={r.d} fill="url(#{id}-hatch-{r.hatch})" />
+  {/if}
+{/each}
 
 <g stroke={INK} stroke-width="2.4">
   <line x1={p.xAxis.x1} y1={p.xAxis.y} x2={p.xAxis.x2} y2={p.xAxis.y} marker-end={cap(p.ends.x)} />
@@ -74,7 +82,7 @@
 {/each}
 
 {#each p.arrows as a}
-  <line x1={a.x1} y1={a.y1} x2={a.x2} y2={a.y2} stroke={a.color} stroke-width="2" marker-end="url(#{arrowId(a.color)})" />
+  <line x1={a.x1} y1={a.y1} {...shortEnd(a)} stroke={a.color} stroke-width="2" marker-end="url(#{arrowId(a.color)})" />
 {/each}
 
 {#if p.braces.length}
@@ -84,7 +92,7 @@
 {/if}
 
 {#each p.leaders as l}
-  <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={INK} stroke-width="1.4" marker-end="url(#{arrowId(INK)})" />
+  <line x1={l.x1} y1={l.y1} {...shortEnd(l)} stroke={INK} stroke-width="1.4" marker-end="url(#{arrowId(INK)})" />
 {/each}
 
 {#each p.dots as d}<circle cx={d.x} cy={d.y} r={p.r} fill={INK} />{/each}
