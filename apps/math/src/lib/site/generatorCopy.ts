@@ -700,6 +700,46 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school'],
   },
 
+  'two-way-table': {
+    heading: 'Two-way tables with totals, blanks and relative frequencies',
+    intro: [
+      'The Two-Way Table Generator draws a two-way table from the counts you type or paste: one category down the side, like Year 7, Year 8 and Year 9, and another across the top, like Walk, Bus and Car, with a Total column, a Total row and the grand total. Title the variables across the top and down the side, or put both in a corner split by a diagonal.',
+      'Every cell, totals included, is written as you type it. Leave a cell empty and it’s blank on the table, or type a letter like x, for students to find. Work out totals fills in the totals the counts give, and the panel says whether the missing values can be worked out from the cells shown, and what each one is. Switch to relative frequencies of the grand total, of each row or of each column, written as decimals, percents or fractions.',
+    ],
+    settings: [
+      'The table: row categories down the side and column categories across the top, typed or pasted from a spreadsheet, totals included',
+      'A Total column and a Total row, each on or off, filled in for you or typed',
+      'Any cell left blank or written as a letter, and whether the missing values can be worked out from the rest',
+      'Counts, or relative frequencies of the grand total, each row or each column, as decimals or percents rounded to a set number of places, or as fractions in lowest terms',
+      'A table title, as text or a blank line for students, and a title for each variable, outside the table or in a corner split by a diagonal',
+      'Gray or plain headings, lines round every cell or only under the headings and before the totals, and totals in bold',
+    ],
+    faqs: [
+      {
+        q: 'How do I leave cells for students to fill in?',
+        a: 'Leave them empty. An empty cell is blank on the table, totals included. Type a letter like x instead to label one for an equation. Under the table, the panel says whether every missing value can be worked out from the cells shown, and gives each one.',
+      },
+      {
+        q: 'Do I have to type the totals?',
+        a: 'No. Type the counts and click Work out totals, which fills in every total it can. Then empty any total that students should work out.',
+      },
+      {
+        q: 'Can it show relative frequencies?',
+        a: 'Yes. Choose Relative frequencies at the top of the table, then whether each cell is divided by the grand total (joint relative frequencies), by its row’s total or by its column’s total (conditional relative frequencies). They’re written as decimals or percents, rounded as you choose, or as fractions in lowest terms. You still type the counts.',
+      },
+      {
+        q: 'Can I paste a table from a spreadsheet?',
+        a: 'Yes. Copy the cells in Excel or Google Sheets, with the row names in the first column and the column headings in the first row, and paste anywhere in the table. A last column headed Total and a last row named Total become the totals.',
+      },
+      {
+        q: 'How do I split the corner with a diagonal?',
+        a: 'Type the titles under Titles, such as Transport across the top and Year down the side, then choose Split by a diagonal under Corner. Both titles go in the corner cell, on either side of the line.',
+      },
+    ],
+    imageAlt: 'A printable two-way table of how students in Years 7, 8 and 9 travel to school, by walking, bus or car, with totals and some cells left blank, made with the Two-Way Table Generator',
+    educationalLevel: ['Middle school', 'High school', 'Algebra 1'],
+  },
+
   'mapping-diagram': {
     heading: 'Mapping diagrams for functions and relations',
     intro: [

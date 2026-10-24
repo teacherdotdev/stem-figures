@@ -13,6 +13,7 @@ import type { Settings as NumberLineSettings } from '$lib/generators/number-line
 import type { Settings as PolygonSettings } from '$lib/generators/regular-polygon/settings'
 import type { Settings as StemAndLeafSettings } from '$lib/generators/stem-and-leaf/settings'
 import type { Settings as TriangleSettings } from '$lib/generators/triangle/settings'
+import type { Settings as TwoWayTableSettings } from '$lib/generators/two-way-table/settings'
 import type { Settings as QuadrilateralSettings } from '$lib/shapes/quadrilateral/settings'
 
 /** Each generator's settings, by generator id. */
@@ -34,6 +35,7 @@ export interface SettingsById {
   'bar-graph': BarGraphSettings
   'stem-and-leaf': StemAndLeafSettings
   'cumulative-frequency': CumulativeSettings
+  'two-way-table': TwoWayTableSettings
   'mapping-diagram': MappingSettings
   'length-reading': LengthSettings
 }

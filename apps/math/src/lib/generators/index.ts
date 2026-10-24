@@ -8,6 +8,7 @@ import { generatorsOn } from '$shared/catalog/index.js'
 import { SITE_ID } from '$lib/site/config.js'
 import AnglesPreview from './angles/Preview.svelte'
 import BarGraphPreview from './bar-graph/Preview.svelte'
+import TwoWayTablePreview from './two-way-table/Preview.svelte'
 import BoxPlotPreview from './box-plot/Preview.svelte'
 import CumulativeFrequencyPreview from './cumulative-frequency/Preview.svelte'
 import CompositeShapePreview from '$lib/editors/composite-shape/Preview.svelte'
@@ -50,6 +51,7 @@ export const PREVIEWS: Record<string, Component> = {
   'bar-graph': BarGraphPreview,
   'stem-and-leaf': StemAndLeafPreview,
   'cumulative-frequency': CumulativeFrequencyPreview,
+  'two-way-table': TwoWayTablePreview,
   'mapping-diagram': MappingDiagramPreview,
   'length-reading': LengthReadingPreview,
   'composite-shape': CompositeShapePreview,

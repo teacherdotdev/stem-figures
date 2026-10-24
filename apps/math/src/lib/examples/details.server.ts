@@ -26,6 +26,7 @@ import * as polygon from '$lib/generators/regular-polygon/settings'
 import * as stemAndLeaf from '$lib/generators/stem-and-leaf/settings'
 import { family as trapezoidFamily } from '$lib/generators/trapezoid/family'
 import * as triangle from '$lib/generators/triangle/settings'
+import * as twoWay from '$lib/generators/two-way-table/settings'
 import * as shapeParts from '$lib/shapes/parts'
 import * as quadKinds from '$lib/shapes/quadrilateral/kinds'
 import * as quad from '$lib/shapes/quadrilateral/settings'
@@ -314,6 +315,18 @@ function cumulativeAnswer(s: SettingsById['cumulative-frequency']): ExampleDetai
   return lines.length ? { heading: 'Answer key', lines } : null
 }
 
+function twoWayAnswer(s: SettingsById['two-way-table']): ExampleDetails['answer'] {
+  const read = twoWay.readTwoWay(s)
+  const problem = read.problems.sums ?? read.problems.relative ?? read.problems.fractions
+  if (problem) throw new Error(`The two-way table example can’t be drawn as written: ${problem}`)
+  // Each cell left blank (or written as a letter), as the generator's panel
+  // works it out. A blank table, filled in from a description, has none.
+  const found = read.missing.filter((m) => m.value !== null)
+  if (!found.length) return null
+  if (found.length < read.missing.length) throw new Error('The two-way table example has a missing value that can’t be worked out')
+  return { heading: 'Answer key', lines: found.map((m) => `${m.name}: ${m.typed ? `${m.typed} = ` : ''}${m.value}`) }
+}
+
 function mappingAnswer(s: SettingsById['mapping-diagram']): ExampleDetails['answer'] {
   const map = mapping.readMapping(s)
   if (!map.inputs.length || !map.outputs.length) throw new Error('The mapping diagram example has no inputs or outputs')
@@ -341,6 +354,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'bar-graph': { definition: definitionOf(barGraph), answer: barGraphAnswer },
   'stem-and-leaf': { definition: definitionOf(stemAndLeaf), answer: stemAndLeafAnswer },
   'cumulative-frequency': { definition: definitionOf(cumulative), answer: cumulativeAnswer },
+  'two-way-table': { definition: definitionOf(twoWay), answer: twoWayAnswer },
   'mapping-diagram': { definition: definitionOf(mapping), answer: mappingAnswer },
   'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthAnswer(s).split(' · ') }) },
 }

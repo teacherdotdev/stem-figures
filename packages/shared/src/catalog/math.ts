@@ -308,6 +308,22 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'two-way-table',
+    site: 'math',
+    name: 'Two-Way Table Generator',
+    path: '/two-way-table',
+    blurb: 'Two-way tables with totals, cells left blank for students, and relative frequencies.',
+    description:
+      'Two-way tables typed or pasted, with row and column totals, any cell left blank or written as a letter, and counts or relative frequencies of the grand total, each row or each column, as decimals, percents or fractions.',
+    keywords: [
+      'two-way table', 'two way table', 'two-way tables', 'two way tables', 'two-way frequency table', 'contingency table',
+      'relative frequency', 'relative frequency table', 'joint relative frequency', 'marginal relative frequency',
+      'conditional relative frequency', 'row totals', 'column totals', 'totals', 'fill in the table', 'missing values',
+      'probability', 'conditional probability', 'categorical data', 'frequency table', 'statistics', 'stats', '8.sp.a.4',
+      'printable',
+    ],
+  },
+  {
     id: 'mapping-diagram',
     site: 'math',
     name: 'Mapping Diagram Generator',
