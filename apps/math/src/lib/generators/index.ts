@@ -22,6 +22,7 @@ import MappingDiagramPreview from './mapping-diagram/Preview.svelte'
 import NumberLinePreview from './number-line/Preview.svelte'
 import ParallelLinesPreview from './parallel-lines/Preview.svelte'
 import ParallelogramPreview from './parallelogram/Preview.svelte'
+import PieChartPreview from './pie-chart/Preview.svelte'
 import PrismPreview from './prism/Preview.svelte'
 import PyramidPreview from './pyramid/Preview.svelte'
 import RectanglePreview from './rectangle/Preview.svelte'
@@ -56,6 +57,7 @@ export const PREVIEWS: Record<string, Component> = {
   'two-way-table': TwoWayTablePreview,
   'histogram': HistogramPreview,
   'venn-diagram': VennDiagramPreview,
+  'pie-chart': PieChartPreview,
   'mapping-diagram': MappingDiagramPreview,
   'length-reading': LengthReadingPreview,
   'composite-shape': CompositeShapePreview,

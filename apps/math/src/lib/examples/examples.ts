@@ -1331,6 +1331,119 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('pie-chart', [
+    {
+      slug: 'pie-chart-of-favorite-fruit',
+      title: 'Pie chart of favorite fruit with percents',
+      alt: 'A pie chart titled Favorite fruit with a colored sector for each of four fruits, each labeled with its name and percent',
+      caption:
+        'A pie chart titled Favorite fruit, with its sectors running clockwise from 12 o’clock: Apples in blue, Bananas in red, Cherries in green and Grapes in orange. Each sector is labeled inside with its name and percent: 40%, 26.7%, 20% and 13.3%.',
+      settings: {
+        rows: [
+          { name: 'Apples', cells: [{ value: '12' }] },
+          { name: 'Bananas', cells: [{ value: '8' }] },
+          { name: 'Cherries', cells: [{ value: '6' }] },
+          { name: 'Grapes', cells: [{ value: '4' }] },
+        ],
+        labels: 'name-percent',
+        title: 'Favorite fruit',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'circle-graph-of-how-students-travel-to-school-with-a-key',
+      title: 'Circle graph of how students travel to school, with a key',
+      alt: 'A circle graph of how students travel to school, each sector labeled with its percent, and a key on the right naming them',
+      caption:
+        'A circle graph titled How we get to school, with sectors for Walk, Car, Bus and Bike in blue, red, green and orange, clockwise from 12 o’clock. Each sector is labeled with its percent only, 35%, 30%, 25% and 10%, and a key on the right names the colors.',
+      settings: {
+        rows: [
+          { name: 'Walk', cells: [{ value: '35' }] },
+          { name: 'Car', cells: [{ value: '30' }] },
+          { name: 'Bus', cells: [{ value: '25' }] },
+          { name: 'Bike', cells: [{ value: '10' }] },
+        ],
+        values: 'percent',
+        labels: 'percent',
+        keyAt: 'right',
+        title: 'How we get to school',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'pie-chart-with-fractions-how-sam-spends-a-day',
+      title: 'Pie chart with fractions: how Sam spends a day',
+      alt: 'A black-and-white pie chart of how Sam spends 24 hours, each sector labeled with its activity and its fraction of the day',
+      caption:
+        'A black-and-white pie chart titled How Sam spends a day, with sectors in gray, white, hatching, dots, cross-hatching and back hatching for Sleep 3/8, School 1/4, Play 1/8, Homework 1/12, Meals 1/12 and Other 1/12. Each is labeled with its name and fraction of the day, inside its sector except Homework, which is labeled outside with a short leader line.',
+      settings: {
+        rows: [
+          { name: 'Sleep', cells: [{ value: '9' }] },
+          { name: 'School', cells: [{ value: '6' }] },
+          { name: 'Play', cells: [{ value: '3' }] },
+          { name: 'Homework', cells: [{ value: '2' }] },
+          { name: 'Meals', cells: [{ value: '2' }] },
+          { name: 'Other', cells: [{ value: '2' }] },
+        ],
+        labels: 'name-fraction',
+        look: 'bw',
+        title: 'How Sam spends a day',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'pie-chart-find-the-missing-angle-x',
+      title: 'Pie chart: find the missing angle x',
+      alt: 'A black-and-white pie chart of Red, Blue, Green and Yellow with each angle marked at the center, 110°, 80° and 100°, and Yellow’s marked x°',
+      caption:
+        'A black-and-white pie chart of four sectors named Red, Blue, Green and Yellow, with a dot at the center and an arc there marking each angle: 110°, 80° and 100°, and x° for Yellow. Students find x from the angles around a point adding up to 360°.',
+      settings: {
+        rows: [
+          { name: 'Red', cells: [{ value: '110' }] },
+          { name: 'Blue', cells: [{ value: '80' }] },
+          { name: 'Green', cells: [{ value: '100' }] },
+          { name: 'Yellow', cells: [{ value: '70' }] },
+        ],
+        values: 'degrees',
+        sectorLabels: ['', '', '', 'letter'],
+        look: 'bw',
+        angleMarks: 'measures',
+      },
+    },
+    {
+      slug: 'complete-the-pie-chart-favorite-sports',
+      title: 'Complete the pie chart: favorite sports',
+      alt: 'A pie chart of the favorite sports of 60 students with only Soccer, 120°, and Basketball, 90°, drawn and the rest of the circle left empty',
+      caption:
+        'A pie chart titled Favorite sports of 60 students with only two sectors drawn, clockwise from 12 o’clock: Soccer in blue, labeled 120°, and Basketball in red, labeled 90°. The other 150° of the circle is left as one empty sector, with a dot at the center, for students to complete.',
+      settings: {
+        rows: [
+          { name: 'Soccer', cells: [{ value: '20' }] },
+          { name: 'Basketball', cells: [{ value: '15' }] },
+          { name: 'Tennis' },
+          { name: 'Swimming' },
+        ],
+        total: '60',
+        labels: 'name-angle',
+        title: 'Favorite sports of 60 students',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'blank-circle-for-drawing-a-pie-chart',
+      title: 'Blank circle for drawing a pie chart',
+      alt: 'A blank circle with its center marked and a radius drawn up to 12 o’clock, and a key of four pets with black-and-white fills',
+      caption:
+        'A blank circle with a dot at its center and one radius drawn up to 12 o’clock, under a blank line for the title. A key on the right gives Dog gray, Cat white, Fish hatching and Rabbit dots, for students to draw and shade a pie chart from a table.',
+      settings: {
+        rows: [{ name: 'Dog' }, { name: 'Cat' }, { name: 'Fish' }, { name: 'Rabbit' }],
+        look: 'bw',
+        keyAt: 'right',
+        titleMode: 'blank',
+      },
+    },
+  ]),
+
   ...examplesOf('mapping-diagram', [
     {
       slug: 'mapping-diagram-of-a-function',

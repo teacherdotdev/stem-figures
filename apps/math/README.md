@@ -64,6 +64,12 @@ and `docs/adr/` for decisions.
   the universal set (two overlapping, separate or one inside the other), with a
   number, a letter or expression, or the sorted elements of typed lists in each
   region, and regions shaded by clicking them on the figure.
+- `/pie-chart` **Pie Chart Generator**: a table of counts, percents or
+  degrees typed or pasted, drawn as sectors clockwise from 12 o'clock, labeled
+  inside or outside by name, value, percent, angle or fraction (each sector's
+  own label can be a blank line or a letter), with angle marks at the center,
+  a key, and color or black-and-white fills. A value left empty leaves its
+  share as one empty sector; a table with no values draws a blank circle.
 - `/<generator>/examples/<slug>` **Example figures** (see below), and
   `/reuse`, how teachers may reuse them.
 - `/about`, `/privacy`, `/sitemap.xml`, `/robots.txt`

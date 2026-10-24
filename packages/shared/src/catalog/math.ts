@@ -355,6 +355,20 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'pie-chart',
+    site: 'math',
+    name: 'Pie Chart Generator',
+    path: '/pie-chart',
+    blurb: 'Pie charts from a table, with sectors labeled by name, value, percent or angle.',
+    description:
+      'Pie charts from a table you type or paste, of counts, percents or degrees: sectors labeled by name, value, percent, angle or fraction, angle marks at the center, a key, color or black-and-white fills, and blank circles or charts left partly drawn.',
+    keywords: [
+      'pie chart', 'pie charts', 'pie graph', 'circle graph', 'circle graphs', 'sector', 'sectors', 'slice', 'slices',
+      'angle', 'angles', 'degrees', '360', 'percentage', 'percent', 'proportion', 'fraction',
+      'categorical data', 'key', 'legend', 'protractor', 'statistics', 'data display', 'printable',
+    ],
+  },
+  {
     id: 'mapping-diagram',
     site: 'math',
     name: 'Mapping Diagram Generator',

@@ -20,6 +20,9 @@
   // total where they meet, each shown while `totalColumn` or `totalRow` is
   // on. Pasting a block whose last column is headed Total, or whose last row
   // is named Total, fills them and turns them on.
+  //
+  // With `valueHeading` the table has one column of values only, under that
+  // fixed heading, and no + column (a pie chart's one value per category).
   import { tick } from 'svelte'
   import { MAX_COLUMNS, MAX_ROWS, blankCell, blankRow, parsePasted, parsePastedTotals, type TableRow } from './table'
 
@@ -40,6 +43,8 @@
     fixed?: boolean
     /** the most value columns the table takes, for a table with one column of values (a frequency table) */
     maxColumns?: number
+    /** one value column only, under this heading, with no + column */
+    valueHeading?: string
     /** each row's total, one per row, for a table that takes totals */
     rowTotals?: string[]
     /** each column's total, one per column */
@@ -50,16 +55,20 @@
     totalRow?: boolean
     /** "text" when a value can be a letter as well as a number */
     inputmode?: 'decimal' | 'text'
+    /** called with a row's index when it's removed, for settings kept per row */
+    onremoverow?: (i: number) => void
+    /** called when a paste replaces the whole table */
+    onreplace?: () => void
   }
   let {
     id, columns = $bindable(), rows = $bindable(), errors = $bindable(false),
-    rowName, columnName, placeholders = {}, onremovecolumn, fixed = false, maxColumns = MAX_COLUMNS,
+    rowName, columnName, placeholders = {}, onremovecolumn, fixed = false, maxColumns = MAX_COLUMNS, valueHeading,
     rowTotals = $bindable(), columnTotals = $bindable(), grand = $bindable(''),
-    totalColumn = $bindable(false), totalRow = $bindable(false), inputmode = 'decimal',
+    totalColumn = $bindable(false), totalRow = $bindable(false), inputmode = 'decimal', onremoverow, onreplace,
   }: Props = $props()
 
   let table = $state<HTMLElement>()
-  const canAddColumn = $derived(!fixed && columns.length < maxColumns)
+  const canAddColumn = $derived(!fixed && valueHeading === undefined && columns.length < maxColumns)
   const canAddRow = $derived(rows.length < MAX_ROWS)
   const takesTotals = $derived(!!rowTotals && !!columnTotals)
   const showTotalColumn = $derived(takesTotals && totalColumn)
@@ -126,6 +135,7 @@
     }
     const keep = rows.map((r, i) => !blankRowAt(r, i))
     if (keep.includes(false)) {
+      if (onremoverow) for (let i = rows.length - 1; i >= 0; i--) if (!keep[i]) onremoverow(i)
       if (rowTotals) rowTotals = rows.flatMap((_, i) => (keep[i] ? [rowTotals![i] ?? ''] : []))
       rows = rows.filter((_, i) => keep[i])
     }
@@ -146,8 +156,10 @@
     const pasted = totals ?? parsePasted(text)
     if (!pasted || !pasted.rows.length) return
     e.preventDefault()
-    const n = fixed ? columns.length : Math.min(maxColumns, pasted.columns?.length ?? Math.max(1, ...pasted.rows.map((r) => r.cells.length)))
-    if (!fixed) columns = pasted.columns?.slice(0, n) ?? Array.from({ length: n }, (_, j) => columns[j] ?? '')
+    const single = valueHeading !== undefined
+    const n = fixed ? columns.length : single ? 1 : Math.min(maxColumns, pasted.columns?.length ?? Math.max(1, ...pasted.rows.map((r) => r.cells.length)))
+    if (single) columns = columns.slice(0, 1)
+    else if (!fixed) columns = pasted.columns?.slice(0, n) ?? Array.from({ length: n }, (_, j) => columns[j] ?? '')
     rows = pasted.rows.map((r) => ({ ...r, cells: Array.from({ length: n }, (_, j) => r.cells[j] ?? blankCell()) }))
     if (rows.some((r) => r.cells.some((c) => c.error))) errors = true
     if (totals) {
@@ -158,9 +170,10 @@
       if (totals.rowTotals) totalColumn = true
       if (totals.columnTotals) totalRow = true
     }
+    onreplace?.()
   }
 
-  const columnLabel = (j: number) => columns[j]?.trim() || `${columnName} ${j + 1}`
+  const columnLabel = (j: number) => valueHeading ?? (columns[j]?.trim() || `${columnName} ${j + 1}`)
   const rowLabel = (i: number) => rows[i]?.name.trim() || `${rowName} ${i + 1}`
   // The columns of values, the Total column counted in.
   const valueColumns = $derived(columns.length + (showTotalColumn ? 1 : 0))
@@ -186,6 +199,8 @@
           <th scope="col" class:fixed>
             {#if fixed}
               {columns[j]}
+            {:else if valueHeading !== undefined}
+              <span class="fixed">{valueHeading}</span>
             {:else}
               <input
                 type="text" class="heading" id={headId(j)} aria-label="{columnName} {j + 1} heading"
@@ -314,6 +329,7 @@
   table input:focus { outline: 2px solid var(--blue); outline-offset: -2px; background: #fff; }
   table input::placeholder { color: #9aa3b2; font-weight: 400; }
   .heading { font-weight: 700; }
+  .fixed { display: block; padding: 0 0.55rem; font-weight: 700; text-align: right; line-height: 2.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .value { text-align: right; font-variant-numeric: tabular-nums; }
   th.new, td.new, tr.new > * { background: #fff; border: 1px dashed #c9cfd8; }
   tr.new input::placeholder, th.new input::placeholder { color: var(--blue-dark); opacity: 0.75; }
