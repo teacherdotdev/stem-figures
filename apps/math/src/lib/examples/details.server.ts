@@ -21,6 +21,7 @@ import * as numberLine from '$lib/generators/number-line/settings'
 import { family as parallelogramFamily } from '$lib/generators/parallelogram/family'
 import { family as rectangleFamily } from '$lib/generators/rectangle/family'
 import * as polygon from '$lib/generators/regular-polygon/settings'
+import * as stemAndLeaf from '$lib/generators/stem-and-leaf/settings'
 import { family as trapezoidFamily } from '$lib/generators/trapezoid/family'
 import * as triangle from '$lib/generators/triangle/settings'
 import * as shapeParts from '$lib/shapes/parts'
@@ -285,6 +286,15 @@ function barGraphAnswer(s: SettingsById['bar-graph']): ExampleDetails['answer'] 
   return null
 }
 
+function stemAndLeafAnswer(s: SettingsById['stem-and-leaf']): ExampleDetails['answer'] {
+  const read = stemAndLeaf.readPlot(s)
+  const problem = Object.values(read.problems).find(Boolean)
+  if (problem) throw new Error(`The stem-and-leaf example can’t be drawn as written: ${problem}`)
+  // Each data set's numbers, as the generator's readout gives them; a blank plot has none.
+  const lines = read.sets.flatMap((set) => (set.summary ? [`${read.back && set.name ? `${set.name}: ` : ''}${stemAndLeaf.readoutOf(set)}`] : []))
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
 function mappingAnswer(s: SettingsById['mapping-diagram']): ExampleDetails['answer'] {
   const map = mapping.readMapping(s)
   if (!map.inputs.length || !map.outputs.length) throw new Error('The mapping diagram example has no inputs or outputs')
@@ -310,6 +320,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'sphere': { definition: definitionOf(solidSettings('sphere')), answer: solidAnswer },
   'box-plot': { definition: definitionOf(boxPlot), answer: boxPlotAnswer },
   'bar-graph': { definition: definitionOf(barGraph), answer: barGraphAnswer },
+  'stem-and-leaf': { definition: definitionOf(stemAndLeaf), answer: stemAndLeafAnswer },
   'mapping-diagram': { definition: definitionOf(mapping), answer: mappingAnswer },
   'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthAnswer(s).split(' · ') }) },
 }

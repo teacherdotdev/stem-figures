@@ -363,12 +363,24 @@ A line through the end of a bar from its value minus a ± amount to its value pl
 _Avoid_: Whisker (that's a box plot's), uncertainty bar, confidence interval (fine in teaching)
 
 **Key**:
-The list beside or under a figure pairing each fill with what it stands for, such as each series of a bar graph.
+The list beside or under a figure pairing each fill with what it stands for, such as each series of a bar graph; on a stem-and-leaf plot, the example under it that says what a stem and leaf stand for, such as 3 | 4 = 34 cm.
 _Avoid_: Legend (fine as a search word)
 
 **Fill**:
 How a bar is colored in: one of the graph inks, or a black-and-white fill (gray, white, hatching, dots, cross-hatching) that still tells the series apart once photocopied. A figure's look gives the series fills in turn, and the teacher can pick one for any series.
 _Avoid_: Pattern, shading (that's an angle's or a region's), color (for the black-and-white ones)
+
+**Stem-and-Leaf Plot**:
+A figure of a data set written as numbers: a column of stems down the left, a line, and each value's leaf written across its stem's row in even columns, so the rows' lengths compare like bars, with a key under it such as 3 | 4 = 34. Back-to-back, two data sets share the stems, one set's leaves running left and the other's right. Its generator is the Stem-and-Leaf Plot Generator.
+_Avoid_: Stem and leaf diagram, stemplot (fine as search words, not as the name)
+
+**Stem**:
+Every digit of a value before its leaf, written once for its row, such as 3 for 34, 2 for 2.3, or −0 for −4. Every stem from the lowest to the highest has a row, even an empty one. Split stems take two rows each (leaves 0–4, then 5–9) or five; a negative stem's rows run the other way, so the plot always reads from the smallest value to the largest.
+_Avoid_: Row (a split stem has several), category
+
+**Leaf**:
+A value's digit at the leaf unit, written on its stem's row. The leaf unit is the last digit typed unless the teacher picks one, and digits past it are cut off, not rounded. Leaves go in order outward from the stem (so a negative stem's biggest digit comes first), or as typed.
+_Avoid_: Last digit (fine in speech), unit digit
 
 **Histogram**:
 A figure of touching bars over a numbered axis, one bar per bin, whose heights show how many values fall in each bin. Its generator is the Histogram Generator.

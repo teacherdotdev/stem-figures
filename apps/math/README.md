@@ -37,6 +37,10 @@ and `docs/adr/` for decisions.
   each row, a series in each column), drawn as upright columns or sideways
   bars, side by side or stacked, with values on the bars, ± error bars, a key,
   color or black-and-white fills. A value left empty draws no bar.
+- `/stem-and-leaf` **Stem-and-Leaf Plot Generator**: one data set, or two
+  back to back, split into stems and leaves at a leaf unit (digits past it
+  cut off), with split stems, negative stems, leaves in order or as typed,
+  leaves in boxes and a key. With no data it draws empty rows or boxes.
 - `/<generator>/examples/<slug>` **Example figures** (see below), and
   `/reuse`, how teachers may reuse them.
 - `/about`, `/privacy`, `/sitemap.xml`, `/robots.txt`

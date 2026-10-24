@@ -278,6 +278,20 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'stem-and-leaf',
+    site: 'math',
+    name: 'Stem-and-Leaf Plot Generator',
+    path: '/stem-and-leaf',
+    blurb: 'Stem-and-leaf plots from a data set, single or back-to-back, with a key.',
+    description:
+      'Stem-and-leaf plots from a data set you type or paste: single or back-to-back, with split stems, decimal or negative stems, leaves in order or as typed, leaves in boxes, a key, and empty rows or boxes for students to fill in.',
+    keywords: [
+      'stem and leaf', 'stem-and-leaf plot', 'stem and leaf plot', 'stem and leaf diagram', 'stem-and-leaf display', 'stemplot', 'stem plot',
+      'back-to-back stem and leaf', 'back to back', 'leaves', 'stems', 'key', 'ordered stem and leaf', 'split stems',
+      'median', 'mode', 'range', 'quartiles', 'data set', 'statistics', 'data display', 'printable',
+    ],
+  },
+  {
     id: 'mapping-diagram',
     site: 'math',
     name: 'Mapping Diagram Generator',

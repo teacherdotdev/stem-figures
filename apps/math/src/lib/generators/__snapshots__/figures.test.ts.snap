@@ -43283,6 +43283,2790 @@ exports[`regular polygon > size=x 1`] = `
 }
 `;
 
+exports[`stem-and-leaf plot >  1`] = `
+{
+  "figure": {
+    "blanks": [],
+    "boxes": [],
+    "fs": 20,
+    "headFs": 17,
+    "headings": [
+      {
+        "anchor": "end",
+        "text": "Stem",
+        "x": 57.57,
+        "y": 33,
+      },
+      {
+        "anchor": "start",
+        "text": "Leaf",
+        "x": 82.51,
+        "y": 33,
+      },
+    ],
+    "height": 254.75,
+    "key": {
+      "text": "3 | 4 = 34",
+      "x": 58.19,
+      "y": 231.55,
+    },
+    "keyFs": 18,
+    "leaves": [],
+    "lines": [
+      {
+        "x1": 67.57,
+        "x2": 67.57,
+        "y1": 42.35,
+        "y2": 200.35,
+      },
+      {
+        "x1": 12,
+        "x2": 234.57,
+        "y1": 42.35,
+        "y2": 42.35,
+      },
+    ],
+    "read": {
+      "auto": 1,
+      "back": false,
+      "boxes": 0,
+      "fitted": {
+        "from": "",
+        "to": "",
+      },
+      "key": {
+        "leaves": [
+          "4",
+        ],
+        "stem": "3",
+        "values": [
+          "34",
+        ],
+      },
+      "problems": {
+        "boxCount": null,
+        "data": null,
+        "data2": null,
+        "from": null,
+        "key": null,
+        "to": null,
+        "unit": null,
+      },
+      "rows": [
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 0,
+          "stem": "",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 1,
+          "stem": "",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 2,
+          "stem": "",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 3,
+          "stem": "",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 4,
+          "stem": "",
+        },
+      ],
+      "sets": [
+        {
+          "count": 0,
+          "cut": [],
+          "modes": [],
+          "name": "",
+          "placed": [],
+          "problem": null,
+          "summary": null,
+        },
+      ],
+      "split": 1,
+      "unit": 1,
+    },
+    "stems": [
+      {
+        "anchor": "end",
+        "text": "",
+        "x": 57.57,
+        "y": 69.55,
+      },
+      {
+        "anchor": "end",
+        "text": "",
+        "x": 57.57,
+        "y": 99.55,
+      },
+      {
+        "anchor": "end",
+        "text": "",
+        "x": 57.57,
+        "y": 129.55,
+      },
+      {
+        "anchor": "end",
+        "text": "",
+        "x": 57.57,
+        "y": 159.55,
+      },
+      {
+        "anchor": "end",
+        "text": "",
+        "x": 57.57,
+        "y": 189.55,
+      },
+    ],
+    "title": null,
+    "titleFs": 25,
+    "width": 246.57,
+  },
+  "query": "",
+}
+`;
+
+exports[`stem-and-leaf plot > data=-12%2C-8%2C-1%2C0%2C4%2C15&split=5&keyMode=blank&labelSize=large 1`] = `
+{
+  "figure": {
+    "blanks": [
+      {
+        "x1": 84.34,
+        "x2": 278.94,
+        "y1": 737.77,
+        "y2": 737.77,
+      },
+    ],
+    "boxes": [],
+    "fs": 28,
+    "headFs": 23.8,
+    "headings": [
+      {
+        "anchor": "end",
+        "text": "Stem",
+        "x": 121.96,
+        "y": 39.8,
+      },
+      {
+        "anchor": "start",
+        "text": "Leaf",
+        "x": 156.88,
+        "y": 39.8,
+      },
+    ],
+    "height": 763.85,
+    "key": {
+      "text": "",
+      "x": 16,
+      "y": 737.77,
+    },
+    "keyFs": 25.2,
+    "leaves": [
+      {
+        "anchor": "middle",
+        "text": "2",
+        "x": 164.66,
+        "y": 90.97,
+      },
+      {
+        "anchor": "middle",
+        "text": "8",
+        "x": 164.66,
+        "y": 174.97,
+      },
+      {
+        "anchor": "middle",
+        "text": "1",
+        "x": 164.66,
+        "y": 342.97,
+      },
+      {
+        "anchor": "middle",
+        "text": "0",
+        "x": 164.66,
+        "y": 384.97,
+      },
+      {
+        "anchor": "middle",
+        "text": "4",
+        "x": 164.66,
+        "y": 468.97,
+      },
+      {
+        "anchor": "middle",
+        "text": "5",
+        "x": 164.66,
+        "y": 678.97,
+      },
+    ],
+    "lines": [
+      {
+        "x1": 135.96,
+        "x2": 135.96,
+        "y1": 52.89,
+        "y2": 694.09,
+      },
+      {
+        "x1": 58.17,
+        "x2": 236.76,
+        "y1": 52.89,
+        "y2": 52.89,
+      },
+    ],
+    "read": {
+      "auto": 1,
+      "back": false,
+      "boxes": 0,
+      "fitted": {
+        "from": "−1",
+        "to": "1",
+      },
+      "key": {
+        "leaves": [
+          "2",
+        ],
+        "stem": "−1",
+        "values": [
+          "−12",
+        ],
+      },
+      "problems": {
+        "boxCount": null,
+        "data": null,
+        "data2": null,
+        "from": null,
+        "key": null,
+        "to": null,
+        "unit": null,
+      },
+      "rows": [
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 2,
+                "negative": true,
+                "row": -7,
+                "stem": 1,
+                "value": -12,
+              },
+            ],
+          ],
+          "row": -7,
+          "stem": "−1",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": -6,
+          "stem": "−1",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 8,
+                "negative": true,
+                "row": -5,
+                "stem": 0,
+                "value": -8,
+              },
+            ],
+          ],
+          "row": -5,
+          "stem": "−0",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": -4,
+          "stem": "−0",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": -3,
+          "stem": "−0",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": -2,
+          "stem": "−0",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 1,
+                "negative": true,
+                "row": -1,
+                "stem": 0,
+                "value": -1,
+              },
+            ],
+          ],
+          "row": -1,
+          "stem": "−0",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 0,
+                "negative": false,
+                "row": 0,
+                "stem": 0,
+                "value": 0,
+              },
+            ],
+          ],
+          "row": 0,
+          "stem": "0",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 1,
+          "stem": "0",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 4,
+                "negative": false,
+                "row": 2,
+                "stem": 0,
+                "value": 4,
+              },
+            ],
+          ],
+          "row": 2,
+          "stem": "0",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 3,
+          "stem": "0",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 4,
+          "stem": "0",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 5,
+          "stem": "1",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 6,
+          "stem": "1",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 5,
+                "negative": false,
+                "row": 7,
+                "stem": 1,
+                "value": 15,
+              },
+            ],
+          ],
+          "row": 7,
+          "stem": "1",
+        },
+      ],
+      "sets": [
+        {
+          "count": 6,
+          "cut": [],
+          "modes": [],
+          "name": "",
+          "placed": [
+            {
+              "cut": false,
+              "leaf": 2,
+              "negative": true,
+              "row": -7,
+              "stem": 1,
+              "value": -12,
+            },
+            {
+              "cut": false,
+              "leaf": 8,
+              "negative": true,
+              "row": -5,
+              "stem": 0,
+              "value": -8,
+            },
+            {
+              "cut": false,
+              "leaf": 1,
+              "negative": true,
+              "row": -1,
+              "stem": 0,
+              "value": -1,
+            },
+            {
+              "cut": false,
+              "leaf": 0,
+              "negative": false,
+              "row": 0,
+              "stem": 0,
+              "value": 0,
+            },
+            {
+              "cut": false,
+              "leaf": 4,
+              "negative": false,
+              "row": 2,
+              "stem": 0,
+              "value": 4,
+            },
+            {
+              "cut": false,
+              "leaf": 5,
+              "negative": false,
+              "row": 7,
+              "stem": 1,
+              "value": 15,
+            },
+          ],
+          "problem": null,
+          "summary": {
+            "max": 15,
+            "median": -0.5,
+            "min": -12,
+            "q1": -8,
+            "q3": 4,
+          },
+        },
+      ],
+      "split": 5,
+      "unit": 1,
+    },
+    "stems": [
+      {
+        "anchor": "end",
+        "text": "−1",
+        "x": 121.96,
+        "y": 90.97,
+      },
+      {
+        "anchor": "end",
+        "text": "−1",
+        "x": 121.96,
+        "y": 132.97,
+      },
+      {
+        "anchor": "end",
+        "text": "−0",
+        "x": 121.96,
+        "y": 174.97,
+      },
+      {
+        "anchor": "end",
+        "text": "−0",
+        "x": 121.96,
+        "y": 216.97,
+      },
+      {
+        "anchor": "end",
+        "text": "−0",
+        "x": 121.96,
+        "y": 258.97,
+      },
+      {
+        "anchor": "end",
+        "text": "−0",
+        "x": 121.96,
+        "y": 300.97,
+      },
+      {
+        "anchor": "end",
+        "text": "−0",
+        "x": 121.96,
+        "y": 342.97,
+      },
+      {
+        "anchor": "end",
+        "text": "0",
+        "x": 121.96,
+        "y": 384.97,
+      },
+      {
+        "anchor": "end",
+        "text": "0",
+        "x": 121.96,
+        "y": 426.97,
+      },
+      {
+        "anchor": "end",
+        "text": "0",
+        "x": 121.96,
+        "y": 468.97,
+      },
+      {
+        "anchor": "end",
+        "text": "0",
+        "x": 121.96,
+        "y": 510.97,
+      },
+      {
+        "anchor": "end",
+        "text": "0",
+        "x": 121.96,
+        "y": 552.97,
+      },
+      {
+        "anchor": "end",
+        "text": "1",
+        "x": 121.96,
+        "y": 594.97,
+      },
+      {
+        "anchor": "end",
+        "text": "1",
+        "x": 121.96,
+        "y": 636.97,
+      },
+      {
+        "anchor": "end",
+        "text": "1",
+        "x": 121.96,
+        "y": 678.97,
+      },
+    ],
+    "title": null,
+    "titleFs": 35,
+    "width": 294.94,
+  },
+  "query": "data=-12%2C-8%2C-1%2C0%2C4%2C15&split=5&keyMode=blank&labelSize=large",
+}
+`;
+
+exports[`stem-and-leaf plot > data=1.4%2C2.6%2C2.65%2C3.7&unit=0.1&keyUnit=cm&headings=0&order=typed 1`] = `
+{
+  "figure": {
+    "blanks": [],
+    "boxes": [],
+    "fs": 20,
+    "headFs": 17,
+    "headings": [],
+    "height": 163.4,
+    "key": {
+      "text": "1 | 4 = 1.4 cm",
+      "x": 16,
+      "y": 140.2,
+    },
+    "keyFs": 18,
+    "leaves": [
+      {
+        "anchor": "middle",
+        "text": "4",
+        "x": 100.6,
+        "y": 38.2,
+      },
+      {
+        "anchor": "middle",
+        "text": "6",
+        "x": 100.6,
+        "y": 68.2,
+      },
+      {
+        "anchor": "middle",
+        "text": "6",
+        "x": 119.6,
+        "y": 68.2,
+      },
+      {
+        "anchor": "middle",
+        "text": "7",
+        "x": 100.6,
+        "y": 98.2,
+      },
+    ],
+    "lines": [
+      {
+        "x1": 80.1,
+        "x2": 80.1,
+        "y1": 14,
+        "y2": 109,
+      },
+    ],
+    "read": {
+      "auto": 0.01,
+      "back": false,
+      "boxes": 0,
+      "fitted": {
+        "from": "1",
+        "to": "3",
+      },
+      "key": {
+        "leaves": [
+          "4",
+        ],
+        "stem": "1",
+        "values": [
+          "1.4",
+        ],
+      },
+      "problems": {
+        "boxCount": null,
+        "data": null,
+        "data2": null,
+        "from": null,
+        "key": null,
+        "to": null,
+        "unit": null,
+      },
+      "rows": [
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 4,
+                "negative": false,
+                "row": 1,
+                "stem": 1,
+                "value": 1.4,
+              },
+            ],
+          ],
+          "row": 1,
+          "stem": "1",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 6,
+                "negative": false,
+                "row": 2,
+                "stem": 2,
+                "value": 2.6,
+              },
+              {
+                "cut": true,
+                "leaf": 6,
+                "negative": false,
+                "row": 2,
+                "stem": 2,
+                "value": 2.6,
+              },
+            ],
+          ],
+          "row": 2,
+          "stem": "2",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 7,
+                "negative": false,
+                "row": 3,
+                "stem": 3,
+                "value": 3.7,
+              },
+            ],
+          ],
+          "row": 3,
+          "stem": "3",
+        },
+      ],
+      "sets": [
+        {
+          "count": 4,
+          "cut": [
+            {
+              "typed": 2.65,
+              "value": 2.6,
+            },
+          ],
+          "modes": [
+            2.6,
+          ],
+          "name": "",
+          "placed": [
+            {
+              "cut": false,
+              "leaf": 4,
+              "negative": false,
+              "row": 1,
+              "stem": 1,
+              "value": 1.4,
+            },
+            {
+              "cut": false,
+              "leaf": 6,
+              "negative": false,
+              "row": 2,
+              "stem": 2,
+              "value": 2.6,
+            },
+            {
+              "cut": true,
+              "leaf": 6,
+              "negative": false,
+              "row": 2,
+              "stem": 2,
+              "value": 2.6,
+            },
+            {
+              "cut": false,
+              "leaf": 7,
+              "negative": false,
+              "row": 3,
+              "stem": 3,
+              "value": 3.7,
+            },
+          ],
+          "problem": null,
+          "summary": {
+            "max": 3.7,
+            "median": 2.6,
+            "min": 1.4,
+            "q1": 2,
+            "q3": 3.1500000000000004,
+          },
+        },
+      ],
+      "split": 1,
+      "unit": 0.1,
+    },
+    "stems": [
+      {
+        "anchor": "end",
+        "text": "1",
+        "x": 70.1,
+        "y": 38.2,
+      },
+      {
+        "anchor": "end",
+        "text": "2",
+        "x": 70.1,
+        "y": 68.2,
+      },
+      {
+        "anchor": "end",
+        "text": "3",
+        "x": 70.1,
+        "y": 98.2,
+      },
+    ],
+    "title": null,
+    "titleFs": 25,
+    "width": 198.19,
+  },
+  "query": "data=1.4%2C2.6%2C2.65%2C3.7&unit=0.1&order=typed&headings=0&keyUnit=cm",
+}
+`;
+
+exports[`stem-and-leaf plot > data=12%2Cx&from=abc&unit=1&keyValue=1%2C99&layout=back 1`] = `
+{
+  "figure": {
+    "blanks": [],
+    "boxes": [],
+    "fs": 20,
+    "headFs": 17,
+    "headings": [
+      {
+        "anchor": "end",
+        "text": "Leaf",
+        "x": 179.29,
+        "y": 33,
+      },
+      {
+        "anchor": "middle",
+        "text": "Stem",
+        "x": 225.02,
+        "y": 33,
+      },
+      {
+        "anchor": "start",
+        "text": "Leaf",
+        "x": 270.74,
+        "y": 33,
+      },
+    ],
+    "height": 134.75,
+    "key": {
+      "text": "2 | 1 | 1 = 12 on the left and 11 on the right",
+      "x": 16,
+      "y": 111.55,
+    },
+    "keyFs": 18,
+    "leaves": [
+      {
+        "anchor": "middle",
+        "text": "2",
+        "x": 173.73,
+        "y": 69.55,
+      },
+    ],
+    "lines": [
+      {
+        "x1": 255.8,
+        "x2": 255.8,
+        "y1": 42.35,
+        "y2": 80.35,
+      },
+      {
+        "x1": 194.23,
+        "x2": 194.23,
+        "y1": 42.35,
+        "y2": 80.35,
+      },
+      {
+        "x1": 122.23,
+        "x2": 327.8,
+        "y1": 42.35,
+        "y2": 42.35,
+      },
+    ],
+    "read": {
+      "auto": 1,
+      "back": true,
+      "boxes": 0,
+      "fitted": {
+        "from": "1",
+        "to": "1",
+      },
+      "key": {
+        "leaves": [
+          "2",
+          "1",
+        ],
+        "stem": "1",
+        "values": [
+          "12",
+          "11",
+        ],
+      },
+      "problems": {
+        "boxCount": null,
+        "data": "“x” isn't a number. Separate numbers with commas, like 12, 15, 18.",
+        "data2": null,
+        "from": "Type a stem at this leaf unit, like 3 or −0, or leave it empty to fit the data.",
+        "key": "Give the two values the same stem, like 34, 31.",
+        "to": null,
+        "unit": null,
+      },
+      "rows": [
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 2,
+                "negative": false,
+                "row": 1,
+                "stem": 1,
+                "value": 12,
+              },
+            ],
+            [],
+          ],
+          "row": 1,
+          "stem": "1",
+        },
+      ],
+      "sets": [
+        {
+          "count": 1,
+          "cut": [],
+          "modes": [],
+          "name": "",
+          "placed": [
+            {
+              "cut": false,
+              "leaf": 2,
+              "negative": false,
+              "row": 1,
+              "stem": 1,
+              "value": 12,
+            },
+          ],
+          "problem": "“x” isn't a number. Separate numbers with commas, like 12, 15, 18.",
+          "summary": {
+            "max": 12,
+            "median": 12,
+            "min": 12,
+            "q1": 12,
+            "q3": 12,
+          },
+        },
+        {
+          "count": 0,
+          "cut": [],
+          "modes": [],
+          "name": "",
+          "placed": [],
+          "problem": null,
+          "summary": null,
+        },
+      ],
+      "split": 1,
+      "unit": 1,
+    },
+    "stems": [
+      {
+        "anchor": "middle",
+        "text": "1",
+        "x": 225.02,
+        "y": 69.55,
+      },
+    ],
+    "title": null,
+    "titleFs": 25,
+    "width": 450.03,
+  },
+  "query": "layout=back&data=12%2Cx&unit=1&from=abc&keyValue=1%2C99",
+}
+`;
+
+exports[`stem-and-leaf plot > data=31%2C33%2C36%2C38%2C41%2C47%2C52&split=2&boxes=1&boxCount=5 1`] = `
+{
+  "figure": {
+    "blanks": [],
+    "boxes": [
+      {
+        "size": 29,
+        "x": 75.57,
+        "y": 47.35,
+      },
+      {
+        "size": 29,
+        "x": 104.57,
+        "y": 47.35,
+      },
+      {
+        "size": 29,
+        "x": 133.57,
+        "y": 47.35,
+      },
+      {
+        "size": 29,
+        "x": 162.57,
+        "y": 47.35,
+      },
+      {
+        "size": 29,
+        "x": 191.57,
+        "y": 47.35,
+      },
+      {
+        "size": 29,
+        "x": 75.57,
+        "y": 76.35,
+      },
+      {
+        "size": 29,
+        "x": 104.57,
+        "y": 76.35,
+      },
+      {
+        "size": 29,
+        "x": 133.57,
+        "y": 76.35,
+      },
+      {
+        "size": 29,
+        "x": 162.57,
+        "y": 76.35,
+      },
+      {
+        "size": 29,
+        "x": 191.57,
+        "y": 76.35,
+      },
+      {
+        "size": 29,
+        "x": 75.57,
+        "y": 105.35,
+      },
+      {
+        "size": 29,
+        "x": 104.57,
+        "y": 105.35,
+      },
+      {
+        "size": 29,
+        "x": 133.57,
+        "y": 105.35,
+      },
+      {
+        "size": 29,
+        "x": 162.57,
+        "y": 105.35,
+      },
+      {
+        "size": 29,
+        "x": 191.57,
+        "y": 105.35,
+      },
+      {
+        "size": 29,
+        "x": 75.57,
+        "y": 134.35,
+      },
+      {
+        "size": 29,
+        "x": 104.57,
+        "y": 134.35,
+      },
+      {
+        "size": 29,
+        "x": 133.57,
+        "y": 134.35,
+      },
+      {
+        "size": 29,
+        "x": 162.57,
+        "y": 134.35,
+      },
+      {
+        "size": 29,
+        "x": 191.57,
+        "y": 134.35,
+      },
+      {
+        "size": 29,
+        "x": 75.57,
+        "y": 163.35,
+      },
+      {
+        "size": 29,
+        "x": 104.57,
+        "y": 163.35,
+      },
+      {
+        "size": 29,
+        "x": 133.57,
+        "y": 163.35,
+      },
+      {
+        "size": 29,
+        "x": 162.57,
+        "y": 163.35,
+      },
+      {
+        "size": 29,
+        "x": 191.57,
+        "y": 163.35,
+      },
+    ],
+    "fs": 20,
+    "headFs": 17,
+    "headings": [
+      {
+        "anchor": "end",
+        "text": "Stem",
+        "x": 57.57,
+        "y": 33,
+      },
+      {
+        "anchor": "start",
+        "text": "Leaf",
+        "x": 84.51,
+        "y": 33,
+      },
+    ],
+    "height": 249.75,
+    "key": {
+      "text": "3 | 1 = 31",
+      "x": 53.19,
+      "y": 226.55,
+    },
+    "keyFs": 18,
+    "leaves": [
+      {
+        "anchor": "middle",
+        "text": "1",
+        "x": 90.07,
+        "y": 69.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "3",
+        "x": 119.07,
+        "y": 69.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "6",
+        "x": 90.07,
+        "y": 98.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "8",
+        "x": 119.07,
+        "y": 98.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "1",
+        "x": 90.07,
+        "y": 127.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "7",
+        "x": 90.07,
+        "y": 156.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "2",
+        "x": 90.07,
+        "y": 185.05,
+      },
+    ],
+    "lines": [
+      {
+        "x1": 67.57,
+        "x2": 67.57,
+        "y1": 42.35,
+        "y2": 195.35,
+      },
+      {
+        "x1": 12,
+        "x2": 224.57,
+        "y1": 42.35,
+        "y2": 42.35,
+      },
+    ],
+    "read": {
+      "auto": 1,
+      "back": false,
+      "boxes": 5,
+      "fitted": {
+        "from": "3",
+        "to": "5",
+      },
+      "key": {
+        "leaves": [
+          "1",
+        ],
+        "stem": "3",
+        "values": [
+          "31",
+        ],
+      },
+      "problems": {
+        "boxCount": null,
+        "data": null,
+        "data2": null,
+        "from": null,
+        "key": null,
+        "to": null,
+        "unit": null,
+      },
+      "rows": [
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 1,
+                "negative": false,
+                "row": 6,
+                "stem": 3,
+                "value": 31,
+              },
+              {
+                "cut": false,
+                "leaf": 3,
+                "negative": false,
+                "row": 6,
+                "stem": 3,
+                "value": 33,
+              },
+            ],
+          ],
+          "row": 6,
+          "stem": "3",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 6,
+                "negative": false,
+                "row": 7,
+                "stem": 3,
+                "value": 36,
+              },
+              {
+                "cut": false,
+                "leaf": 8,
+                "negative": false,
+                "row": 7,
+                "stem": 3,
+                "value": 38,
+              },
+            ],
+          ],
+          "row": 7,
+          "stem": "3",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 1,
+                "negative": false,
+                "row": 8,
+                "stem": 4,
+                "value": 41,
+              },
+            ],
+          ],
+          "row": 8,
+          "stem": "4",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 7,
+                "negative": false,
+                "row": 9,
+                "stem": 4,
+                "value": 47,
+              },
+            ],
+          ],
+          "row": 9,
+          "stem": "4",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 2,
+                "negative": false,
+                "row": 10,
+                "stem": 5,
+                "value": 52,
+              },
+            ],
+          ],
+          "row": 10,
+          "stem": "5",
+        },
+      ],
+      "sets": [
+        {
+          "count": 7,
+          "cut": [],
+          "modes": [],
+          "name": "",
+          "placed": [
+            {
+              "cut": false,
+              "leaf": 1,
+              "negative": false,
+              "row": 6,
+              "stem": 3,
+              "value": 31,
+            },
+            {
+              "cut": false,
+              "leaf": 3,
+              "negative": false,
+              "row": 6,
+              "stem": 3,
+              "value": 33,
+            },
+            {
+              "cut": false,
+              "leaf": 6,
+              "negative": false,
+              "row": 7,
+              "stem": 3,
+              "value": 36,
+            },
+            {
+              "cut": false,
+              "leaf": 8,
+              "negative": false,
+              "row": 7,
+              "stem": 3,
+              "value": 38,
+            },
+            {
+              "cut": false,
+              "leaf": 1,
+              "negative": false,
+              "row": 8,
+              "stem": 4,
+              "value": 41,
+            },
+            {
+              "cut": false,
+              "leaf": 7,
+              "negative": false,
+              "row": 9,
+              "stem": 4,
+              "value": 47,
+            },
+            {
+              "cut": false,
+              "leaf": 2,
+              "negative": false,
+              "row": 10,
+              "stem": 5,
+              "value": 52,
+            },
+          ],
+          "problem": null,
+          "summary": {
+            "max": 52,
+            "median": 38,
+            "min": 31,
+            "q1": 33,
+            "q3": 47,
+          },
+        },
+      ],
+      "split": 2,
+      "unit": 1,
+    },
+    "stems": [
+      {
+        "anchor": "end",
+        "text": "3",
+        "x": 57.57,
+        "y": 69.05,
+      },
+      {
+        "anchor": "end",
+        "text": "3",
+        "x": 57.57,
+        "y": 98.05,
+      },
+      {
+        "anchor": "end",
+        "text": "4",
+        "x": 57.57,
+        "y": 127.05,
+      },
+      {
+        "anchor": "end",
+        "text": "4",
+        "x": 57.57,
+        "y": 156.05,
+      },
+      {
+        "anchor": "end",
+        "text": "5",
+        "x": 57.57,
+        "y": 185.05,
+      },
+    ],
+    "title": null,
+    "titleFs": 25,
+    "width": 236.57,
+  },
+  "query": "data=31%2C33%2C36%2C38%2C41%2C47%2C52&split=2&boxes=1&boxCount=5",
+}
+`;
+
+exports[`stem-and-leaf plot > data=58%2C62%2C65%2C67%2C71%2C72%2C74%2C74%2C78%2C79%2C81%2C83%2C85%2C86%2C88%2C90%2C92%2C97&titleMode=text&title=Test%20scores 1`] = `
+{
+  "figure": {
+    "blanks": [],
+    "boxes": [],
+    "fs": 20,
+    "headFs": 17,
+    "headings": [
+      {
+        "anchor": "end",
+        "text": "Stem",
+        "x": 57.57,
+        "y": 75.5,
+      },
+      {
+        "anchor": "start",
+        "text": "Leaf",
+        "x": 82.51,
+        "y": 75.5,
+      },
+    ],
+    "height": 297.25,
+    "key": {
+      "text": "5 | 8 = 58",
+      "x": 39.19,
+      "y": 274.05,
+    },
+    "keyFs": 18,
+    "leaves": [
+      {
+        "anchor": "middle",
+        "text": "8",
+        "x": 88.07,
+        "y": 112.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "2",
+        "x": 88.07,
+        "y": 142.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "5",
+        "x": 107.07,
+        "y": 142.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "7",
+        "x": 126.07,
+        "y": 142.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "1",
+        "x": 88.07,
+        "y": 172.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "2",
+        "x": 107.07,
+        "y": 172.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "4",
+        "x": 126.07,
+        "y": 172.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "4",
+        "x": 145.07,
+        "y": 172.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "8",
+        "x": 164.07,
+        "y": 172.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "9",
+        "x": 183.07,
+        "y": 172.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "1",
+        "x": 88.07,
+        "y": 202.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "3",
+        "x": 107.07,
+        "y": 202.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "5",
+        "x": 126.07,
+        "y": 202.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "6",
+        "x": 145.07,
+        "y": 202.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "8",
+        "x": 164.07,
+        "y": 202.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "0",
+        "x": 88.07,
+        "y": 232.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "2",
+        "x": 107.07,
+        "y": 232.05,
+      },
+      {
+        "anchor": "middle",
+        "text": "7",
+        "x": 126.07,
+        "y": 232.05,
+      },
+    ],
+    "lines": [
+      {
+        "x1": 67.57,
+        "x2": 67.57,
+        "y1": 84.85,
+        "y2": 242.85,
+      },
+      {
+        "x1": 12,
+        "x2": 196.57,
+        "y1": 84.85,
+        "y2": 84.85,
+      },
+    ],
+    "read": {
+      "auto": 1,
+      "back": false,
+      "boxes": 0,
+      "fitted": {
+        "from": "5",
+        "to": "9",
+      },
+      "key": {
+        "leaves": [
+          "8",
+        ],
+        "stem": "5",
+        "values": [
+          "58",
+        ],
+      },
+      "problems": {
+        "boxCount": null,
+        "data": null,
+        "data2": null,
+        "from": null,
+        "key": null,
+        "to": null,
+        "unit": null,
+      },
+      "rows": [
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 8,
+                "negative": false,
+                "row": 5,
+                "stem": 5,
+                "value": 58,
+              },
+            ],
+          ],
+          "row": 5,
+          "stem": "5",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 2,
+                "negative": false,
+                "row": 6,
+                "stem": 6,
+                "value": 62,
+              },
+              {
+                "cut": false,
+                "leaf": 5,
+                "negative": false,
+                "row": 6,
+                "stem": 6,
+                "value": 65,
+              },
+              {
+                "cut": false,
+                "leaf": 7,
+                "negative": false,
+                "row": 6,
+                "stem": 6,
+                "value": 67,
+              },
+            ],
+          ],
+          "row": 6,
+          "stem": "6",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 1,
+                "negative": false,
+                "row": 7,
+                "stem": 7,
+                "value": 71,
+              },
+              {
+                "cut": false,
+                "leaf": 2,
+                "negative": false,
+                "row": 7,
+                "stem": 7,
+                "value": 72,
+              },
+              {
+                "cut": false,
+                "leaf": 4,
+                "negative": false,
+                "row": 7,
+                "stem": 7,
+                "value": 74,
+              },
+              {
+                "cut": false,
+                "leaf": 4,
+                "negative": false,
+                "row": 7,
+                "stem": 7,
+                "value": 74,
+              },
+              {
+                "cut": false,
+                "leaf": 8,
+                "negative": false,
+                "row": 7,
+                "stem": 7,
+                "value": 78,
+              },
+              {
+                "cut": false,
+                "leaf": 9,
+                "negative": false,
+                "row": 7,
+                "stem": 7,
+                "value": 79,
+              },
+            ],
+          ],
+          "row": 7,
+          "stem": "7",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 1,
+                "negative": false,
+                "row": 8,
+                "stem": 8,
+                "value": 81,
+              },
+              {
+                "cut": false,
+                "leaf": 3,
+                "negative": false,
+                "row": 8,
+                "stem": 8,
+                "value": 83,
+              },
+              {
+                "cut": false,
+                "leaf": 5,
+                "negative": false,
+                "row": 8,
+                "stem": 8,
+                "value": 85,
+              },
+              {
+                "cut": false,
+                "leaf": 6,
+                "negative": false,
+                "row": 8,
+                "stem": 8,
+                "value": 86,
+              },
+              {
+                "cut": false,
+                "leaf": 8,
+                "negative": false,
+                "row": 8,
+                "stem": 8,
+                "value": 88,
+              },
+            ],
+          ],
+          "row": 8,
+          "stem": "8",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 0,
+                "negative": false,
+                "row": 9,
+                "stem": 9,
+                "value": 90,
+              },
+              {
+                "cut": false,
+                "leaf": 2,
+                "negative": false,
+                "row": 9,
+                "stem": 9,
+                "value": 92,
+              },
+              {
+                "cut": false,
+                "leaf": 7,
+                "negative": false,
+                "row": 9,
+                "stem": 9,
+                "value": 97,
+              },
+            ],
+          ],
+          "row": 9,
+          "stem": "9",
+        },
+      ],
+      "sets": [
+        {
+          "count": 18,
+          "cut": [],
+          "modes": [
+            74,
+          ],
+          "name": "",
+          "placed": [
+            {
+              "cut": false,
+              "leaf": 8,
+              "negative": false,
+              "row": 5,
+              "stem": 5,
+              "value": 58,
+            },
+            {
+              "cut": false,
+              "leaf": 2,
+              "negative": false,
+              "row": 6,
+              "stem": 6,
+              "value": 62,
+            },
+            {
+              "cut": false,
+              "leaf": 5,
+              "negative": false,
+              "row": 6,
+              "stem": 6,
+              "value": 65,
+            },
+            {
+              "cut": false,
+              "leaf": 7,
+              "negative": false,
+              "row": 6,
+              "stem": 6,
+              "value": 67,
+            },
+            {
+              "cut": false,
+              "leaf": 1,
+              "negative": false,
+              "row": 7,
+              "stem": 7,
+              "value": 71,
+            },
+            {
+              "cut": false,
+              "leaf": 2,
+              "negative": false,
+              "row": 7,
+              "stem": 7,
+              "value": 72,
+            },
+            {
+              "cut": false,
+              "leaf": 4,
+              "negative": false,
+              "row": 7,
+              "stem": 7,
+              "value": 74,
+            },
+            {
+              "cut": false,
+              "leaf": 4,
+              "negative": false,
+              "row": 7,
+              "stem": 7,
+              "value": 74,
+            },
+            {
+              "cut": false,
+              "leaf": 8,
+              "negative": false,
+              "row": 7,
+              "stem": 7,
+              "value": 78,
+            },
+            {
+              "cut": false,
+              "leaf": 9,
+              "negative": false,
+              "row": 7,
+              "stem": 7,
+              "value": 79,
+            },
+            {
+              "cut": false,
+              "leaf": 1,
+              "negative": false,
+              "row": 8,
+              "stem": 8,
+              "value": 81,
+            },
+            {
+              "cut": false,
+              "leaf": 3,
+              "negative": false,
+              "row": 8,
+              "stem": 8,
+              "value": 83,
+            },
+            {
+              "cut": false,
+              "leaf": 5,
+              "negative": false,
+              "row": 8,
+              "stem": 8,
+              "value": 85,
+            },
+            {
+              "cut": false,
+              "leaf": 6,
+              "negative": false,
+              "row": 8,
+              "stem": 8,
+              "value": 86,
+            },
+            {
+              "cut": false,
+              "leaf": 8,
+              "negative": false,
+              "row": 8,
+              "stem": 8,
+              "value": 88,
+            },
+            {
+              "cut": false,
+              "leaf": 0,
+              "negative": false,
+              "row": 9,
+              "stem": 9,
+              "value": 90,
+            },
+            {
+              "cut": false,
+              "leaf": 2,
+              "negative": false,
+              "row": 9,
+              "stem": 9,
+              "value": 92,
+            },
+            {
+              "cut": false,
+              "leaf": 7,
+              "negative": false,
+              "row": 9,
+              "stem": 9,
+              "value": 97,
+            },
+          ],
+          "problem": null,
+          "summary": {
+            "max": 97,
+            "median": 78.5,
+            "min": 58,
+            "q1": 71,
+            "q3": 86,
+          },
+        },
+      ],
+      "split": 1,
+      "unit": 1,
+    },
+    "stems": [
+      {
+        "anchor": "end",
+        "text": "5",
+        "x": 57.57,
+        "y": 112.05,
+      },
+      {
+        "anchor": "end",
+        "text": "6",
+        "x": 57.57,
+        "y": 142.05,
+      },
+      {
+        "anchor": "end",
+        "text": "7",
+        "x": 57.57,
+        "y": 172.05,
+      },
+      {
+        "anchor": "end",
+        "text": "8",
+        "x": 57.57,
+        "y": 202.05,
+      },
+      {
+        "anchor": "end",
+        "text": "9",
+        "x": 57.57,
+        "y": 232.05,
+      },
+    ],
+    "title": {
+      "text": "Test scores",
+      "x": 104.28,
+      "y": 41,
+    },
+    "titleFs": 25,
+    "width": 208.57,
+  },
+  "query": "data=58%2C62%2C65%2C67%2C71%2C72%2C74%2C74%2C78%2C79%2C81%2C83%2C85%2C86%2C88%2C90%2C92%2C97&title=Test+scores&titleMode=text",
+}
+`;
+
+exports[`stem-and-leaf plot > from=1&to=5&boxes=1&boxCount=8&keyValue=23&keyWords=means&keyUnit=minutes&titleMode=blank 1`] = `
+{
+  "figure": {
+    "blanks": [
+      {
+        "x1": 31.78,
+        "x2": 291.78,
+        "y1": 41,
+        "y2": 41,
+      },
+    ],
+    "boxes": [
+      {
+        "size": 29,
+        "x": 75.57,
+        "y": 89.85,
+      },
+      {
+        "size": 29,
+        "x": 104.57,
+        "y": 89.85,
+      },
+      {
+        "size": 29,
+        "x": 133.57,
+        "y": 89.85,
+      },
+      {
+        "size": 29,
+        "x": 162.57,
+        "y": 89.85,
+      },
+      {
+        "size": 29,
+        "x": 191.57,
+        "y": 89.85,
+      },
+      {
+        "size": 29,
+        "x": 220.57,
+        "y": 89.85,
+      },
+      {
+        "size": 29,
+        "x": 249.57,
+        "y": 89.85,
+      },
+      {
+        "size": 29,
+        "x": 278.57,
+        "y": 89.85,
+      },
+      {
+        "size": 29,
+        "x": 75.57,
+        "y": 118.85,
+      },
+      {
+        "size": 29,
+        "x": 104.57,
+        "y": 118.85,
+      },
+      {
+        "size": 29,
+        "x": 133.57,
+        "y": 118.85,
+      },
+      {
+        "size": 29,
+        "x": 162.57,
+        "y": 118.85,
+      },
+      {
+        "size": 29,
+        "x": 191.57,
+        "y": 118.85,
+      },
+      {
+        "size": 29,
+        "x": 220.57,
+        "y": 118.85,
+      },
+      {
+        "size": 29,
+        "x": 249.57,
+        "y": 118.85,
+      },
+      {
+        "size": 29,
+        "x": 278.57,
+        "y": 118.85,
+      },
+      {
+        "size": 29,
+        "x": 75.57,
+        "y": 147.85,
+      },
+      {
+        "size": 29,
+        "x": 104.57,
+        "y": 147.85,
+      },
+      {
+        "size": 29,
+        "x": 133.57,
+        "y": 147.85,
+      },
+      {
+        "size": 29,
+        "x": 162.57,
+        "y": 147.85,
+      },
+      {
+        "size": 29,
+        "x": 191.57,
+        "y": 147.85,
+      },
+      {
+        "size": 29,
+        "x": 220.57,
+        "y": 147.85,
+      },
+      {
+        "size": 29,
+        "x": 249.57,
+        "y": 147.85,
+      },
+      {
+        "size": 29,
+        "x": 278.57,
+        "y": 147.85,
+      },
+      {
+        "size": 29,
+        "x": 75.57,
+        "y": 176.85,
+      },
+      {
+        "size": 29,
+        "x": 104.57,
+        "y": 176.85,
+      },
+      {
+        "size": 29,
+        "x": 133.57,
+        "y": 176.85,
+      },
+      {
+        "size": 29,
+        "x": 162.57,
+        "y": 176.85,
+      },
+      {
+        "size": 29,
+        "x": 191.57,
+        "y": 176.85,
+      },
+      {
+        "size": 29,
+        "x": 220.57,
+        "y": 176.85,
+      },
+      {
+        "size": 29,
+        "x": 249.57,
+        "y": 176.85,
+      },
+      {
+        "size": 29,
+        "x": 278.57,
+        "y": 176.85,
+      },
+      {
+        "size": 29,
+        "x": 75.57,
+        "y": 205.85,
+      },
+      {
+        "size": 29,
+        "x": 104.57,
+        "y": 205.85,
+      },
+      {
+        "size": 29,
+        "x": 133.57,
+        "y": 205.85,
+      },
+      {
+        "size": 29,
+        "x": 162.57,
+        "y": 205.85,
+      },
+      {
+        "size": 29,
+        "x": 191.57,
+        "y": 205.85,
+      },
+      {
+        "size": 29,
+        "x": 220.57,
+        "y": 205.85,
+      },
+      {
+        "size": 29,
+        "x": 249.57,
+        "y": 205.85,
+      },
+      {
+        "size": 29,
+        "x": 278.57,
+        "y": 205.85,
+      },
+    ],
+    "fs": 20,
+    "headFs": 17,
+    "headings": [
+      {
+        "anchor": "end",
+        "text": "Stem",
+        "x": 57.57,
+        "y": 75.5,
+      },
+      {
+        "anchor": "start",
+        "text": "Leaf",
+        "x": 84.51,
+        "y": 75.5,
+      },
+    ],
+    "height": 292.25,
+    "key": {
+      "text": "2 | 3 means 23 minutes",
+      "x": 36.43,
+      "y": 269.05,
+    },
+    "keyFs": 18,
+    "leaves": [],
+    "lines": [
+      {
+        "x1": 67.57,
+        "x2": 67.57,
+        "y1": 84.85,
+        "y2": 237.85,
+      },
+      {
+        "x1": 12,
+        "x2": 311.57,
+        "y1": 84.85,
+        "y2": 84.85,
+      },
+    ],
+    "read": {
+      "auto": 1,
+      "back": false,
+      "boxes": 8,
+      "fitted": {
+        "from": "",
+        "to": "",
+      },
+      "key": {
+        "leaves": [
+          "3",
+        ],
+        "stem": "2",
+        "values": [
+          "23",
+        ],
+      },
+      "problems": {
+        "boxCount": null,
+        "data": null,
+        "data2": null,
+        "from": null,
+        "key": null,
+        "to": null,
+        "unit": null,
+      },
+      "rows": [
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 1,
+          "stem": "1",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 2,
+          "stem": "2",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 3,
+          "stem": "3",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 4,
+          "stem": "4",
+        },
+        {
+          "leaves": [
+            [],
+          ],
+          "row": 5,
+          "stem": "5",
+        },
+      ],
+      "sets": [
+        {
+          "count": 0,
+          "cut": [],
+          "modes": [],
+          "name": "",
+          "placed": [],
+          "problem": null,
+          "summary": null,
+        },
+      ],
+      "split": 1,
+      "unit": 1,
+    },
+    "stems": [
+      {
+        "anchor": "end",
+        "text": "1",
+        "x": 57.57,
+        "y": 111.55,
+      },
+      {
+        "anchor": "end",
+        "text": "2",
+        "x": 57.57,
+        "y": 140.55,
+      },
+      {
+        "anchor": "end",
+        "text": "3",
+        "x": 57.57,
+        "y": 169.55,
+      },
+      {
+        "anchor": "end",
+        "text": "4",
+        "x": 57.57,
+        "y": 198.55,
+      },
+      {
+        "anchor": "end",
+        "text": "5",
+        "x": 57.57,
+        "y": 227.55,
+      },
+    ],
+    "title": null,
+    "titleFs": 25,
+    "width": 323.57,
+  },
+  "query": "from=1&to=5&boxes=1&boxCount=8&keyWords=means&keyUnit=minutes&keyValue=23&titleMode=blank",
+}
+`;
+
+exports[`stem-and-leaf plot > layout=back&data=24%2C27%2C31%2C33%2C45&name=Class%20A&data2=21%2C30%2C34%2C41%2C49&name2=Class%20B&keyWords=means 1`] = `
+{
+  "figure": {
+    "blanks": [],
+    "boxes": [],
+    "fs": 20,
+    "headFs": 17,
+    "headings": [
+      {
+        "anchor": "end",
+        "text": "Class A",
+        "x": 205.07,
+        "y": 33,
+      },
+      {
+        "anchor": "middle",
+        "text": "Stem",
+        "x": 250.79,
+        "y": 33,
+      },
+      {
+        "anchor": "start",
+        "text": "Class B",
+        "x": 296.51,
+        "y": 33,
+      },
+    ],
+    "height": 194.75,
+    "key": {
+      "text": "4 | 2 | 1 means 24 for Class A and 21 for Class B",
+      "x": 16,
+      "y": 171.55,
+    },
+    "keyFs": 18,
+    "leaves": [
+      {
+        "anchor": "middle",
+        "text": "4",
+        "x": 199.51,
+        "y": 69.55,
+      },
+      {
+        "anchor": "middle",
+        "text": "7",
+        "x": 180.51,
+        "y": 69.55,
+      },
+      {
+        "anchor": "middle",
+        "text": "1",
+        "x": 302.07,
+        "y": 69.55,
+      },
+      {
+        "anchor": "middle",
+        "text": "1",
+        "x": 199.51,
+        "y": 99.55,
+      },
+      {
+        "anchor": "middle",
+        "text": "3",
+        "x": 180.51,
+        "y": 99.55,
+      },
+      {
+        "anchor": "middle",
+        "text": "0",
+        "x": 302.07,
+        "y": 99.55,
+      },
+      {
+        "anchor": "middle",
+        "text": "4",
+        "x": 321.07,
+        "y": 99.55,
+      },
+      {
+        "anchor": "middle",
+        "text": "5",
+        "x": 199.51,
+        "y": 129.55,
+      },
+      {
+        "anchor": "middle",
+        "text": "1",
+        "x": 302.07,
+        "y": 129.55,
+      },
+      {
+        "anchor": "middle",
+        "text": "9",
+        "x": 321.07,
+        "y": 129.55,
+      },
+    ],
+    "lines": [
+      {
+        "x1": 281.57,
+        "x2": 281.57,
+        "y1": 42.35,
+        "y2": 140.35,
+      },
+      {
+        "x1": 220.01,
+        "x2": 220.01,
+        "y1": 42.35,
+        "y2": 140.35,
+      },
+      {
+        "x1": 148.01,
+        "x2": 353.57,
+        "y1": 42.35,
+        "y2": 42.35,
+      },
+    ],
+    "read": {
+      "auto": 1,
+      "back": true,
+      "boxes": 0,
+      "fitted": {
+        "from": "2",
+        "to": "4",
+      },
+      "key": {
+        "leaves": [
+          "4",
+          "1",
+        ],
+        "stem": "2",
+        "values": [
+          "24",
+          "21",
+        ],
+      },
+      "problems": {
+        "boxCount": null,
+        "data": null,
+        "data2": null,
+        "from": null,
+        "key": null,
+        "to": null,
+        "unit": null,
+      },
+      "rows": [
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 4,
+                "negative": false,
+                "row": 2,
+                "stem": 2,
+                "value": 24,
+              },
+              {
+                "cut": false,
+                "leaf": 7,
+                "negative": false,
+                "row": 2,
+                "stem": 2,
+                "value": 27,
+              },
+            ],
+            [
+              {
+                "cut": false,
+                "leaf": 1,
+                "negative": false,
+                "row": 2,
+                "stem": 2,
+                "value": 21,
+              },
+            ],
+          ],
+          "row": 2,
+          "stem": "2",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 1,
+                "negative": false,
+                "row": 3,
+                "stem": 3,
+                "value": 31,
+              },
+              {
+                "cut": false,
+                "leaf": 3,
+                "negative": false,
+                "row": 3,
+                "stem": 3,
+                "value": 33,
+              },
+            ],
+            [
+              {
+                "cut": false,
+                "leaf": 0,
+                "negative": false,
+                "row": 3,
+                "stem": 3,
+                "value": 30,
+              },
+              {
+                "cut": false,
+                "leaf": 4,
+                "negative": false,
+                "row": 3,
+                "stem": 3,
+                "value": 34,
+              },
+            ],
+          ],
+          "row": 3,
+          "stem": "3",
+        },
+        {
+          "leaves": [
+            [
+              {
+                "cut": false,
+                "leaf": 5,
+                "negative": false,
+                "row": 4,
+                "stem": 4,
+                "value": 45,
+              },
+            ],
+            [
+              {
+                "cut": false,
+                "leaf": 1,
+                "negative": false,
+                "row": 4,
+                "stem": 4,
+                "value": 41,
+              },
+              {
+                "cut": false,
+                "leaf": 9,
+                "negative": false,
+                "row": 4,
+                "stem": 4,
+                "value": 49,
+              },
+            ],
+          ],
+          "row": 4,
+          "stem": "4",
+        },
+      ],
+      "sets": [
+        {
+          "count": 5,
+          "cut": [],
+          "modes": [],
+          "name": "Class A",
+          "placed": [
+            {
+              "cut": false,
+              "leaf": 4,
+              "negative": false,
+              "row": 2,
+              "stem": 2,
+              "value": 24,
+            },
+            {
+              "cut": false,
+              "leaf": 7,
+              "negative": false,
+              "row": 2,
+              "stem": 2,
+              "value": 27,
+            },
+            {
+              "cut": false,
+              "leaf": 1,
+              "negative": false,
+              "row": 3,
+              "stem": 3,
+              "value": 31,
+            },
+            {
+              "cut": false,
+              "leaf": 3,
+              "negative": false,
+              "row": 3,
+              "stem": 3,
+              "value": 33,
+            },
+            {
+              "cut": false,
+              "leaf": 5,
+              "negative": false,
+              "row": 4,
+              "stem": 4,
+              "value": 45,
+            },
+          ],
+          "problem": null,
+          "summary": {
+            "max": 45,
+            "median": 31,
+            "min": 24,
+            "q1": 25.5,
+            "q3": 39,
+          },
+        },
+        {
+          "count": 5,
+          "cut": [],
+          "modes": [],
+          "name": "Class B",
+          "placed": [
+            {
+              "cut": false,
+              "leaf": 1,
+              "negative": false,
+              "row": 2,
+              "stem": 2,
+              "value": 21,
+            },
+            {
+              "cut": false,
+              "leaf": 0,
+              "negative": false,
+              "row": 3,
+              "stem": 3,
+              "value": 30,
+            },
+            {
+              "cut": false,
+              "leaf": 4,
+              "negative": false,
+              "row": 3,
+              "stem": 3,
+              "value": 34,
+            },
+            {
+              "cut": false,
+              "leaf": 1,
+              "negative": false,
+              "row": 4,
+              "stem": 4,
+              "value": 41,
+            },
+            {
+              "cut": false,
+              "leaf": 9,
+              "negative": false,
+              "row": 4,
+              "stem": 4,
+              "value": 49,
+            },
+          ],
+          "problem": null,
+          "summary": {
+            "max": 49,
+            "median": 34,
+            "min": 21,
+            "q1": 25.5,
+            "q3": 45,
+          },
+        },
+      ],
+      "split": 1,
+      "unit": 1,
+    },
+    "stems": [
+      {
+        "anchor": "middle",
+        "text": "2",
+        "x": 250.79,
+        "y": 69.55,
+      },
+      {
+        "anchor": "middle",
+        "text": "3",
+        "x": 250.79,
+        "y": 99.55,
+      },
+      {
+        "anchor": "middle",
+        "text": "4",
+        "x": 250.79,
+        "y": 129.55,
+      },
+    ],
+    "title": null,
+    "titleFs": 25,
+    "width": 501.58,
+  },
+  "query": "layout=back&data=24%2C27%2C31%2C33%2C45&name=Class+A&data2=21%2C30%2C34%2C41%2C49&name2=Class+B&keyWords=means",
+}
+`;
+
 exports[`trapezoid >  1`] = `
 {
   "figure": {

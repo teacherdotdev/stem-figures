@@ -766,6 +766,97 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('stem-and-leaf', [
+    {
+      slug: 'stem-and-leaf-plot-of-test-scores',
+      title: 'Stem-and-leaf plot of test scores',
+      alt: 'A stem-and-leaf plot titled Test scores with stems 5 to 9, the leaves in order, and the key 5 | 8 = 58',
+      caption:
+        'A stem-and-leaf plot titled Test scores, with the headings Stem and Leaf. The stems 5, 6, 7, 8 and 9 run down the left of a line, and each score’s last digit is written in order across its stem’s row, from 5 | 8 for 58 up to 9 | 0 2 7. The key under the plot reads 5 | 8 = 58. Students find the median, mode and range from it.',
+      settings: {
+        data: '58, 62, 65, 67, 71, 72, 74, 74, 78, 79, 81, 83, 85, 86, 88, 90, 92, 97',
+        title: 'Test scores',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'back-to-back-stem-and-leaf-plot-class-a-and-class-b',
+      title: 'Back-to-back stem-and-leaf plot: Class A and Class B',
+      alt: 'A back-to-back stem-and-leaf plot titled Push-ups in one minute, with Class A’s leaves running left and Class B’s running right from shared stems 2 to 5',
+      caption:
+        'A back-to-back stem-and-leaf plot titled Push-ups in one minute, comparing Class A and Class B. The stems 2, 3, 4 and 5 run down the middle between two lines, with Class A’s leaves running left from them and Class B’s running right, each in order outward from the stem and headed with its class’s name. The key reads 4 | 2 | 1 means 24 for Class A and 21 for Class B. Students compare the two classes’ medians and ranges.',
+      settings: {
+        layout: 'back',
+        data: '24, 27, 29, 31, 33, 33, 36, 38, 40, 42, 45, 51',
+        name: 'Class A',
+        data2: '21, 23, 30, 34, 37, 41, 44, 46, 47, 49, 52, 55, 58',
+        name2: 'Class B',
+        keyWords: 'means',
+        title: 'Push-ups in one minute',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'stem-and-leaf-plot-with-decimals',
+      title: 'Stem-and-leaf plot with decimals: plant heights in cm',
+      alt: 'A stem-and-leaf plot titled Plant heights with whole-number stems 1 to 4, tenths as leaves, and the key 1 | 4 means 1.4 cm',
+      caption:
+        'A stem-and-leaf plot titled Plant heights, of heights in centimeters measured to the nearest tenth. The whole numbers 1, 2, 3 and 4 are the stems and the tenths are the leaves, so 2 | 6 stands for 2.6 cm. The key reads 1 | 4 means 1.4 cm.',
+      settings: {
+        data: '1.4, 1.8, 2.1, 2.6, 2.6, 2.9, 3.0, 3.3, 3.5, 3.7, 4.2, 4.8',
+        keyWords: 'means',
+        keyUnit: 'cm',
+        title: 'Plant heights',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'stem-and-leaf-plot-with-split-stems',
+      title: 'Stem-and-leaf plot with split stems',
+      alt: 'A stem-and-leaf plot titled Ages of club members with each of the stems 3, 4 and 5 on two rows, leaves 0 to 4 on the first and 5 to 9 on the second, and the key 3 | 1 = 31',
+      caption:
+        'A stem-and-leaf plot titled Ages of club members, with split stems: each of the stems 3, 4 and 5 takes two rows, the first for leaves 0 to 4 and the second for leaves 5 to 9, which spreads out data crowded onto a few stems. The key reads 3 | 1 = 31.',
+      settings: {
+        data: '31, 33, 36, 38, 39, 40, 41, 41, 42, 44, 45, 46, 47, 47, 49, 52, 53, 58',
+        split: 2,
+        title: 'Ages of club members',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'stem-and-leaf-plot-with-negative-stems-temperatures',
+      title: 'Stem-and-leaf plot with negative stems: temperatures',
+      alt: 'A stem-and-leaf plot titled Daily low temperatures with the stems −1, −0, 0 and 1, and the key −0 | 5 = −5 °C',
+      caption:
+        'A stem-and-leaf plot titled Daily low temperatures, of temperatures in degrees Celsius from −12 °C to 15 °C. The stems run −1, −0, 0 and 1 from the coldest to the warmest, with −0 holding −1 to −9 and 0 holding 0 to 9, and a negative stem’s leaves written so the values rise across its row. The key reads −0 | 5 = −5 °C.',
+      settings: {
+        data: '-12, -10, -8, -5, -3, -1, 0, 2, 2, 4, 7, 9, 11, 15',
+        keyValue: '-5',
+        keyUnit: '°C',
+        title: 'Daily low temperatures',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'blank-stem-and-leaf-diagram-with-boxes',
+      title: 'Blank stem-and-leaf diagram with boxes to fill in',
+      alt: 'A blank stem-and-leaf diagram with the stems 1 to 5, a row of eight empty boxes for leaves beside each, and the key 2 | 3 means 23 minutes',
+      caption:
+        'A blank stem-and-leaf diagram for students to fill in from a list of data, with the stems 1, 2, 3, 4 and 5 down the left and a row of eight empty boxes beside each for the leaves. The key reads 2 | 3 means 23 minutes, and the title is Time to finish a puzzle.',
+      settings: {
+        from: '1',
+        to: '5',
+        boxes: true,
+        boxCount: '8',
+        keyValue: '23',
+        keyWords: 'means',
+        keyUnit: 'minutes',
+        title: 'Time to finish a puzzle',
+        titleMode: 'text',
+      },
+    },
+  ]),
+
   ...examplesOf('mapping-diagram', [
     {
       slug: 'mapping-diagram-of-a-function',

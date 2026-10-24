@@ -24,6 +24,7 @@ import PyramidPreview from './pyramid/Preview.svelte'
 import RectanglePreview from './rectangle/Preview.svelte'
 import RegularPolygonPreview from './regular-polygon/Preview.svelte'
 import SpherePreview from './sphere/Preview.svelte'
+import StemAndLeafPreview from './stem-and-leaf/Preview.svelte'
 import TrapezoidPreview from './trapezoid/Preview.svelte'
 import TrianglePreview from './triangle/Preview.svelte'
 
@@ -46,6 +47,7 @@ export const PREVIEWS: Record<string, Component> = {
   'sphere': SpherePreview,
   'box-plot': BoxPlotPreview,
   'bar-graph': BarGraphPreview,
+  'stem-and-leaf': StemAndLeafPreview,
   'mapping-diagram': MappingDiagramPreview,
   'length-reading': LengthReadingPreview,
   'composite-shape': CompositeShapePreview,
