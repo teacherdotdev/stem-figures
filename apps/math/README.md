@@ -53,6 +53,13 @@ and `docs/adr/` for decisions.
   frequencies of the grand total, each row or each column, as decimals,
   percents or fractions. An empty cell is blank on the figure and a letter is
   written as typed; the panel says which missing values can be worked out.
+- `/histogram` **Histogram Generator**: a data set sorted into bins (a start
+  and a width, or ones that fit the data, with values on an edge going the
+  way the teacher picks), or a frequency table of bins typed like 10–20 or
+  10 ≤ x < 20, equal or unequal. The vertical axis shows frequency, relative
+  frequency or frequency density; a frequency polygon can go over the bars or
+  alone; the horizontal axis is numbered at the bin edges or every step, with
+  a zig-zag break when it starts past 0. A frequency left empty draws no bar.
 - `/<generator>/examples/<slug>` **Example figures** (see below), and
   `/reuse`, how teachers may reuse them.
 - `/about`, `/privacy`, `/sitemap.xml`, `/robots.txt`

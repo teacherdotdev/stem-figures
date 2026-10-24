@@ -324,6 +324,22 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'histogram',
+    site: 'math',
+    alsoOn: ['biology'],
+    name: 'Histogram Generator',
+    path: '/histogram',
+    blurb: 'Histograms from a data set or a frequency table, with equal or unequal bins.',
+    description:
+      'Histograms from a data set or a frequency table you type or paste: touching bars over equal or unequal bins, frequency, relative frequency or frequency density, a frequency polygon, and a zig-zag break when the axis starts past 0.',
+    keywords: [
+      'histogram', 'histograms', 'frequency histogram', 'relative frequency histogram', 'frequency density',
+      'unequal class widths', 'class width', 'class interval', 'class intervals', 'grouped data', 'grouped frequency table',
+      'frequency table', 'frequency polygon', 'bins', 'bin width', 'continuous data', 'distribution', 'skewed', 'symmetric',
+      'bimodal', 'statistics', 'stats', 'data display', 'axis break', 'printable',
+    ],
+  },
+  {
     id: 'mapping-diagram',
     site: 'math',
     name: 'Mapping Diagram Generator',

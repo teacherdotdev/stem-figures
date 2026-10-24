@@ -15,6 +15,7 @@ import { buildCumulative } from '$lib/generators/cumulative-frequency/layout'
 import * as cumulative from '$lib/generators/cumulative-frequency/settings'
 import { parseEquation, readEquations } from '$lib/generators/coordinate-grid/equations'
 import * as grid from '$lib/generators/coordinate-grid/settings'
+import * as histogram from '$lib/generators/histogram/settings'
 import { family as kiteFamily } from '$lib/generators/kite/family'
 import { lengthSettings, answerLine as lengthAnswer } from '$lib/generators/length-reading/settings'
 import * as mapping from '$lib/generators/mapping-diagram/settings'
@@ -327,6 +328,16 @@ function twoWayAnswer(s: SettingsById['two-way-table']): ExampleDetails['answer'
   return { heading: 'Answer key', lines: found.map((m) => `${m.name}: ${m.typed ? `${m.typed} = ` : ''}${m.value}`) }
 }
 
+function histogramAnswer(s: SettingsById['histogram']): ExampleDetails['answer'] {
+  const read = histogram.readHistogram(s)
+  const problem = Object.values(read.problems).find(Boolean)
+  if (problem) throw new Error(`The histogram example can’t be drawn as written: ${problem}`)
+  if (!read.bins.length) throw new Error('The histogram example has no bins')
+  // A data set's frequency table, which students work out; a typed table gives its own.
+  if (s.source !== 'data') return null
+  return { heading: 'Answer key', lines: [...read.bins.map((b) => `${b.name}: ${histogram.fmt(b.frequency ?? 0)}`), `n = ${histogram.fmt(read.n)}`] }
+}
+
 function mappingAnswer(s: SettingsById['mapping-diagram']): ExampleDetails['answer'] {
   const map = mapping.readMapping(s)
   if (!map.inputs.length || !map.outputs.length) throw new Error('The mapping diagram example has no inputs or outputs')
@@ -355,6 +366,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'stem-and-leaf': { definition: definitionOf(stemAndLeaf), answer: stemAndLeafAnswer },
   'cumulative-frequency': { definition: definitionOf(cumulative), answer: cumulativeAnswer },
   'two-way-table': { definition: definitionOf(twoWay), answer: twoWayAnswer },
+  'histogram': { definition: definitionOf(histogram), answer: histogramAnswer },
   'mapping-diagram': { definition: definitionOf(mapping), answer: mappingAnswer },
   'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthAnswer(s).split(' · ') }) },
 }

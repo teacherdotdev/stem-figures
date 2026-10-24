@@ -38,6 +38,8 @@
     onremovecolumn?: (j: number) => void
     /** the columns are the generator's: headings written as given, none added or removed */
     fixed?: boolean
+    /** the most value columns the table takes, for a table with one column of values (a frequency table) */
+    maxColumns?: number
     /** each row's total, one per row, for a table that takes totals */
     rowTotals?: string[]
     /** each column's total, one per column */
@@ -51,13 +53,13 @@
   }
   let {
     id, columns = $bindable(), rows = $bindable(), errors = $bindable(false),
-    rowName, columnName, placeholders = {}, onremovecolumn, fixed = false,
+    rowName, columnName, placeholders = {}, onremovecolumn, fixed = false, maxColumns = MAX_COLUMNS,
     rowTotals = $bindable(), columnTotals = $bindable(), grand = $bindable(''),
     totalColumn = $bindable(false), totalRow = $bindable(false), inputmode = 'decimal',
   }: Props = $props()
 
   let table = $state<HTMLElement>()
-  const canAddColumn = $derived(!fixed && columns.length < MAX_COLUMNS)
+  const canAddColumn = $derived(!fixed && columns.length < maxColumns)
   const canAddRow = $derived(rows.length < MAX_ROWS)
   const takesTotals = $derived(!!rowTotals && !!columnTotals)
   const showTotalColumn = $derived(takesTotals && totalColumn)
@@ -144,8 +146,8 @@
     const pasted = totals ?? parsePasted(text)
     if (!pasted || !pasted.rows.length) return
     e.preventDefault()
-    const n = fixed ? columns.length : (pasted.columns?.length ?? Math.max(1, ...pasted.rows.map((r) => r.cells.length)))
-    if (!fixed) columns = pasted.columns ?? Array.from({ length: n }, (_, j) => columns[j] ?? '')
+    const n = fixed ? columns.length : Math.min(maxColumns, pasted.columns?.length ?? Math.max(1, ...pasted.rows.map((r) => r.cells.length)))
+    if (!fixed) columns = pasted.columns?.slice(0, n) ?? Array.from({ length: n }, (_, j) => columns[j] ?? '')
     rows = pasted.rows.map((r) => ({ ...r, cells: Array.from({ length: n }, (_, j) => r.cells[j] ?? blankCell()) }))
     if (rows.some((r) => r.cells.some((c) => c.error))) errors = true
     if (totals) {

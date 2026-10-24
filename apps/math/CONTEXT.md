@@ -383,11 +383,11 @@ A value's digit at the leaf unit, written on its stem's row. The leaf unit is th
 _Avoid_: Last digit (fine in speech), unit digit
 
 **Histogram**:
-A figure of touching bars over a numbered axis, one bar per bin, whose heights show how many values fall in each bin. Its generator is the Histogram Generator.
+A figure of touching bars over a numbered axis, one bar per bin, whose heights show how many values fall in each bin (with unequal bins, their areas, over a frequency density axis). Its generator is the Histogram Generator.
 _Avoid_: Bar graph (bars there are separate categories), column chart
 
 **Bin**:
-One stretch of the histogram's axis, such as 10 to 20, numbered at its edges. A value on an edge belongs to the bin that starts there. Bins come from a data set with a start and bin width, or are typed with their counts as a frequency table.
+One stretch of the histogram's axis, such as 10 to 20, numbered at its edges. A value on an edge belongs to the bin that starts there (10 ≤ x < 20), unless the teacher picks the bin that ends there (10 < x ≤ 20). Bins come from a data set with a start and bin width, or are typed with their counts as a frequency table, where a bin typed as an inequality says which end it holds. Whole-number bins like 10–19 are read as their edges, so 10–19, 20–29 leave a gap; the generator offers 9.5–19.5, 19.5–29.5 instead. On the page they're bins; class, class interval and class width are the same words in UK textbooks.
 _Avoid_: Interval, class, bucket, range (a range is an axis's From, To and Step)
 
 **Frequency**:
@@ -406,6 +406,19 @@ _Avoid_: Running total table, cumulative frequency table (fine in speech)
 A value read off a cumulative frequency graph with dashed lines: across from a cumulative frequency to the join and down to the horizontal axis (the median from n/2, the quartiles from n/4 and 3n/4, a percentile), or up from a value and across. It's read where the lines meet the join as drawn, to a tenth of a block, and its value is written at the axis, left as a blank line for students, or left off.
 _Avoid_: Estimate (fine in teaching), interpolation, guide line
 
+**Frequency density**:
+A bin's frequency divided by its width, the height of its bar on a histogram with unequal bins, so each bar's area stands for its frequency. The Histogram Generator chooses it for unequal bins; a frequency axis can still be picked, with a warning.
+_Avoid_: Density (alone, fine in speech), frequency per unit
+
+**Frequency polygon**:
+A line through the middle of the top of each histogram bar, drawn over the bars or alone, and closed down to the axis half a bin past each end unless the teacher leaves it open.
+_Avoid_: Line graph (points joined across a coordinate grid), frequency curve
+
+**Axis break**:
+A zig-zag on the horizontal axis between the corner and the first bin, when the axis starts past 0, so data like heights from 150 to 190 cm don't need an empty stretch from 0.
+_Avoid_: Broken axis, squiggle, axis jump
+
+**Line plot**:
 A number line with a mark stacked above each value of a data set, as grades 3–6 use the name. No generator makes one yet.
 _Avoid_: Dot plot is the same figure; line graph (points joined across a coordinate grid) is a different one
 
@@ -422,8 +435,8 @@ A cell of a two-way table left for students: left empty, so it's blank on the fi
 _Avoid_: Hidden value (nothing is typed and then hidden), gap (fine in speech), unknown
 
 **Relative frequency**:
-A count divided by a total: in a two-way table, by the grand total (a joint relative frequency), by its row's total, or by its column's total (a conditional relative frequency), written as a decimal, a percent or a fraction in lowest terms. The totals then show the matching shares, and a row's (or column's) total is 1, or 100%.
-_Avoid_: Proportion, probability (fine in teaching), percentage table
+A count divided by a total. On a histogram it's a bin's frequency as a share of n, the total of all the frequencies, as a decimal or a percent. In a two-way table it's a cell divided by the grand total (a joint relative frequency), by its row's total, or by its column's total (a conditional relative frequency), written as a decimal, a percent or a fraction in lowest terms; the totals then show the matching shares, and a row's (or column's) total is 1, or 100%.
+_Avoid_: Proportion, percentage frequency, probability (fine in teaching), percentage table
 
 ### 3D shapes
 

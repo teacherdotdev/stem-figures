@@ -740,6 +740,52 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'Algebra 1'],
   },
 
+  'histogram': {
+    heading: 'Histograms from a data set or a frequency table',
+    intro: [
+      'The Histogram Generator draws a histogram from a data set you type or paste, sorted into bins of the width you give or one that fits the data, or from a frequency table of bins and their frequencies. Bins are typed the way you write them, like 10–20 or 10 ≤ x < 20, and can be unequal, in which case the vertical axis shows frequency density so each bar’s area stands for its frequency.',
+      'The horizontal axis is numbered at the bin edges, with a zig-zag break when it starts past 0, such as for heights from 150 cm. Draw a frequency polygon over the bars or on its own. Leave a frequency empty for a bar students draw, or hide the vertical axis’s numbers for students to work out the scale from one bar.',
+    ],
+    settings: [
+      'A data set, with where the bins start, their width, and which bin holds a value on an edge',
+      'Or a frequency table: bins typed as 10–20, 10 ≤ x < 20 or 20 < t ≤ 30, equal or unequal, and their frequencies',
+      'Frequency, relative frequency as a decimal or a percent, or frequency density on the vertical axis',
+      'Bars filled with a color, gray, a black-and-white fill or white, and each bar’s frequency written above it',
+      'A frequency polygon over the bars or alone, closed down to the axis or left open',
+      'The horizontal axis numbered at the bin edges or every step of a range you type',
+      'A chart title and axis titles, as text or a blank line for students',
+      'The vertical axis’s range and count-by, worked out from the data unless you type them, which lines are numbered, and the gridlines',
+    ],
+    faqs: [
+      {
+        q: 'What is the difference between a histogram and a bar graph?',
+        a: 'A histogram’s bars touch, because its bins run on from one to the next along a numbered axis, like heights from 150 to 190 cm. A bar graph’s bars stand apart, one for each named category, like favorite sports. Use the Bar Graph Generator for those.',
+      },
+      {
+        q: 'How do I make a histogram with unequal class widths?',
+        a: 'Choose Frequency table and type each bin with its frequency, like 0 < t ≤ 10, then 10 < t ≤ 15. With unequal bins the vertical axis shows frequency density, each bin’s frequency divided by its width, as GCSE Higher papers use. You can still pick frequency, but the panel warns you that the bars’ areas won’t match the frequencies.',
+      },
+      {
+        q: 'Which bin does a value on an edge go in?',
+        a: 'The bin that starts there, so 20 goes in 20 ≤ x < 30. Under the data set you can pick the bin that ends there instead (10 < x ≤ 20), as many UK papers write it. A frequency table typed with inequalities says which end each bin holds.',
+      },
+      {
+        q: 'Why does the panel say my bins have a gap?',
+        a: 'Bins typed as whole numbers, like 10–19 and 20–29, are read as running from 10 to 19 and from 20 to 29, leaving a gap. For whole-number data the bars meet halfway, so the generator offers 9.5–19.5, 19.5–29.5 and so on; click Use these bins to switch.',
+      },
+      {
+        q: 'How do I draw a frequency polygon?',
+        a: 'Under Bars, choose a frequency polygon over the bars or alone. It joins the middle of the top of each bar, and is closed down to the axis half a bin past each end unless you leave it open.',
+      },
+      {
+        q: 'How do I leave a bar for students to draw?',
+        a: 'Choose Frequency table (it starts from your data set’s bins if you typed one) and empty that bin’s frequency. The bin stays on the axis with no bar. Empty every frequency for a blank histogram with its axes set up.',
+      },
+    ],
+    imageAlt: 'A printable histogram of student heights, with touching bars over bins from 150 to 180 cm and a zig-zag break on the horizontal axis, made with the Histogram Generator',
+    educationalLevel: ['Middle school', 'High school'],
+  },
+
   'mapping-diagram': {
     heading: 'Mapping diagrams for functions and relations',
     intro: [

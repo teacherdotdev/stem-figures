@@ -7,6 +7,7 @@ import type { Settings as BarGraphSettings } from '$lib/generators/bar-graph/set
 import type { Settings as BoxPlotSettings } from '$lib/generators/box-plot/settings'
 import type { Settings as GridSettings } from '$lib/generators/coordinate-grid/settings'
 import type { Settings as CumulativeSettings } from '$lib/generators/cumulative-frequency/settings'
+import type { Settings as HistogramSettings } from '$lib/generators/histogram/settings'
 import type { LengthSettings } from '$lib/generators/length-reading/settings'
 import type { Settings as MappingSettings } from '$lib/generators/mapping-diagram/settings'
 import type { Settings as NumberLineSettings } from '$lib/generators/number-line/settings'
@@ -36,6 +37,7 @@ export interface SettingsById {
   'stem-and-leaf': StemAndLeafSettings
   'cumulative-frequency': CumulativeSettings
   'two-way-table': TwoWayTableSettings
+  'histogram': HistogramSettings
   'mapping-diagram': MappingSettings
   'length-reading': LengthSettings
 }
