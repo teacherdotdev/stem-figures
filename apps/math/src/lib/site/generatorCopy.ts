@@ -617,6 +617,47 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Elementary school', 'Middle school', 'High school'],
   },
 
+  'cumulative-frequency': {
+    heading: 'Cumulative frequency graphs from a frequency table',
+    intro: [
+      'The Cumulative Frequency Graph Generator draws a cumulative frequency graph from a frequency table, a cumulative table or a data set. Each point is plotted at a bin’s upper bound against the running total up to it, starting from 0 at the lowest bound, and the points are joined by a smooth curve or straight lines. The axes fit the data unless you type their ranges.',
+      'Dashed lines read the median and quartiles off the curve, or any percentile, or go up from a value to estimate how many are below it. Each value is written at the axis, left as a blank line for students, or left off. Every reading is taken from the curve as drawn, so it matches what students measure on the printed graph.',
+    ],
+    settings: [
+      'The data: a frequency table of bins, a cumulative table of upper bounds, or a data set sorted into bins of a width you choose',
+      'Crosses or dots at the points, joined by a smooth curve, straight lines or nothing, starting from 0 at the lowest bound or not',
+      'A vertical axis of cumulative frequency or cumulative percent',
+      'Reading lines for the median, lower and upper quartiles, any percentile, across from a cumulative frequency or up from a value, each with its value, a blank line or neither',
+      'Color, or black and white for printing',
+      'A chart title and axis titles, as text or a blank line for students',
+      'Each axis’s range and count-by, worked out from the data unless you type them, which lines are numbered, and the gridlines',
+    ],
+    faqs: [
+      {
+        q: 'Where are the points of a cumulative frequency graph plotted?',
+        a: 'At the upper bound of each bin, against the running total up to that bound. The graph starts with a point at the lowest bound and 0, as GCSE mark schemes expect; turn off Start from 0 at the lowest bound to leave it out.',
+      },
+      {
+        q: 'Is a cumulative frequency graph the same as an ogive?',
+        a: 'Yes. US textbooks often call it an ogive and draw it with straight lines and a percent axis. Choose Straight lines under Join and Cumulative percent for the vertical axis to draw it that way.',
+      },
+      {
+        q: 'How are the median and quartiles found?',
+        a: 'A dashed line runs across from half of n (a quarter and three quarters for the quartiles) to the curve, then down to the horizontal axis. The value is read where that line meets the curve as drawn, to a tenth of a block, so a smooth curve and straight lines can give slightly different answers, as they do on paper. The panel lists the median, quartiles and interquartile range.',
+      },
+      {
+        q: 'Can I type a cumulative frequency table instead?',
+        a: 'Yes. Choose Cumulative table and type each upper bound with its running total, or paste the table. Type the first bound as a bin, like 0 < h ≤ 10, for the curve to start from 0 at its lower end.',
+      },
+      {
+        q: 'How do I make a graph for students to draw on?',
+        a: 'Choose None under Join for the points alone, so students draw the curve. For blank axes, leave the data empty and type each axis’s range. To have students read a value, draw its lines and choose Blank for its value.',
+      },
+    ],
+    imageAlt: 'A printable cumulative frequency curve of the heights of 80 students, with dashed lines reading off the median and quartiles, made with the Cumulative Frequency Graph Generator',
+    educationalLevel: ['Middle school', 'High school'],
+  },
+
   'mapping-diagram': {
     heading: 'Mapping diagrams for functions and relations',
     intro: [

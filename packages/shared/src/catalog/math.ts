@@ -278,6 +278,22 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'cumulative-frequency',
+    site: 'math',
+    name: 'Cumulative Frequency Graph Generator',
+    path: '/cumulative-frequency',
+    blurb: 'Cumulative frequency curves from a frequency table, with the median and quartiles read off.',
+    description:
+      'Cumulative frequency graphs from a frequency table, a cumulative table or a data set: points at each upper bound joined by a smooth curve or straight lines, a cumulative frequency or percent axis, and dashed lines reading off the median, quartiles or any percentile, with their values written or left blank.',
+    keywords: [
+      'cumulative frequency', 'cumulative frequency graph', 'cumulative frequency curve', 'cumulative frequency diagram',
+      'cumulative frequency polygon', 'ogive', 'cumulative relative frequency', 'cumulative percentage', 'running total',
+      'grouped data', 'grouped frequency table', 'frequency table', 'class interval', 'upper class boundary',
+      'median', 'lower quartile', 'upper quartile', 'quartiles', 'interquartile range', 'iqr', 'percentile', 'percentiles',
+      'estimate', 'gcse', 'statistics', 'stats', 'data display', 'printable',
+    ],
+  },
+  {
     id: 'mapping-diagram',
     site: 'math',
     name: 'Mapping Diagram Generator',

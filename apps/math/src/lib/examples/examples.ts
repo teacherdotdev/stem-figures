@@ -766,6 +766,141 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('cumulative-frequency', [
+    {
+      slug: 'cumulative-frequency-curve-median-and-quartiles',
+      title: 'Cumulative frequency curve with the median and quartiles',
+      alt: 'A cumulative frequency curve titled Heights of 80 students, with dashed red lines reading off the median, 169, and the quartiles, 162 and 177, written under the height axis',
+      caption:
+        'A cumulative frequency curve titled Heights of 80 students, over a height axis from 140 to 200 cm by 5 and a cumulative frequency axis from 0 to 80 by 10. Crosses mark the running totals at each upper bound, starting from 0 at 140, joined by a smooth blue curve. Dashed red lines go across from 20, 40 and 60 to the curve and down, with the lower quartile 162, the median 169 and the upper quartile 177 written under the axis.',
+      settings: {
+        rows: [
+          { name: '140 < h ≤ 150', cells: [{ value: '4' }] },
+          { name: '150 < h ≤ 160', cells: [{ value: '12' }] },
+          { name: '160 < h ≤ 170', cells: [{ value: '26' }] },
+          { name: '170 < h ≤ 180', cells: [{ value: '24' }] },
+          { name: '180 < h ≤ 190', cells: [{ value: '10' }] },
+          { name: '190 < h ≤ 200', cells: [{ value: '4' }] },
+        ],
+        median: 'value',
+        lower: 'value',
+        upper: 'value',
+        title: 'Heights of 80 students',
+        titleMode: 'text',
+        xTitle: 'Height (cm)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'cumulative-frequency-points-for-students-to-draw-the-curve',
+      title: 'Cumulative frequency points for students to draw the curve',
+      alt: 'Crosses plotted for a cumulative frequency graph of time in minutes, from 0 to 60 on both axes, with no curve drawn through them',
+      caption:
+        'Six crosses on a grid with dark gridlines split into halves: one at 0 minutes with a cumulative frequency of 0, then 5 at 10 minutes, 19 at 20, 40 at 30, 52 at 40 and 60 at 60. The time axis runs from 0 to 60 minutes and the cumulative frequency axis from 0 to 60, both by 5. No curve is drawn, so students join the points with a smooth curve.',
+      settings: {
+        rows: [
+          { name: '0 < t ≤ 10', cells: [{ value: '5' }] },
+          { name: '10 < t ≤ 20', cells: [{ value: '14' }] },
+          { name: '20 < t ≤ 30', cells: [{ value: '21' }] },
+          { name: '30 < t ≤ 40', cells: [{ value: '12' }] },
+          { name: '40 < t ≤ 60', cells: [{ value: '8' }] },
+        ],
+        join: 'none',
+        gridlines: 'standard',
+        minor: 2,
+        xTitle: 'Time (minutes)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'ogive-cumulative-percent-test-scores',
+      title: 'Ogive of test scores with a cumulative percent axis',
+      alt: 'An ogive of test scores with dots joined by straight blue lines, a cumulative percent axis from 0 to 100, and dashed red lines across from 60 and down',
+      caption:
+        'An ogive titled Test scores, with scores from 40 to 100 by 5 along the bottom and a cumulative percent axis from 0 to 100 by 10. Dots at 0% for 40, then 5%, 17.5%, 40%, 70%, 90% and 100% at each upper bound from 50 to 100, are joined by straight blue lines. Dashed red lines go across from 60% to the line and down to the score axis, with no value written, so students read the 60th percentile.',
+      settings: {
+        rows: [
+          { name: '40–50', cells: [{ value: '2' }] },
+          { name: '50–60', cells: [{ value: '5' }] },
+          { name: '60–70', cells: [{ value: '9' }] },
+          { name: '70–80', cells: [{ value: '12' }] },
+          { name: '80–90', cells: [{ value: '8' }] },
+          { name: '90–100', cells: [{ value: '4' }] },
+        ],
+        mark: 'dot',
+        join: 'straight',
+        scale: 'percent',
+        readings: [{ kind: 'percentile', at: '60', show: 'lines' }],
+        title: 'Test scores',
+        titleMode: 'text',
+        xTitle: 'Score',
+        xTitleMode: 'text',
+        yTitle: 'Cumulative percent',
+      },
+    },
+    {
+      slug: 'cumulative-frequency-from-a-cumulative-table-estimate-how-many',
+      title: 'Cumulative frequency graph: estimate how many from the curve',
+      alt: 'A black-and-white cumulative frequency curve titled Weights of 120 parcels, with dashed lines for the median and up from 5 kg, and blank lines at the axes for the answers',
+      caption:
+        'A cumulative frequency curve in black and white titled Weights of 120 parcels, over a weight axis from 0 to 12 kg by 1 and a cumulative frequency axis from 0 to 120 by 10, with crosses at 0 parcels for 0 kg, then 8, 30, 64, 96, 112 and 120 parcels every 2 kg up to 12. Dashed lines go across from 60 to the curve and down for the median, and up from 5 kg and across for how many parcels weigh 5 kg or less. A blank line under the weight axis and another left of the frequency axis are for students’ answers.',
+      settings: {
+        mode: 'cumulative',
+        totals: [
+          { name: '0 < w ≤ 2', cells: [{ value: '8' }] },
+          { name: '0 < w ≤ 4', cells: [{ value: '30' }] },
+          { name: '0 < w ≤ 6', cells: [{ value: '64' }] },
+          { name: '0 < w ≤ 8', cells: [{ value: '96' }] },
+          { name: '0 < w ≤ 10', cells: [{ value: '112' }] },
+          { name: '0 < w ≤ 12', cells: [{ value: '120' }] },
+        ],
+        median: 'blank',
+        readings: [{ kind: 'up', at: '5', show: 'blank' }],
+        look: 'bw',
+        title: 'Weights of 120 parcels',
+        titleMode: 'text',
+        xTitle: 'Weight (kg)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'cumulative-frequency-curve-from-a-data-set-of-test-marks',
+      title: 'Cumulative frequency curve from a data set of test marks',
+      alt: 'A cumulative frequency curve of 30 test marks with dashed red lines for the quartiles and median and three blank lines under the mark axis',
+      caption:
+        'A cumulative frequency curve of 30 test marks, sorted into bins of 10 from 10 to 90, with crosses at each upper bound joined by a smooth blue curve. The mark axis runs from 10 to 90 by 10 and the cumulative frequency axis from 0 to 30 by 5. Dashed red lines go across from 7.5, 15 and 22.5 to the curve and down, each to a blank line under the axis for students to write the lower quartile, median and upper quartile.',
+      settings: {
+        mode: 'data',
+        data: '12, 18, 23, 25, 27, 31, 33, 34, 36, 38, 39, 41, 42, 44, 45, 45, 47, 48, 51, 53, 54, 56, 58, 61, 63, 66, 68, 72, 75, 83',
+        binStart: '10',
+        binWidth: '10',
+        edges: 'right',
+        lower: 'blank',
+        median: 'blank',
+        upper: 'blank',
+        xTitle: 'Mark',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'blank-cumulative-frequency-graph-axes',
+      title: 'Blank cumulative frequency graph axes',
+      alt: 'Blank cumulative frequency graph axes on graph paper, time from 0 to 60 minutes by 5 and cumulative frequency from 0 to 80 by 10',
+      caption:
+        'A blank grid for a cumulative frequency graph, with dark gridlines each split into five smaller squares like graph paper. The horizontal axis is titled Time (minutes) and numbered from 0 to 60 by 5, and the vertical axis is titled Cumulative frequency and numbered from 0 to 80 by 10. Nothing is plotted, so students plot the points from a table and draw the curve.',
+      settings: {
+        xTo: '60',
+        xStep: '5',
+        yTo: '80',
+        yStep: '10',
+        gridlines: 'standard',
+        minor: 5,
+        xTitle: 'Time (minutes)',
+        xTitleMode: 'text',
+      },
+    },
+  ]),
+
   ...examplesOf('mapping-diagram', [
     {
       slug: 'mapping-diagram-of-a-function',

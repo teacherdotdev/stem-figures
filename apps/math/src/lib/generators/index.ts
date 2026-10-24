@@ -9,6 +9,7 @@ import { SITE_ID } from '$lib/site/config.js'
 import AnglesPreview from './angles/Preview.svelte'
 import BarGraphPreview from './bar-graph/Preview.svelte'
 import BoxPlotPreview from './box-plot/Preview.svelte'
+import CumulativeFrequencyPreview from './cumulative-frequency/Preview.svelte'
 import CompositeShapePreview from '$lib/editors/composite-shape/Preview.svelte'
 import ConePreview from './cone/Preview.svelte'
 import CoordinateGridPreview from './coordinate-grid/Preview.svelte'
@@ -46,6 +47,7 @@ export const PREVIEWS: Record<string, Component> = {
   'sphere': SpherePreview,
   'box-plot': BoxPlotPreview,
   'bar-graph': BarGraphPreview,
+  'cumulative-frequency': CumulativeFrequencyPreview,
   'mapping-diagram': MappingDiagramPreview,
   'length-reading': LengthReadingPreview,
   'composite-shape': CompositeShapePreview,

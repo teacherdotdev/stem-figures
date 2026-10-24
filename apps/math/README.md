@@ -37,6 +37,12 @@ and `docs/adr/` for decisions.
   each row, a series in each column), drawn as upright columns or sideways
   bars, side by side or stacked, with values on the bars, ± error bars, a key,
   color or black-and-white fills. A value left empty draws no bar.
+- `/cumulative-frequency` **Cumulative Frequency Graph Generator**: a frequency
+  table, a cumulative table or a data set binned from a start and width, drawn
+  as crosses or dots at each upper bound joined by a smooth (monotone) curve or
+  straight lines, over a cumulative frequency or percent axis, with dashed
+  readings of the median, quartiles, a percentile or a value, each written,
+  blank or left off.
 - `/<generator>/examples/<slug>` **Example figures** (see below), and
   `/reuse`, how teachers may reuse them.
 - `/about`, `/privacy`, `/sitemap.xml`, `/robots.txt`
