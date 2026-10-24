@@ -11,6 +11,7 @@ import type { Settings as MappingSettings } from '$lib/generators/mapping-diagra
 import type { Settings as NumberLineSettings } from '$lib/generators/number-line/settings'
 import type { Settings as PolygonSettings } from '$lib/generators/regular-polygon/settings'
 import type { Settings as TriangleSettings } from '$lib/generators/triangle/settings'
+import type { Settings as TwoWayTableSettings } from '$lib/generators/two-way-table/settings'
 import type { Settings as QuadrilateralSettings } from '$lib/shapes/quadrilateral/settings'
 
 /** Each generator's settings, by generator id. */
@@ -30,6 +31,7 @@ export interface SettingsById {
   'sphere': ShapeSettings
   'box-plot': BoxPlotSettings
   'bar-graph': BarGraphSettings
+  'two-way-table': TwoWayTableSettings
   'mapping-diagram': MappingSettings
   'length-reading': LengthSettings
 }

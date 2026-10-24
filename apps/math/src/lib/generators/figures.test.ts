@@ -16,6 +16,8 @@ import { buildLine } from './number-line/numberline.js'
 import * as line from './number-line/settings.js'
 import { buildDiagram } from './mapping-diagram/layout.js'
 import * as mapping from './mapping-diagram/settings.js'
+import { buildTable } from './two-way-table/layout.js'
+import * as twoWay from './two-way-table/settings.js'
 import { buildQuadrilateral } from '$lib/shapes/quadrilateral/layout.js'
 import { readQuadrilateral } from '$lib/shapes/quadrilateral/settings.js'
 import { family as kite } from './kite/family.js'
@@ -254,6 +256,18 @@ const BAR = [
   'titleMode=text&title=Votes&valueTitleMode=blank&categoryTitleMode=text&categoryTitle=Color&from=abc&step=0',
 ]
 
+const TRAVEL = `cols=Walk%7CBus%7CCar&${rows('Year 7|12|10|8|30', 'Year 8|15|8|6|29', 'Year 9|9|14|5|28')}&tot=36%7C32%7C19%7C87`
+const TWO_WAY = [
+  '',
+  TRAVEL,
+  `cols=Walk%7CBus%7CCar&${rows('Year 7||10|8|30', 'Year 8|15|x|6|', 'Year 9|9|14|5|28')}&tot=36%7C%7C19%7C`,
+  `${TRAVEL}&show=relative&relativeTo=row&form=fraction&totalsBold=1`,
+  `${TRAVEL}&show=relative&relativeTo=column&form=percent&places=1&rules=some&headers=plain`,
+  `${TRAVEL}&columnTitle=Transport&rowTitle=Year&titleMode=text&title=Travel%20to%20school`,
+  `${TRAVEL}&columnTitle=Transport&rowTitle=Year%20group&corner=diagonal&labelSize=large`,
+  `totalColumn=0&cols=Strawberry%20milkshake%7CHot%20chocolate&${rows('A very long row category|3|4', 'B|5|6')}&tot=8%7C10&titleMode=blank`,
+]
+
 describe('coordinate grid', () => {
   test.each(GRID)('%s', (q) => {
     const s = grid.settingsFromParams(params(q))
@@ -282,6 +296,14 @@ describe('bar graph', () => {
     const s = bar.settingsFromParams(params(q))
     const { layout, ...figure } = buildBarGraph(s)
     expect({ query: bar.settingsToQuery(s), figure, layout: { ...layout, px: undefined } }).toMatchSnapshot()
+  })
+})
+
+describe('two-way table', () => {
+  test.each(TWO_WAY)('%s', (q) => {
+    const s = twoWay.settingsFromParams(params(q))
+    const { read, ...figure } = buildTable(s)
+    expect({ query: twoWay.settingsToQuery(s), missing: read.missing, problems: read.problems, figure }).toMatchSnapshot()
   })
 })
 

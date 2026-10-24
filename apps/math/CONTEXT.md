@@ -386,6 +386,22 @@ _Avoid_: Count (fine in speech), tally
 A number line with a mark stacked above each value of a data set, as grades 3–6 use the name. No generator makes one yet.
 _Avoid_: Dot plot is the same figure; line graph (points joined across a coordinate grid) is a different one
 
+**Two-Way Table**:
+A table of counts for two ways of sorting the same people or things: the categories of one down the side (Year 7, Year 8), the categories of the other across the top (Walk, Bus, Car), and in each cell how many are in both. Each variable can have a title, written above the headings and beside the row names, or both in a corner split by a diagonal. Its generator is the Two-Way Table Generator.
+_Avoid_: Contingency table, two-way frequency table (fine as search words, not as the name); frequency table (one variable)
+
+**Total**:
+A cell of a two-way table that adds up others: each row's total in the Total column, each column's total in the Total row, and the grand total where they meet. Totals are typed like any other cell, or filled in by Work out totals.
+_Avoid_: Sum, marginal (fine in teaching), subtotal
+
+**Missing value**:
+A cell of a two-way table left for students: left empty, so it's blank on the figure, or typed as a letter like x, written as typed. A missing value can be worked out when its row or column has no other gap, repeated until nothing changes; the generator says which can and what each one is.
+_Avoid_: Hidden value (nothing is typed and then hidden), gap (fine in speech), unknown
+
+**Relative frequency**:
+A count divided by a total: in a two-way table, by the grand total (a joint relative frequency), by its row's total, or by its column's total (a conditional relative frequency), written as a decimal, a percent or a fraction in lowest terms. The totals then show the matching shares, and a row's (or column's) total is 1, or 100%.
+_Avoid_: Proportion, probability (fine in teaching), percentage table
+
 ### 3D shapes
 
 **3D Shape**:

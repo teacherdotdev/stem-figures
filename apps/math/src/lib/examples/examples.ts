@@ -766,6 +766,148 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('two-way-table', [
+    {
+      slug: 'two-way-table-how-students-travel-to-school',
+      title: 'Two-way table: how students travel to school, with gaps to fill',
+      alt: 'A two-way table of how students in Years 7, 8 and 9 travel to school by walking, bus or car, with totals and three cells left blank',
+      caption:
+        'A two-way table titled How students travel to school, with Year down the side (Years 7, 8 and 9) and Transport across the top (Walk, Bus and Car), and a Total column and Total row. Every total is given, grand total 87, and one count in each row is left blank: Year 7 by bus, Year 8 by car and Year 9 walking. Students work each one out from its row or column.',
+      settings: {
+        columns: ['Walk', 'Bus', 'Car'],
+        rows: [
+          { name: 'Year 7', cells: [{ value: '12' }, { value: '' }, { value: '8' }] },
+          { name: 'Year 8', cells: [{ value: '15' }, { value: '8' }, { value: '' }] },
+          { name: 'Year 9', cells: [{ value: '' }, { value: '14' }, { value: '5' }] },
+        ],
+        rowTotals: ['30', '29', '28'],
+        columnTotals: ['36', '32', '19'],
+        grand: '87',
+        title: 'How students travel to school',
+        titleMode: 'text',
+        columnTitle: 'Transport',
+        rowTitle: 'Year',
+      },
+    },
+    {
+      slug: 'two-way-table-gap-fill-language-choices',
+      title: 'Two-way table gap-fill: boys’ and girls’ language choices',
+      alt: 'A two-way table of the language 100 boys and girls chose, French, German or Spanish, with five cells left blank, totals included',
+      caption:
+        'A two-way table of the language chosen by boys and girls, French, German or Spanish, with a Total column and Total row and a grand total of 100. Five cells are blank, two of them totals: the boys’ German and total, the girls’ French and Spanish, and the Spanish total. Students fill them in from the rows and columns that have only one gap, then the ones those open up.',
+      settings: {
+        columns: ['French', 'German', 'Spanish'],
+        rows: [
+          { name: 'Boys', cells: [{ value: '18' }, { value: '' }, { value: '15' }] },
+          { name: 'Girls', cells: [{ value: '' }, { value: '17' }, { value: '' }] },
+        ],
+        rowTotals: ['', '55'],
+        columnTotals: ['40', '29', ''],
+        grand: '100',
+      },
+    },
+    {
+      slug: 'two-way-table-with-an-unknown-x',
+      title: 'Two-way table with an unknown, x',
+      alt: 'A two-way table of school lunches and packed lunches in Years 10 and 11, with one count written as x and the Year 11 total left blank',
+      caption:
+        'A two-way table of how many students in Years 10 and 11 have a school lunch or a packed lunch, with totals. The Year 10 packed lunches are written as x, in italics, and the Year 11 total is left blank. Students find x from the Packed lunch column, then the missing total.',
+      settings: {
+        columns: ['School lunch', 'Packed lunch'],
+        rows: [
+          { name: 'Year 10', cells: [{ value: '46' }, { value: 'x' }] },
+          { name: 'Year 11', cells: [{ value: '38' }, { value: '41' }] },
+        ],
+        rowTotals: ['80', ''],
+        columnTotals: ['84', '75'],
+        grand: '159',
+      },
+    },
+    {
+      slug: 'joint-relative-frequency-table-pets-by-grade',
+      title: 'Joint relative frequency table: pets by grade',
+      alt: 'A two-way relative frequency table of grade 7 and grade 8 students with and without a pet, each cell a decimal of the grand total',
+      caption:
+        'A joint relative frequency table of grade 7 and grade 8 students who have a pet or don’t. Each cell is its count divided by the grand total of 80, written as a decimal to two places: 0.35, 0.15, 0.30 and 0.20. The totals are the marginal relative frequencies, 0.50 for each grade, 0.65 with a pet and 0.35 without, and the grand total is 1.00.',
+      settings: {
+        columns: ['Pet', 'No pet'],
+        rows: [
+          { name: 'Grade 7', cells: [{ value: '28' }, { value: '12' }] },
+          { name: 'Grade 8', cells: [{ value: '24' }, { value: '16' }] },
+        ],
+        rowTotals: ['40', '40'],
+        columnTotals: ['52', '28'],
+        grand: '80',
+        show: 'relative',
+        title: 'Joint relative frequencies',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'conditional-relative-frequency-table-row-percents-favorite-sport',
+      title: 'Conditional relative frequency table: favorite sport by grade, in row percents',
+      alt: 'A relative frequency table of favorite sport in grades 6, 7 and 8 as percents of each row, with lines only under the headings and before the totals',
+      caption:
+        'A two-way table of the favorite sport of students in grades 6, 7 and 8, soccer, basketball or swimming, written as percents of each row: grade 6 is 50%, 30% and 20%, so each row’s total is 100%. The Total row gives each sport’s share of all students, 40%, 40% and 20%. Plain headings and lines only under the headings and before the totals give it a textbook look.',
+      settings: {
+        columns: ['Soccer', 'Basketball', 'Swimming'],
+        rows: [
+          { name: 'Grade 6', cells: [{ value: '10' }, { value: '6' }, { value: '4' }] },
+          { name: 'Grade 7', cells: [{ value: '12' }, { value: '12' }, { value: '6' }] },
+          { name: 'Grade 8', cells: [{ value: '18' }, { value: '22' }, { value: '10' }] },
+        ],
+        rowTotals: ['20', '30', '50'],
+        columnTotals: ['40', '40', '20'],
+        grand: '100',
+        show: 'relative',
+        relativeTo: 'row',
+        form: 'percent',
+        places: 0,
+        headers: 'plain',
+        rules: 'some',
+      },
+    },
+    {
+      slug: 'relative-frequency-table-as-fractions-left-and-right-handed',
+      title: 'Relative frequency table as fractions: left- and right-handed students',
+      alt: 'A two-way table of left- and right-handed boys and girls as fractions of each column, with the corner split by a diagonal into Hand and Student',
+      caption:
+        'A two-way table of left- and right-handed boys and girls, each cell written as a fraction of its column’s total in lowest terms: 4/7 of the left-handed students are boys and 3/7 girls, 26/53 of the right-handed students are boys and 27/53 girls. The Total column shows each group is 1/2 of all 60 students. The corner is split by a diagonal, with Hand across the top and Student down the side.',
+      settings: {
+        columns: ['Left-handed', 'Right-handed'],
+        rows: [
+          { name: 'Boys', cells: [{ value: '4' }, { value: '26' }] },
+          { name: 'Girls', cells: [{ value: '3' }, { value: '27' }] },
+        ],
+        rowTotals: ['30', '30'],
+        columnTotals: ['7', '53'],
+        grand: '60',
+        show: 'relative',
+        relativeTo: 'column',
+        form: 'fraction',
+        columnTitle: 'Hand',
+        rowTitle: 'Student',
+        corner: 'diagonal',
+      },
+    },
+    {
+      slug: 'blank-two-way-table-to-complete-from-a-description',
+      title: 'Blank two-way table to complete from a description',
+      alt: 'A blank two-way table of adults and children choosing vanilla, chocolate or strawberry ice cream, with only the grand total of 60 given',
+      caption:
+        'A two-way table with rows for adults and children and columns for vanilla, chocolate and strawberry ice cream, plus a Total column and Total row. Every cell is blank except the grand total, 60, and a blank line above the table is left for its title. Students fill it in from a description, such as “25 of the 60 people are adults”.',
+      settings: {
+        columns: ['Vanilla', 'Chocolate', 'Strawberry'],
+        rows: [
+          { name: 'Adults', cells: [{ value: '' }, { value: '' }, { value: '' }] },
+          { name: 'Children', cells: [{ value: '' }, { value: '' }, { value: '' }] },
+        ],
+        grand: '60',
+        titleMode: 'blank',
+      },
+    },
+  ]),
+
   ...examplesOf('mapping-diagram', [
     {
       slug: 'mapping-diagram-of-a-function',

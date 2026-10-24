@@ -37,6 +37,12 @@ and `docs/adr/` for decisions.
   each row, a series in each column), drawn as upright columns or sideways
   bars, side by side or stacked, with values on the bars, ± error bars, a key,
   color or black-and-white fills. A value left empty draws no bar.
+- `/two-way-table` **Two-Way Table Generator**: a table of counts typed or
+  pasted, totals included (a Total column, a Total row and the grand total,
+  each typed or worked out), drawn as an SVG table with counts or relative
+  frequencies of the grand total, each row or each column, as decimals,
+  percents or fractions. An empty cell is blank on the figure and a letter is
+  written as typed; the panel says which missing values can be worked out.
 - `/<generator>/examples/<slug>` **Example figures** (see below), and
   `/reuse`, how teachers may reuse them.
 - `/about`, `/privacy`, `/sitemap.xml`, `/robots.txt`
