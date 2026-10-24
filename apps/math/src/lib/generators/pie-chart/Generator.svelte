@@ -33,8 +33,7 @@
   const clean = $derived(gen.snapshot())
   const built = $derived(buildPieChart(clean))
   const read = $derived(built.read)
-  // The table's one column of values; its heading follows what they are.
-  let columns = $state([''])
+  // The table's one column of values, headed by what they are.
   const HEADINGS = { count: 'Count', percent: 'Percent', degrees: 'Degrees' }
 
   /** One choice as a row of buttons. */
@@ -111,8 +110,8 @@
       </div>
       {@render choice({ key: 'values', name: 'Values are', options: VALUE_KINDS })}
       <TableInput
-        id="table" rowName="Category" columnName="Value" valueHeading={HEADINGS[clean.values]}
-        bind:columns bind:rows={s.rows} onremoverow={removeRow} onreplace={() => ((s.sectorLabels = []), (s.fills = []))}
+        id="table" rowName="Category" columnName="Value" columns={[HEADINGS[clean.values]]} fixed
+        bind:rows={s.rows} onremoverow={removeRow} onreplace={() => ((s.sectorLabels = []), (s.fills = []))}
       />
       {#if read.problems.table}<p class="help problem">{read.problems.table}</p>{/if}
       {#if read.offer}
