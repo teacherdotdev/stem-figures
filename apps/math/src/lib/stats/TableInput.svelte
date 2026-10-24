@@ -9,6 +9,9 @@
   // stays). Enter moves down a row. Pasting a block with tabs (or several
   // lines with commas) anywhere in it replaces the whole table, headings
   // included. See table.ts for how it's kept.
+  //
+  // With `valueHeading` the table has one column of values only, under that
+  // fixed heading, and no + column (a pie chart's one value per category).
   import { tick } from 'svelte'
   import { MAX_COLUMNS, MAX_ROWS, blankCell, blankRow, parsePasted, type TableRow } from './table'
 
@@ -25,14 +28,20 @@
     placeholders?: { column?: string }
     /** called with a column's index when it's removed, for settings kept per column */
     onremovecolumn?: (j: number) => void
+    /** one value column only, under this heading, with no + column */
+    valueHeading?: string
+    /** called with a row's index when it's removed, for settings kept per row */
+    onremoverow?: (i: number) => void
+    /** called when a paste replaces the whole table */
+    onreplace?: () => void
   }
   let {
     id, columns = $bindable(), rows = $bindable(), errors = $bindable(false),
-    rowName, columnName, placeholders = {}, onremovecolumn,
+    rowName, columnName, placeholders = {}, onremovecolumn, valueHeading, onremoverow, onreplace,
   }: Props = $props()
 
   let table = $state<HTMLElement>()
-  const canAddColumn = $derived(columns.length < MAX_COLUMNS)
+  const canAddColumn = $derived(valueHeading === undefined && columns.length < MAX_COLUMNS)
   const canAddRow = $derived(rows.length < MAX_ROWS)
 
   // Each box's id: the heading of column j, or row i's name, value j or ± j
@@ -78,7 +87,9 @@
       for (const r of rows) r.cells.splice(j, 1)
       onremovecolumn?.(j)
     }
-    if (rows.some(blankRowAt)) rows = rows.filter((r) => !blankRowAt(r))
+    if (!rows.some(blankRowAt)) return
+    if (onremoverow) for (let i = rows.length - 1; i >= 0; i--) if (blankRowAt(rows[i])) onremoverow(i)
+    rows = rows.filter((r) => !blankRowAt(r))
   }
 
   // Enter moves down a row, as in a spreadsheet.
@@ -92,13 +103,14 @@
     const pasted = parsePasted(e.clipboardData?.getData('text/plain') ?? '')
     if (!pasted || !pasted.rows.length) return
     e.preventDefault()
-    const n = pasted.columns?.length ?? Math.max(1, ...pasted.rows.map((r) => r.cells.length))
-    columns = pasted.columns ?? Array.from({ length: n }, (_, j) => columns[j] ?? '')
+    const n = valueHeading !== undefined ? 1 : (pasted.columns?.length ?? Math.max(1, ...pasted.rows.map((r) => r.cells.length)))
+    columns = valueHeading !== undefined ? columns.slice(0, 1) : (pasted.columns ?? Array.from({ length: n }, (_, j) => columns[j] ?? ''))
     rows = pasted.rows.map((r) => ({ ...r, cells: Array.from({ length: n }, (_, j) => r.cells[j] ?? blankCell()) }))
     if (rows.some((r) => r.cells.some((c) => c.error))) errors = true
+    onreplace?.()
   }
 
-  const columnLabel = (j: number) => columns[j]?.trim() || `${columnName} ${j + 1}`
+  const columnLabel = (j: number) => valueHeading ?? (columns[j]?.trim() || `${columnName} ${j + 1}`)
   const rowLabel = (i: number) => rows[i]?.name.trim() || `${rowName} ${i + 1}`
   // The width each column takes, in rem, below which the table scrolls.
   const minWidth = $derived(6.5 + columns.length * (errors ? 6.2 : 3.6) + (canAddColumn ? 2.4 : 0))
@@ -119,11 +131,11 @@
         <th class="corner" scope="col">{rowName}</th>
         {#each columns as _, j}
           <th scope="col">
-            <input
+            {#if valueHeading !== undefined}<span class="fixed">{valueHeading}</span>{:else}<input
               type="text" class="heading" id={headId(j)} aria-label="{columnName} {j + 1} heading"
               placeholder={j === 0 ? (placeholders.column ?? '') : ''} bind:value={columns[j]}
               onkeydown={(e) => down(e, -1, `v${j}`)}
-            />
+            />{/if}
           </th>
           {#if errors}<th scope="col" class="pm" aria-label="± for {columnLabel(j)}">±</th>{/if}
         {/each}
@@ -212,6 +224,7 @@
   table input:focus { outline: 2px solid var(--blue); outline-offset: -2px; background: #fff; }
   table input::placeholder { color: #9aa3b2; font-weight: 400; }
   .heading { font-weight: 700; }
+  .fixed { display: block; padding: 0 0.55rem; font-weight: 700; text-align: right; line-height: 2.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .value { text-align: right; font-variant-numeric: tabular-nums; }
   th.new, td.new, tr.new > * { background: #fff; border: 1px dashed #c9cfd8; }
   tr.new input::placeholder, th.new input::placeholder { color: var(--blue-dark); opacity: 0.75; }

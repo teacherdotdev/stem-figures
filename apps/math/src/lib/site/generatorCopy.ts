@@ -617,6 +617,45 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Elementary school', 'Middle school', 'High school'],
   },
 
+  'pie-chart': {
+    heading: 'Pie charts and circle graphs from a table',
+    intro: [
+      'The Pie Chart Generator draws a pie chart from a table you type or paste: a category on each row, like Apples or Bananas, and its count, percent or angle in degrees. The sectors run clockwise from 12 o’clock, as pie charts are drawn by hand, in the order typed or largest first. Each sector is labeled inside where it fits, or outside with a short leader line, by its name, value, percent, angle or fraction, or by a key.',
+      'Leave a value empty and its share of the circle is left as one empty sector, for students to complete the pie chart; leave every value empty for a blank circle with its center marked and a radius drawn up to 12 o’clock. Give one sector a blank line or a letter (x°) instead of its label, and mark the angles at the center for measuring with a protractor or working out a missing angle.',
+    ],
+    settings: [
+      'The table: a category and a value on each row, typed or pasted from a spreadsheet, as counts, percents or degrees, with the total for counts',
+      'The sectors in the order typed or largest first, arcs at the center with or without their measures, and a center dot',
+      'Sector labels by name, value, percent, angle or fraction, or a name and a number, with any sector’s own label, a blank line or a letter',
+      'Color, black-and-white fills that photocopy, or white sectors to shade, with a fill picked for each sector, and a key on the right or below',
+      'A chart title, as text or a blank line for students',
+    ],
+    faqs: [
+      {
+        q: 'How do you work out the angles for a pie chart?',
+        a: 'Divide each category’s value by the total and multiply by 360°. Out of 30 students, 12 is 12 ÷ 30 × 360° = 144°. The table under the data shows each category’s angle, percent and fraction of the whole.',
+      },
+      {
+        q: 'Is a pie chart the same as a circle graph?',
+        a: 'Yes. Circle graph is the usual name in US middle school, and pie chart in the UK and Australia. Both are a circle cut into sectors whose angles show each category’s share of the whole.',
+      },
+      {
+        q: 'Can I type percents or angles instead of counts?',
+        a: 'Yes. Choose Percents or Degrees under Values are. If they add up to less than 100% or 360°, the rest is left as an empty sector and the panel says so; if they add up to more, the sectors are shrunk to fit the circle.',
+      },
+      {
+        q: 'How do I make a pie chart for students to complete?',
+        a: 'Type every category, but leave the values empty for the sectors students should draw. With counts, type the total too, so the circle leaves room for them. The sectors you gave values are drawn and the rest is one empty sector. Leave every value empty for a blank circle.',
+      },
+      {
+        q: 'How do I label a missing angle x?',
+        a: 'Type the sector’s value, then under Labels pick Letter (x°) for it. Its label becomes x°, or x% when the chart is labeled by percents, and the next sector given a letter gets y. Turn on angle marks to put an arc and the other angles at the center.',
+      },
+    ],
+    imageAlt: 'A printable pie chart of favorite fruit, with a colored sector for each fruit labeled with its name and percent, made with the Pie Chart Generator',
+    educationalLevel: ['Middle school', 'High school'],
+  },
+
   'mapping-diagram': {
     heading: 'Mapping diagrams for functions and relations',
     intro: [

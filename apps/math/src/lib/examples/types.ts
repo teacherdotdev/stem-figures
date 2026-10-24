@@ -9,6 +9,7 @@ import type { Settings as GridSettings } from '$lib/generators/coordinate-grid/s
 import type { LengthSettings } from '$lib/generators/length-reading/settings'
 import type { Settings as MappingSettings } from '$lib/generators/mapping-diagram/settings'
 import type { Settings as NumberLineSettings } from '$lib/generators/number-line/settings'
+import type { Settings as PieChartSettings } from '$lib/generators/pie-chart/settings'
 import type { Settings as PolygonSettings } from '$lib/generators/regular-polygon/settings'
 import type { Settings as TriangleSettings } from '$lib/generators/triangle/settings'
 import type { Settings as QuadrilateralSettings } from '$lib/shapes/quadrilateral/settings'
@@ -30,6 +31,7 @@ export interface SettingsById {
   'sphere': ShapeSettings
   'box-plot': BoxPlotSettings
   'bar-graph': BarGraphSettings
+  'pie-chart': PieChartSettings
   'mapping-diagram': MappingSettings
   'length-reading': LengthSettings
 }

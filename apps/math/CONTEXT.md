@@ -370,6 +370,14 @@ _Avoid_: Legend (fine as a search word)
 How a bar is colored in: one of the graph inks, or a black-and-white fill (gray, white, hatching, dots, cross-hatching) that still tells the series apart once photocopied. A figure's look gives the series fills in turn, and the teacher can pick one for any series.
 _Avoid_: Pattern, shading (that's an angle's or a region's), color (for the black-and-white ones)
 
+**Pie Chart**:
+A circle cut into sectors, one for each category, each sector's angle the category's share of the whole times 360°. The sectors run clockwise from 12 o'clock in the order typed, or largest first. Values are counts, percents or degrees. Whatever isn't drawn (values left empty, or values that fall short of the whole) is one empty sector at the end. Its generator is the Pie Chart Generator.
+_Avoid_: Circle graph, pie graph (fine as search words, not as the name)
+
+**Sector (of a pie chart)**:
+The slice of a pie chart for one category, between two radii. Its label is inside it where it fits, or outside with a short leader line, and says its name, value, percent, angle or fraction, or two of them; a sector's own label can be a blank line or a letter (x°) for students to work out. An arc at the center can mark its angle.
+_Avoid_: Slice, wedge, segment (a segment is cut off by a chord)
+
 **Histogram**:
 A figure of touching bars over a numbered axis, one bar per bin, whose heights show how many values fall in each bin. Its generator is the Histogram Generator.
 _Avoid_: Bar graph (bars there are separate categories), column chart

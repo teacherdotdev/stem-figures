@@ -16,6 +16,8 @@ import * as grid from '$lib/generators/coordinate-grid/settings'
 import { family as kiteFamily } from '$lib/generators/kite/family'
 import { lengthSettings, answerLine as lengthAnswer } from '$lib/generators/length-reading/settings'
 import * as mapping from '$lib/generators/mapping-diagram/settings'
+import { buildPieChart, hiddenText } from '$lib/generators/pie-chart/layout'
+import * as pieChart from '$lib/generators/pie-chart/settings'
 import type { Interval } from '$lib/generators/number-line/inequality'
 import * as numberLine from '$lib/generators/number-line/settings'
 import { family as parallelogramFamily } from '$lib/generators/parallelogram/family'
@@ -285,6 +287,20 @@ function barGraphAnswer(s: SettingsById['bar-graph']): ExampleDetails['answer'] 
   return null
 }
 
+function pieChartAnswer(s: SettingsById['pie-chart']): ExampleDetails['answer'] {
+  const pie = buildPieChart(s)
+  const problem = pie.read.problems.table ?? pie.read.problems.total ?? pie.read.problems.sum
+  if (problem) throw new Error(`The pie chart example can’t be drawn as written: ${problem}`)
+  // Only what's left for students has an answer: each letter, each blank, and the empty sector.
+  const lines = pie.sectors.flatMap((t) => {
+    if (t.letter) return [`${t.letter} = ${hiddenText(t.part, s.labels, s.values)}`]
+    if (t.part.label === 'blank') return [`${t.part.name || 'Blank'}: ${hiddenText(t.part, s.labels, s.values)}`]
+    return []
+  })
+  if (pie.empty && pie.sectors.length) lines.push(`Left empty: ${pieChart.nice(pie.read.gap)}° (${pieChart.nice((pie.read.gap / 360) * 100)}%)`)
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
 function mappingAnswer(s: SettingsById['mapping-diagram']): ExampleDetails['answer'] {
   const map = mapping.readMapping(s)
   if (!map.inputs.length || !map.outputs.length) throw new Error('The mapping diagram example has no inputs or outputs')
@@ -310,6 +326,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'sphere': { definition: definitionOf(solidSettings('sphere')), answer: solidAnswer },
   'box-plot': { definition: definitionOf(boxPlot), answer: boxPlotAnswer },
   'bar-graph': { definition: definitionOf(barGraph), answer: barGraphAnswer },
+  'pie-chart': { definition: definitionOf(pieChart), answer: pieChartAnswer },
   'mapping-diagram': { definition: definitionOf(mapping), answer: mappingAnswer },
   'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthAnswer(s).split(' · ') }) },
 }

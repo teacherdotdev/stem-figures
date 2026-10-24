@@ -16,6 +16,8 @@ import { buildLine } from './number-line/numberline.js'
 import * as line from './number-line/settings.js'
 import { buildDiagram } from './mapping-diagram/layout.js'
 import * as mapping from './mapping-diagram/settings.js'
+import { buildPieChart } from './pie-chart/layout.js'
+import * as pie from './pie-chart/settings.js'
 import { buildQuadrilateral } from '$lib/shapes/quadrilateral/layout.js'
 import { readQuadrilateral } from '$lib/shapes/quadrilateral/settings.js'
 import { family as kite } from './kite/family.js'
@@ -282,6 +284,25 @@ describe('bar graph', () => {
     const s = bar.settingsFromParams(params(q))
     const { layout, ...figure } = buildBarGraph(s)
     expect({ query: bar.settingsToQuery(s), figure, layout: { ...layout, px: undefined } }).toMatchSnapshot()
+  })
+})
+
+const PIE = [
+  '',
+  rows('Apples|12', 'Bananas|8', 'Cherries|6', 'Grapes|4'),
+  `labels=name-percent&titleMode=text&title=Fruit&keyAt=right&${rows('Apples|12', 'Bananas|8', 'Cherries|6', 'Grapes|4')}`,
+  `values=percent&labels=value-percent&look=bw&keyAt=below&order=largest&${rows('Walk|35', 'Car|30', 'Bus|25', 'Bike|8')}`,
+  `values=degrees&angleMarks=measures&lab=%7C%7Cletter%7Cblank&look=bw&${rows('Red|110', 'Blue|80', 'Green|100', 'Yellow|70')}`,
+  `total=60&labels=name-angle&fills=dots&centerDot=off&${rows('Soccer|20', 'Basketball|15', 'Tennis|', 'Swimming|')}`,
+  `labelSize=large&labels=name&${rows('Big|92', 'One|1', 'Two|1', 'Three|1', 'Four|1', 'Five|1', 'Six|1', 'Seven|1', 'Eight|1')}`,
+  `look=white&titleMode=blank&${rows('Dog|', 'Cat|')}`,
+  `values=percent&${rows('A|60', 'B|lots', 'C|-3')}`,
+]
+
+describe('pie chart', () => {
+  test.each(PIE)('%s', (q) => {
+    const s = pie.settingsFromParams(params(q))
+    expect({ query: pie.settingsToQuery(s), figure: buildPieChart(s) }).toMatchSnapshot()
   })
 })
 
