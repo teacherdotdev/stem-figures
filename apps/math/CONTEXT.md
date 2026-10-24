@@ -355,12 +355,20 @@ Where two lines cross away from a point, or a line meets the circle away from a 
 _Avoid_: Intersection (fine in teaching)
 
 **Angle** (in this figure):
-The space between two neighboring lines at the center, a point or a crossing, labeled, marked and shaded as on a Parallel Lines and Transversal. A right angle's square comes on its own, at the first right angle in each place (where a triangle stands on a diameter, or a radius meets its tangent), until the teacher takes it off. At a point on the circle, only the angles inside count, not the reflex angle round the outside.
+The space between two neighboring lines at the center, a point or a crossing, labeled and marked as on a Parallel Lines and Transversal. It isn't shaded: enclosed areas are. A right angle's square comes on its own, at the first right angle in each place (where a triangle stands on a diameter, or a radius meets its tangent), until the teacher takes it off. At a point on the circle, only the angles inside count, not the reflex angle round the outside.
 _Avoid_: Central angle and inscribed angle as names in the figure (they're fine in teaching; every angle is edited the same way)
 
 **Arc**:
 The piece of the circle between two neighboring places on it (points, and where lines meet it). Its label is nothing, its measure in degrees, its length (from the radius) or text; it can carry congruence ticks and be drawn bold or in a color, to show an intercepted arc. An arc split by a point in the middle is labeled piece by piece.
 _Avoid_: Curve, minor arc and major arc (an arc is always between neighboring places)
+
+**Enclosed area**:
+Any region the circle and the lines close off: a **sector** (between two radii and an arc), a **segment** (between a chord and an arc), a triangle of chords, or a piece where chords cross. Clicking inside one shades it in one of the shading colors. It keeps its shading while its points move, until a line is drawn across it. Lines' loose ends, and a tangent, close nothing off.
+_Avoid_: Region, face, shape (that's a different figure)
+
+**Measures** (in this figure):
+The circle's circumference and area, and each shaded enclosed area's size (with its arc's angle and length when it runs along one arc, as a sector or segment does), worked out from the radius and shown on the page in terms of π and as a decimal. They're for the teacher and never printed in the figure.
+_Avoid_: Answers, results, solutions
 
 ### Data displays
 

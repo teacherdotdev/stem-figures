@@ -16,6 +16,7 @@
   import { ROUND_NAMES, UNITS, roundTo } from '$lib/shapes/parts.js'
   import AngleOptions from '$lib/labeling/AngleOptions.svelte'
   import CountPicker from '$lib/labeling/CountPicker.svelte'
+  import Swatches from '$lib/labeling/Swatches.svelte'
   import LabelPicker from '$lib/labeling/LabelPicker.svelte'
   import PickLayer from '$lib/labeling/PickLayer.svelte'
   import PointOptions from '$lib/labeling/PointOptions.svelte'
@@ -25,6 +26,8 @@
   import CapPicker from '../parallel-lines/CapPicker.svelte'
   import LineButton from '../parallel-lines/LineButton.svelte'
   import CircleFigure from './CircleFigure.svelte'
+  import type { Face } from './faces.js'
+  import { circleMeasures } from './measures.js'
   import { KIND_NAMES } from './geometry.js'
   import { WHOLE, angleStyle, autoStyle, buildCircle, lineName, nodeName, type CircleLayout } from './layout.js'
   import {
@@ -44,6 +47,14 @@
   const radius = $derived(readRadius(clean.radius))
   const unitText = $derived(clean.unit.trim() ? ` ${clean.unit.trim()}` : '')
   const rounded = (v: number) => roundTo(v, clean.round)
+  /** An area named by the named places round it, in order: OAB. */
+  const areaName = (f: Face) =>
+    f.corners.map((k) => (k === CENTER ? clean.centerName : clean.points.find((p) => p.id === k)?.name ?? clean.marks[k] ?? '').trim()).join('')
+  const measures = $derived(circleMeasures(clean, drawing.areas.map((a) => a.face), areaName))
+  function setFace(key: string, fill: number) {
+    if (fill) s.faces[key] = fill
+    else delete s.faces[key]
+  }
 
   // While a point is dragged the view holds still, so the circle doesn't move under the pointer.
   let frozen = $state<CircleLayout['frame'] | null>(null)
@@ -70,6 +81,7 @@
 
   const popupAngle = $derived(popup?.part.kind === 'angle' ? drawing.angles.find((a) => a.key === popup!.part.key) : null)
   const popupArc = $derived(popup?.part.kind === 'curve' ? geo.arcs.find((a) => a.key === popup!.part.key) : null)
+  const popupArea = $derived(popup?.part.kind === 'area' ? drawing.areas.find((a) => a.key === popup!.part.key) : null)
   // A part that's gone (its point deleted, its crossing moved away) closes its popup.
   $effect(() => {
     if (!popup) return
@@ -78,6 +90,7 @@
       kind === 'line' ? !!lineOf(key)
       : kind === 'angle' ? !!popupAngle
       : kind === 'curve' ? !!popupArc || (key === WHOLE && drawing.curves.some((c) => c.key === WHOLE))
+      : kind === 'area' ? !!popupArea
       : isPoint(key) ? key === CENTER || !!pointOf(key)
       : drawing.spots.some((p) => p.key === key)
     if (!there) close()
@@ -277,7 +290,7 @@
           Each point on the circle is placed by its direction from the center: 0° to the right, counting
           counterclockwise. Drag a point round the circle to move it, in 5° steps, or 1° with Ctrl (Cmd on a Mac)
           held. Click part of the circle and choose Add point here to put a point in its middle. Click a point to join it to another or draw a
-          tangent there, and click any line, angle or arc to label or style it. Click where lines cross, or where a line meets the circle, to name a point there.
+          tangent there, and click any line, angle or arc to label or style it, or inside an enclosed area to shade it. Click where lines cross, or where a line meets the circle, to name a point there.
         </HelpTip>
       </div>
       {@render pointRow(CENTER)}
@@ -308,6 +321,16 @@
         ><Plus size={16} /> Add tangent</button>
       </div>
     </section>
+    {#if measures.length}
+      <section class="card-body second">
+        <h2 class="card-head">Measures</h2>
+        <ul class="readout">
+          {#each measures as m}
+            <li><span class="what">{m.name}</span>{#each m.values as v}<span class="value">{v}</span>{/each}</li>
+          {/each}
+        </ul>
+      </section>
+    {/if}
   {/snippet}
 
   {#snippet settings()}
@@ -416,7 +439,17 @@
     {:else if popup.part.kind === 'angle' && popupAngle}
       {@const a = popupAngle}
       <div class="pop-head"><span>Angle at {named(a.node)}</span><span class="measure">{a.ghost.text}</span></div>
-      <AngleOptions value={angleStyle(clean, key, a.auto)} right={a.right} onchange={(patch) => setAngle(key, a.auto, patch)} />
+      <AngleOptions value={angleStyle(clean, key, a.auto)} right={a.right} shading={false} onchange={(patch) => setAngle(key, a.auto, patch)} />
+    {:else if popup.part.kind === 'area' && popupArea}
+      {@const f = popupArea.face}
+      <div class="pop-head">
+        <span>Area {areaName(f)}</span>
+        {#if radius !== null}<span class="measure">{rounded(f.area * radius * radius)}{clean.unit.trim() ? ` ${clean.unit.trim()}²` : ''}</span>{/if}
+      </div>
+      <div class="group">
+        <span class="name" id="pop-area-shade">Shading</span>
+        <Swatches id="pop-area-shade" value={s.faces[key] ?? 0} onpick={(i) => setFace(key, i)} />
+      </div>
     {:else if popup.part.kind === 'curve' && key === WHOLE}
       <div class="pop-head"><span>Circle</span></div>
       <button type="button" class="btn-ghost add-here" onclick={() => addPointAt(90)}><Plus size={16} /> Add point here</button>
@@ -447,7 +480,7 @@
         <span class="name" id="pop-arc-draw">Drawn</span>
         <div class="segmented" role="radiogroup" aria-labelledby="pop-arc-draw">
           {#each Object.entries(ARC_DRAWS) as [v, d] (v)}
-            <button type="button" role="radio" aria-checked={style.draw === v} class:on={style.draw === v} aria-label={d.name} title={d.name} onclick={() => setArc(key, { draw: v as ArcDraw })}>
+            <button type="button" role="radio" aria-checked={style.draw === v} class:on={style.draw === v} aria-label="{d.name} arc" title="{d.name} arc" onclick={() => setArc(key, { draw: v as ArcDraw })}>
               <svg viewBox="0 0 26 14" width="26" height="14" aria-hidden="true">
                 <path d="M3,12 Q13,0 23,12" fill="none" stroke={d.color || 'currentColor'} stroke-width={d.color ? 3.5 : 1.6} stroke-linecap="round" />
               </svg>
@@ -541,5 +574,9 @@
   .chip.on { border-color: var(--blue); background: var(--blue-soft); color: var(--blue-dark); }
   .chip:disabled { opacity: 0.4; }
   .ends { display: flex; flex-direction: column; gap: 0.35rem; }
+  .readout { margin: 0; padding: 0.55rem 0.75rem; list-style: none; border-radius: 10px; background: var(--blue-soft); font-size: 0.85rem; }
+  .readout li { display: flex; flex-wrap: wrap; column-gap: 0.6rem; }
+  .readout li + li { margin-top: 0.3rem; }
+  .readout .what { font-weight: 700; }
   .add-here { display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; padding: 0.45rem 0.8rem; font-size: 0.85rem; border-radius: 10px; }
 </style>

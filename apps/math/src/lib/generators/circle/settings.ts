@@ -22,8 +22,8 @@
 //
 // In the page address each point is one value, like pt=p1|name=A|dir=40, each
 // line one too, like l=l1|a=o|b=p1|ticks=1, each labeled angle, arc and named
-// crossing too: a=o@l1+~l2+|label=measure, arc=p1~p2|label=degrees,
-// m=l1.l2|name=E.
+// crossing and shaded area too: a=o@l1+~l2+|label=measure,
+// arc=p1~p2|label=degrees, m=l1.l2|name=E, f=l1+l2+p1~p2|fill=2.
 
 import { cleanLabelSize, type LabelSize } from '$shared/labelSize'
 import { parseNumber } from '$lib/shared/math.js'
@@ -78,6 +78,8 @@ export type Settings = {
   lines: Line[]
   angles: Record<string, AngleStyle>
   arcs: Record<string, ArcStyle>
+  /** Shaded enclosed areas, by their key (see faces.ts): the shading color, from SHADES. */
+  faces: Record<string, number>
   /** Names at crossings and where lines meet the circle, by node key; there's a dot at each. */
   marks: Record<string, string>
   centerName: string
@@ -113,6 +115,7 @@ export const DEFAULT_SETTINGS: Settings = {
     'p3@l3+~l4+': { ...ANGLE_DEFAULTS, label: 'text', text: 'x', mark: '1' },
   },
   arcs: {},
+  faces: {},
   marks: {},
   centerName: 'O',
   centerDot: true,
@@ -149,6 +152,7 @@ const NODE = String.raw`(o|p\d+|l\d+(\.l\d+)+|l\d+:[abm]\d+)`
 const RAY = String.raw`l\d+[+-]`
 const ANGLE_KEY = new RegExp(`^${NODE}@${RAY}~${RAY}$`)
 const ARC_KEY = new RegExp(`^${NODE}~${NODE}$`)
+const FACE_KEY = new RegExp(`^(c|l\\d+|${NODE}~${NODE})(\\+(l\\d+|${NODE}~${NODE}))*$`)
 const MARK_KEY = /^(l\d+(\.l\d+)+|l\d+:[abm]\d+)$/
 
 /** A point's direction in degrees, from 0 up to 360, or what to fix about it. */
@@ -194,6 +198,7 @@ export function cleanSettings(s: RawSettings): Settings {
     lines,
     angles: {},
     arcs: {},
+    faces: {},
     marks: {},
     centerName: cleanName(s.centerName ?? d.centerName),
     centerDot: bool(s.centerDot, d.centerDot),
@@ -213,7 +218,8 @@ export function cleanSettings(s: RawSettings): Settings {
       label: oneOf(ANGLE_LABELS, a?.label, 'none'),
       text: String(a?.text ?? '').slice(0, 40),
       mark: oneOf(MARKS, a?.mark, 'none'),
-      shade: oneOf(SHADES.map((_, i) => i), num(a?.shade, 0), 0),
+      // Angles aren't shaded in this figure: enclosed areas are.
+      shade: 0,
     }
   }
   for (const [key, a] of Object.entries((s.arcs ?? {}) as Record<string, any>)) {
@@ -225,6 +231,10 @@ export function cleanSettings(s: RawSettings): Settings {
       draw: oneOf(Object.keys(ARC_DRAWS) as ArcDraw[], a?.draw, 'normal'),
     }
     if (style.label !== 'none' || style.text || style.ticks || style.draw !== 'normal') out.arcs[key] = style
+  }
+  for (const [key, fill] of Object.entries((s.faces ?? {}) as Record<string, any>)) {
+    const shade = num(fill, 0)
+    if (FACE_KEY.test(key) && known(key) && shade > 0 && shade < SHADES.length && Number.isInteger(shade)) out.faces[key] = shade
   }
   for (const [key, name] of Object.entries((s.marks ?? {}) as Record<string, any>)) {
     if (MARK_KEY.test(key) && known(key)) out.marks[key] = cleanName(name)
@@ -284,6 +294,7 @@ export function settingsToQuery(s: Settings): string {
     if (!entries.length) params.append('a', '')
   }
   for (const [key, a] of Object.entries(s.arcs)) params.append('arc', joinParts(key, a, ARC_DEFAULTS))
+  for (const [key, fill] of Object.entries(s.faces)) params.append('f', joinParts(key, { fill }, {}))
   for (const [key, name] of Object.entries(s.marks)) params.append('m', joinParts(key, { name }, { name: '' }))
   return params.toString()
 }
@@ -305,6 +316,7 @@ export function settingsFromParams(params: URLSearchParams): Settings {
     s.angles = Object.fromEntries(params.getAll('a').filter(Boolean).map(splitParts).map(([key, values]) => [key, { ...ANGLE_DEFAULTS, ...values }]))
   }
   s.arcs = Object.fromEntries(params.getAll('arc').map(splitParts).map(([key, values]) => [key, { ...ARC_DEFAULTS, ...values }]))
+  s.faces = Object.fromEntries(params.getAll('f').map(splitParts).map(([key, values]) => [key, values.fill]))
   s.marks = Object.fromEntries(params.getAll('m').map(splitParts).map(([key, values]) => [key, values.name ?? '']))
   return cleanSettings(s)
 }

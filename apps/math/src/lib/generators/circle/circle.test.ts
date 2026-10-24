@@ -1,8 +1,10 @@
 import { describe, expect, test } from 'vitest'
 import { buildGeometry, type Geometry } from './geometry.js'
 import { angleStyle, buildCircle } from './layout.js'
+import { findFaces } from './faces.js'
+import { circleMeasures } from './measures.js'
 import {
-  DEFAULT_SETTINGS, cleanSettings, freeDir, freshNames, newJoin, newTangent, settingsFromParams, settingsToQuery, type Line, type Settings,
+  ARC_DEFAULTS, DEFAULT_SETTINGS, cleanSettings, freeDir, freshNames, newJoin, newTangent, settingsFromParams, settingsToQuery, type Line, type Settings,
 } from './settings.js'
 
 const params = (q: string) => settingsFromParams(new URLSearchParams(q))
@@ -27,8 +29,9 @@ describe('the page address', () => {
       ['l', 'l1|a=p1|runA=1|capA=triangle|style=dashed|label=measure|ticks=2|b=p4'],
       ['l', 'l3|kind=tangent|a=p4|runB=0|capA=circle|label=text|text=t'],
       ['l', 'l4|a=o|arrows=1|b=p1'],
-      ['a', 'o@l4+~l1-|label=measure|shade=2'],
+      ['a', 'o@l4+~l1-|label=measure|mark=2'],
       ['arc', 'p1~p4|label=degrees|ticks=1|draw=red'],
+      ['f', 'l1+l4+p1~p4|fill=3'],
       ['m', 'l1:a1|name=E'],
     ]).toString()
     expect(settingsToQuery(params(q))).toBe(q)
@@ -161,7 +164,7 @@ describe('arcs', () => {
 describe('labels stay with their parts', () => {
   const base = figure([['p1', 210], ['p2', 330], ['p3', 100]], [newJoin('l1', 'o', 'p1'), newJoin('l2', 'o', 'p2'), newJoin('l3', 'p3', 'p1'), newJoin('l4', 'p3', 'p2')], {
     angles: { 'o@l1+~l2+': { label: 'measure', text: '', mark: '1', shade: 0 } },
-    arcs: { 'p1~p2': { label: 'degrees', text: '', ticks: 0, draw: 'normal' } },
+    arcs: { 'p1~p2': { ...ARC_DEFAULTS, label: 'degrees' } },
   })
   const labelParts = (s: Settings) => buildCircle(s).labels.map((l) => l.part).filter((p) => !p.startsWith('pt:')).sort()
 
@@ -187,5 +190,94 @@ describe('helpers', () => {
     expect(freeDir([])).toBe(90)
     expect(freeDir(DEFAULT_SETTINGS.points)).toBe(35)
     expect(freshNames(DEFAULT_SETTINGS, 2)).toEqual(['D', 'E'])
+  })
+})
+
+describe('enclosed areas', () => {
+  const areas = (s: Settings) => findFaces(buildGeometry(s))
+  const keys = (s: Settings) => areas(s).map((f) => f.key).sort()
+  const total = (s: Settings) => areas(s).reduce((t, f) => t + f.area, 0)
+
+  test('with no lines the whole circle is one area', () => {
+    expect(keys(figure([], []))).toEqual(['c'])
+    expect(keys(figure([['p1', 30]], []))).toEqual(['p1~p1'])
+    expect(areas(figure([['p1', 30]], []))[0].area).toBeCloseTo(Math.PI, 9)
+  })
+
+  test('a chord makes two segments, and two radii a sector and the rest', () => {
+    const chord = figure([['p1', 0], ['p2', 120]], [newJoin('l1', 'p1', 'p2')])
+    expect(keys(chord)).toEqual(['l1+p1~p2', 'l1+p2~p1'])
+    const segment = areas(chord).find((f) => f.key === 'l1+p1~p2')!
+    expect(segment.area).toBeCloseTo(Math.PI / 3 - 0.5 * Math.sin((120 * Math.PI) / 180), 9)
+    expect(segment.arcs).toEqual([expect.closeTo(120, 9)])
+    const sector = figure([['p1', 0], ['p2', 120]], [newJoin('l1', 'o', 'p1'), newJoin('l2', 'o', 'p2')])
+    expect(keys(sector)).toEqual(['l1+l2+p1~p2', 'l1+l2+p2~p1'])
+    expect(areas(sector).find((f) => f.key === 'l1+l2+p1~p2')!.area).toBeCloseTo(Math.PI / 3, 9)
+  })
+
+  test('the areas always fill the circle exactly', () => {
+    const figures = [
+      figure([['p1', 210], ['p2', 330], ['p3', 100]], [newJoin('l1', 'o', 'p1'), newJoin('l2', 'o', 'p2'), newJoin('l3', 'p3', 'p1'), newJoin('l4', 'p3', 'p2')]),
+      figure([['p1', 20], ['p2', 200], ['p3', 100], ['p4', 300]], [newJoin('l1', 'p1', 'p2'), newJoin('l2', 'p3', 'p4')]),
+      figure([['p1', 0], ['p2', 180], ['p3', 60]], [newJoin('l1', 'p1', 'p2'), newJoin('l2', 'p3', 'p1'), newJoin('l3', 'p3', 'p2'), newJoin('l4', 'o', 'p3')]),
+      // A diameter and a radius along it, and a run-on through the circle, still split it cleanly.
+      figure([['p1', 0], ['p2', 180], ['p3', 90]], [newJoin('l1', 'p1', 'p2'), newJoin('l2', 'o', 'p1'), { ...newJoin('l3', 'p3', 'o'), runB: true }]),
+    ]
+    for (const s of figures) expect(total(s)).toBeCloseTo(Math.PI, 9)
+    // Two crossing chords make four areas.
+    expect(areas(figures[1])).toHaveLength(4)
+  })
+
+  test('a tangent and loose ends close nothing off', () => {
+    const s = figure([['p1', 90], ['p2', 200]], [newTangent('l1', 'p1'), newJoin('l2', 'o', 'p2')])
+    expect(keys(s)).toEqual(['p1~p2+p2~p1'])
+    expect(total(s)).toBeCloseTo(Math.PI, 9)
+  })
+
+  test('an area keeps its key while its points move', () => {
+    const at = (c: number) => keys(figure([['p1', 210], ['p2', 330], ['p3', c]], [newJoin('l1', 'o', 'p1'), newJoin('l2', 'o', 'p2'), newJoin('l3', 'p3', 'p1'), newJoin('l4', 'p3', 'p2')]))
+    expect(at(80)).toEqual(at(110))
+  })
+
+  test('a shaded area is drawn, and its shading comes back from the page address', () => {
+    const s = figure([['p1', 0], ['p2', 120]], [newJoin('l1', 'p1', 'p2')], { faces: { 'l1+p1~p2': 2 } })
+    expect(buildCircle(s).regions).toHaveLength(1)
+    expect(params(settingsToQuery(s)).faces).toEqual({ 'l1+p1~p2': 2 })
+    expect(params('f=l9%2Bp1~p2|fill=2&f=nonsense|fill=1').faces).toEqual({})
+  })
+})
+
+describe('measures', () => {
+  const values = (s: Settings) => circleMeasures(s, findFaces(buildGeometry(s)), (f) => f.corners.join(''))
+  const shaded = (lines: Line[], face: string, radius = '6') =>
+    figure([['p1', 0], ['p2', 120]], lines, { radius, round: 2, faces: { [face]: 1 } })
+
+  test('the circle’s circumference and area, in π and as decimals', () => {
+    const m = values(shaded([], 'x'))
+    expect(m).toEqual([
+      { name: 'Circumference', values: ['12π cm ≈ 37.7 cm'] },
+      { name: 'Area', values: ['36π cm² ≈ 113.1 cm²'] },
+    ])
+  })
+
+  test('a sector: its angle, arc and area', () => {
+    const [, , sector] = values(shaded([newJoin('l1', 'o', 'p1'), newJoin('l2', 'o', 'p2')], 'l1+l2+p1~p2'))
+    expect(sector.values).toEqual(['120°', 'arc 4π cm ≈ 12.57 cm', 'area 12π cm² ≈ 37.7 cm²'])
+  })
+
+  test('a segment: the sector less the triangle', () => {
+    const [, , segment] = values(shaded([newJoin('l1', 'p1', 'p2')], 'l1+p1~p2'))
+    expect(segment.values).toEqual(['120°', 'arc 4π cm ≈ 12.57 cm', 'area 12π − 15.59 cm² ≈ 22.11 cm²'])
+    const [, , major] = values(shaded([newJoin('l1', 'p1', 'p2')], 'l1+p2~p1'))
+    expect(major.values).toEqual(['240°', 'arc 8π cm ≈ 25.13 cm', 'area 24π + 15.59 cm² ≈ 90.99 cm²'])
+  })
+
+  test('an area with no arc is just a number', () => {
+    const s = figure([['p1', 0], ['p2', 120], ['p3', 240]], [newJoin('l1', 'p1', 'p2'), newJoin('l2', 'p2', 'p3'), newJoin('l3', 'p3', 'p1')], { faces: { 'l1+l2+l3': 1 } })
+    expect(values(s)[2].values).toEqual(['area 46.8 cm²'])
+  })
+
+  test('no measures without a radius', () => {
+    expect(values(shaded([], 'x', 'x'))).toEqual([])
   })
 })

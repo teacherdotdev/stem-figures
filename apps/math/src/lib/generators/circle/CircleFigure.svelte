@@ -28,7 +28,7 @@
 >
   <rect x={f.x} y={f.y} width={f.w} height={f.h} fill="#fff" />
 
-  {#each figure.shades as sh}<path d={sh.d} fill={sh.fill} />{/each}
+  {#each figure.regions as r}<path d={r.d} fill={r.fill} />{/each}
 
   <circle cx="0" cy="0" r={R} fill="none" stroke={INK} stroke-width="2.2" />
   {#each figure.arcStrokes as a}<path d={a.d} fill="none" stroke={a.color} stroke-width="4.5" stroke-linecap="round" />{/each}

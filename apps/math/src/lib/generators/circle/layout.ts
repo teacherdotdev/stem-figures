@@ -15,6 +15,7 @@ import { angleMark, parallelArrows, sectorPath, tickMarks } from '$lib/labeling/
 import type { Pickable } from '$lib/labeling/pick.js'
 import { SHADES } from '$lib/labeling/options.js'
 import { ANGLE_DEFAULTS, ARC_DEFAULTS, ARC_DRAWS, CENTER, readRadius, type AngleStyle, type LineStyle, type Settings } from './settings.js'
+import { findFaces } from './faces.js'
 import { KIND_NAMES, buildGeometry, degOf, type Angle, type Corner, type GeoLine, type Node } from './geometry.js'
 
 export type { PlacedLabel, Vec }
@@ -234,9 +235,13 @@ export function buildCircle(s: Settings) {
   // With no place on the circle yet, the whole circle can be clicked, to put a point on it.
   if (!geo.arcs.length) curves.push({ key: WHOLE, d: arcPath(90, 360), anchor: px([0, 1]), name: 'The circle' })
 
-  // Each angle: shading, arcs or a right-angle square, its label, and where the teacher can point at it.
+  // The enclosed areas: each can be clicked, and shaded.
+  const faces = findFaces(geo)
+  const areas = faces.map((f) => ({ key: f.key, d: f.path(px, R), anchor: px(f.inside), name: 'Enclosed area', face: f }))
+  const regions = areas.filter((a) => SHADES[s.faces[a.key]]?.fill).map((a) => ({ d: a.d, fill: SHADES[s.faces[a.key]].fill }))
+
+  // Each angle: arcs or a right-angle square, its label, and where the teacher can point at it.
   const arcs: string[] = []
-  const shades: { d: string; fill: string }[] = []
   const squares: Vec[][] = []
   const marks = { arcs, squares }
   const MARK_SIZES = { arc: ARC, arcGap: ARC_GAP, square: SQUARE }
@@ -249,8 +254,6 @@ export function buildCircle(s: Settings) {
       const large = a.measure > 180
       const radius = Math.max(16, Math.min(WEDGE, 0.4 * R * Math.min(a.from.room, a.to.room)))
       const wedge = sectorPath(v, e1, e2, radius, true, large)
-      const fill = SHADES[style.shade]?.fill
-      if (fill) shades.push({ d: wedge, fill })
       const right = isRight(a.measure)
       const outer = angleMark(marks, v, e1, e2, style.mark, right, large, MARK_SIZES)
       const box = style.label === 'text' ? layoutMath(style.text, FS) : style.label === 'measure' ? layoutMath(rounded(a.measure), FS, { suffix: '°' }) : null
@@ -323,9 +326,11 @@ export function buildCircle(s: Settings) {
     frame,
     segments: segments.map((g) => ({ ...g, drawn: drawn.get(g.id)! })),
     arcStrokes,
+    /** Every enclosed area, which can be clicked, and the shaded ones, under everything. */
+    areas,
+    regions,
     heads,
     openHeads,
-    shades,
     arcs,
     squares,
     ticks,
