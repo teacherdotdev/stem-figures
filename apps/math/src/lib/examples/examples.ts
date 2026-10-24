@@ -766,6 +766,70 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('venn-diagram', [
+    {
+      slug: 'venn-diagram-football-and-tennis',
+      title: 'Venn diagram with numbers: football and tennis',
+      alt: 'A Venn diagram of two overlapping circles, Football and Tennis, in a box marked ξ, with 12 in Football only, 5 in both, 8 in Tennis only and 15 outside',
+      caption:
+        'Two overlapping circles named Football and Tennis inside a box marked ξ for the universal set, with the number of students in each region: 12 play football only, 5 play both, 8 play tennis only, and 15, written outside the circles in the lower left corner, play neither. Students read off totals, such as how many play football, or probabilities.',
+      settings: { nameA: 'Football', nameB: 'Tennis', values: { a: '12', ab: '5', b: '8', out: '15' } },
+    },
+    {
+      slug: 'three-set-venn-diagram-with-numbers',
+      title: 'Three-set Venn diagram with numbers: pets',
+      alt: 'A three-set Venn diagram of Cat, Dog and Fish in a box marked ξ, with a number in each of its eight regions',
+      caption:
+        'Three overlapping circles named Cat, Dog and Fish inside a box marked ξ, with the number of students owning each mix of pets in every region: 9 cat only, 7 dog only, 3 fish only, 4 cat and dog only, 2 cat and fish only, 1 dog and fish only, 2 all three, and 5, in the lower right corner, none of them.',
+      settings: {
+        sets: 3,
+        nameA: 'Cat',
+        nameB: 'Dog',
+        nameC: 'Fish',
+        values: { a: '9', b: '7', ab: '4', c: '3', ac: '2', bc: '1', abc: '2', out: '5' },
+      },
+    },
+    {
+      slug: 'venn-diagram-sorting-numbers-1-to-20',
+      title: 'Venn diagram sorting the numbers 1 to 20: even numbers and multiples of 3',
+      alt: 'A Venn diagram sorting the numbers 1 to 20 into two overlapping circles, Even and Multiples of 3, with the numbers in neither outside the circles',
+      caption:
+        'The numbers 1 to 20 sorted into two overlapping circles named Even and Multiples of 3, inside a box marked ξ. 2, 4, 8, 10, 14, 16 and 20 are in Even only; 6, 12 and 18 are in both; 3, 9 and 15 are in Multiples of 3 only; and 1, 5, 7, 11, 13, 17 and 19 are outside both circles, in the lower right corner.',
+      settings: {
+        mode: 'elements',
+        nameA: 'Even',
+        nameB: 'Multiples of 3',
+        universeList: '1-20',
+        listA: '2, 4, 6, 8, 10, 12, 14, 16, 18, 20',
+        listB: '3, 6, 9, 12, 15, 18',
+      },
+    },
+    {
+      slug: 'prime-factor-venn-diagram-hcf-lcm-36-and-60',
+      title: 'Prime factor Venn diagram for the HCF and LCM of 36 and 60',
+      alt: 'A Venn diagram of the prime factors of 36 and 60, with 2, 2 and 3 in the overlap, 3 in the 36 circle only and 5 in the 60 circle only',
+      caption:
+        'Two overlapping circles named 36 and 60, in a box with no universal set symbol, holding the prime factors of each number: 36 = 2 × 2 × 3 × 3 and 60 = 2 × 2 × 3 × 5. The factors they share, 2, 2 and 3, are in the overlap, the other 3 is in 36 only, and 5 is in 60 only. Students find the HCF and LCM of 36 and 60 from it.',
+      settings: { mode: 'elements', nameA: '36', nameB: '60', universe: 'none', listA: '2, 2, 3, 3', listB: '2, 2, 3, 5' },
+    },
+    {
+      slug: 'venn-diagram-shade-a-intersect-b-complement',
+      title: 'Venn diagram with A ∩ B′ shaded',
+      alt: 'A Venn diagram of two overlapping circles, A and B, in a box marked ξ, with the part of A outside B hatched and nothing written in the regions',
+      caption:
+        'Two overlapping circles named A and B inside a box marked ξ, with the region in A but not in B, A ∩ B′, shaded with diagonal hatching that photocopies well. Nothing is written in the regions, so students write the set notation for the shaded region.',
+      settings: { shaded: ['a'], shade: 'hatch' },
+    },
+    {
+      slug: 'venn-diagram-probability-find-x',
+      title: 'Venn diagram of probabilities: find x',
+      alt: 'A Venn diagram of probabilities with 0.3 in A only, x in the overlap of A and B, 0.25 in B only and 0.15 outside both circles',
+      caption:
+        'Two overlapping circles named A and B inside a box marked ξ, with a probability in each region: 0.3 in A only, the unknown x in the overlap, 0.25 in B only, and 0.15 outside both circles in the lower right corner. Students find x, then probabilities such as P(A ∪ B).',
+      settings: { mode: 'text', values: { a: '0.3', ab: 'x', b: '0.25', out: '0.15' } },
+    },
+  ]),
+
   ...examplesOf('mapping-diagram', [
     {
       slug: 'mapping-diagram-of-a-function',

@@ -26,6 +26,7 @@ import RegularPolygonPreview from './regular-polygon/Preview.svelte'
 import SpherePreview from './sphere/Preview.svelte'
 import TrapezoidPreview from './trapezoid/Preview.svelte'
 import TrianglePreview from './triangle/Preview.svelte'
+import VennDiagramPreview from './venn-diagram/Preview.svelte'
 
 /** Each generator's directory preview, by id. */
 export const PREVIEWS: Record<string, Component> = {
@@ -46,6 +47,7 @@ export const PREVIEWS: Record<string, Component> = {
   'sphere': SpherePreview,
   'box-plot': BoxPlotPreview,
   'bar-graph': BarGraphPreview,
+  'venn-diagram': VennDiagramPreview,
   'mapping-diagram': MappingDiagramPreview,
   'length-reading': LengthReadingPreview,
   'composite-shape': CompositeShapePreview,

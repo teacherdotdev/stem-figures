@@ -386,6 +386,22 @@ _Avoid_: Count (fine in speech), tally
 A number line with a mark stacked above each value of a data set, as grades 3–6 use the name. No generator makes one yet.
 _Avoid_: Dot plot is the same figure; line graph (points joined across a coordinate grid) is a different one
 
+**Venn Diagram**:
+A figure of one, two or three equal circles, each a set, inside a box for the universal set, with something written in each region and any regions shaded. Two sets overlap, sit apart (mutually exclusive) or one sits inside the other (a subset); three always overlap. Its generator is the Venn Diagram Generator.
+_Avoid_: Set diagram, circle diagram
+
+**Set**:
+One circle of a Venn diagram, named outside it by a letter (A, B, C) or a word (Football). In elements mode it's a list of members typed by the teacher; a repeated member is another copy, so prime factors (2, 2, 3) sort as they should.
+_Avoid_: Group, category (that's a bar graph's), circle (fine in speech)
+
+**Universal Set**:
+Everything a Venn diagram is about, drawn as the box round the circles and named in its top left corner: ξ (the default, as GCSE writes it), U, S, ε, a word or nothing. In elements mode its members are typed as a list or a range like 1-20; left empty, it's just the sets' own members.
+_Avoid_: Universe, sample space (fine in teaching), rectangle
+
+**Region**:
+The part of a Venn diagram inside exactly some of the sets and outside the rest, such as A only (A ∩ B′) or neither: four for two overlapping sets, eight for three, outside included. Each holds a number, a letter or expression, or the elements that belong there, written in rows round its middle; one left empty is drawn empty, or with a blank line when the teacher asks for one. Clicking a region on the figure fills it in or shades it. A shaded region is filled with a tint, gray or a black-and-white pattern, under the circles' outlines.
+_Avoid_: Section, area (that's a shape's measure), zone, part
+
 ### 3D shapes
 
 **3D Shape**:

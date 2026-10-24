@@ -617,6 +617,46 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Elementary school', 'Middle school', 'High school'],
   },
 
+  'venn-diagram': {
+    heading: 'Venn diagrams with numbers, elements or shading',
+    intro: [
+      'The Venn Diagram Generator draws one, two or three circles inside a box for the universal set, marked ξ unless you choose U, S, ε, a word or nothing. Two sets can overlap, sit apart for mutually exclusive events, or one can sit inside the other for a subset. Each set is named outside its circle, with a letter like A or a word like Football.',
+      'Put a number in each region for counting and probability questions, or a letter or expression like x or 2x + 1 for algebra. Or list the members of each set, or a range like 1-20, and every element is sorted into its region for you, prime factors included. Click any region on the figure to fill it in or shade it, and leave regions empty for students to fill in.',
+    ],
+    settings: [
+      'What goes in each region: a number, the elements of sets you list, or a letter or expression',
+      'One, two or three sets; two sets overlapping, separate, or one inside the other',
+      'Each set’s name, as a letter or a word',
+      'The universal set’s name: ξ, U, S, ε, a word or nothing',
+      'Any regions shaded, in a color tint, gray or a black-and-white pattern',
+      'Empty regions left empty or given a blank line for students',
+    ],
+    faqs: [
+      {
+        q: 'How do I shade a region, like A ∩ B′?',
+        a: 'Click the region on the figure and tick Shaded, or tick it in the list of regions under Sets. A ∩ B′ is the part of A outside B, called A only in the list. Pick the fill under Shading: a color tint, gray, or hatching or dots that photocopy well.',
+      },
+      {
+        q: 'Can it sort numbers into the diagram for me?',
+        a: 'Yes. Choose Elements, type the universal set (like 1-20) and each set’s members (like 2, 4, 6, 8), and each number is written in the region of every set it belongs to. An element that’s in a set but not in the universal set is pointed out so you can fix it.',
+      },
+      {
+        q: 'How do I make a prime factor Venn diagram for the HCF and LCM?',
+        a: 'Choose Elements and name the sets after the two numbers. Type each number’s prime factors with repeats, like 2, 2, 3, 3 for 36 and 2, 2, 3, 5 for 60. Each repeated factor is another copy, so the factors the numbers share go in the middle.',
+      },
+      {
+        q: 'Can I use it for probability?',
+        a: 'Yes. Type a probability in each region, like 0.3, or choose Text for fractions and unknowns like x. Leave a region empty, or give empty regions a blank line, for students to work out.',
+      },
+      {
+        q: 'Why ξ for the universal set?',
+        a: 'GCSE papers in England write the universal set as ξ, so it’s the starting choice. U is one click away under Labels, along with S, ε, a word or nothing.',
+      },
+    ],
+    imageAlt: 'A printable Venn diagram of students who play football and tennis, with the number of students in each region, made with the Venn Diagram Generator',
+    educationalLevel: ['Middle school', 'High school'],
+  },
+
   'mapping-diagram': {
     heading: 'Mapping diagrams for functions and relations',
     intro: [

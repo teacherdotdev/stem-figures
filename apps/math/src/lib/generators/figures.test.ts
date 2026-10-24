@@ -30,6 +30,8 @@ import * as polygon from './regular-polygon/settings.js'
 import { family as trapezoid } from './trapezoid/family.js'
 import { buildTriangle } from './triangle/layout.js'
 import * as triangle from './triangle/settings.js'
+import { buildVenn } from './venn-diagram/layout.js'
+import * as venn from './venn-diagram/settings.js'
 
 const eq = (...rows: string[]) => rows.map((r) => `eq=${encodeURIComponent(r)}`).join('&')
 
@@ -254,6 +256,18 @@ const BAR = [
   'titleMode=text&title=Votes&valueTitleMode=blank&categoryTitleMode=text&categoryTitle=Color&from=abc&step=0',
 ]
 
+const VENN = [
+  '',
+  'nameA=Football&nameB=Tennis&r_a=12&r_ab=5&r_b=8&r_out=15&shaded=ab',
+  'sets=3&r_a=9&r_b=7&r_ab=4&r_c=3&r_ac=2&r_bc=1&r_abc=2&r_out=5&shade=hatch&shaded=abc%7Cout',
+  'arrangement=separate&universe=U&r_a=6&r_b=4&empty=line',
+  'arrangement=subset&nameA=Mammals&nameB=Dogs&mode=text&r_a=x&r_ab=2x%2B1&universe=word&universeWord=Animals',
+  'sets=1&labelSize=large&r_a=0.3&r_out=0.7&shade=gray&shaded=a',
+  'mode=elements&universeList=1-20&listA=2%2C4%2C6%2C8%2C10%2C12%2C14%2C16%2C18%2C20&listB=3%2C6%2C9%2C12%2C15%2C18',
+  'mode=elements&universe=none&nameA=36&nameB=60&listA=2%2C2%2C3%2C3&listB=2%2C2%2C3%2C5',
+  'mode=elements&sets=3&universeList=1-30&listA=1-15&listB=10-25&listC=5-12%2C20-26',
+]
+
 describe('coordinate grid', () => {
   test.each(GRID)('%s', (q) => {
     const s = grid.settingsFromParams(params(q))
@@ -282,6 +296,13 @@ describe('bar graph', () => {
     const s = bar.settingsFromParams(params(q))
     const { layout, ...figure } = buildBarGraph(s)
     expect({ query: bar.settingsToQuery(s), figure, layout: { ...layout, px: undefined } }).toMatchSnapshot()
+  })
+})
+
+describe('venn diagram', () => {
+  test.each(VENN)('%s', (q) => {
+    const s = venn.settingsFromParams(params(q))
+    expect({ query: venn.settingsToQuery(s), figure: buildVenn(s) }).toMatchSnapshot()
   })
 })
 
