@@ -1,19 +1,14 @@
 import { describe, expect, test } from 'vitest'
 import { cleanRows, columnsFromParam, columnsToParam, parsePasted, readTable, readValue, rowFromParam, rowToParam } from './table'
 
-const cell = (value: string, error = '', hidden = false) => ({ value, error, hidden })
+const cell = (value: string, error = '') => ({ value, error })
 
 describe('a table in the page address', () => {
-  test('a row is its name, then each cell, ± and ! included', () => {
-    const row = { name: 'Apples', hideName: false, cells: [cell('12'), cell('15', '1.5'), cell('9', '', true)] }
+  test('a row is its name, then each cell, ± included', () => {
+    const row = { name: 'Apples', cells: [cell('12'), cell('15', '1.5'), cell('')] }
     const p = rowToParam(row)
-    expect(p).toBe('Apples|12|15±1.5|!9')
+    expect(p).toBe('Apples|12|15±1.5|')
     expect(rowFromParam(p, 3)).toEqual(row)
-  })
-
-  test('a name left for students keeps its !', () => {
-    const row = { name: 'Thursday', hideName: true, cells: [cell('4')] }
-    expect(rowFromParam(rowToParam(row), 1)).toEqual(row)
   })
 
   test('missing cells are empty, extra ones dropped', () => {
@@ -21,8 +16,8 @@ describe('a table in the page address', () => {
     expect(rowFromParam('A|1|2|3', 2).cells).toEqual([cell('1'), cell('2')])
   })
 
-  test('typed |, ± and ! cannot break the address', () => {
-    const [r] = cleanRows([{ name: '!A|B', cells: [{ value: '1|2±!', error: '±3' }] }], 1)
+  test('typed | and ± cannot break the address', () => {
+    const [r] = cleanRows([{ name: 'A|B', cells: [{ value: '1|2±', error: '±3' }] }], 1)
     expect(r.name).toBe('AB')
     expect(r.cells[0]).toEqual(cell('12', '3'))
   })

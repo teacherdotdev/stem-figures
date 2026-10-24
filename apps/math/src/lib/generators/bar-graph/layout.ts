@@ -26,7 +26,6 @@ export type ErrorBar = { x1: number; y1: number; x2: number; y2: number; caps: {
 export type ValueLabel = { x: number; y: number; text: string; anchor: 'start' | 'middle' | 'end'; white: boolean; halo: boolean }
 /** A category's name: its lines, where the first sits, and whether it's slanted. */
 export type CategoryName = { lines: string[]; x: number; y: number; anchor: 'middle' | 'end'; slant: boolean }
-export type Blank = { x1: number; y1: number; x2: number; y2: number }
 
 /** Words wrapped into lines no wider than `max`, or null if a word alone is wider. */
 function wrap(text: string, fs: number, max: number): string[] | null {
@@ -55,7 +54,7 @@ export function buildBarGraph(s: Settings) {
   const valueBlocks = Math.max(1, Math.round((to - from) / step))
   const grouped = m > 1 && !read.stacked
   // Under columns, wide enough for each name's longest word too, up to a point.
-  const names = rows.map((r) => (r.hideName ? '' : r.name))
+  const names = rows.map((r) => r.name)
   const longestWord = Math.max(0, ...names.flatMap((t) => t.split(/\s+/)).map((w) => textWidth(w, fs)))
   let k = grouped ? Math.min(m + 1, 5) : 2
   if (columns) k = Math.max(k, Math.min(5, Math.ceil((longestWord + 10) / CELL)))
@@ -78,7 +77,7 @@ export function buildBarGraph(s: Settings) {
     wrapped = names.map((t) => wrap(t, fs, max) ?? [t])
     room = Math.max(fs * 3, ...wrapped.flat().map((l) => textWidth(l, fs))) + 10
   }
-  if (!rows.some((r) => r.name || r.hideName)) room = columns ? fs * 0.6 : fs
+  if (!rows.some((r) => r.name)) room = columns ? fs * 0.6 : fs
 
   // The shared grid: the value axis numbered, the category axis not.
   const value: Axis = { start: from, step, blocks: valueBlocks, numbering: read.numbering }
@@ -154,7 +153,6 @@ export function buildBarGraph(s: Settings) {
   rows.forEach((r, i) => {
     const c = mid(i)
     if (read.stacked) {
-      // A part left for students keeps its place in the stack, undrawn.
       let up = 0
       let down = 0
       r.values.forEach((v, j) => {
@@ -163,21 +161,19 @@ export function buildBarGraph(s: Settings) {
         const b = a + v
         if (v >= 0) up = b
         else down = b
-        if (r.hidden[j]) return
         const bar = { ...rect(c, barW, a, b), fill: fills[j], series: j, row: i }
         bars.push(bar)
         if (s.values === 'inside' && v !== 0) inside(bar, fills[j], typed(i, j) || fmt(v))
       })
-      // The stack's total at its end, unless part of it is left for students.
-      const whole = r.values.every((v, j) => v === null || !r.hidden[j]) && r.values.some((v) => v !== null)
-      if (whole && s.values === 'end') {
+      // The stack's total at its end.
+      if (r.values.some((v) => v !== null) && s.values === 'end') {
         if (up > 0 || down === 0) atEnd(c, at(up), false, fmt(up))
         if (down < 0) atEnd(c, at(down), true, fmt(down))
       }
       return
     }
     r.values.forEach((v, j) => {
-      if (v === null || r.hidden[j]) return
+      if (v === null) return
       const cj = grouped ? c - groupW / 2 + (j + 0.5) * barW : c
       const bar = { ...rect(cj, barW, 0, v), fill: fills[j], series: j, row: i }
       bars.push(bar)
@@ -197,18 +193,10 @@ export function buildBarGraph(s: Settings) {
     })
   })
 
-  // Names under each column (or slanted, ending under it), or beside each bar,
-  // with a short line in place of any left for students.
+  // Names under each column (or slanted, ending under it), or beside each bar.
   const categories: CategoryName[] = []
-  const blanks: Blank[] = []
-  rows.forEach((r, i) => {
+  rows.forEach((_, i) => {
     const c = mid(i)
-    if (r.hideName) {
-      const half = Math.min(slot * 0.4, fs * 2.6)
-      if (columns) blanks.push({ x1: c - half, y1: box.y + box.h + fs * 1.3, x2: c + half, y2: box.y + box.h + fs * 1.3 })
-      else blanks.push({ x1: box.x - 10 - half * 2, y1: c + fs * 0.4, x2: box.x - 10, y2: c + fs * 0.4 })
-      return
-    }
     const lines = wrapped[i]
     if (!lines.length) return
     if (columns && slant) categories.push({ lines, x: c + fs * 0.3, y: box.y + box.h + fs * 0.9, anchor: 'end', slant: true })
@@ -255,7 +243,6 @@ export function buildBarGraph(s: Settings) {
     errorBars,
     values,
     categories,
-    blanks,
     key,
     note,
     fills,

@@ -36,7 +36,7 @@ and `docs/adr/` for decisions.
 - `/bar-graph` **Bar Graph Generator**: a table typed or pasted (a category on
   each row, a series in each column), drawn as upright columns or sideways
   bars, side by side or stacked, with values on the bars, ± error bars, a key,
-  color or black-and-white fills, and any bar or name left for students.
+  color or black-and-white fills. A value left empty draws no bar.
 - `/<generator>/examples/<slug>` **Example figures** (see below), and
   `/reuse`, how teachers may reuse them.
 - `/about`, `/privacy`, `/sitemap.xml`, `/robots.txt`

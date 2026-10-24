@@ -3,7 +3,7 @@
   // figure's settings under them, the figure card on the right. Settings are
   // mirrored into the page address so a bookmark or shared link brings back
   // exactly this bar graph, and the server renders that same figure on first load.
-  import { ChartColumn, Diff, EyeOff, Heading, MoveUp, Palette } from '@lucide/svelte'
+  import { ChartColumn, Diff, Heading, MoveUp, Palette } from '@lucide/svelte'
   import GeneratorPage from '$shared/GeneratorPage.svelte'
   import { generatorState } from '$shared/generatorState.svelte'
   import GridlineSettings from '$shared/graph/GridlineSettings.svelte'
@@ -34,9 +34,6 @@
   const clean = $derived(gen.snapshot())
   const graph = $derived(readGraph(clean))
   const several = $derived(clean.columns.length > 1)
-
-  // Clicking values to leave them for students is a way of using the table, not a setting.
-  let hiding = $state(false)
 
   /** One choice as a row of buttons. */
   type Choice = { key: keyof Settings; name: string; options: Record<string, string> }
@@ -119,24 +116,19 @@
           Type in the table as in a spreadsheet, or paste one from Sheets or Excel. Each row is a category and each column a set of
           bars, named by its heading. Type a heading in the + column at the end for a double bar graph, or in the empty row for another
           category; empty a row or column to remove it. A pasted column headed SEM, SD or ± becomes the error bars of the one before
-          it. Leave for students turns each value into a button: click one to leave its bar off, or a name to leave a blank line for it.
+          it. Leave a value empty for no bar, such as a bar for students to draw.
         </HelpTip>
       </div>
       <TableInput
-        id="table" rowName="Category" columnName="Series" {hiding}
+        id="table" rowName="Category" columnName="Series"
         bind:columns={s.columns} bind:rows={s.rows} bind:errors={s.errorBars}
         placeholders={{ column: 'Students' }} onremovecolumn={(j) => s.fills.splice(j, 1)}
       />
       {#if graph.problems.table}<p class="help problem">{graph.problems.table}</p>{/if}
-      <div class="options">
-        <label class="check">
-          <input type="checkbox" bind:checked={s.errorBars} />
-          <span>Error bars <Diff size={14} aria-hidden="true" /></span>
-        </label>
-        <button type="button" class="toggle" class:on={hiding} aria-pressed={hiding} onclick={() => (hiding = !hiding)}>
-          <EyeOff size={15} aria-hidden="true" /> {hiding ? 'Done' : 'Leave for students'}
-        </button>
-      </div>
+      <label class="check">
+        <input type="checkbox" bind:checked={s.errorBars} />
+        <span>Error bars <Diff size={14} aria-hidden="true" /></span>
+      </label>
       {#if graph.problems.errors}<p class="help problem">{graph.problems.errors}</p>{/if}
     </section>
   {/snippet}
@@ -215,16 +207,9 @@
 
   .data { padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.6rem; }
   .head-row { display: flex; align-items: center; justify-content: space-between; }
-  .options { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
-  .check { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.88rem; margin: 0; cursor: pointer; }
+  .check { align-self: flex-start; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.88rem; margin: 0; cursor: pointer; }
   .check span { display: inline-flex; align-items: center; gap: 0.3rem; }
   .check input { width: 1.05rem; height: 1.05rem; margin: 0; accent-color: var(--blue); flex: none; }
-  .toggle {
-    display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.7rem; border: 1.5px solid var(--border);
-    border-radius: 999px; background: #fff; color: var(--blue-dark); font-weight: 700; font-size: 0.85rem; cursor: pointer;
-  }
-  .toggle:hover { background: var(--blue-soft); }
-  .toggle.on { background: var(--blue); border-color: var(--blue); color: #fff; }
   .help { margin: 0; font-size: 0.84rem; }
   .help.problem { color: var(--red); font-weight: 600; }
 

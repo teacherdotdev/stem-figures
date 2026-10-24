@@ -8,18 +8,15 @@
   // that's been emptied is gone once the table loses focus (one column always
   // stays). Enter moves down a row. Pasting a block with tabs (or several
   // lines with commas) anywhere in it replaces the whole table, headings
-  // included. In `hiding` mode each value and name becomes a button that
-  // leaves it for students. See table.ts for how it's kept.
+  // included. See table.ts for how it's kept.
   import { tick } from 'svelte'
-  import { EyeOff } from '@lucide/svelte'
-  import { MAX_COLUMNS, MAX_ROWS, blankCell, blankRow, parsePasted, type Cell, type TableRow } from './table'
+  import { MAX_COLUMNS, MAX_ROWS, blankCell, blankRow, parsePasted, type TableRow } from './table'
 
   interface Props {
     id: string
     columns: string[]
     rows: TableRow[]
     errors?: boolean
-    hiding?: boolean
     /** what a row is, for its heading and labels: "Category" */
     rowName: string
     /** what a column is: "Series" */
@@ -30,13 +27,13 @@
     onremovecolumn?: (j: number) => void
   }
   let {
-    id, columns = $bindable(), rows = $bindable(), errors = $bindable(false), hiding = false,
+    id, columns = $bindable(), rows = $bindable(), errors = $bindable(false),
     rowName, columnName, placeholders = {}, onremovecolumn,
   }: Props = $props()
 
   let table = $state<HTMLElement>()
-  const canAddColumn = $derived(!hiding && columns.length < MAX_COLUMNS)
-  const canAddRow = $derived(!hiding && rows.length < MAX_ROWS)
+  const canAddColumn = $derived(columns.length < MAX_COLUMNS)
+  const canAddRow = $derived(rows.length < MAX_ROWS)
 
   // Each box's id: the heading of column j, or row i's name, value j or ± j
   // (row rows.length is the empty row at the end).
@@ -110,20 +107,6 @@
   const errorWidth = $derived(errors ? Math.min(10, 34 / columns.length) : 0)
 </script>
 
-{#snippet valueBox(i: number, j: number, cell: Cell)}
-  {#if hiding}
-    <button
-      class="hide" class:hidden={cell.hidden} aria-pressed={cell.hidden} aria-label="Leave {rowLabel(i)}, {columnLabel(j)} for students"
-      onclick={() => (cell.hidden = !cell.hidden)}
-    >{#if cell.hidden}<EyeOff size={13} aria-hidden="true" />{/if}{cell.value}</button>
-  {:else}
-    <input
-      type="text" class="value" inputmode="decimal" id={cellId(i, `v${j}`)} aria-label="{rowLabel(i)}, {columnLabel(j)}"
-      bind:value={cell.value} onkeydown={(e) => down(e, i, `v${j}`)}
-    />
-  {/if}
-{/snippet}
-
 <div class="scroll" onpaste={onpaste} onfocusout={tidy} bind:this={table}>
   <table style:min-width="{minWidth}rem" aria-label="{rowName} table">
     <colgroup>
@@ -158,21 +141,20 @@
       {#each rows as row, i}
         <tr>
           <th scope="row">
-            {#if hiding}
-              <button class="hide name" class:hidden={row.hideName} aria-pressed={row.hideName} aria-label="Leave the name {rowLabel(i)} for students" onclick={() => (row.hideName = !row.hideName)}>
-                {#if row.hideName}<EyeOff size={13} aria-hidden="true" />{/if}{row.name}
-              </button>
-            {:else}
-              <input type="text" class="name" id={cellId(i, 'name')} aria-label="{rowName} {i + 1}" bind:value={row.name} onkeydown={(e) => down(e, i, 'name')} />
-            {/if}
+            <input type="text" class="name" id={cellId(i, 'name')} aria-label="{rowName} {i + 1}" bind:value={row.name} onkeydown={(e) => down(e, i, 'name')} />
           </th>
           {#each row.cells as cell, j}
-            <td>{@render valueBox(i, j, cell)}</td>
+            <td>
+              <input
+                type="text" class="value" inputmode="decimal" id={cellId(i, `v${j}`)} aria-label="{rowLabel(i)}, {columnLabel(j)}"
+                bind:value={cell.value} onkeydown={(e) => down(e, i, `v${j}`)}
+              />
+            </td>
             {#if errors}
               <td class="pm">
                 <input
                   type="text" class="value" inputmode="decimal" id={cellId(i, `e${j}`)} aria-label="± for {rowLabel(i)}, {columnLabel(j)}"
-                  disabled={hiding} bind:value={cell.error} onkeydown={(e) => down(e, i, `e${j}`)}
+                  bind:value={cell.error} onkeydown={(e) => down(e, i, `e${j}`)}
                 />
               </td>
             {/if}
@@ -231,16 +213,8 @@
   table input::placeholder { color: #9aa3b2; font-weight: 400; }
   .heading { font-weight: 700; }
   .value { text-align: right; font-variant-numeric: tabular-nums; }
-  table input:disabled { background: transparent; }
   th.new, td.new, tr.new > * { background: #fff; border: 1px dashed #c9cfd8; }
   tr.new input::placeholder, th.new input::placeholder { color: var(--blue-dark); opacity: 0.75; }
   th.new input { padding: 0; text-align: center; font-size: 1.1rem; }
   th.new input::placeholder { opacity: 1; }
-  .hide {
-    display: flex; align-items: center; justify-content: flex-end; gap: 0.25rem; width: 100%; height: 2.2rem; padding: 0 0.55rem;
-    border: 0; background: #fff; color: var(--ink); font: inherit; cursor: pointer;
-  }
-  .hide.name { justify-content: flex-start; background: var(--bg); font-weight: 400; }
-  .hide:hover { background: var(--blue-soft); }
-  .hide.hidden { color: var(--muted); text-decoration: line-through; background: repeating-linear-gradient(-45deg, #fff 0 6px, var(--bg) 6px 12px); }
 </style>

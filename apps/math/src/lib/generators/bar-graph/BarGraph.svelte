@@ -47,9 +47,6 @@
       {/if}
     {/each}
   </g>
-  <g stroke={INK} stroke-width="1.5">
-    {#each b.blanks as l}<line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />{/each}
-  </g>
 
   {#if b.key}
     <g transform="translate({b.key.x} {b.key.y})" font-family={SANS} font-size={b.fs} font-weight="bold" fill={INK}>

@@ -249,7 +249,7 @@ const BAR = [
   `cols=Boys%7CGirls&${rows('Dog|9|7', 'Cat|5|8', 'Fish|3|2')}`,
   `cols=Boys%7CGirls&stacking=stacked&values=inside&look=bw&keyAt=below&${rows('Dog|9|7', 'Cat|5|8')}`,
   `direction=bars&values=end&${rows('Strawberry milkshake|12', 'Hot chocolate|7', 'Water|-3')}`,
-  `errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20%C2%B11%20SEM&${rows('None|12.4±1.1', 'A|18.9±1.6', '!B|!15.2±2.3')}`,
+  `errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20%C2%B11%20SEM&${rows('None|12.4±1.1', 'A|18.9±1.6', 'B|', '|15.2±2.3')}`,
   `gridlines=bold&minor=2&to=20&step=2&every=2&labelSize=large&${rows('Strawberry milkshake|3', 'Hot chocolate|5', 'Sparkling water|9')}`,
   'titleMode=text&title=Votes&valueTitleMode=blank&categoryTitleMode=text&categoryTitle=Color&from=abc&step=0',
 ]

@@ -755,7 +755,7 @@ export const EXAMPLES: Example[] = [
           { name: 'Monday', cells: [{ value: '4' }] },
           { name: 'Tuesday', cells: [{ value: '7.5' }] },
           { name: 'Wednesday', cells: [{ value: '2' }] },
-          { name: 'Thursday', cells: [{ value: '5.5', hidden: true }] },
+          { name: 'Thursday' },
           { name: 'Friday', cells: [{ value: '1' }] },
         ],
         gridlines: 'bold',

@@ -281,13 +281,8 @@ function barGraphAnswer(s: SettingsById['bar-graph']): ExampleDetails['answer'] 
   const read = barGraph.readGraph(s)
   const problem = read.problems.table ?? read.problems.from ?? read.problems.to ?? read.problems.step
   if (problem) throw new Error(`The bar graph example can’t be drawn as written: ${problem}`)
-  // Only what's left for students has an answer: each bar or name left off.
-  const series = (j: number) => (s.columns.length > 1 ? ` (${s.columns[j].trim() || `series ${j + 1}`})` : '')
-  const lines = read.rows.flatMap((r) => [
-    ...(r.hideName ? [`Blank name: ${r.name}`] : []),
-    ...r.values.flatMap((v, j) => (r.hidden[j] && v !== null ? [`${r.name || 'Bar'}${series(j)}: ${barGraph.fmt(v)}`] : [])),
-  ])
-  return lines.length ? { heading: 'Answer key', lines } : null
+  // The figure shows every value it has; a bar left for students has none to give.
+  return null
 }
 
 function mappingAnswer(s: SettingsById['mapping-diagram']): ExampleDetails['answer'] {

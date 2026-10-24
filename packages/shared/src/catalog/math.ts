@@ -268,7 +268,7 @@ export const MATH: CatalogEntry[] = [
     path: '/bar-graph',
     blurb: 'Bar graphs and column graphs from a table, with one or several bars per category.',
     description:
-      'Bar graphs and column graphs from a table you type or paste: upright or sideways bars, double bar graphs side by side or stacked, values written on the bars, error bars, and bars or names left blank for students.',
+      'Bar graphs and column graphs from a table you type or paste: upright or sideways bars, double bar graphs side by side or stacked, values written on the bars, and error bars.',
     keywords: [
       'bar graph', 'bar graphs', 'bar chart', 'bar charts', 'column graph', 'column graphs', 'column chart',
       'vertical bar graph', 'horizontal bar graph', 'double bar graph', 'grouped bar chart', 'side-by-side bar chart',

@@ -7,25 +7,23 @@
 // In the page address each row is one repeated parameter and the headings
 // another, as Box Plot writes its data sets:
 //   cols=Boys|Girls
-//   row=Apples|12|15±1.5|!9
-// A cell is its value, then ±error if it has one; a leading ! marks a value
-// (or a row's name) left for students.
+//   row=Apples|12|15±1.5|
+// A cell is its value, then ±error if it has one; an empty cell is no value.
 
-/** One value as typed, its ± error as typed, and whether it's left for students. */
-export type Cell = { value: string; error: string; hidden: boolean }
-export type TableRow = { name: string; hideName: boolean; cells: Cell[] }
+/** One value as typed, and its ± error as typed. */
+export type Cell = { value: string; error: string }
+export type TableRow = { name: string; cells: Cell[] }
 
 export const MAX_COLUMNS = 6
 export const MAX_ROWS = 30
 
-export const blankCell = (): Cell => ({ value: '', error: '', hidden: false })
-export const blankRow = (columns: number): TableRow => ({ name: '', hideName: false, cells: Array.from({ length: columns }, blankCell) })
+export const blankCell = (): Cell => ({ value: '', error: '' })
+export const blankRow = (columns: number): TableRow => ({ name: '', cells: Array.from({ length: columns }, blankCell) })
 
 const text = (v: unknown) => (v === undefined || v === null ? '' : String(v))
-const bool = (v: unknown) => v === true || v === '1' || v === 'true'
-// Written into the page address between "|", after a possible "!", around a "±".
-const tidyName = (v: unknown) => text(v).replace(/\|/g, '').replace(/^!+/, '')
-const tidyValue = (v: unknown) => text(v).replace(/[|±!]/g, '')
+// Written into the page address between "|", around a "±".
+const tidyName = (v: unknown) => text(v).replace(/\|/g, '')
+const tidyValue = (v: unknown) => text(v).replace(/[|±]/g, '')
 
 /** Headings tidied: at least one column, at most MAX_COLUMNS. */
 export function cleanColumns(columns: unknown): string[] {
@@ -40,12 +38,7 @@ export function cleanRows(rows: unknown, columns: number): TableRow[] {
     const cells: any[] = Array.isArray(r?.cells) ? r.cells : []
     return {
       name: tidyName(r?.name),
-      hideName: bool(r?.hideName),
-      cells: Array.from({ length: columns }, (_, c) => ({
-        value: tidyValue(cells[c]?.value),
-        error: tidyValue(cells[c]?.error),
-        hidden: bool(cells[c]?.hidden),
-      })),
+      cells: Array.from({ length: columns }, (_, c) => ({ value: tidyValue(cells[c]?.value), error: tidyValue(cells[c]?.error) })),
     }
   })
 }
@@ -54,19 +47,17 @@ const isEmpty = (r: TableRow) => !r.name.trim() && r.cells.every((c) => !c.value
 /** The rows with something in them: empty ones change nothing. */
 export const filledRows = (rows: TableRow[]) => rows.filter((r) => !isEmpty(r))
 
-const cellToParam = (c: Cell) => `${c.hidden ? '!' : ''}${c.value.trim()}${c.error.trim() ? `±${c.error.trim()}` : ''}`
-export const rowToParam = (r: TableRow) => [`${r.hideName ? '!' : ''}${r.name.trim()}`, ...r.cells.map(cellToParam)].join('|')
+const cellToParam = (c: Cell) => `${c.value.trim()}${c.error.trim() ? `±${c.error.trim()}` : ''}`
+export const rowToParam = (r: TableRow) => [r.name.trim(), ...r.cells.map(cellToParam)].join('|')
 
 /** A row from the page address, with any cells it's missing left empty. */
 export function rowFromParam(p: string, columns: number): TableRow {
   const [name = '', ...cells] = p.split('|')
   return {
-    name: name.replace(/^!/, ''),
-    hideName: name.startsWith('!'),
+    name,
     cells: Array.from({ length: columns }, (_, c) => {
-      const raw = cells[c] ?? ''
-      const [value, error = ''] = raw.replace(/^!/, '').split('±')
-      return { value, error, hidden: raw.startsWith('!') }
+      const [value, error = ''] = (cells[c] ?? '').split('±')
+      return { value, error }
     }),
   }
 }
@@ -89,10 +80,8 @@ export function readValue(typed: string): Read {
 /** One row as numbers. */
 export type ReadRow = {
   name: string
-  hideName: boolean
   values: (number | null)[]
   errors: (number | null)[]
-  hidden: boolean[]
 }
 
 /**
@@ -113,7 +102,7 @@ export function readTable(rows: TableRow[]): { rows: ReadRow[]; problem: string 
       values.push(v.value)
       errors.push(e.value !== null && e.value >= 0 ? e.value : null)
     }
-    return { name: r.name.trim(), hideName: r.hideName, values, errors, hidden: r.cells.map((c) => c.hidden) }
+    return { name: r.name.trim(), values, errors }
   })
   return { rows: out, problem }
 }
@@ -147,12 +136,7 @@ export function parsePasted(text: string): { columns: string[] | null; rows: Tab
 
   const rows = body.slice(0, MAX_ROWS).map((r) => ({
     name: tidyName(r[0]),
-    hideName: false,
-    cells: valueCols.map((c) => ({
-      value: tidyValue(r[c]),
-      error: kinds[c] === 'error' ? tidyValue(r[c + 1]) : '',
-      hidden: false,
-    })),
+    cells: valueCols.map((c) => ({ value: tidyValue(r[c]), error: kinds[c] === 'error' ? tidyValue(r[c + 1]) : '' })),
   }))
   const columns = header ? valueCols.map((c) => tidyName(head[c])) : null
   return { columns: columns && columns.length ? columns : valueCols.length ? valueCols.map(() => '') : null, rows }

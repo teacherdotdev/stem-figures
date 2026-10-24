@@ -10881,7 +10881,6 @@ exports[`bar graph >  1`] = `
   "figure": {
     "bars": [],
     "base": 334,
-    "blanks": [],
     "categories": [],
     "errorBars": [],
     "fills": [
@@ -11128,7 +11127,6 @@ exports[`bar graph > cols=Boys%7CGirls&row=Dog%7C9%7C7&row=Cat%7C5%7C8&row=Fish%
       },
     ],
     "base": 302,
-    "blanks": [],
     "categories": [
       {
         "anchor": "middle",
@@ -11239,11 +11237,6 @@ exports[`bar graph > cols=Boys%7CGirls&row=Dog%7C9%7C7&row=Cat%7C5%7C8&row=Fish%
             null,
             null,
           ],
-          "hidden": [
-            false,
-            false,
-          ],
-          "hideName": false,
           "name": "Dog",
           "values": [
             9,
@@ -11255,11 +11248,6 @@ exports[`bar graph > cols=Boys%7CGirls&row=Dog%7C9%7C7&row=Cat%7C5%7C8&row=Fish%
             null,
             null,
           ],
-          "hidden": [
-            false,
-            false,
-          ],
-          "hideName": false,
           "name": "Cat",
           "values": [
             5,
@@ -11271,11 +11259,6 @@ exports[`bar graph > cols=Boys%7CGirls&row=Dog%7C9%7C7&row=Cat%7C5%7C8&row=Fish%
             null,
             null,
           ],
-          "hidden": [
-            false,
-            false,
-          ],
-          "hideName": false,
           "name": "Fish",
           "values": [
             3,
@@ -11452,7 +11435,6 @@ exports[`bar graph > cols=Boys%7CGirls&stacking=stacked&values=inside&look=bw&ke
       },
     ],
     "base": 270,
-    "blanks": [],
     "categories": [
       {
         "anchor": "middle",
@@ -11554,11 +11536,6 @@ exports[`bar graph > cols=Boys%7CGirls&stacking=stacked&values=inside&look=bw&ke
             null,
             null,
           ],
-          "hidden": [
-            false,
-            false,
-          ],
-          "hideName": false,
           "name": "Dog",
           "values": [
             9,
@@ -11570,11 +11547,6 @@ exports[`bar graph > cols=Boys%7CGirls&stacking=stacked&values=inside&look=bw&ke
             null,
             null,
           ],
-          "hidden": [
-            false,
-            false,
-          ],
-          "hideName": false,
           "name": "Cat",
           "values": [
             5,
@@ -11767,7 +11739,6 @@ exports[`bar graph > direction=bars&values=end&row=Strawberry%20milkshake%7C12&r
       },
     ],
     "base": 180.56799999999998,
-    "blanks": [],
     "categories": [
       {
         "anchor": "end",
@@ -11852,10 +11823,6 @@ exports[`bar graph > direction=bars&values=end&row=Strawberry%20milkshake%7C12&r
           "errors": [
             null,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "Strawberry milkshake",
           "values": [
             12,
@@ -11865,10 +11832,6 @@ exports[`bar graph > direction=bars&values=end&row=Strawberry%20milkshake%7C12&r
           "errors": [
             null,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "Hot chocolate",
           "values": [
             7,
@@ -11878,10 +11841,6 @@ exports[`bar graph > direction=bars&values=end&row=Strawberry%20milkshake%7C12&r
           "errors": [
             null,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "Water",
           "values": [
             -3,
@@ -12033,7 +11992,7 @@ exports[`bar graph > direction=bars&values=end&row=Strawberry%20milkshake%7C12&r
 }
 `;
 
-exports[`bar graph > errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20%C2%B11%20SEM&row=None%7C12.4%C2%B11.1&row=A%7C18.9%C2%B11.6&row=!B%7C!15.2%C2%B12.3 1`] = `
+exports[`bar graph > errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20%C2%B11%20SEM&row=None%7C12.4%C2%B11.1&row=A%7C18.9%C2%B11.6&row=B%7C&row=%7C15.2%C2%B12.3 1`] = `
 {
   "figure": {
     "bars": [
@@ -12042,8 +12001,8 @@ exports[`bar graph > errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20
         "h": 198.4,
         "row": 0,
         "series": 0,
-        "w": 79.36,
-        "x": 63.12,
+        "w": 59.52,
+        "x": 57.04,
         "y": 167.6,
       },
       {
@@ -12051,20 +12010,21 @@ exports[`bar graph > errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20
         "h": 302.4,
         "row": 1,
         "series": 0,
-        "w": 79.36,
-        "x": 191.12,
+        "w": 59.52,
+        "x": 153.04,
         "y": 63.6,
+      },
+      {
+        "fill": "blue",
+        "h": 243.2,
+        "row": 3,
+        "series": 0,
+        "w": 59.52,
+        "x": 345.04,
+        "y": 122.8,
       },
     ],
     "base": 366,
-    "blanks": [
-      {
-        "x1": 322.40000000000003,
-        "x2": 395.2,
-        "y1": 384.2,
-        "y2": 384.2,
-      },
-    ],
     "categories": [
       {
         "anchor": "middle",
@@ -12072,7 +12032,7 @@ exports[`bar graph > errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20
           "None",
         ],
         "slant": false,
-        "x": 102.8,
+        "x": 86.8,
         "y": 382.1,
       },
       {
@@ -12081,7 +12041,16 @@ exports[`bar graph > errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20
           "A",
         ],
         "slant": false,
-        "x": 230.8,
+        "x": 182.8,
+        "y": 382.1,
+      },
+      {
+        "anchor": "middle",
+        "lines": [
+          "B",
+        ],
+        "slant": false,
+        "x": 278.8,
         "y": 382.1,
       },
     ],
@@ -12089,42 +12058,62 @@ exports[`bar graph > errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20
       {
         "caps": [
           {
-            "x1": 75.024,
-            "x2": 130.576,
+            "x1": 65.968,
+            "x2": 107.63199999999999,
             "y1": 185.2,
             "y2": 185.2,
           },
           {
-            "x1": 75.024,
-            "x2": 130.576,
+            "x1": 65.968,
+            "x2": 107.63199999999999,
             "y1": 150,
             "y2": 150,
           },
         ],
-        "x1": 102.8,
-        "x2": 102.8,
+        "x1": 86.8,
+        "x2": 86.8,
         "y1": 185.2,
         "y2": 150,
       },
       {
         "caps": [
           {
-            "x1": 203.024,
-            "x2": 258.576,
+            "x1": 161.96800000000002,
+            "x2": 203.632,
             "y1": 89.20000000000005,
             "y2": 89.20000000000005,
           },
           {
-            "x1": 203.024,
-            "x2": 258.576,
+            "x1": 161.96800000000002,
+            "x2": 203.632,
             "y1": 38,
             "y2": 38,
           },
         ],
-        "x1": 230.8,
-        "x2": 230.8,
+        "x1": 182.8,
+        "x2": 182.8,
         "y1": 89.20000000000005,
         "y2": 38,
+      },
+      {
+        "caps": [
+          {
+            "x1": 353.968,
+            "x2": 395.632,
+            "y1": 159.60000000000002,
+            "y2": 159.60000000000002,
+          },
+          {
+            "x1": 353.968,
+            "x2": 395.632,
+            "y1": 86,
+            "y2": 86,
+          },
+        ],
+        "x1": 374.8,
+        "x2": 374.8,
+        "y1": 159.60000000000002,
+        "y2": 86,
       },
     ],
     "fills": [
@@ -12184,10 +12173,6 @@ exports[`bar graph > errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20
           "errors": [
             1.1,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "None",
           "values": [
             12.4,
@@ -12197,10 +12182,6 @@ exports[`bar graph > errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20
           "errors": [
             1.6,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "A",
           "values": [
             18.9,
@@ -12208,13 +12189,18 @@ exports[`bar graph > errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20
         },
         {
           "errors": [
+            null,
+          ],
+          "name": "B",
+          "values": [
+            null,
+          ],
+        },
+        {
+          "errors": [
             2.3,
           ],
-          "hidden": [
-            true,
-          ],
-          "hideName": true,
-          "name": "B",
+          "name": "",
           "values": [
             15.2,
           ],
@@ -12229,7 +12215,7 @@ exports[`bar graph > errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20
     "blanks": [],
     "box": {
       "x0": 0,
-      "x1": 3,
+      "x1": 4,
       "y0": 0,
       "y1": 22,
     },
@@ -12360,7 +12346,7 @@ exports[`bar graph > errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20
       "y2": 14,
     },
   },
-  "query": "errorBars=1&crossbars=wide&errorNote=Error+bars+show+%C2%B11+SEM&row=None%7C12.4%C2%B11.1&row=A%7C18.9%C2%B11.6&row=%21B%7C%2115.2%C2%B12.3",
+  "query": "errorBars=1&crossbars=wide&errorNote=Error+bars+show+%C2%B11+SEM&row=None%7C12.4%C2%B11.1&row=A%7C18.9%C2%B11.6&row=B%7C&row=%7C15.2%C2%B12.3",
 }
 `;
 
@@ -12397,7 +12383,6 @@ exports[`bar graph > gridlines=bold&minor=2&to=20&step=2&every=2&labelSize=large
       },
     ],
     "base": 334,
-    "blanks": [],
     "categories": [
       {
         "anchor": "middle",
@@ -12484,10 +12469,6 @@ exports[`bar graph > gridlines=bold&minor=2&to=20&step=2&every=2&labelSize=large
           "errors": [
             null,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "Strawberry milkshake",
           "values": [
             3,
@@ -12497,10 +12478,6 @@ exports[`bar graph > gridlines=bold&minor=2&to=20&step=2&every=2&labelSize=large
           "errors": [
             null,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "Hot chocolate",
           "values": [
             5,
@@ -12510,10 +12487,6 @@ exports[`bar graph > gridlines=bold&minor=2&to=20&step=2&every=2&labelSize=large
           "errors": [
             null,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "Sparkling water",
           "values": [
             9,
@@ -12702,7 +12675,6 @@ exports[`bar graph > row=Soccer%7C8&row=Basketball%7C6&row=Swimming%7C5&row=Tenn
       },
     ],
     "base": 270,
-    "blanks": [],
     "categories": [
       {
         "anchor": "middle",
@@ -12804,10 +12776,6 @@ exports[`bar graph > row=Soccer%7C8&row=Basketball%7C6&row=Swimming%7C5&row=Tenn
           "errors": [
             null,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "Soccer",
           "values": [
             8,
@@ -12817,10 +12785,6 @@ exports[`bar graph > row=Soccer%7C8&row=Basketball%7C6&row=Swimming%7C5&row=Tenn
           "errors": [
             null,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "Basketball",
           "values": [
             6,
@@ -12830,10 +12794,6 @@ exports[`bar graph > row=Soccer%7C8&row=Basketball%7C6&row=Swimming%7C5&row=Tenn
           "errors": [
             null,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "Swimming",
           "values": [
             5,
@@ -12843,10 +12803,6 @@ exports[`bar graph > row=Soccer%7C8&row=Basketball%7C6&row=Swimming%7C5&row=Tenn
           "errors": [
             null,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "Tennis",
           "values": [
             3,
@@ -12856,10 +12812,6 @@ exports[`bar graph > row=Soccer%7C8&row=Basketball%7C6&row=Swimming%7C5&row=Tenn
           "errors": [
             null,
           ],
-          "hidden": [
-            false,
-          ],
-          "hideName": false,
           "name": "Running",
           "values": [
             4,
@@ -12997,7 +12949,6 @@ exports[`bar graph > titleMode=text&title=Votes&valueTitleMode=blank&categoryTit
   "figure": {
     "bars": [],
     "base": 370.4,
-    "blanks": [],
     "categories": [],
     "errorBars": [],
     "fills": [

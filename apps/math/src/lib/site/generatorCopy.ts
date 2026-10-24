@@ -580,7 +580,7 @@ export const COPY: Record<string, GeneratorCopy> = {
     heading: 'Bar graphs and column graphs from a table',
     intro: [
       'The Bar Graph Generator draws a bar graph from a table you type or paste: a category on each row, like Soccer or Swimming, and its value. Bars stand up as columns or run sideways, over a value axis fitted to the data unless you type its range. Add a column to the table for a double bar graph, with the bars side by side or stacked and a key naming each set.',
-      'Leave any bar off, or any category’s name as a blank line, for students to draw or fill in from a table. Write the values on the bars or leave them for students to read from the axis. For science, give each bar a ± value to draw error bars, such as the standard error of a mean.',
+      'Leave a category’s value empty and its name stays with no bar, for students to draw from a table. Write the values on the bars or leave them for students to read from the axis. For science, give each bar a ± value to draw error bars, such as the standard error of a mean.',
     ],
     settings: [
       'The table: categories down the side and one or more series across the top, typed or pasted from a spreadsheet',
@@ -588,7 +588,6 @@ export const COPY: Record<string, GeneratorCopy> = {
       'Values written at the end of each bar or inside it, or not at all',
       'Error bars from a ± value for each bar, with or without crossbars, and a note under the graph saying what they show',
       'Color, black-and-white fills that photocopy, or white bars to shade, with a fill picked for each series, and a key on the right or below',
-      'Any bar or category name left for students',
       'A chart title and axis titles, as text or a blank line for students',
       'The value axis’s range and count-by, worked out from the data unless you type them, which lines are numbered, and the gridlines',
     ],
@@ -611,7 +610,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'How do I leave a bar for students to draw?',
-        a: 'Click Leave for students under the table, then click the value of each bar to leave off. Its category name stays, so students can draw the bar from a table or a description. Click a category’s name instead to leave a blank line where it goes.',
+        a: 'Type the category’s name and leave its value empty. Its name stays under the axis with no bar, so students can draw the bar from a table or a description.',
       },
     ],
     imageAlt: 'A printable bar graph of favorite sports, with a column for each sport over a value axis titled Number of students, made with the Bar Graph Generator',

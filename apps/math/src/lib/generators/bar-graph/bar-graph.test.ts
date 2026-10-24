@@ -3,7 +3,7 @@ import { textBox, textWidth, type Box } from '$shared/graph/labels'
 import { buildBarGraph } from './layout.js'
 import { cleanSettings, readGraph, settingsFromParams, settingsToQuery, type RawSettings } from './settings.js'
 
-const row = (name: string, ...values: (string | { value: string; error?: string; hidden?: boolean })[]) => ({
+const row = (name: string, ...values: (string | { value: string; error?: string })[]) => ({
   name,
   cells: values.map((v) => (typeof v === 'string' ? { value: v } : v)),
 })
@@ -31,8 +31,8 @@ describe('the page address', () => {
     expect(settingsToQuery(cleanSettings({ rows: [row('A', '1')] }))).toBe('row=A%7C1')
   })
 
-  test('error bars and bars left for students round-trip', () => {
-    const s = cleanSettings({ errorBars: true, rows: [row('A', { value: '4', error: '0.5' }), { ...row('B', { value: '2', hidden: true }), hideName: true }] })
+  test('error bars and empty values round-trip', () => {
+    const s = cleanSettings({ errorBars: true, rows: [row('A', { value: '4', error: '0.5' }), row('B', ''), row('', '3')] })
     expect(settingsFromParams(new URLSearchParams(settingsToQuery(s)))).toEqual(s)
   })
 
@@ -111,13 +111,6 @@ describe('bars', () => {
     expect(dog[0].y).toBeCloseTo(dog[1].y + dog[1].h, 1)
     expect(dog[1].y).toBeCloseTo(valueAt(g, 16), 1)
   })
-
-  test('a part left for students keeps its place in the stack', () => {
-    const g = graph({ columns: ['A', 'B', 'C'], rows: [row('X', '2', { value: '3', hidden: true }, '4')], stacking: 'stacked' })
-    const top = g.bars.find((b) => b.series === 2)!
-    expect(top.y + top.h).toBeCloseTo(valueAt(g, 5), 1)
-    expect(top.y).toBeCloseTo(valueAt(g, 9), 1)
-  })
 })
 
 describe('error bars', () => {
@@ -184,11 +177,16 @@ describe('labels', () => {
 })
 
 describe('left for students', () => {
-  test('a hidden bar is not drawn, and a hidden name is a blank line', () => {
-    const g = graph({ rows: [row('Mon', '4'), { ...row('Tue', { value: '7', hidden: true }), hideName: true }], values: 'end' })
-    expect(g.bars).toHaveLength(1)
-    expect(g.values.map((v) => v.text)).toEqual(['4'])
-    expect(g.categories.flatMap((c) => c.lines)).toEqual(['Mon'])
-    expect(g.blanks).toHaveLength(1)
+  test('an empty value draws no bar, keeping its category and name', () => {
+    const g = graph({ rows: [row('Mon', '4'), row('Tue', ''), row('Wed', '2')], values: 'end' })
+    expect(g.bars.map((b) => b.row)).toEqual([0, 2])
+    expect(g.values.map((v) => v.text)).toEqual(['4', '2'])
+    expect(g.categories.flatMap((c) => c.lines)).toEqual(['Mon', 'Tue', 'Wed'])
+  })
+
+  test('an empty value in a stack leaves the other parts end to end', () => {
+    const g = graph({ columns: ['A', 'B', 'C'], rows: [row('X', '2', '', '4')], stacking: 'stacked' })
+    const top = g.bars.find((b) => b.series === 2)!
+    expect(top.y + top.h).toBeCloseTo(valueAt(g, 2), 1)
   })
 })
