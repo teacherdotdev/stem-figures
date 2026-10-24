@@ -261,6 +261,23 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'bar-graph',
+    site: 'math',
+    alsoOn: ['biology'],
+    name: 'Bar Graph Generator',
+    path: '/bar-graph',
+    blurb: 'Bar graphs and column graphs from a table, with one or several bars per category.',
+    description:
+      'Bar graphs and column graphs from a table you type or paste: upright or sideways bars, double bar graphs side by side or stacked, values written on the bars, error bars, and bars or names left blank for students.',
+    keywords: [
+      'bar graph', 'bar graphs', 'bar chart', 'bar charts', 'column graph', 'column graphs', 'column chart',
+      'vertical bar graph', 'horizontal bar graph', 'double bar graph', 'grouped bar chart', 'side-by-side bar chart',
+      'comparative bar chart', 'dual bar chart', 'compound bar chart', 'composite bar chart', 'component bar chart',
+      'stacked bar chart', 'stacked bar graph', 'error bars', 'standard error', 'sem', 'standard deviation',
+      'categorical data', 'frequency', 'data display', 'statistics', 'stats', 'compare data', 'key', 'legend', 'printable',
+    ],
+  },
+  {
     id: 'mapping-diagram',
     site: 'math',
     name: 'Mapping Diagram Generator',

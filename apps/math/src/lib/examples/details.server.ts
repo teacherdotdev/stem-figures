@@ -9,6 +9,7 @@
 
 import { settingsFor as solidSettings } from '$lib/generators/3d-shape/settings'
 import { partName, radiusOf, readShape } from '$lib/generators/3d-shape/solve'
+import * as barGraph from '$lib/generators/bar-graph/settings'
 import * as boxPlot from '$lib/generators/box-plot/settings'
 import { parseEquation, readEquations } from '$lib/generators/coordinate-grid/equations'
 import * as grid from '$lib/generators/coordinate-grid/settings'
@@ -276,6 +277,19 @@ function boxPlotAnswer(s: SettingsById['box-plot']): ExampleDetails['answer'] {
   return { heading: 'Answer key', lines: out }
 }
 
+function barGraphAnswer(s: SettingsById['bar-graph']): ExampleDetails['answer'] {
+  const read = barGraph.readGraph(s)
+  const problem = read.problems.table ?? read.problems.from ?? read.problems.to ?? read.problems.step
+  if (problem) throw new Error(`The bar graph example can’t be drawn as written: ${problem}`)
+  // Only what's left for students has an answer: each bar or name left off.
+  const series = (j: number) => (s.columns.length > 1 ? ` (${s.columns[j].trim() || `series ${j + 1}`})` : '')
+  const lines = read.rows.flatMap((r) => [
+    ...(r.hideName ? [`Blank name: ${r.name}`] : []),
+    ...r.values.flatMap((v, j) => (r.hidden[j] && v !== null ? [`${r.name || 'Bar'}${series(j)}: ${barGraph.fmt(v)}`] : [])),
+  ])
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
 function mappingAnswer(s: SettingsById['mapping-diagram']): ExampleDetails['answer'] {
   const map = mapping.readMapping(s)
   if (!map.inputs.length || !map.outputs.length) throw new Error('The mapping diagram example has no inputs or outputs')
@@ -300,6 +314,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'cone': { definition: definitionOf(solidSettings('cone')), answer: solidAnswer },
   'sphere': { definition: definitionOf(solidSettings('sphere')), answer: solidAnswer },
   'box-plot': { definition: definitionOf(boxPlot), answer: boxPlotAnswer },
+  'bar-graph': { definition: definitionOf(barGraph), answer: barGraphAnswer },
   'mapping-diagram': { definition: definitionOf(mapping), answer: mappingAnswer },
   'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthAnswer(s).split(' · ') }) },
 }

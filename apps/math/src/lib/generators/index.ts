@@ -7,6 +7,7 @@ import type { Component } from 'svelte'
 import { generatorsOn } from '$shared/catalog/index.js'
 import { SITE_ID } from '$lib/site/config.js'
 import AnglesPreview from './angles/Preview.svelte'
+import BarGraphPreview from './bar-graph/Preview.svelte'
 import BoxPlotPreview from './box-plot/Preview.svelte'
 import CompositeShapePreview from '$lib/editors/composite-shape/Preview.svelte'
 import ConePreview from './cone/Preview.svelte'
@@ -44,6 +45,7 @@ export const PREVIEWS: Record<string, Component> = {
   'cone': ConePreview,
   'sphere': SpherePreview,
   'box-plot': BoxPlotPreview,
+  'bar-graph': BarGraphPreview,
   'mapping-diagram': MappingDiagramPreview,
   'length-reading': LengthReadingPreview,
   'composite-shape': CompositeShapePreview,

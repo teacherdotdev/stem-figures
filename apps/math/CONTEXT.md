@@ -346,6 +346,30 @@ _Avoid_: Summary statistics, five statistics
 A value more than 1.5 times the box's width beyond either end of the box, drawn as its own point with the whisker stopping at the last value that isn't one. Outliers are only drawn when the teacher turns them on; otherwise whiskers reach the minimum and maximum.
 _Avoid_: Extreme value, anomaly
 
+**Bar Graph**:
+A figure of separate bars, one for each category (or one for each series in each category), whose lengths show values read off a numbered value axis. The bars stand up as columns or run sideways; a column graph is a bar graph with upright bars. Its generator is the Bar Graph Generator.
+_Avoid_: Bar chart, column graph, column chart (fine as search words, not as the name); histogram (its bars touch, over a numbered axis)
+
+**Category**:
+One row of a bar graph's table, and the place along its category axis where that row's bars stand, named under them (or beside them, for sideways bars), such as Soccer. Categories are named, not numbered, and keep the order they were typed in.
+_Avoid_: Group, label, x value
+
+**Series**:
+One column of a bar graph's table, named by its heading, such as Boys: a bar in every category, all filled alike and named in the key. With two or more series a category's bars stand side by side (a double bar graph) or stacked end to end.
+_Avoid_: Data set (that's a row of numbers for a box plot), group, column (fine in speech)
+
+**Error bar**:
+A line through the end of a bar from its value minus a ± amount to its value plus it, with a short crossbar at each end unless the teacher takes them off. The teacher types each bar's ± amount (a standard error, a standard deviation, a range); the generator never works one out. Only side-by-side bars have them.
+_Avoid_: Whisker (that's a box plot's), uncertainty bar, confidence interval (fine in teaching)
+
+**Key**:
+The list beside or under a figure pairing each fill with what it stands for, such as each series of a bar graph.
+_Avoid_: Legend (fine as a search word)
+
+**Fill**:
+How a bar is colored in: one of the graph inks, or a black-and-white fill (gray, white, hatching, dots, cross-hatching) that still tells the series apart once photocopied. A figure's look gives the series fills in turn, and the teacher can pick one for any series.
+_Avoid_: Pattern, shading (that's an angle's or a region's), color (for the black-and-white ones)
+
 **Histogram**:
 A figure of touching bars over a numbered axis, one bar per bin, whose heights show how many values fall in each bin. Its generator is the Histogram Generator.
 _Avoid_: Bar graph (bars there are separate categories), column chart

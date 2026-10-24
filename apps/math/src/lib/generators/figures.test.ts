@@ -6,6 +6,8 @@ import { describe, expect, test } from 'vitest'
 import { buildShape } from './3d-shape/layout.js'
 import * as shape from './3d-shape/settings.js'
 import { readShape } from './3d-shape/solve.js'
+import { buildBarGraph } from './bar-graph/layout.js'
+import * as bar from './bar-graph/settings.js'
 import { buildPlot } from './box-plot/boxplot.js'
 import * as box from './box-plot/settings.js'
 import { buildGraph } from './coordinate-grid/graph.js'
@@ -240,6 +242,18 @@ const SHAPE = [
 
 const params = (q: string) => new URLSearchParams(q)
 
+const rows = (...r: string[]) => r.map((x) => `row=${encodeURIComponent(x)}`).join('&')
+const BAR = [
+  '',
+  rows('Soccer|8', 'Basketball|6', 'Swimming|5', 'Tennis|3', 'Running|4'),
+  `cols=Boys%7CGirls&${rows('Dog|9|7', 'Cat|5|8', 'Fish|3|2')}`,
+  `cols=Boys%7CGirls&stacking=stacked&values=inside&look=bw&keyAt=below&${rows('Dog|9|7', 'Cat|5|8')}`,
+  `direction=bars&values=end&${rows('Strawberry milkshake|12', 'Hot chocolate|7', 'Water|-3')}`,
+  `errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20%C2%B11%20SEM&${rows('None|12.4±1.1', 'A|18.9±1.6', '!B|!15.2±2.3')}`,
+  `gridlines=bold&minor=2&to=20&step=2&every=2&labelSize=large&${rows('Strawberry milkshake|3', 'Hot chocolate|5', 'Sparkling water|9')}`,
+  'titleMode=text&title=Votes&valueTitleMode=blank&categoryTitleMode=text&categoryTitle=Color&from=abc&step=0',
+]
+
 describe('coordinate grid', () => {
   test.each(GRID)('%s', (q) => {
     const s = grid.settingsFromParams(params(q))
@@ -260,6 +274,14 @@ describe('box plot', () => {
     const s = box.settingsFromParams(params(q))
     const { rows, problems } = box.readPlot(s)
     expect({ query: box.settingsToQuery(s), rows, problems, plot: buildPlot(s) }).toMatchSnapshot()
+  })
+})
+
+describe('bar graph', () => {
+  test.each(BAR)('%s', (q) => {
+    const s = bar.settingsFromParams(params(q))
+    const { layout, ...figure } = buildBarGraph(s)
+    expect({ query: bar.settingsToQuery(s), figure, layout: { ...layout, px: undefined } }).toMatchSnapshot()
   })
 })
 

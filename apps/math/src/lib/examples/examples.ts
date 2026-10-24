@@ -634,6 +634,138 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('bar-graph', [
+    {
+      slug: 'bar-graph-of-favorite-sports',
+      title: 'Bar graph of favorite sports',
+      alt: 'A bar graph titled Favorite sports with a blue column for each of five sports over an axis from 0 to 10 titled Number of students',
+      caption:
+        'A bar graph titled Favorite sports, with one blue column each for Soccer, Basketball, Swimming, Tennis and Running. The value axis is titled Number of students and numbered from 0 to 10 by 1, with light gridlines across it, and the sports are named under their columns above the title Sport. No values are written on the bars, so students read them from the axis.',
+      settings: {
+        columns: ['Students'],
+        rows: [
+          { name: 'Soccer', cells: [{ value: '8' }] },
+          { name: 'Basketball', cells: [{ value: '6' }] },
+          { name: 'Swimming', cells: [{ value: '5' }] },
+          { name: 'Tennis', cells: [{ value: '3' }] },
+          { name: 'Running', cells: [{ value: '4' }] },
+        ],
+        to: '10',
+        title: 'Favorite sports',
+        titleMode: 'text',
+        categoryTitle: 'Sport',
+        categoryTitleMode: 'text',
+        valueTitle: 'Number of students',
+        valueTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'double-bar-graph-boys-and-girls',
+      title: 'Double bar graph: favorite pets of boys and girls',
+      alt: 'A double bar graph of favorite pets with a blue bar for boys and a red bar for girls beside each pet, and a key naming them',
+      caption:
+        'A double bar graph of favorite pets, with two bars side by side for each of Dog, Cat, Fish and Rabbit: blue for Boys and red for Girls, named in a key on the right. The value axis is titled Number of students and numbered from 0 to 9. Students compare the two groups pet by pet.',
+      settings: {
+        columns: ['Boys', 'Girls'],
+        rows: [
+          { name: 'Dog', cells: [{ value: '9' }, { value: '7' }] },
+          { name: 'Cat', cells: [{ value: '5' }, { value: '8' }] },
+          { name: 'Fish', cells: [{ value: '3' }, { value: '2' }] },
+          { name: 'Rabbit', cells: [{ value: '2' }, { value: '4' }] },
+        ],
+        title: 'Favorite pets',
+        titleMode: 'text',
+        valueTitle: 'Number of students',
+        valueTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'horizontal-bar-chart-books-read',
+      title: 'Horizontal bar chart of books read, with values',
+      alt: 'A horizontal bar chart of books read by five students, each bar with its number written at its end',
+      caption:
+        'A horizontal bar chart titled Books read this term, with a sideways bar for each of five students, Amara, Ben, Chen, Dana and Eli, named down the left. Each bar has its number of books written at its end, over an axis titled Books numbered from 0 to 12.',
+      settings: {
+        rows: [
+          { name: 'Amara', cells: [{ value: '12' }] },
+          { name: 'Ben', cells: [{ value: '7' }] },
+          { name: 'Chen', cells: [{ value: '9' }] },
+          { name: 'Dana', cells: [{ value: '4' }] },
+          { name: 'Eli', cells: [{ value: '10' }] },
+        ],
+        direction: 'bars',
+        values: 'end',
+        title: 'Books read this term',
+        titleMode: 'text',
+        valueTitle: 'Books',
+        valueTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'stacked-composite-bar-chart-travel-to-school',
+      title: 'Stacked (composite) bar chart: how students travel to school',
+      alt: 'A stacked bar chart in black and white with a column for each of three year groups split into Walk, Bus and Car, and a key below',
+      caption:
+        'A stacked bar chart, also called a composite bar chart, of how students in Years 7, 8 and 9 travel to school. Each year’s column is split into Walk, Bus and Car in gray, white and hatching, named in a key below the graph, with the number in each part written inside it. Black-and-white fills keep the parts apart on a photocopy.',
+      settings: {
+        columns: ['Walk', 'Bus', 'Car'],
+        rows: [
+          { name: 'Year 7', cells: [{ value: '12' }, { value: '10' }, { value: '8' }] },
+          { name: 'Year 8', cells: [{ value: '15' }, { value: '8' }, { value: '6' }] },
+          { name: 'Year 9', cells: [{ value: '9' }, { value: '14' }, { value: '5' }] },
+        ],
+        stacking: 'stacked',
+        barWidth: 'wide',
+        values: 'inside',
+        look: 'bw',
+        keyAt: 'below',
+        valueTitle: 'Number of students',
+        valueTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'bar-graph-with-error-bars-mean-plant-height',
+      title: 'Bar graph with error bars: mean plant height',
+      alt: 'A gray bar graph of mean plant height under three fertilizers, each bar with an error bar, and the note Error bars show ±1 SEM',
+      caption:
+        'A bar graph of the mean height of plants given no fertilizer, fertilizer A and fertilizer B, in gray for printing, over an axis titled Mean height (cm). Each bar has an error bar with crossbars reaching one standard error of the mean above and below it, and the note under the graph says Error bars show ±1 SEM. Students judge whether the differences between the means are likely to be real.',
+      settings: {
+        rows: [
+          { name: 'None', cells: [{ value: '12.4', error: '1.1' }] },
+          { name: 'Fertilizer A', cells: [{ value: '18.9', error: '1.6' }] },
+          { name: 'Fertilizer B', cells: [{ value: '15.2', error: '2.3' }] },
+        ],
+        look: 'bw',
+        errorBars: true,
+        errorNote: 'Error bars show ±1 SEM',
+        categoryTitle: 'Treatment',
+        categoryTitleMode: 'text',
+        valueTitle: 'Mean height (cm)',
+        valueTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'bar-graph-with-a-bar-left-for-students-to-draw',
+      title: 'Bar graph with a bar left for students to draw',
+      alt: 'A bar graph of rainfall from Monday to Friday with Thursday’s bar missing, over bold gridlines with minor lines for drawing it',
+      caption:
+        'A bar graph of rainfall in millimeters from Monday to Friday with Thursday’s bar left off, so students draw it from a table or a description. Bold gridlines split into halves make the bar easy to draw to the nearest half millimeter, and the axis is titled Rainfall (mm).',
+      settings: {
+        rows: [
+          { name: 'Monday', cells: [{ value: '4' }] },
+          { name: 'Tuesday', cells: [{ value: '7.5' }] },
+          { name: 'Wednesday', cells: [{ value: '2' }] },
+          { name: 'Thursday', cells: [{ value: '5.5', hidden: true }] },
+          { name: 'Friday', cells: [{ value: '1' }] },
+        ],
+        gridlines: 'bold',
+        minor: 2,
+        valueTitle: 'Rainfall (mm)',
+        valueTitleMode: 'text',
+      },
+    },
+  ]),
+
   ...examplesOf('mapping-diagram', [
     {
       slug: 'mapping-diagram-of-a-function',

@@ -33,6 +33,10 @@ and `docs/adr/` for decisions.
   show a function or a relation that isn't one; the panel says which, and why.
   Each side is titled (Input and Output, or text, a blank line or nothing) and
   drawn in an oval, a box or nothing.
+- `/bar-graph` **Bar Graph Generator**: a table typed or pasted (a category on
+  each row, a series in each column), drawn as upright columns or sideways
+  bars, side by side or stacked, with values on the bars, ± error bars, a key,
+  color or black-and-white fills, and any bar or name left for students.
 - `/<generator>/examples/<slug>` **Example figures** (see below), and
   `/reuse`, how teachers may reuse them.
 - `/about`, `/privacy`, `/sitemap.xml`, `/robots.txt`

@@ -576,6 +576,48 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school'],
   },
 
+  'bar-graph': {
+    heading: 'Bar graphs and column graphs from a table',
+    intro: [
+      'The Bar Graph Generator draws a bar graph from a table you type or paste: a category on each row, like Soccer or Swimming, and its value. Bars stand up as columns or run sideways, over a value axis fitted to the data unless you type its range. Add a column to the table for a double bar graph, with the bars side by side or stacked and a key naming each set.',
+      'Leave any bar off, or any category’s name as a blank line, for students to draw or fill in from a table. Write the values on the bars or leave them for students to read from the axis. For science, give each bar a ± value to draw error bars, such as the standard error of a mean.',
+    ],
+    settings: [
+      'The table: categories down the side and one or more series across the top, typed or pasted from a spreadsheet',
+      'Upright columns or sideways bars; for several series, side by side or stacked; narrow, medium or wide bars',
+      'Values written at the end of each bar or inside it, or not at all',
+      'Error bars from a ± value for each bar, with or without crossbars, and a note under the graph saying what they show',
+      'Color, black-and-white fills that photocopy, or white bars to shade, with a fill picked for each series, and a key on the right or below',
+      'Any bar or category name left for students',
+      'A chart title and axis titles, as text or a blank line for students',
+      'The value axis’s range and count-by, worked out from the data unless you type them, which lines are numbered, and the gridlines',
+    ],
+    faqs: [
+      {
+        q: 'What is the difference between a bar graph and a column graph?',
+        a: 'Nothing but the direction. A column graph is a bar graph with upright bars; in the UK and Australia “bar chart” often means sideways bars. Pick Columns or Bars under Direction to switch between them.',
+      },
+      {
+        q: 'How do I make a double bar graph?',
+        a: 'Type a heading in the + column at the end of the table, like Girls, and its values under it; name the first column too, like Boys. Each category then gets two bars side by side, and a key names them. Choose Stacked to put one on top of the other instead.',
+      },
+      {
+        q: 'Can I paste data from a spreadsheet?',
+        a: 'Yes. Copy the cells in Excel or Google Sheets, with the category names in the first column and a heading row if you like, and paste anywhere in the table. It replaces what was there.',
+      },
+      {
+        q: 'How do I add error bars?',
+        a: 'Turn on Error bars and type each bar’s ± value, such as its standard error, in the ± column beside it, or paste a column headed SEM, SD or ± after the values. Each bar gets a line from its value minus that amount to its value plus it. Error bars are drawn on side-by-side bars, not stacked ones.',
+      },
+      {
+        q: 'How do I leave a bar for students to draw?',
+        a: 'Click Leave for students under the table, then click the value of each bar to leave off. Its category name stays, so students can draw the bar from a table or a description. Click a category’s name instead to leave a blank line where it goes.',
+      },
+    ],
+    imageAlt: 'A printable bar graph of favorite sports, with a column for each sport over a value axis titled Number of students, made with the Bar Graph Generator',
+    educationalLevel: ['Elementary school', 'Middle school', 'High school'],
+  },
+
   'mapping-diagram': {
     heading: 'Mapping diagrams for functions and relations',
     intro: [

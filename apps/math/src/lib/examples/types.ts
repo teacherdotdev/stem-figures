@@ -3,6 +3,7 @@
 // only, so the gallery on a generator page doesn't pull in every generator.
 
 import type { Settings as ShapeSettings } from '$lib/generators/3d-shape/settings'
+import type { Settings as BarGraphSettings } from '$lib/generators/bar-graph/settings'
 import type { Settings as BoxPlotSettings } from '$lib/generators/box-plot/settings'
 import type { Settings as GridSettings } from '$lib/generators/coordinate-grid/settings'
 import type { LengthSettings } from '$lib/generators/length-reading/settings'
@@ -28,6 +29,7 @@ export interface SettingsById {
   'cone': ShapeSettings
   'sphere': ShapeSettings
   'box-plot': BoxPlotSettings
+  'bar-graph': BarGraphSettings
   'mapping-diagram': MappingSettings
   'length-reading': LengthSettings
 }
