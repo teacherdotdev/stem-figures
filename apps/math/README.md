@@ -41,6 +41,12 @@ and `docs/adr/` for decisions.
   back to back, split into stems and leaves at a leaf unit (digits past it
   cut off), with split stems, negative stems, leaves in order or as typed,
   leaves in boxes and a key. With no data it draws empty rows or boxes.
+- `/cumulative-frequency` **Cumulative Frequency Graph Generator**: a frequency
+  table, a cumulative table or a data set binned from a start and width, drawn
+  as crosses or dots at each upper bound joined by a smooth (monotone) curve or
+  straight lines, over a cumulative frequency or percent axis, with dashed
+  readings of the median, quartiles, a percentile or a value, each written,
+  blank or left off.
 - `/<generator>/examples/<slug>` **Example figures** (see below), and
   `/reuse`, how teachers may reuse them.
 - `/about`, `/privacy`, `/sitemap.xml`, `/robots.txt`

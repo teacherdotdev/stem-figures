@@ -394,7 +394,18 @@ _Avoid_: Interval, class, bucket, range (a range is an axis's From, To and Step)
 How many values fall in a bin: the height of its bar, read off the histogram's vertical axis.
 _Avoid_: Count (fine in speech), tally
 
-**Line plot**:
+**Cumulative Frequency Graph**:
+A figure of running totals over a numbered axis: a point at each bin's upper bound for the number of values up to it, starting from 0 at the lowest bound, joined by a smooth curve or straight lines. The vertical axis is cumulative frequency, or cumulative percent of n. Its generator is the Cumulative Frequency Graph Generator.
+_Avoid_: Ogive, cumulative frequency curve, cumulative frequency polygon (fine as search words, not as the name)
+
+**Cumulative table**:
+A table of upper bounds, each with its cumulative frequency (the running total of values up to it), as many questions give the data for a cumulative frequency graph. Typed instead of a frequency table, its totals never go down.
+_Avoid_: Running total table, cumulative frequency table (fine in speech)
+
+**Reading**:
+A value read off a cumulative frequency graph with dashed lines: across from a cumulative frequency to the join and down to the horizontal axis (the median from n/2, the quartiles from n/4 and 3n/4, a percentile), or up from a value and across. It's read where the lines meet the join as drawn, to a tenth of a block, and its value is written at the axis, left as a blank line for students, or left off.
+_Avoid_: Estimate (fine in teaching), interpolation, guide line
+
 A number line with a mark stacked above each value of a data set, as grades 3–6 use the name. No generator makes one yet.
 _Avoid_: Dot plot is the same figure; line graph (points joined across a coordinate grid) is a different one
 

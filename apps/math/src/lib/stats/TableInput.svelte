@@ -9,6 +9,10 @@
   // stays). Enter moves down a row. Pasting a block with tabs (or several
   // lines with commas) anywhere in it replaces the whole table, headings
   // included. See table.ts for how it's kept.
+  //
+  // With `fixed`, the generator sets the columns (a frequency table's one
+  // column of frequencies): their headings are written, not typed, and
+  // there's no + column; a pasted table keeps only that many value columns.
   import { tick } from 'svelte'
   import { MAX_COLUMNS, MAX_ROWS, blankCell, blankRow, parsePasted, type TableRow } from './table'
 
@@ -25,14 +29,16 @@
     placeholders?: { column?: string }
     /** called with a column's index when it's removed, for settings kept per column */
     onremovecolumn?: (j: number) => void
+    /** the columns are the generator's: headings written as given, none added or removed */
+    fixed?: boolean
   }
   let {
     id, columns = $bindable(), rows = $bindable(), errors = $bindable(false),
-    rowName, columnName, placeholders = {}, onremovecolumn,
+    rowName, columnName, placeholders = {}, onremovecolumn, fixed = false,
   }: Props = $props()
 
   let table = $state<HTMLElement>()
-  const canAddColumn = $derived(columns.length < MAX_COLUMNS)
+  const canAddColumn = $derived(!fixed && columns.length < MAX_COLUMNS)
   const canAddRow = $derived(rows.length < MAX_ROWS)
 
   // Each box's id: the heading of column j, or row i's name, value j or ± j
@@ -72,7 +78,7 @@
   const blankRowAt = (r: TableRow) => !r.name.trim() && r.cells.every((c) => !c.value.trim() && !c.error.trim())
   function tidy(e: FocusEvent) {
     if (table?.contains(e.relatedTarget as Node | null)) return
-    for (let j = columns.length - 1; j >= 0 && columns.length > 1; j--) {
+    for (let j = columns.length - 1; j >= 0 && columns.length > 1 && !fixed; j--) {
       if (!blankColumn(j)) continue
       columns.splice(j, 1)
       for (const r of rows) r.cells.splice(j, 1)
@@ -92,8 +98,8 @@
     const pasted = parsePasted(e.clipboardData?.getData('text/plain') ?? '')
     if (!pasted || !pasted.rows.length) return
     e.preventDefault()
-    const n = pasted.columns?.length ?? Math.max(1, ...pasted.rows.map((r) => r.cells.length))
-    columns = pasted.columns ?? Array.from({ length: n }, (_, j) => columns[j] ?? '')
+    const n = fixed ? columns.length : (pasted.columns?.length ?? Math.max(1, ...pasted.rows.map((r) => r.cells.length)))
+    if (!fixed) columns = pasted.columns ?? Array.from({ length: n }, (_, j) => columns[j] ?? '')
     rows = pasted.rows.map((r) => ({ ...r, cells: Array.from({ length: n }, (_, j) => r.cells[j] ?? blankCell()) }))
     if (rows.some((r) => r.cells.some((c) => c.error))) errors = true
   }
@@ -118,12 +124,16 @@
       <tr>
         <th class="corner" scope="col">{rowName}</th>
         {#each columns as _, j}
-          <th scope="col">
-            <input
-              type="text" class="heading" id={headId(j)} aria-label="{columnName} {j + 1} heading"
-              placeholder={j === 0 ? (placeholders.column ?? '') : ''} bind:value={columns[j]}
-              onkeydown={(e) => down(e, -1, `v${j}`)}
-            />
+          <th scope="col" class:fixed>
+            {#if fixed}
+              {columns[j]}
+            {:else}
+              <input
+                type="text" class="heading" id={headId(j)} aria-label="{columnName} {j + 1} heading"
+                placeholder={j === 0 ? (placeholders.column ?? '') : ''} bind:value={columns[j]}
+                onkeydown={(e) => down(e, -1, `v${j}`)}
+              />
+            {/if}
           </th>
           {#if errors}<th scope="col" class="pm" aria-label="± for {columnLabel(j)}">±</th>{/if}
         {/each}
@@ -200,6 +210,7 @@
   .c-new { width: 2.4rem; }
   th, td { padding: 0; border: 1px solid var(--border); }
   thead th, tbody th { background: var(--bg); }
+  thead th.fixed { padding: 0.3rem 0.55rem; font-size: 0.78rem; font-weight: 700; line-height: 1.15; color: var(--muted); text-align: right; }
   .corner { padding: 0 0.55rem; font-size: 0.78rem; font-weight: 700; color: var(--muted); text-align: left; white-space: nowrap; overflow: hidden; }
   .pm { color: var(--muted); }
   thead .pm { font-size: 0.85rem; font-weight: 700; text-align: center; }

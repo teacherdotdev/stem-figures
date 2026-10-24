@@ -10,6 +10,8 @@ import { buildBarGraph } from './bar-graph/layout.js'
 import * as bar from './bar-graph/settings.js'
 import { buildPlot } from './box-plot/boxplot.js'
 import * as box from './box-plot/settings.js'
+import { buildCumulative } from './cumulative-frequency/layout.js'
+import * as cumulative from './cumulative-frequency/settings.js'
 import { buildGraph } from './coordinate-grid/graph.js'
 import * as grid from './coordinate-grid/settings.js'
 import { buildLine } from './number-line/numberline.js'
@@ -255,6 +257,15 @@ const BAR = [
   `gridlines=bold&minor=2&to=20&step=2&every=2&labelSize=large&${rows('Strawberry milkshake|3', 'Hot chocolate|5', 'Sparkling water|9')}`,
   'titleMode=text&title=Votes&valueTitleMode=blank&categoryTitleMode=text&categoryTitle=Color&from=abc&step=0',
 ]
+const CUMULATIVE = [
+  '',
+  rows('0–10|4', '10–20|10', '20–30|18', '30–40|12', '40–50|6'),
+  `median=value&lower=blank&upper=lines&${rows('140 < h ≤ 150|4', '150 < h ≤ 160|12', '160 < h ≤ 170|26', '170 < h ≤ 180|24', '180 < h ≤ 190|10')}`,
+  `join=straight&mark=dot&scale=percent&yTitle=Cumulative%20percent&read=percentile%7C90%7Cvalue&read=up%7C35%7Cblank&${rows('0–10|4', '10–20|10', '20–30|18')}`,
+  'mode=cumulative&cum=0%20%3C%20w%20%E2%89%A4%202%7C8&cum=0%20%3C%20w%20%E2%89%A4%204%7C30&cum=0%20%3C%20w%20%E2%89%A4%206%7C64&look=bw&median=blank',
+  'mode=data&data=12%2C18%2C23%2C25%2C31%2C33%2C41%2C47&binStart=10&binWidth=10&edges=right&join=none&gridlines=bold&minor=2',
+  `xFrom=0&xTo=60&xStep=5&yTo=80&yStep=10&titleMode=text&title=Times&xTitleMode=blank&labelSize=large&start=0&${rows('0–10|x', '10–5|3')}`,
+]
 
 describe('coordinate grid', () => {
   test.each(GRID)('%s', (q) => {
@@ -284,6 +295,15 @@ describe('bar graph', () => {
     const s = bar.settingsFromParams(params(q))
     const { layout, ...figure } = buildBarGraph(s)
     expect({ query: bar.settingsToQuery(s), figure, layout: { ...layout, px: undefined } }).toMatchSnapshot()
+  })
+})
+
+describe('cumulative frequency', () => {
+  test.each(CUMULATIVE)('%s', (q) => {
+    const s = cumulative.settingsFromParams(params(q))
+    // The join's points are in its drawn paths already.
+    const { layout, join: _, ...figure } = buildCumulative(s)
+    expect({ query: cumulative.settingsToQuery(s), figure, layout: { ...layout, px: undefined } }).toMatchSnapshot()
   })
 })
 

@@ -11,6 +11,8 @@ import { settingsFor as solidSettings } from '$lib/generators/3d-shape/settings'
 import { partName, radiusOf, readShape } from '$lib/generators/3d-shape/solve'
 import * as barGraph from '$lib/generators/bar-graph/settings'
 import * as boxPlot from '$lib/generators/box-plot/settings'
+import { buildCumulative } from '$lib/generators/cumulative-frequency/layout'
+import * as cumulative from '$lib/generators/cumulative-frequency/settings'
 import { parseEquation, readEquations } from '$lib/generators/coordinate-grid/equations'
 import * as grid from '$lib/generators/coordinate-grid/settings'
 import { family as kiteFamily } from '$lib/generators/kite/family'
@@ -295,6 +297,23 @@ function stemAndLeafAnswer(s: SettingsById['stem-and-leaf']): ExampleDetails['an
   return lines.length ? { heading: 'Answer key', lines } : null
 }
 
+function cumulativeAnswer(s: SettingsById['cumulative-frequency']): ExampleDetails['answer'] {
+  const built = buildCumulative(s)
+  const problem = Object.values(built.read.problems).find(Boolean) ?? built.problems.readings.find(Boolean) ?? built.problems.join
+  if (problem) throw new Error(`The cumulative frequency example can’t be drawn as written: ${problem}`)
+  // Each reading drawn without its value, read off the drawn join as students would.
+  const { quartiles } = built
+  const unwritten = [
+    ...cumulative.QUARTILES.filter((q) => s[q] === 'lines' || s[q] === 'blank').map((q) => quartiles[q]),
+    ...built.readings.filter((r) => r && r.show !== 'value'),
+  ].filter((r) => r !== null)
+  const lines = unwritten.map((r) => `${r!.name}: ${r!.text}`)
+  if (s.lower !== 'off' && s.upper !== 'off' && (s.lower !== 'value' || s.upper !== 'value') && quartiles.lower && quartiles.upper) {
+    lines.push(`Interquartile range: ${cumulative.fmt(Number((quartiles.upper.value - quartiles.lower.value).toPrecision(12)))}`)
+  }
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
 function mappingAnswer(s: SettingsById['mapping-diagram']): ExampleDetails['answer'] {
   const map = mapping.readMapping(s)
   if (!map.inputs.length || !map.outputs.length) throw new Error('The mapping diagram example has no inputs or outputs')
@@ -321,6 +340,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'box-plot': { definition: definitionOf(boxPlot), answer: boxPlotAnswer },
   'bar-graph': { definition: definitionOf(barGraph), answer: barGraphAnswer },
   'stem-and-leaf': { definition: definitionOf(stemAndLeaf), answer: stemAndLeafAnswer },
+  'cumulative-frequency': { definition: definitionOf(cumulative), answer: cumulativeAnswer },
   'mapping-diagram': { definition: definitionOf(mapping), answer: mappingAnswer },
   'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthAnswer(s).split(' · ') }) },
 }
