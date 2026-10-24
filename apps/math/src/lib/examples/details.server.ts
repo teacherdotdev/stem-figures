@@ -28,6 +28,7 @@ import * as stemAndLeaf from '$lib/generators/stem-and-leaf/settings'
 import { family as trapezoidFamily } from '$lib/generators/trapezoid/family'
 import * as triangle from '$lib/generators/triangle/settings'
 import * as twoWay from '$lib/generators/two-way-table/settings'
+import * as venn from '$lib/generators/venn-diagram/settings'
 import * as shapeParts from '$lib/shapes/parts'
 import * as quadKinds from '$lib/shapes/quadrilateral/kinds'
 import * as quad from '$lib/shapes/quadrilateral/settings'
@@ -338,6 +339,15 @@ function histogramAnswer(s: SettingsById['histogram']): ExampleDetails['answer']
   return { heading: 'Answer key', lines: [...read.bins.map((b) => `${b.name}: ${histogram.fmt(b.frequency ?? 0)}`), `n = ${histogram.fmt(read.n)}`] }
 }
 
+function vennAnswer(s: SettingsById['venn-diagram']): ExampleDetails['answer'] {
+  const read = venn.readVenn(s)
+  const problem = read.problems.elements ?? Object.values(read.problems.values)[0]
+  if (problem) throw new Error(`The Venn diagram example can’t be drawn as written: ${problem}`)
+  // The counts the diagram gives, and in elements mode each region's members.
+  const lines = [...read.readout.counts, ...read.readout.members].map((l) => `${l.label}${read.readout.members.includes(l) ? ':' : ' ='} ${l.value}`)
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
 function mappingAnswer(s: SettingsById['mapping-diagram']): ExampleDetails['answer'] {
   const map = mapping.readMapping(s)
   if (!map.inputs.length || !map.outputs.length) throw new Error('The mapping diagram example has no inputs or outputs')
@@ -367,6 +377,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'cumulative-frequency': { definition: definitionOf(cumulative), answer: cumulativeAnswer },
   'two-way-table': { definition: definitionOf(twoWay), answer: twoWayAnswer },
   'histogram': { definition: definitionOf(histogram), answer: histogramAnswer },
+  'venn-diagram': { definition: definitionOf(venn), answer: vennAnswer },
   'mapping-diagram': { definition: definitionOf(mapping), answer: mappingAnswer },
   'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthAnswer(s).split(' · ') }) },
 }

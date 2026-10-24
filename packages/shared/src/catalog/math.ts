@@ -340,6 +340,21 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'venn-diagram',
+    site: 'math',
+    name: 'Venn Diagram Generator',
+    path: '/venn-diagram',
+    blurb: 'Venn diagrams of one, two or three sets, with numbers or elements in each region and regions shaded.',
+    description:
+      'Venn diagrams of one, two or three sets inside a universal set: overlapping, separate or one inside the other, with a number, the elements or a letter in each region, and any regions shaded.',
+    keywords: [
+      'venn diagram', 'venn diagrams', 'sets', 'set notation', 'union', 'intersection', 'complement', 'universal set',
+      'ξ', 'subset', 'disjoint', 'mutually exclusive', 'a ∩ b', 'a ∪ b', 'a′', 'shading', 'shade the region',
+      'probability', 'conditional probability', 'elements', 'factors', 'multiples', 'prime factors', 'hcf', 'lcm',
+      'sorting', 'three circles', 'three set venn diagram', 'two circles', 'printable',
+    ],
+  },
+  {
     id: 'mapping-diagram',
     site: 'math',
     name: 'Mapping Diagram Generator',

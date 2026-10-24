@@ -30,6 +30,7 @@ import SpherePreview from './sphere/Preview.svelte'
 import StemAndLeafPreview from './stem-and-leaf/Preview.svelte'
 import TrapezoidPreview from './trapezoid/Preview.svelte'
 import TrianglePreview from './triangle/Preview.svelte'
+import VennDiagramPreview from './venn-diagram/Preview.svelte'
 
 /** Each generator's directory preview, by id. */
 export const PREVIEWS: Record<string, Component> = {
@@ -54,6 +55,7 @@ export const PREVIEWS: Record<string, Component> = {
   'cumulative-frequency': CumulativeFrequencyPreview,
   'two-way-table': TwoWayTablePreview,
   'histogram': HistogramPreview,
+  'venn-diagram': VennDiagramPreview,
   'mapping-diagram': MappingDiagramPreview,
   'length-reading': LengthReadingPreview,
   'composite-shape': CompositeShapePreview,

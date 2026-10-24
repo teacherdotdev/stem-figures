@@ -60,6 +60,10 @@ and `docs/adr/` for decisions.
   frequency or frequency density; a frequency polygon can go over the bars or
   alone; the horizontal axis is numbered at the bin edges or every step, with
   a zig-zag break when it starts past 0. A frequency left empty draws no bar.
+- `/venn-diagram` **Venn Diagram Generator**: one, two or three sets in a box for
+  the universal set (two overlapping, separate or one inside the other), with a
+  number, a letter or expression, or the sorted elements of typed lists in each
+  region, and regions shaded by clicking them on the figure.
 - `/<generator>/examples/<slug>` **Example figures** (see below), and
   `/reuse`, how teachers may reuse them.
 - `/about`, `/privacy`, `/sitemap.xml`, `/robots.txt`
