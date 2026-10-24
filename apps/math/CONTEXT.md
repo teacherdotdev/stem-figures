@@ -343,7 +343,7 @@ A place on the circle with an optional name, such as A, set by its **direction**
 _Avoid_: Vertex, dot (that's how it's drawn)
 
 **Line** (in this figure):
-A straight line joining two points (either can be the center), or a **tangent** at a point. It's named by what it is: a **radius** (from the center to the circle), a **diameter** (circle to circle through the center), a **chord** (circle to circle), or a **secant** (a chord run on past both ends). Each end stops at its point or runs on past it, ending in a cap; an end running into the circle goes all the way through it first. Lines are drawn from a point's popup ("Join to") or the left card.
+A straight line joining two points (either can be the center), or a **tangent** at a point. It's named by what it is: a **radius** (from the center to the circle), a **diameter** (circle to circle through the center), a **chord** (circle to circle), or a **secant** (a chord run on past both ends). Each end stops at its point or runs on past it, ending in a cap; an end running into the circle goes all the way through it first. Lines are drawn from a point's popup ("Join to") or the left card. A line's label goes beside it by itself, and can be dragged across the line to the other side.
 _Avoid_: Segment (alone), side, edge
 
 **Tangent**:
@@ -359,7 +359,7 @@ The space between two neighboring lines at the center, a point or a crossing, la
 _Avoid_: Central angle and inscribed angle as names in the figure (they're fine in teaching; every angle is edited the same way)
 
 **Arc**:
-The piece of the circle between two neighboring places on it (points, and where lines meet it). Its label is nothing, its measure in degrees, its length (from the radius) or text; it can carry congruence ticks and be drawn bold or in a color, to show an intercepted arc. An arc split by a point in the middle is labeled piece by piece.
+The piece of the circle between two neighboring places on it (points, and where lines meet it). Its label is nothing, its measure in degrees, its length (from the radius) or text; it can carry congruence ticks and be drawn bold or in a color, to show an intercepted arc, or hidden, leaving the rest of the circle drawn (it shows faintly dashed while the figure is edited). An arc split by a point in the middle is labeled piece by piece.
 _Avoid_: Curve, minor arc and major arc (an arc is always between neighboring places)
 
 **Enclosed area**:

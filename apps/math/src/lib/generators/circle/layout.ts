@@ -184,21 +184,32 @@ export function buildCircle(s: Settings) {
     const gap = l.ticks || l.arrows ? TICK + 6 : 6
     // A chord's label goes inside the circle when there's no room between it and the circle.
     const room = (1 - len(m)) * R
-    const side = !through && !tangent && room < 2 * reach(box, nrm) + gap + 6 ? mul(nrm, -1) : nrm
     // Along the line, clear of any place on it where another line crosses: in the middle of the longest stretch between them.
     const along = geo.nodes
       .map((n) => dot(sub(n.at, g.P), g.d))
       .filter((t, i) => Math.abs(cross(g.d, sub(geo.nodes[i].at, g.P))) < 1e-6 && t > g.lo + 1e-6 && t < g.hi - 1e-6)
     const half = (reach(box, t) + 6) / R
-    let at = midAt
+    let labelAt = midAt
     if (along.some((t) => Math.abs(t - midAt) < half)) {
       const stops = [tangent ? g.lo : 0, ...along, tangent ? g.hi : g.length].sort((x, y) => x - y)
       let best = 0
-      stops.slice(1).forEach((t, i) => t - stops[i] > best && ((best = t - stops[i]), (at = (t + stops[i]) / 2)))
+      stops.slice(1).forEach((t, i) => t - stops[i] > best && ((best = t - stops[i]), (labelAt = (t + stops[i]) / 2)))
     }
-    const base = px(add(g.P, mul(g.d, at)))
-    const spot = add(base, mul(side, gap + reach(box, side)))
-    place(`line:${g.id}`, box, overlaps(box, spot) ? add(base, mul(side, -(gap + reach(box, side)))) : spot, side)
+    const base = px(add(g.P, mul(g.d, labelAt)))
+    // Where it goes by itself: away from the center, unless there's no room (or another label's in the way) there.
+    let side = !through && !tangent && room < 2 * reach(box, nrm) + gap + 6 ? mul(nrm, -1) : nrm
+    const spot = (way: Vec) => add(base, mul(way, gap + reach(box, way)))
+    if (overlaps(box, spot(side))) side = mul(side, -1)
+    // Dragged across the line, it goes on the other side.
+    if (l.flip) side = mul(side, -1)
+    // Still in another label's way, it slides along the line, as far as the line goes.
+    let center = spot(side)
+    const [lo, hi] = [((tangent ? g.lo : 0) - labelAt) * R, ((tangent ? g.hi : g.length) - labelAt) * R]
+    for (let k = 1; k <= 16 && overlaps(box, center); k++) {
+      const tries = [k * 6, -k * 6].filter((d) => d > lo && d < hi).map((d) => add(spot(side), mul(t, d)))
+      center = tries.find((c) => !overlaps(box, c)) ?? center
+    }
+    place(`line:${g.id}`, box, center, side)
   }
 
   // Arcs: drawn bold or in a color, ticks across the middle, and the label outside the circle.
@@ -212,12 +223,16 @@ export function buildCircle(s: Settings) {
     return `M${r1(a[0])},${r1(a[1])} A${r},${r} 0 ${sweep > 180 ? 1 : 0} 0 ${r1(b[0])},${r1(b[1])}`
   }
   const arcStrokes: { d: string; color: string }[] = []
+  const hidden: string[] = []
+  const shownArcs: string[] = []
   const curves: NonNullable<Pickable['curves']> = []
   for (const a of geo.arcs) {
     const style = s.arcs[a.key] ?? ARC_DEFAULTS
     const d = arcPath(a.start, a.sweep)
     const color = ARC_DRAWS[style.draw].color
     if (color) arcStrokes.push({ d, color })
+    if (style.draw === 'hidden') hidden.push(d)
+    else shownArcs.push(d)
     const u = angleOn(a.start + a.sweep / 2)
     const mid = px(u)
     const out = page(u)
@@ -326,6 +341,9 @@ export function buildCircle(s: Settings) {
     frame,
     segments: segments.map((g) => ({ ...g, drawn: drawn.get(g.id)! })),
     arcStrokes,
+    /** The circle as drawn: whole, or the arcs not hidden; and the hidden ones, shown faintly while the figure is edited. */
+    circle: hidden.length ? shownArcs : null,
+    hidden,
     /** Every enclosed area, which can be clicked, and the shaded ones, under everything. */
     areas,
     regions,

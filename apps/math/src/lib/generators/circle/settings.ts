@@ -62,13 +62,18 @@ export type Line = {
   text: string
   ticks: number
   arrows: number
+  /** Its label on the other side of it from where it would go. */
+  flip: boolean
 }
 
 /** How an arc is labeled: not at all, its measure in degrees, its length, or typed text. */
 export const ARC_LABELS = ['none', 'degrees', 'length', 'text'] as const
 export type ArcLabel = (typeof ARC_LABELS)[number]
-/** How an arc is drawn over the circle: as the circle is, bolder, or bold in a color. */
-export const ARC_DRAWS = { normal: { name: 'Normal', color: '' }, bold: { name: 'Bold', color: '#111827' }, blue: { name: 'Blue', color: '#2563eb' }, red: { name: 'Red', color: '#dc2626' }, green: { name: 'Green', color: '#16a34a' } }
+/** How an arc is drawn over the circle: as the circle is, bolder, bold in a color, or not at all. */
+export const ARC_DRAWS = {
+  normal: { name: 'Normal', color: '' }, bold: { name: 'Bold', color: '#111827' }, blue: { name: 'Blue', color: '#2563eb' }, red: { name: 'Red', color: '#dc2626' },
+  green: { name: 'Green', color: '#16a34a' }, hidden: { name: 'Hidden', color: '' },
+}
 export type ArcDraw = keyof typeof ARC_DRAWS
 export type ArcStyle = { label: ArcLabel; text: string; ticks: number; draw: ArcDraw }
 export const ARC_DEFAULTS: ArcStyle = { label: 'none', text: '', ticks: 0, draw: 'normal' }
@@ -95,7 +100,7 @@ export type Settings = {
 
 export const LINE_DEFAULTS = {
   runA: false, runB: false, capA: 'none' as Cap, capB: 'none' as Cap, style: 'solid' as LineStyle,
-  label: 'none' as AngleLabel, text: '', ticks: 0, arrows: 0,
+  label: 'none' as AngleLabel, text: '', ticks: 0, arrows: 0, flip: false,
 }
 export const newJoin = (id: string, a: string, b: string): Line => ({ id, kind: 'join', a, b, ...LINE_DEFAULTS })
 /** A tangent runs on both ways from where it touches, unless an end is cut back. */
@@ -190,6 +195,7 @@ export function cleanSettings(s: RawSettings): Settings {
       text: String(l?.text ?? '').slice(0, 40),
       ticks: oneOf(COUNTS, num(l?.ticks, 0), 0),
       arrows: oneOf(COUNTS, num(l?.arrows, 0), 0),
+      flip: bool(l?.flip, false),
     })),
     'l',
   ).filter((l) => (l.kind === 'tangent' ? onCircle.has(l.a) && (l.runA || l.runB) : pointIds.has(l.a) && pointIds.has(l.b) && l.a !== l.b))

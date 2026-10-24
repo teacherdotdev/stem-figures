@@ -28,9 +28,10 @@ describe('the page address', () => {
       ['pt', 'p4|name=Q%E2%80%B2|dir=200'],
       ['l', 'l1|a=p1|runA=1|capA=triangle|style=dashed|label=measure|ticks=2|b=p4'],
       ['l', 'l3|kind=tangent|a=p4|runB=0|capA=circle|label=text|text=t'],
-      ['l', 'l4|a=o|arrows=1|b=p1'],
+      ['l', 'l4|a=o|label=text|text=r|arrows=1|flip=1|b=p1'],
       ['a', 'o@l4+~l1-|label=measure|mark=2'],
       ['arc', 'p1~p4|label=degrees|ticks=1|draw=red'],
+      ['arc', 'p4~p1|draw=hidden'],
       ['f', 'l1+l4+p1~p4|fill=3'],
       ['m', 'l1:a1|name=E'],
     ]).toString()
@@ -279,5 +280,25 @@ describe('measures', () => {
 
   test('no measures without a radius', () => {
     expect(values(shaded([], 'x', 'x'))).toEqual([])
+  })
+})
+
+describe('moving and hiding', () => {
+  test('a line’s label can go on the other side of it', () => {
+    const chord = (flip: boolean) => figure([['p1', 0], ['p2', 120]], [{ ...newJoin('l1', 'p1', 'p2'), label: 'text', text: 'x', flip }])
+    const at = (flip: boolean) => buildCircle(chord(flip)).labels.find((l) => l.part === 'line:l1')!
+    // The chord's middle is up and to the right of the center: its label goes outside, and flipped, inside.
+    const [out, back] = [at(false), at(true)]
+    const mid = [(130 + 130 * Math.cos((2 * Math.PI) / 3)) / 2, -(130 * Math.sin((2 * Math.PI) / 3)) / 2]
+    expect(Math.hypot(out.cx, out.cy)).toBeGreaterThan(Math.hypot(mid[0], mid[1]))
+    expect(Math.hypot(back.cx, back.cy)).toBeLessThan(Math.hypot(mid[0], mid[1]))
+  })
+
+  test('a hidden arc leaves the rest of the circle drawn', () => {
+    const s = figure([['p1', 0], ['p2', 120], ['p3', 240]], [], { arcs: { 'p1~p2': { ...ARC_DEFAULTS, draw: 'hidden' } } })
+    const f = buildCircle(s)
+    expect(f.hidden).toHaveLength(1)
+    expect(f.circle).toHaveLength(2)
+    expect(buildCircle(figure([['p1', 0]], [])).circle).toBeNull()
   })
 })

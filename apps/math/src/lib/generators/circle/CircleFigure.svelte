@@ -30,7 +30,11 @@
 
   {#each figure.regions as r}<path d={r.d} fill={r.fill} />{/each}
 
-  <circle cx="0" cy="0" r={R} fill="none" stroke={INK} stroke-width="2.2" />
+  {#if figure.circle}
+    {#each figure.circle as d}<path {d} fill="none" stroke={INK} stroke-width="2.2" />{/each}
+  {:else}
+    <circle cx="0" cy="0" r={R} fill="none" stroke={INK} stroke-width="2.2" />
+  {/if}
   {#each figure.arcStrokes as a}<path d={a.d} fill="none" stroke={a.color} stroke-width="4.5" stroke-linecap="round" />{/each}
 
   <g fill="none" stroke={INK} stroke-width="1.6">

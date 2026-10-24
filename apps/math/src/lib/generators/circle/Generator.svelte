@@ -6,7 +6,7 @@
   // point's popup is where lines are drawn from it. Settings are mirrored into
   // the page address so a bookmark or shared link brings back exactly this
   // figure, and the server renders that same figure on first load.
-  import { Plus, Shapes, X } from '@lucide/svelte'
+  import { EyeOff, Plus, Shapes, X } from '@lucide/svelte'
   import GeneratorPage from '$shared/GeneratorPage.svelte'
   import { generatorState } from '$shared/generatorState.svelte'
   import HelpTip from '$shared/HelpTip.svelte'
@@ -215,6 +215,38 @@
     frozen = null
     if (!moved) open({ kind: 'point', key: h.key }, screenOf(event.currentTarget as SVGGraphicsElement, h.at))
   }
+  // Dragging a line's label across the line puts it on the other side; a press that doesn't move opens the line's popup.
+  let labelDrag: { id: string; pointer: number; x: number; y: number; moved: boolean } | null = null
+  function labelDown(event: PointerEvent, id: string) {
+    if (event.button !== 0) return
+    event.preventDefault()
+    ;(event.currentTarget as Element).setPointerCapture(event.pointerId)
+    labelDrag = { id, pointer: event.pointerId, x: event.clientX, y: event.clientY, moved: false }
+  }
+  function labelMove(event: PointerEvent) {
+    if (!labelDrag || event.pointerId !== labelDrag.pointer) return
+    if (!labelDrag.moved && Math.hypot(event.clientX - labelDrag.x, event.clientY - labelDrag.y) < 4) return
+    if (!labelDrag.moved) frozen = drawing.frame
+    labelDrag.moved = true
+    const l = lineOf(labelDrag.id)
+    const g = drawing.segments.find((x) => x.id === labelDrag!.id)
+    const label = drawing.labels.find((x) => x.part === `line:${labelDrag!.id}`)
+    if (!l || !g || !label) return
+    const m = (event.currentTarget as SVGGraphicsElement).ownerSVGElement!.getScreenCTM()!.inverse()
+    const at = new DOMPoint(event.clientX, event.clientY).matrixTransform(m)
+    const along = [g.to[0] - g.from[0], g.to[1] - g.from[1]]
+    const sideOf = (x: number, y: number) => Math.sign(along[0] * (y - g.from[1]) - along[1] * (x - g.from[0]))
+    const pointer = sideOf(at.x, at.y)
+    if (pointer && pointer !== sideOf(label.cx, label.cy)) l.flip = !l.flip
+  }
+  function labelUp(event: PointerEvent, label: CircleLayout['labels'][number]) {
+    if (!labelDrag || event.pointerId !== labelDrag.pointer) return
+    const { id, moved } = labelDrag
+    labelDrag = null
+    frozen = null
+    if (!moved) open({ kind: 'line', key: id }, screenOf(event.currentTarget as SVGGraphicsElement, [label.cx, label.cy]))
+  }
+
   function handleKey(event: KeyboardEvent, h: CircleLayout['handles'][number]) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
@@ -290,7 +322,8 @@
           Each point on the circle is placed by its direction from the center: 0° to the right, counting
           counterclockwise. Drag a point round the circle to move it, in 5° steps, or 1° with Ctrl (Cmd on a Mac)
           held. Click part of the circle and choose Add point here to put a point in its middle. Click a point to join it to another or draw a
-          tangent there, and click any line, angle or arc to label or style it, or inside an enclosed area to shade it. Click where lines cross, or where a line meets the circle, to name a point there.
+          tangent there, and click any line, angle or arc to label or style it, or inside an enclosed area to shade it.
+          Drag a line's label across the line to put it on the other side. Click where lines cross, or where a line meets the circle, to name a point there.
         </HelpTip>
       </div>
       {@render pointRow(CENTER)}
@@ -366,6 +399,15 @@
     <div class="stage">
       <CircleFigure figure={drawing} frame={frozen} bind:svg />
       <PickLayer figure={shown} selected={popup?.part ?? null} onpick={(part, at) => open(part, at)}>
+        {#each shown.hidden as d}<path {d} fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="4 4" pointer-events="none" />{/each}
+        {#each shown.labels.filter((l) => l.part.startsWith('line:')) as l (l.part)}
+          {@const id = l.part.slice(5)}
+          <rect
+            x={l.x - 3} y={l.y - l.box.asc - 3} width={l.box.w + 6} height={l.box.asc + l.box.desc + 6} fill="transparent" class="label-handle"
+            role="button" tabindex="-1" aria-label="Drag across the line to move this label to its other side"
+            onpointerdown={(e) => labelDown(e, id)} onpointermove={labelMove} onpointerup={(e) => labelUp(e, l)} onpointercancel={(e) => labelUp(e, l)}
+          />
+        {/each}
         {#each shown.handles as h (h.key)}
           {@const lit = hovered === h.key || (popup?.part.kind === 'point' && popup.part.key === h.key)}
           {#if lit}
@@ -481,9 +523,12 @@
         <div class="segmented" role="radiogroup" aria-labelledby="pop-arc-draw">
           {#each Object.entries(ARC_DRAWS) as [v, d] (v)}
             <button type="button" role="radio" aria-checked={style.draw === v} class:on={style.draw === v} aria-label="{d.name} arc" title="{d.name} arc" onclick={() => setArc(key, { draw: v as ArcDraw })}>
-              <svg viewBox="0 0 26 14" width="26" height="14" aria-hidden="true">
-                <path d="M3,12 Q13,0 23,12" fill="none" stroke={d.color || 'currentColor'} stroke-width={d.color ? 3.5 : 1.6} stroke-linecap="round" />
-              </svg>
+              {#if v === 'hidden'}<EyeOff size={15} aria-hidden="true" />
+              {:else}
+                <svg viewBox="0 0 26 14" width="26" height="14" aria-hidden="true">
+                  <path d="M3,12 Q13,0 23,12" fill="none" stroke={d.color || 'currentColor'} stroke-width={d.color ? 3.5 : 1.6} stroke-linecap="round" />
+                </svg>
+              {/if}
             </button>
           {/each}
         </div>
@@ -563,6 +608,7 @@
   .stage { position: relative; }
   .handle { cursor: grab; outline: none; touch-action: none; }
   .handle.fixed { cursor: pointer; }
+  .label-handle { cursor: grab; touch-action: none; outline: none; }
   .handle:focus-visible { stroke: #2563eb; stroke-opacity: 0.5; stroke-width: 3; }
 
   .chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
