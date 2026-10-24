@@ -43,13 +43,15 @@ export function checkBins(bins: Bin[]): string | null {
 
 /**
  * A data set sorted into bins `width` wide from `start`, enough of them to
- * hold every value. A value on an edge goes in the bin whose `holds` end it is.
+ * hold every value. A value on an edge goes in the bin whose `holds` end it is,
+ * so with bins that hold their right ends a value on `start` gets a bin before it.
  */
 export function binData(values: number[], start: number, width: number, holds: Edge): { bins: Bin[]; counts: number[] } {
   if (!values.length || !(width > 0)) return { bins: [], counts: [] }
   const max = Math.max(...values)
   const min = Math.min(...values)
-  const first = Math.min(start, start + Math.floor((min - start) / width + 1e-9) * width)
+  const below = holds === 'right' ? Math.ceil((min - start) / width - 1e-9) - 1 : Math.floor((min - start) / width + 1e-9)
+  const first = Math.min(start, start + below * width)
   // A value exactly on the last edge needs a bin of its own unless bins hold their right end.
   let n = Math.max(1, Math.ceil((max - first) / width - 1e-9))
   if (holds === 'left' && Math.abs(first + n * width - max) < 1e-9) n++

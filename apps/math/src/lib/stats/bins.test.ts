@@ -35,10 +35,14 @@ describe('sorting a data set into bins', () => {
     expect(counts).toEqual([3, 2, 1])
   })
 
-  test('or the bin that ends there', () => {
+  test('or the bin that ends there, with a bin before the start for a value on it', () => {
     const { bins, counts } = binData(values, 10, 10, 'right')
-    expect(bins.map((b) => [b.lo, b.hi])).toEqual([[10, 20], [20, 30]])
-    expect(counts).toEqual([4, 2])
+    expect(bins.map((b) => [b.lo, b.hi])).toEqual([[0, 10], [10, 20], [20, 30]])
+    expect(counts).toEqual([1, 3, 2])
+  })
+
+  test('no extra bin when nothing sits on the start', () => {
+    expect(binData([12, 25], 10, 10, 'right').bins.map((b) => [b.lo, b.hi])).toEqual([[10, 20], [20, 30]])
   })
 
   test('every value lands in exactly one bin', () => {

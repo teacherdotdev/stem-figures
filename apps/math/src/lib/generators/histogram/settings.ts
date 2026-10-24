@@ -225,11 +225,6 @@ function readDataSet(s: Settings) {
       problems.binWidth = `That makes more than ${MAX_BLOCKS} bins. Make the bins wider.`
     } else width = v
   }
-  // A value on the first edge, when bins hold their right ends, needs a bin before it.
-  if (s.edges === 'right' && values.length) {
-    const min = Math.min(...values)
-    start = Math.min(start, tidy(start + (Math.ceil((min - start) / width - 1e-9) - 1) * width))
-  }
   const binned = binData(values, start, width, s.edges)
   const bins: ReadBin[] = binned.bins.map((b, i) => ({ ...b, frequency: binned.counts[i], name: binText(b) }))
   return { bins, auto, problems, count: values.length }
