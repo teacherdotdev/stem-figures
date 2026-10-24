@@ -4,12 +4,20 @@ import { angleStyle, buildCircle } from './layout.js'
 import { findFaces } from './faces.js'
 import { circleMeasures } from './measures.js'
 import {
-  ARC_DEFAULTS, DEFAULT_SETTINGS, cleanSettings, freeDir, freshNames, newJoin, newTangent, settingsFromParams, settingsToQuery, type Line, type Settings,
+  ARC_DEFAULTS, DEFAULT_SETTINGS, cleanSettings, freeDir, freshNames, midKey, newJoin, newTangent, newTangentFrom, settingsFromParams, settingsToQuery, touchKey,
+  type Line, type Settings,
 } from './settings.js'
 
 const params = (q: string) => settingsFromParams(new URLSearchParams(q))
-const figure = (points: [string, number][], lines: Line[], extra: Partial<Settings> = {}): Settings =>
-  cleanSettings({ ...DEFAULT_SETTINGS, points: points.map(([id, dir]) => ({ id, name: id.toUpperCase(), dir: String(dir) })), lines, angles: {}, ...extra })
+/** Points by id and direction, and for one off the circle, its distance from the center. */
+const figure = (points: ([string, number] | [string, number, number])[], lines: Line[], extra: Partial<Settings> = {}): Settings =>
+  cleanSettings({
+    ...DEFAULT_SETTINGS,
+    points: points.map(([id, dir, dist = 1]) => ({ id, name: id.toUpperCase(), dir: String(dir), dist: String(dist) })),
+    lines,
+    angles: {},
+    ...extra,
+  })
 const angleAt = (g: Geometry, node: string) => g.corners.find((c) => c.node.key === node)!.angles
 const nodeAt = (g: Geometry, key: string) => g.nodes.find((n) => n.key === key)!.at
 const dist = (p: [number, number], q: [number, number]) => Math.hypot(p[0] - q[0], p[1] - q[1])
@@ -26,14 +34,18 @@ describe('the page address', () => {
       ['unit', 'in'],
       ['pt', 'p1|name=P|dir=15'],
       ['pt', 'p4|name=Q%E2%80%B2|dir=200'],
+      ['pt', 'p5|name=P|dir=-30|dist=2.5'],
       ['l', 'l1|a=p1|runA=1|capA=triangle|style=dashed|label=measure|ticks=2|b=p4'],
       ['l', 'l3|kind=tangent|a=p4|runB=0|capA=circle|label=text|text=t'],
       ['l', 'l4|a=o|label=text|text=r|arrows=1|flip=1|b=p1'],
+      ['l', 'l6|kind=from|a=p5|runB=1|side=right'],
+      ['l', 'l7|a=o|b=l6%3At'],
       ['a', 'o@l4+~l1-|label=measure|mark=2'],
       ['arc', 'p1~p4|label=degrees|ticks=1|draw=red'],
       ['arc', 'p4~p1|draw=hidden'],
       ['f', 'l1+l4+p1~p4|fill=3'],
       ['m', 'l1:a1|name=E'],
+      ['m', 'l6:t|name=T'],
     ]).toString()
     expect(settingsToQuery(params(q))).toBe(q)
   })
@@ -300,5 +312,108 @@ describe('moving and hiding', () => {
     expect(f.hidden).toHaveLength(1)
     expect(f.circle).toHaveLength(2)
     expect(buildCircle(figure([['p1', 0]], [])).circle).toBeNull()
+  })
+})
+
+describe('points off the circle', () => {
+  const P = (dist: number, dir = 0): [string, number, number] => ['p9', dir, dist]
+
+  test('two tangents from a point are the same length, and square to the radius where they touch', () => {
+    for (const [dist, dir] of [[2, 0], [1.5, 120], [3.25, 250]]) {
+      const s = figure([P(dist, dir)], [newTangentFrom('l1', 'p9', 'left'), newTangentFrom('l2', 'p9', 'right'), newJoin('l3', 'o', touchKey('l1')), newJoin('l4', 'o', touchKey('l2'))])
+      const g = buildGeometry(s)
+      const [t1, t2] = g.lines
+      expect(t1.length).toBeCloseTo(t2.length, 9)
+      expect(t1.length).toBeCloseTo(Math.sqrt(dist * dist - 1), 9)
+      for (const key of [touchKey('l1'), touchKey('l2')]) {
+        const at = angleAt(g, key)
+        expect(at.some((a) => Math.abs(a.measure - 90) < 1e-9)).toBe(true)
+        expect(Math.hypot(...nodeAt(g, key))).toBeCloseTo(1, 9)
+      }
+      expect(g.lines.map((l) => l.kind)).toEqual(['tangent', 'tangent', 'radius', 'radius'])
+    }
+  })
+
+  test('two secants from a point: PA·PB = PC·PD, from the drawn geometry', () => {
+    for (const [dist, a, c] of [[2, 20, -15], [3, 10, 350], [1.75, 40, 330]]) {
+      // From P through the near points A and C (closer round than where a tangent would touch), on through the circle to where each meets it again.
+      const s = figure([P(dist), ['p1', a], ['p2', c]], [{ ...newJoin('l1', 'p9', 'p1'), runB: true }, { ...newJoin('l2', 'p9', 'p2'), runB: true }])
+      const g = buildGeometry(s)
+      const [Pt, A, C] = ['p9', 'p1', 'p2'].map((k) => nodeAt(g, k))
+      const [B, D] = ['l1:b1', 'l2:b1'].map((k) => nodeAt(g, k))
+      expect(dist && Math.hypot(...B)).toBeCloseTo(1, 9)
+      const [pa, pb, pc, pd] = [A, B, C, D].map((x) => Math.hypot(x[0] - Pt[0], x[1] - Pt[1]))
+      expect(pa * pb).toBeCloseTo(pc * pd, 9)
+      // Which is also the tangent's length squared.
+      expect(pa * pb).toBeCloseTo(dist * dist - 1, 9)
+      expect(g.lines.map((l) => l.kind)).toEqual(['secant', 'secant'])
+    }
+  })
+
+  test('a line from outside through the center meets the circle on both sides of it', () => {
+    const g = buildGeometry(figure([P(2.5, 30)], [{ ...newJoin('l1', 'p9', 'o'), runB: true }]))
+    expect(g.nodes.filter((n) => n.kind === 'meet').map((n) => n.key)).toEqual(['l1:m1', 'l1:b1'])
+    expect(g.lines[0].kind).toBe('secant')
+    expect(buildGeometry(figure([P(2.5, 30)], [newJoin('l1', 'p9', 'o')])).lines[0].kind).toBe('segment')
+  })
+
+  test('the area between two tangents and the circle', () => {
+    const dist = 2
+    const s = figure([P(dist)], [newTangentFrom('l1', 'p9', 'left'), newTangentFrom('l2', 'p9', 'right')])
+    const faces = findFaces(buildGeometry(s))
+    const turn = Math.acos(1 / dist)
+    // The kite O-T-P-T, less the sector between the touch points.
+    const outside = faces.find((f) => f.key.includes('l1'))!
+    expect(outside.area).toBeCloseTo(Math.sqrt(dist * dist - 1) - turn, 9)
+    const [, , shaded] = circleMeasures(cleanSettings({ ...s, faces: { [outside.key]: 1 }, radius: '1', round: 2 }), faces, () => 'P')
+    expect(shaded.values.at(-1)).toBe('area 1.73 − 0.33π cm² ≈ 0.68 cm²')
+    // And the circle, untouched inside.
+    expect(faces.filter((f) => f !== outside).reduce((t, f) => t + f.area, 0)).toBeCloseTo(Math.PI, 9)
+  })
+
+  test('no tangents from inside the circle, and a join to a touch point needs its tangent', () => {
+    expect(buildGeometry(figure([P(0.5)], [newTangentFrom('l1', 'p9', 'left')])).lines).toEqual([])
+    const s = cleanSettings({ ...figure([P(2)], []), lines: [newJoin('l2', 'o', touchKey('l1'))] })
+    expect(s.lines).toEqual([])
+  })
+})
+
+describe('midpoints', () => {
+  const chord = (extra: Line[] = [], marks: Record<string, string> = {}) =>
+    figure([['p1', 200], ['p2', 340]], [{ ...newJoin('l1', 'p1', 'p2'), ticks: 1 }, ...extra], { marks })
+
+  test('a line from the center to a chord’s midpoint is square to it, with one square on its own', () => {
+    for (const [a, b] of [[200, 340], [10, 130], [90, 300]]) {
+      const s = figure([['p1', a], ['p2', b]], [newJoin('l1', 'p1', 'p2'), newJoin('l2', 'o', midKey('l1'))])
+      const f = buildCircle(s)
+      const at = f.angles.filter((x) => x.node === midKey('l1'))
+      expect(at.map((x) => x.measure)).toEqual([90, 90].map((v) => expect.closeTo(v, 9)))
+      expect(f.squares).toHaveLength(1)
+      // And it halves the chord.
+      const g = buildGeometry(s)
+      const [A, B, M] = ['p1', 'p2', midKey('l1')].map((k) => nodeAt(g, k))
+      expect(dist(A, M)).toBeCloseTo(dist(M, B), 9)
+    }
+  })
+
+  test('a midpoint is a place only once it’s joined or named, and the chord’s ticks then go on each half', () => {
+    expect(buildGeometry(chord()).nodes.some((n) => n.kind === 'mid')).toBe(false)
+    expect(buildCircle(chord()).ticks).toHaveLength(1)
+    // Still offered, to click.
+    expect(buildCircle(chord()).handles.some((h) => h.key === midKey('l1'))).toBe(true)
+    expect(buildCircle(chord([], { [midKey('l1')]: 'M' })).ticks).toHaveLength(2)
+    expect(buildCircle(chord([newJoin('l2', 'o', midKey('l1'))])).ticks).toHaveLength(2)
+  })
+
+  test('a midpoint comes back from the page address, and goes with its line', () => {
+    const s = chord([newJoin('l2', 'o', midKey('l1'))], { [midKey('l1')]: 'M' })
+    expect(params(settingsToQuery(s))).toEqual(s)
+    const gone = cleanSettings({ ...s, lines: s.lines.filter((l) => l.id !== 'l1') })
+    expect([gone.lines, gone.marks]).toEqual([[], {}])
+  })
+
+  test('the areas still fill the circle', () => {
+    const s = chord([newJoin('l2', 'o', midKey('l1')), newJoin('l3', 'o', 'p1')])
+    expect(findFaces(buildGeometry(s)).reduce((t, f) => t + f.area, 0)).toBeCloseTo(Math.PI, 9)
   })
 })

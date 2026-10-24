@@ -28,12 +28,13 @@
   import CircleFigure from './CircleFigure.svelte'
   import type { Face } from './faces.js'
   import { circleMeasures } from './measures.js'
-  import { KIND_NAMES } from './geometry.js'
-  import { WHOLE, angleStyle, autoStyle, buildCircle, lineName, nodeName, type CircleLayout } from './layout.js'
+  import { KIND_NAMES, touchPoint } from './geometry.js'
+  import { R, WHOLE, angleStyle, autoStyle, buildCircle, lineName, nodeName, type CircleLayout } from './layout.js'
   import {
     ARC_DEFAULTS, ARC_DRAWS, CENTER, MAX_LINES, MAX_POINTS,
-    cleanSettings, freeDir, freshNames, idsIn, newJoin, newTangent, nextId, readRadius, settingsFromParams, settingsToQuery,
-    type AngleStyle, type ArcDraw, type ArcLabel, type ArcStyle, type Line, type RawSettings,
+    MAX_DIST, MIN_DIST, SIDES,
+    cleanSettings, freeDir, freshNames, idsIn, isMid, midKey, newJoin, newTangent, newTangentFrom, nextId, onCircle, readRadius, settingsFromParams, settingsToQuery, touchKey,
+    type AngleStyle, type ArcDraw, type ArcLabel, type ArcStyle, type Line, type RawSettings, type Side,
   } from './settings.js'
 
   const gen = generatorState(
@@ -60,7 +61,8 @@
   let frozen = $state<CircleLayout['frame'] | null>(null)
   const shown = $derived(frozen ? { ...drawing, frame: frozen } : drawing)
 
-  const isPoint = (key: string) => key === CENTER || /^p\d+$/.test(key)
+  /** A place with a point's popup: the center, a point, where a tangent from a point touches the circle, or the middle of a line. */
+  const isPoint = (key: string) => key === CENTER || /^p\d+$/.test(key) || /^l\d+:(t|mid)$/.test(key)
   const pointOf = (id: string) => s.points.find((p) => p.id === id)
   const lineOf = (id: string) => s.lines.find((l) => l.id === id)
   const geoLine = (id: string) => geo.lines.find((g) => g.id === id)
@@ -91,7 +93,7 @@
       : kind === 'angle' ? !!popupAngle
       : kind === 'curve' ? !!popupArc || (key === WHOLE && drawing.curves.some((c) => c.key === WHOLE))
       : kind === 'area' ? !!popupArea
-      : isPoint(key) ? key === CENTER || !!pointOf(key)
+      : isPoint(key) ? drawing.handles.some((h) => h.key === key)
       : drawing.spots.some((p) => p.key === key)
     if (!there) close()
   })
@@ -103,26 +105,34 @@
     for (const key of Object.keys(s.arcs)) if (gone(key)) delete s.arcs[key]
     for (const key of Object.keys(s.marks)) if (gone(key)) delete s.marks[key]
   }
-  function removeLine(id: string) {
-    s.lines = s.lines.filter((l) => l.id !== id)
-    forget([id])
-    if (popup?.part.key === id) close()
+  /** Takes away lines ending at these places, and the lines ending where those touch the circle, and so on. */
+  function removeFrom(places: string[], lines: string[] = []) {
+    const gone = new Set(lines)
+    for (let more = true; more; ) {
+      more = false
+      for (const l of s.lines) {
+        if (gone.has(l.id) || ![l.a, l.b].some((k) => places.includes(k) || gone.has(k.split(':')[0]))) continue
+        gone.add(l.id)
+        more = true
+      }
+    }
+    s.lines = s.lines.filter((l) => !gone.has(l.id))
+    forget([...places, ...gone])
+    if (popup && [...places, ...gone].some((k) => popup!.part.key === k || popup!.part.key.startsWith(`${k}:`))) close()
   }
+  const removeLine = (id: string) => removeFrom([], [id])
   function removePoint(id: string) {
-    const lines = s.lines.filter((l) => l.a === id || l.b === id).map((l) => l.id)
-    s.lines = s.lines.filter((l) => !lines.includes(l.id))
     s.points = s.points.filter((p) => p.id !== id)
-    forget([id, ...lines])
-    if (popup && (popup.part.key === id || lines.includes(popup.part.key))) close()
+    removeFrom([id])
   }
   function addPoint() {
-    s.points.push({ id: nextId(s.points, 'p'), name: freshNames(s, 1)[0] ?? '', dir: String(freeDir(s.points)) })
+    s.points.push({ id: nextId(s.points, 'p'), name: freshNames(s, 1)[0] ?? '', dir: String(freeDir(s.points)), dist: '1' })
   }
   /** A point in the middle of an arc, whose popup takes the arc's place. */
   function addPointAt(deg: number) {
     if (s.points.length >= MAX_POINTS) return
     const id = nextId(s.points, 'p')
-    s.points.push({ id, name: freshNames(s, 1)[0] ?? '', dir: String(Math.round((deg % 360) * 10) / 10) })
+    s.points.push({ id, name: freshNames(s, 1)[0] ?? '', dir: String(Math.round((deg % 360) * 10) / 10), dist: '1' })
     if (popup) popup = { ...popup, part: { kind: 'point', key: id } }
   }
   function toggleJoin(a: string, b: string) {
@@ -135,13 +145,56 @@
     if (l) removeLine(l.id)
     else if (s.lines.length < MAX_LINES) s.lines.push(newTangent(nextId(s.lines, 'l'), id))
   }
-  // A new line joins the first two places not yet joined; a new tangent goes at the first point without one.
-  const places = $derived([CENTER, ...s.points.map((p) => p.id)])
+  /** The tangents from a point outside the circle, on whichever sides are asked for. */
+  function setTangentsFrom(id: string, sides: Side[]) {
+    for (const l of s.lines.filter((x) => x.kind === 'from' && x.a === id && !sides.includes(x.side))) removeLine(l.id)
+    for (const side of sides) {
+      if (!tangentFrom(id, side) && s.lines.length < MAX_LINES) s.lines.push(newTangentFrom(nextId(s.lines, 'l'), id, side))
+    }
+  }
+  const tangentFrom = (id: string, side: Side) => s.lines.find((l) => l.kind === 'from' && l.a === id && l.side === side)
+  /** What the two tangents from a point are called on the page: by where they touch, left and right, or top and bottom. */
+  function sideNames(id: string): Record<Side, string> {
+    const P = geo.where.get(id)
+    const [L, Rt] = SIDES.map((side) => (P ? touchPoint(P, side) : null))
+    if (!L || !Rt) return { left: 'One side', right: 'Other side' }
+    const across = Math.abs(L[0] - Rt[0]) > Math.abs(L[1] - Rt[1])
+    return across ? (L[0] < Rt[0] ? { left: 'Left', right: 'Right' } : { left: 'Right', right: 'Left' }) : L[1] > Rt[1] ? { left: 'Top', right: 'Bottom' } : { left: 'Bottom', right: 'Top' }
+  }
+  const outside = (id: string) => {
+    const P = geo.where.get(id)
+    return !!P && Math.hypot(P[0], P[1]) > 1 + 1e-6
+  }
+
+  // A new line joins the first two places not yet joined; a new tangent goes at the first point on the circle without one,
+  // else from the first point outside it without both.
+  // The places a line's ends can be picked from: the center, the points and the touch points. Midpoints aren't among
+  // them: a line from a midpoint is drawn from the midpoint's own popup, and has its own row.
+  const places = $derived([CENTER, ...s.points.map((p) => p.id), ...drawing.handles.filter((h) => h.key.endsWith(':t')).map((h) => h.key)])
+  /** The middles of the lines between two places, by those places' names (AB), for a line from a midpoint to start at. */
+  const midpoints = $derived(
+    s.lines.filter((l) => l.kind === 'join' && !isMid(l.a) && !isMid(l.b)).map((l) => ({ key: midKey(l.id), name: `${named(l.a)}${named(l.b)}` })),
+  )
+  /** A new line from a midpoint: the first one not yet joined to the center, to the center. */
+  function addMidpointLine() {
+    const m = midpoints.find((x) => !join(x.key, CENTER)) ?? midpoints[0]
+    if (m && s.lines.length < MAX_LINES) s.lines.push(newJoin(nextId(s.lines, 'l'), m.key, CENTER))
+  }
+  /** The places a popup offers to join to: the center, the points, and touch points once they're named. */
+  const joinable = $derived(places.filter((k) => !k.endsWith(':t') || !!clean.marks[k]?.trim()))
   const freePair = $derived.by(() => {
     for (const a of places) for (const b of places) if (a < b && !join(a, b)) return [a, b] as const
     return null
   })
-  const freeTangent = $derived(s.points.find((p) => !tangentAt(p.id))?.id ?? null)
+  const freeTangent = $derived.by((): (() => void) | null => {
+    const at = s.points.find((p) => onCircle(p) && !tangentAt(p.id))
+    if (at) return () => s.lines.push(newTangent(nextId(s.lines, 'l'), at.id))
+    for (const p of s.points) {
+      const side = outside(p.id) && SIDES.find((x) => !tangentFrom(p.id, x))
+      if (side) return () => s.lines.push(newTangentFrom(nextId(s.lines, 'l'), p.id, side))
+    }
+    return null
+  })
 
   // An inscribed polygon: its corners evenly round the circle, a side along the bottom, joined in order.
   let polygonSides = $state(4)
@@ -152,7 +205,7 @@
     for (let i = 0; i < n; i++) {
       const id = nextId(s.points, 'p')
       ids.push(id)
-      s.points.push({ id, name: names[i] ?? '', dir: String(Math.round(((270 - 180 / n + (360 * i) / n) % 360) * 100) / 100) })
+      s.points.push({ id, name: names[i] ?? '', dir: String(Math.round(((270 - 180 / n + (360 * i) / n) % 360) * 100) / 100), dist: '1' })
     }
     for (let i = 0; i < n; i++) s.lines.push(newJoin(nextId(s.lines, 'l'), ids[i], ids[(i + 1) % n]))
   }
@@ -175,6 +228,7 @@
   /** What a line's ends are called: past its points, or which way a tangent runs on the page. */
   function endNames(l: Line) {
     if (l.kind === 'join') return { a: `Past ${named(l.a)}`, b: `Past ${named(l.b)}` }
+    if (l.kind === 'from') return { a: `Past ${named(l.a)}`, b: `Past ${named(touchKey(l.id))}` }
     const d = geoLine(l.id)?.d ?? [1, 0]
     const [b, a] = Math.abs(d[0]) > 0.3 ? (d[0] > 0 ? ['Right', 'Left'] : ['Left', 'Right']) : d[1] > 0 ? ['Top', 'Bottom'] : ['Bottom', 'Top']
     return { a: `${a} end`, b: `${b} end` }
@@ -182,18 +236,21 @@
   /** The button before a line's row: how it's drawn, with a run-on end's cap. */
   const looks = (l: Line) => ({ ...l, name: '', startCap: l.runA ? l.capA : 'none', endCap: l.runB ? l.capB : 'none' }) as Line & { name: string; startCap: Line['capA']; endCap: Line['capB'] }
 
-  // Dragging a point round the circle; a press that doesn't move opens its popup.
+  // Dragging a point round the circle, or off it and back; a press that doesn't move opens its popup. A point on the
+  // circle leaves it once pulled a third of a radius away, and one off it lands on it within a tenth.
+  const PULL_OFF = 1 / 3
+  const SNAP_ON = 0.1
   let drag: { key: string; id: number; x: number; y: number; moved: boolean } | null = null
   let hovered = $state<string | null>(null)
   function screenOf(el: SVGGraphicsElement, [x, y]: [number, number]) {
     const m = el.ownerSVGElement!.getScreenCTM()!
     return { x: m.a * x + m.c * y + m.e, y: m.b * x + m.d * y + m.f }
   }
-  function down(event: PointerEvent, key: string) {
+  function down(event: PointerEvent, h: CircleLayout['handles'][number]) {
     if (event.button !== 0) return
     event.preventDefault()
     ;(event.currentTarget as Element).setPointerCapture(event.pointerId)
-    drag = { key, id: event.pointerId, x: event.clientX, y: event.clientY, moved: false }
+    drag = { key: h.key, id: event.pointerId, x: event.clientX, y: event.clientY, moved: false }
   }
   function move(event: PointerEvent) {
     if (!drag || event.pointerId !== drag.id) return
@@ -204,9 +261,16 @@
     drag.moved = true
     const m = (event.currentTarget as SVGGraphicsElement).ownerSVGElement!.getScreenCTM()!.inverse()
     const at = new DOMPoint(event.clientX, event.clientY).matrixTransform(m)
-    const step = event.ctrlKey || event.metaKey ? 1 : 5
+    const fine = event.ctrlKey || event.metaKey
+    const step = fine ? 1 : 5
     const deg = (Math.atan2(-at.y, at.x) * 180) / Math.PI
     p.dir = String((((Math.round(deg / step) * step) % 360) + 360) % 360)
+    // A point on the circle slides round it until it's pulled well off; one off it moves anywhere, its distance in
+    // quarter radii (twentieths with Ctrl or Cmd), and snaps onto the circle when it comes near.
+    const r = Math.hypot(at.x, at.y) / R
+    const by = fine ? 0.05 : 0.25
+    if (onCircle(p) ? Math.abs(r - 1) < PULL_OFF : Math.abs(r - 1) < SNAP_ON) p.dist = '1'
+    else p.dist = String(Number(Math.min(MAX_DIST, Math.max(by, Math.round(r / by) * by)).toFixed(2)))
   }
   function up(event: PointerEvent, h: CircleLayout['handles'][number]) {
     if (!drag || event.pointerId !== drag.id) return
@@ -253,12 +317,20 @@
       open({ kind: 'point', key: h.key }, screenOf(event.currentTarget as SVGGraphicsElement, h.at))
       return
     }
+    // Left and right turn it round the center; up and down move it out and in, off the circle and back on.
     const p = pointOf(h.key)
-    const by = { ArrowUp: 1, ArrowRight: -1, ArrowDown: -1, ArrowLeft: 1 }[event.key]
-    if (!p || h.dir === null || !by) return
+    const fine = event.ctrlKey || event.metaKey
+    const outward = { ArrowUp: 1, ArrowDown: -1 }[event.key as 'ArrowUp' | 'ArrowDown']
+    const by = { ArrowRight: -1, ArrowLeft: 1 }[event.key as 'ArrowRight' | 'ArrowLeft']
+    if (!p || h.dir === null || h.dist === null || !(by || outward)) return
     event.preventDefault()
-    const step = event.ctrlKey || event.metaKey ? 1 : 5
-    p.dir = String((((Math.round(h.dir / step) * step + by * step) % 360) + 360) % 360)
+    if (outward) {
+      const step = fine ? 0.05 : 0.25
+      p.dist = String(Number(Math.min(MAX_DIST, Math.max(step, Math.round(h.dist / step) * step + outward * step)).toFixed(2)))
+      return
+    }
+    const step = fine ? 1 : 5
+    p.dir = String((((Math.round(h.dir / step) * step + by! * step) % 360) + 360) % 360)
   }
 
   const figureSummary = $derived(
@@ -269,14 +341,19 @@
 
 {#snippet pointRow(id: string)}
   {@const p = pointOf(id)}
-  <div class="row" role="group" aria-label="Point">
+  <div class="row" role="group" aria-label={p ? 'Point' : 'The center'}>
     {#if p}
       <input class="pname" type="text" maxlength="4" aria-label="Name of the point" placeholder="name" bind:value={p.name} />
-      <span class="where">on the circle at</span>
       <div class="dir">
         <ScrubAngle
-          id="dir-{p.id}" label="where {named(p.id)} is on the circle, in degrees counterclockwise from the right" symbol="↻" min={0} max={360}
+          id="dir-{p.id}" label="{named(p.id)}'s direction from the center, in degrees counterclockwise from the right" symbol="↻" min={0} max={360}
           invalid={!!geo.problems[p.id]} bind:value={p.dir}
+        />
+      </div>
+      <div class="dist">
+        <ScrubAngle
+          id="dist-{p.id}" label="how far {named(p.id)} is from the center, in radii: 1 is on the circle" symbol="↔" suffix="r" step={0.05}
+          min={MIN_DIST} max={MAX_DIST} invalid={!!geo.problems[p.id]} bind:value={p.dist}
         />
       </div>
       <button type="button" class="remove" aria-label="Remove this point" data-tip="Remove" onclick={() => removePoint(p.id)}><X size={16} /></button>
@@ -288,48 +365,72 @@
   {#if p && geo.problems[p.id]}<p class="help problem">{geo.problems[p.id]}</p>{/if}
 {/snippet}
 
-{#snippet placeSelect(value: string, label: string, onpick: (v: string) => void, center = true)}
+{#snippet placeSelect(value: string, label: string, onpick: (v: string) => void, among: string[])}
   <select class="place" aria-label={label} {value} onchange={(e) => onpick(e.currentTarget.value)}>
-    {#each center ? places : places.filter((k) => k !== CENTER) as key}<option value={key}>{named(key)}</option>{/each}
+    {#each among.includes(value) ? among : [value, ...among] as key}<option value={key}>{named(key)}</option>{/each}
   </select>
 {/snippet}
 
 {#snippet lineRow(l: Line)}
   {@const g = geoLine(l.id)}
+  {@const mid = [l.a, l.b].find(isMid)}
   <div class="row" role="group" aria-label="Line">
     <LineButton
       line={looks(l)} name={g ? lineName(clean, g) : 'line'} expanded={popup?.part.kind === 'line' && popup.part.key === l.id}
       bind:button={buttons[l.id]} onclick={() => openFrom({ kind: 'line', key: l.id }, buttons[l.id])}
     />
-    <span class="kind">{g ? KIND_NAMES[g.kind] : 'Line'}</span>
-    {#if l.kind === 'tangent'}
-      <span class="at">at</span>
-      {@render placeSelect(l.a, 'Where the tangent touches', (v) => (l.a = v), false)}
+    {#if mid}
+      <!-- From the midpoint of a line, picked by its line, to a place. -->
+      <span class="kind">Midpoint of</span>
+      <select
+        class="place" aria-label="Which line's midpoint it starts from" value={mid}
+        onchange={(e) => (mid === l.a ? (l.a = e.currentTarget.value) : (l.b = e.currentTarget.value))}
+      >
+        {#each midpoints as m}<option value={m.key}>{m.name}</option>{/each}
+      </select>
+      <span class="at">to</span>
+      {@render placeSelect(mid === l.a ? l.b : l.a, 'The other end of the line', (v) => (mid === l.a ? (l.b = v) : (l.a = v)), places)}
     {:else}
-      {@render placeSelect(l.a, 'One end of the line', (v) => (l.a = v))}
-      {@render placeSelect(l.b, 'The other end of the line', (v) => (l.b = v))}
+      <span class="kind">{l.kind === 'from' ? 'Tangent from' : g ? KIND_NAMES[g.kind] : 'Line'}</span>
+    {/if}
+    {#if mid}{:else if l.kind === 'tangent'}
+      <span class="at">at</span>
+      {@render placeSelect(l.a, 'Where the tangent touches', (v) => (l.a = v), s.points.filter(onCircle).map((p) => p.id))}
+    {:else if l.kind === 'from'}
+      {@const names = sideNames(l.a)}
+      {@render placeSelect(l.a, 'The point the tangent comes from', (v) => (l.a = v), s.points.filter((p) => !onCircle(p)).map((p) => p.id))}
+      <select class="place side" aria-label="Which of the two tangents" value={l.side} onchange={(e) => (l.side = e.currentTarget.value as Side)}>
+        {#each SIDES as side}<option value={side}>{names[side]}</option>{/each}
+      </select>
+    {:else}
+      {@render placeSelect(l.a, 'One end of the line', (v) => (l.a = v), places)}
+      {@render placeSelect(l.b, 'The other end of the line', (v) => (l.b = v), places)}
     {/if}
     <button type="button" class="remove" aria-label="Remove this line" data-tip="Remove" onclick={() => removeLine(l.id)}><X size={16} /></button>
   </div>
 {/snippet}
 
-<GeneratorPage name="Circle Generator" filename="circle" {gen} {svg} bind:labelSize={s.labelSize} printWidth={5}>
+<GeneratorPage name="Circle Generator" filename="circle" {gen} {svg} settingsWidth={27} bind:labelSize={s.labelSize} printWidth={5}>
   {#snippet inputs()}
     <section class="card-body">
       <div class="head-row">
         <h2 class="card-head">Points</h2>
         <HelpTip id="circle-tip" label="How the figure works">
-          Each point on the circle is placed by its direction from the center: 0° to the right, counting
-          counterclockwise. Drag a point round the circle to move it, in 5° steps, or 1° with Ctrl (Cmd on a Mac)
-          held. Click part of the circle and choose Add point here to put a point in its middle. Click a point to join it to another or draw a
-          tangent there, and click any line, angle or arc to label or style it, or inside an enclosed area to shade it.
+          Each point is placed by its direction from the center (0° to the right, counting counterclockwise) and how
+          many radii it is from the center: 1 is on the circle. Drag a point round the circle in 5° steps, or 1° with
+          Ctrl (Cmd on a Mac) held; pull it well away to take it off the circle, and bring it near to put it back on. Click part of the circle and choose Add point here to put a point in its middle. Click a point to join it to another or draw a
+          tangent there (or, from a point outside the circle, the tangents from it). Click the middle of a chord to name its
+          midpoint or join it to the center, and click any line, angle or arc to label or style it, or inside an enclosed area to shade it.
           Drag a line's label across the line to put it on the other side. Click where lines cross, or where a line meets the circle, to name a point there.
         </HelpTip>
       </div>
       {@render pointRow(CENTER)}
+      {#if s.points.length}
+        <div class="row heads" aria-hidden="true"><span class="pname-head">Point</span><span class="dir">Direction</span><span class="dist">From O</span></div>
+      {/if}
       {#each s.points as p (p.id)}{@render pointRow(p.id)}{/each}
       <div class="adds">
-        <button type="button" class="btn-ghost add" disabled={s.points.length >= MAX_POINTS} onclick={addPoint}><Plus size={16} /> Add point</button>
+        <button type="button" class="btn-ghost add" disabled={s.points.length >= MAX_POINTS} onclick={() => addPoint()}><Plus size={16} /> Add point</button>
         <div class="polygon">
           <button type="button" class="btn-ghost add" disabled={s.points.length + polygonSides > MAX_POINTS || s.lines.length + polygonSides > MAX_LINES} onclick={addPolygon}>
             <Plus size={16} /> Add inscribed polygon
@@ -348,10 +449,8 @@
           type="button" class="btn-ghost add" disabled={!freePair || s.lines.length >= MAX_LINES}
           onclick={() => freePair && s.lines.push(newJoin(nextId(s.lines, 'l'), freePair[0], freePair[1]))}
         ><Plus size={16} /> Add line</button>
-        <button
-          type="button" class="btn-ghost add" disabled={!freeTangent || s.lines.length >= MAX_LINES}
-          onclick={() => freeTangent && s.lines.push(newTangent(nextId(s.lines, 'l'), freeTangent))}
-        ><Plus size={16} /> Add tangent</button>
+        <button type="button" class="btn-ghost add" disabled={!freeTangent || s.lines.length >= MAX_LINES} onclick={() => freeTangent?.()}><Plus size={16} /> Add tangent</button>
+        <button type="button" class="btn-ghost add" disabled={!midpoints.length || s.lines.length >= MAX_LINES} onclick={addMidpointLine}><Plus size={16} /> Add midpoint line</button>
       </div>
     </section>
     {#if measures.length}
@@ -391,7 +490,7 @@
         </select>
       </label>
       <label class="check"><input type="checkbox" bind:checked={s.centerDot} /><span>Dot at the center</span></label>
-      <label class="check"><input type="checkbox" bind:checked={s.dots} /><span>Dots at the points on the circle</span></label>
+      <label class="check"><input type="checkbox" bind:checked={s.dots} /><span>Dots at the points</span></label>
     </Section>
   {/snippet}
 
@@ -415,9 +514,12 @@
             <circle cx={h.at[0]} cy={h.at[1]} r="3.5" fill="#2563eb" pointer-events="none" />
           {/if}
           <circle
-            cx={h.at[0]} cy={h.at[1]} r="11" fill="transparent" class="handle" class:fixed={h.dir === null} role="button" tabindex="0"
-            aria-label={h.dir === null ? `The center, ${named(h.key)}` : `Point ${named(h.key)} at ${rounded(h.dir)}°. Drag or use the arrow keys to move it round the circle`}
-            onpointerdown={(e) => down(e, h.key)} onpointermove={move} onpointerup={(e) => up(e, h)} onpointercancel={(e) => up(e, h)}
+            cx={h.at[0]} cy={h.at[1]} r={h.key.endsWith(':mid') ? 8 : 11} fill="transparent" class="handle" class:fixed={h.dir === null} role="button" tabindex="0"
+            aria-label={h.key === CENTER ? `The center, ${named(h.key)}`
+              : h.key.endsWith(':mid') ? `The ${named(h.key)}`
+              : h.dir === null ? `Where a tangent touches the circle, ${named(h.key)}`
+              : `Point ${named(h.key)} at ${rounded(h.dir)}°, ${h.on ? 'on the circle' : `${rounded(h.dist ?? 0)} radii from the center`}. Drag it, or use the arrow keys: left and right turn it round the center, up and down move it out and in`}
+            onpointerdown={(e) => down(e, h)} onpointermove={move} onpointerup={(e) => up(e, h)} onpointercancel={(e) => up(e, h)}
             onpointerenter={(e) => e.pointerType === 'mouse' && (hovered = h.key)} onpointerleave={() => hovered === h.key && (hovered = null)}
             onkeydown={(e) => handleKey(e, h)}
           />
@@ -432,17 +534,26 @@
   <Popover at={popup.at} owner={popup.owner} onclose={close} label="Settings for this part of the figure">
     {#if popup.part.kind === 'point' && isPoint(key)}
       {@const p = pointOf(key)}
-      {@const others = places.filter((k) => k !== key)}
-      {@const dir = drawing.handles.find((h) => h.key === key)?.dir}
+      {@const touch = key.endsWith(':t') || key.endsWith(':mid')}
+      {@const others = joinable.filter((k) => k !== key)}
+      {@const h = drawing.handles.find((x) => x.key === key)}
       <div class="pop-head">
-        <span>{p ? 'Point' : 'Center'} {named(key)}</span>
-        {#if p && dir != null}<span class="measure">{rounded(dir)}°</span>{/if}
+        <span>
+          {key.endsWith(':mid') ? `Midpoint of ${named(lineOf(key.split(':')[0])?.a ?? '')}${named(lineOf(key.split(':')[0])?.b ?? '')}`
+          : touch ? `Where the tangent from ${named(lineOf(key.split(':')[0])?.a ?? '')} touches`
+          : p ? `Point ${named(key)}` : `Center ${named(key)}`}
+        </span>
+        {#if p && h?.dir != null}<span class="measure">{rounded(h.dir)}°{h.on ? '' : `, ${rounded(h.dist ?? 0)} r`}</span>{/if}
       </div>
-      <label class="group">
-        <span class="name">Name</span>
-        {#if p}<input type="text" maxlength="4" placeholder="A" bind:value={p.name} />
-        {:else}<input type="text" maxlength="4" placeholder="O" bind:value={s.centerName} />{/if}
-      </label>
+      {#if touch}
+        <PointOptions name={s.marks[key]} onchange={(name) => setMark(key, name)} />
+      {:else}
+        <label class="group">
+          <span class="name">Name</span>
+          {#if p}<input type="text" maxlength="4" placeholder="A" bind:value={p.name} />
+          {:else}<input type="text" maxlength="4" placeholder="O" bind:value={s.centerName} />{/if}
+        </label>
+      {/if}
       {#if others.length}
         <div class="group">
           <span class="name" id="pop-join">Join to</span>
@@ -456,7 +567,7 @@
           </div>
         </div>
       {/if}
-      {#if p}
+      {#if p && onCircle(p)}
         {@const on = !!tangentAt(key)}
         <div class="group">
           <span class="name" id="pop-tangent">Tangent here</span>
@@ -465,8 +576,24 @@
             <button type="button" role="radio" aria-checked={on} class:on disabled={!on && s.lines.length >= MAX_LINES} onclick={() => !on && toggleTangent(key)}>Tangent</button>
           </div>
         </div>
+      {:else if p && outside(key)}
+        {@const names = sideNames(key)}
+        {@const have = SIDES.filter((x) => !!tangentFrom(key, x))}
+        <div class="group">
+          <span class="name" id="pop-tangents">Tangents from here</span>
+          <div class="segmented" role="radiogroup" aria-labelledby="pop-tangents">
+            {#each [[], ['left'], ['right'], ['left', 'right']] as Side[][] as choice}
+              {@const on = choice.length === have.length && choice.every((x) => have.includes(x))}
+              <button type="button" role="radio" aria-checked={on} class:on onclick={() => setTangentsFrom(key, choice)}>
+                {choice.length === 0 ? 'None' : choice.length === 2 ? 'Both' : names[choice[0]]}
+              </button>
+            {/each}
+          </div>
+        </div>
+      {/if}
+      {#if p}
         <button type="button" class="btn-ghost delete" onclick={() => removePoint(key)}>Delete this point</button>
-      {:else}
+      {:else if !touch}
         <div class="group">
           <span class="name" id="pop-dot">Dot</span>
           <div class="segmented" role="radiogroup" aria-labelledby="pop-dot">
@@ -585,12 +712,17 @@
   .row { display: flex; align-items: center; gap: 0.35rem; }
   .pname { width: 3.6rem; flex: none; height: 2.6rem; box-sizing: border-box; font-family: 'Times New Roman', Times, serif; font-style: italic; font-size: 1.05rem; }
   .dir { width: 5.9rem; flex: none; }
+  .dist { width: 5.2rem; flex: none; }
+  .heads { font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-bottom: -0.2rem; }
+  .heads span { padding-left: 0.2rem; }
+  .pname-head { width: 3.6rem; flex: none; }
+  .place.side { flex: 1.5 1 0; min-width: 6rem; font-family: inherit; font-style: normal; font-size: 0.85rem; }
   /* The degrees right after the number, not at the far end of the box. */
-  .dir :global(input[type='text']) { flex: 0 1 auto; width: auto; min-width: 1.5ch; field-sizing: content; }
+  .dir :global(input[type='text']), .dist :global(input[type='text']) { flex: 0 1 auto; width: auto; min-width: 1.5ch; field-sizing: content; }
   .where { color: var(--muted); font-size: 0.88rem; padding-left: 0.2rem; white-space: nowrap; }
-  .kind { width: 4.6rem; flex: none; font-size: 0.85rem; font-weight: 600; }
+  .kind { width: 5.6rem; flex: none; font-size: 0.85rem; font-weight: 600; line-height: 1.15; }
   .at { flex: none; color: var(--muted); font-size: 0.85rem; }
-  .place { flex: 1; min-width: 0; height: 2.6rem; font-family: 'Times New Roman', Times, serif; font-style: italic; font-size: 1.05rem; }
+  .place { flex: 1 1 3rem; min-width: 3rem; height: 2.6rem; font-family: 'Times New Roman', Times, serif; font-style: italic; font-size: 1.05rem; }
   .remove { display: inline-grid; place-items: center; width: 2rem; height: 2.6rem; flex: none; border: 0; background: none; color: var(--muted); border-radius: 8px; margin-left: auto; }
   .remove:hover:not(:disabled) { color: var(--red); background: #fef2f2; }
   .adds { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }

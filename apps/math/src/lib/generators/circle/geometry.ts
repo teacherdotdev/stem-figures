@@ -12,7 +12,7 @@
 // an end that runs on.
 
 import { add, cross, dot, len, mul, perp, sub, unit, type Vec } from '$lib/shapes/vec.js'
-import { CENTER, angleKey, arcKey, readDir, type Line, type Settings } from './settings.js'
+import { CENTER, angleKey, arcKey, isMid, midKey, readDir, readDist, touchKey, type Line, type Settings } from './settings.js'
 
 export type { Vec }
 
@@ -24,11 +24,16 @@ export const TANGENT = 0.9
 /** How close two places are, in radii, to be the same one. */
 const SAME = 1e-6
 
-export type LineKind = 'radius' | 'diameter' | 'chord' | 'secant' | 'tangent'
-export const KIND_NAMES: Record<LineKind, string> = { radius: 'Radius', diameter: 'Diameter', chord: 'Chord', secant: 'Secant', tangent: 'Tangent' }
+export type LineKind = 'radius' | 'diameter' | 'chord' | 'secant' | 'tangent' | 'segment'
+export const KIND_NAMES: Record<LineKind, string> = { radius: 'Radius', diameter: 'Diameter', chord: 'Chord', secant: 'Secant', tangent: 'Tangent', segment: 'Line' }
 
 export type GeoLine = { id: string; line: Line; kind: LineKind; P: Vec; d: Vec; length: number; lo: number; hi: number }
-export type Node = { key: string; at: Vec; kind: 'center' | 'point' | 'meet' | 'crossing'; onCircle: boolean }
+/**
+ * A place on the figure: the center, a point, where a tangent from a point
+ * touches the circle, the middle of a line (once a line ends there or it's
+ * named), where a line meets the circle, or where lines cross.
+ */
+export type Node = { key: string; at: Vec; kind: 'center' | 'point' | 'touch' | 'mid' | 'meet' | 'crossing'; onCircle: boolean }
 /** A ray out from a node: its line and which way along it, its direction, and how far it runs. */
 export type Ray = { ray: string; u: Vec; room: number }
 export type Angle = { key: string; node: string; from: Ray; to: Ray; measure: number }
@@ -48,11 +53,16 @@ export function readPoints(s: Settings) {
   const problems: Record<string, string> = {}
   for (const p of s.points) {
     const v = readDir(p.dir)
+    const r = readDist(p.dist)
     if (typeof v === 'string') problems[p.id] = v
-    else where.set(p.id, at(v))
+    else if (typeof r === 'string') problems[p.id] = r
+    // On the circle exactly, so what's on it lines up with it.
+    else where.set(p.id, r === 1 ? at(v) : mul(at(v), r))
   }
   return { where, problems }
 }
+
+const isOn = (p: Vec) => Math.abs(len(p) - 1) < SAME
 
 /** Where a line through `P` along `d` meets the circle, as distances along it. */
 function meetsCircle(P: Vec, d: Vec): number[] {
@@ -63,22 +73,48 @@ function meetsCircle(P: Vec, d: Vec): number[] {
   return [-b - r, -b + r]
 }
 
-/** What kind of line it is, from where its ends are. */
-function kindOf(l: Line, P: Vec, Q: Vec): LineKind {
-  if (l.kind === 'tangent') return 'tangent'
-  if (l.a === CENTER || l.b === CENTER) return 'radius'
-  if (len(add(P, Q)) < SAME) return 'diameter'
-  return l.runA && l.runB ? 'secant' : 'chord'
+/**
+ * What kind of line a join is, from where its ends are: from the center to
+ * the circle a radius; across the circle a diameter, a chord, or a secant
+ * when it runs on past both ends; any other line a secant if it crosses the
+ * circle twice as drawn, or just a line.
+ */
+function kindOf(l: Line, P: Vec, Q: Vec, crossings: number): LineKind {
+  if ((l.a === CENTER && isOn(Q)) || (l.b === CENTER && isOn(P))) return 'radius'
+  if (isOn(P) && isOn(Q)) return len(add(P, Q)) < SAME ? 'diameter' : l.runA && l.runB ? 'secant' : 'chord'
+  return crossings >= 2 ? 'secant' : 'segment'
 }
 
-/** The lines that can be drawn, each with how far it runs. */
+/** Where a tangent from P touches the circle, on its side looking from P toward the center, or null from inside the circle. */
+export function touchPoint(P: Vec, side: 'left' | 'right'): Vec | null {
+  const d = len(P)
+  if (d < 1 + SAME) return null
+  const turn = Math.acos(1 / d) / RAD
+  return at(degOf(P) + (side === 'right' ? turn : -turn))
+}
+
+/**
+ * The lines that can be drawn, each with how far it runs, in their order.
+ * Where each tangent from a point touches the circle is added to `where`
+ * first, so joins can end there.
+ */
 export function readLines(s: Settings, where: Map<string, Vec>): GeoLine[] {
-  const out: GeoLine[] = []
+  const out = new Map<string, GeoLine>()
   for (const l of s.lines) {
     const P = where.get(l.a)
-    if (!P) continue
+    const T = l.kind === 'from' && P ? touchPoint(P, l.side) : null
+    if (!P || !T) continue
+    where.set(touchKey(l.id), T)
+    const length = len(sub(T, P))
+    out.set(l.id, { id: l.id, line: l, kind: 'tangent', P, d: unit(sub(T, P)), length, lo: l.runA ? -RUN : 0, hi: length + (l.runB ? RUN : 0) })
+  }
+  // Lines between places first, each giving its midpoint, then the lines ending at a midpoint.
+  const order = [...s.lines.filter((l) => !isMid(l.a) && !isMid(l.b)), ...s.lines.filter((l) => isMid(l.a) || isMid(l.b))]
+  for (const l of order) {
+    const P = where.get(l.a)
+    if (!P || l.kind === 'from') continue
     if (l.kind === 'tangent') {
-      out.push({ id: l.id, line: l, kind: 'tangent', P, d: perp(P), length: 0, lo: l.runA ? -TANGENT : 0, hi: l.runB ? TANGENT : 0 })
+      if (isOn(P)) out.set(l.id, { id: l.id, line: l, kind: 'tangent', P, d: perp(P), length: 0, lo: l.runA ? -TANGENT : 0, hi: l.runB ? TANGENT : 0 })
       continue
     }
     const Q = where.get(l.b)
@@ -89,9 +125,12 @@ export function readLines(s: Settings, where: Map<string, Vec>): GeoLine[] {
     const meets = meetsCircle(P, d)
     const pastA = Math.max(0, ...meets.map((m) => -m).filter((m) => m > SAME))
     const pastB = Math.max(0, ...meets.map((m) => m - length).filter((m) => m > SAME))
-    out.push({ id: l.id, line: l, kind: kindOf(l, P, Q), P, d, length, lo: l.runA ? -(pastA + RUN) : 0, hi: length + (l.runB ? pastB + RUN : 0) })
+    const [lo, hi] = [l.runA ? -(pastA + RUN) : 0, length + (l.runB ? pastB + RUN : 0)]
+    const crossings = meets.filter((m) => m > lo - SAME && m < hi + SAME).length
+    out.set(l.id, { id: l.id, line: l, kind: kindOf(l, P, Q, crossings), P, d, length, lo, hi })
+    if (!isMid(l.a) && !isMid(l.b)) where.set(midKey(l.id), mul(add(P, Q), 0.5))
   }
-  return out
+  return s.lines.map((l) => out.get(l.id)).filter((g): g is GeoLine => !!g)
 }
 
 /** Every node, ray and angle on the figure, and the arcs around the circle. */
@@ -99,7 +138,17 @@ export function buildGeometry(s: Settings) {
   const { where, problems } = readPoints(s)
   const lines = readLines(s, where)
   const nodes: Node[] = [{ key: CENTER, at: [0, 0], kind: 'center', onCircle: false }]
-  for (const p of s.points) if (where.has(p.id)) nodes.push({ key: p.id, at: where.get(p.id)!, kind: 'point', onCircle: true })
+  for (const p of s.points) if (where.has(p.id)) nodes.push({ key: p.id, at: where.get(p.id)!, kind: 'point', onCircle: isOn(where.get(p.id)!) })
+  for (const l of s.lines) {
+    const T = where.get(touchKey(l.id))
+    if (T && !nodes.some((n) => len(sub(n.at, T)) < SAME)) nodes.push({ key: touchKey(l.id), at: T, kind: 'touch', onCircle: true })
+  }
+  for (const l of s.lines) {
+    const key = midKey(l.id)
+    const M = where.get(key)
+    const used = key in s.marks || s.lines.some((x) => x.a === key || x.b === key)
+    if (M && used && !nodes.some((n) => len(sub(n.at, M)) < SAME)) nodes.push({ key, at: M, kind: 'mid', onCircle: isOn(M) })
+  }
   const near = (v: Vec) => nodes.find((n) => len(sub(n.at, v)) < SAME)
 
   // Where each line meets the circle away from a point: past its a end, between its ends, or past its b end, counted out from that end.
@@ -161,8 +210,8 @@ export function buildGeometry(s: Settings) {
       rays.forEach((r, i) => {
         const next = rays[(i + 1) % rays.length]
         const measure = (((degOf(next.u) - degOf(r.u)) % 360) + 360) % 360
-        // Not a straight angle, nor, at a place on the circle, the reflex angle out past it.
-        if (measure < 1e-6 || Math.abs(measure - 180) < 1e-6 || (node.onCircle && measure > 180)) return
+        // Not a straight angle, nor a reflex angle anywhere but the center (where it's a central angle).
+        if (measure < 1e-6 || Math.abs(measure - 180) < 1e-6 || (node.kind !== 'center' && measure > 180)) return
         angles.push({ key: angleKey(node.key, r.ray, next.ray), node: node.key, from: r, to: next, measure })
       })
     }

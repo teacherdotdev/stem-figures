@@ -14,7 +14,7 @@ import { add, cross, dot, len, mul, perp, r1, reach, sub, unit, type Vec } from 
 import { angleMark, parallelArrows, sectorPath, tickMarks } from '$lib/labeling/marks.js'
 import type { Pickable } from '$lib/labeling/pick.js'
 import { SHADES } from '$lib/labeling/options.js'
-import { ANGLE_DEFAULTS, ARC_DEFAULTS, ARC_DRAWS, CENTER, readRadius, type AngleStyle, type LineStyle, type Settings } from './settings.js'
+import { ANGLE_DEFAULTS, ARC_DEFAULTS, ARC_DRAWS, CENTER, midKey, readRadius, type AngleStyle, type LineStyle, type Settings } from './settings.js'
 import { findFaces } from './faces.js'
 import { KIND_NAMES, buildGeometry, degOf, type Angle, type Corner, type GeoLine, type Node } from './geometry.js'
 
@@ -57,17 +57,22 @@ export const autoStyle = (auto: boolean): AngleStyle => (auto ? { ...ANGLE_DEFAU
 export const angleStyle = (s: Settings, key: string, auto: boolean): AngleStyle => s.angles[key] ?? autoStyle(auto)
 
 /** A place on the figure's name, as the left card and popups write it. */
-export function nodeName(s: Settings, key: string) {
+export function nodeName(s: Settings, key: string): string {
   if (key === CENTER) return s.centerName.trim() || 'the center'
   const p = s.points.find((x) => x.id === key)
   if (p) return p.name.trim() || 'a point'
-  return s.marks[key]?.trim() || (key.includes('.') ? 'where lines cross' : 'where a line meets the circle')
+  if (key.endsWith(':mid')) {
+    const l = s.lines.find((x) => x.id === key.split(':')[0])
+    return s.marks[key]?.trim() || `midpoint${l ? ` of ${nodeName(s, l.a)}${nodeName(s, l.b)}` : ''}`
+  }
+  return s.marks[key]?.trim() || (key.includes('.') ? 'where lines cross' : key.endsWith(':t') ? 'touch point' : 'where a line meets the circle')
 }
 
-/** A line's name: its kind and its points, like "Chord AB" or "Tangent at A". */
+/** A line's name: its kind and its points, like "Chord AB", "Tangent at A" or "Tangent from P". */
 export function lineName(s: Settings, g: Pick<GeoLine, 'kind' | 'line'>) {
-  const n = (key: string) => (key === CENTER ? s.centerName.trim() : s.points.find((p) => p.id === key)?.name.trim()) ?? ''
-  if (g.kind === 'tangent') return `Tangent${n(g.line.a) ? ` at ${n(g.line.a)}` : ''}`
+  const n = (key: string) => (key === CENTER ? s.centerName : s.points.find((p) => p.id === key)?.name ?? s.marks[key] ?? '').trim()
+  if (g.line.kind === 'tangent') return `Tangent${n(g.line.a) ? ` at ${n(g.line.a)}` : ''}`
+  if (g.line.kind === 'from') return `Tangent${n(g.line.a) ? ` from ${n(g.line.a)}` : ''}`
   return `${KIND_NAMES[g.kind]} ${n(g.line.a)}${n(g.line.b)}`.trim()
 }
 
@@ -162,7 +167,8 @@ export function buildCircle(s: Settings) {
   const arrows: Vec[][] = []
   for (const g of geo.lines) {
     const l = g.line
-    const tangent = g.kind === 'tangent'
+    // A tangent at a point runs both ways from it; every other line has its ends at its places.
+    const tangent = g.line.kind === 'tangent'
     const t = page(g.d)
     let midAt = tangent ? (g.hi > 0 ? g.hi * 0.6 : g.lo * 0.6) : g.length / 2
     if (!tangent && len(add(g.P, mul(g.d, midAt))) < 0.05) midAt = g.length * 0.75
@@ -175,7 +181,10 @@ export function buildCircle(s: Settings) {
       if (nrm[1] > 1e-9 || (Math.abs(nrm[1]) <= 1e-9 && nrm[0] < 0)) nrm = mul(nrm, -1)
     } else if (dot(nrm, page(m)) < 0) nrm = mul(nrm, -1)
     const both = l.ticks && l.arrows
-    ticks.push(...tickMarks(both ? add(mid, mul(t, -(l.ticks * TICK_GAP) / 2 - 4)) : mid, t, nrm, l.ticks, TICK, TICK_GAP))
+    // Once its midpoint is used, its ticks go on each half, to show they're equal.
+    const halves = geo.nodes.some((n) => n.key === midKey(g.id))
+    if (halves) for (const k of [0.25, 0.75]) ticks.push(...tickMarks(px(add(g.P, mul(g.d, g.length * k))), t, nrm, l.ticks, TICK, TICK_GAP))
+    else ticks.push(...tickMarks(both ? add(mid, mul(t, -(l.ticks * TICK_GAP) / 2 - 4)) : mid, t, nrm, l.ticks, TICK, TICK_GAP))
     const way = t[0] > 1e-9 || (Math.abs(t[0]) <= 1e-9 && t[1] > 0) ? t : mul(t, -1)
     arrows.push(...parallelArrows(both ? add(mid, mul(way, (l.arrows * ARROW_GAP) / 2 + 4)) : mid, way, nrm, l.arrows, ARROW, ARROW_W, ARROW_GAP))
     const measure = radius !== null && !tangent ? g.length * radius : null
@@ -309,7 +318,7 @@ export function buildCircle(s: Settings) {
   for (const [i, g] of geo.lines.entries()) {
     const seg = segments[i]
     const ends: Vec[] = []
-    const runs = g.kind === 'tangent' ? [g.lo < 0, g.hi > 0] : [g.line.runA, g.line.runB]
+    const runs = g.line.kind === 'tangent' ? [g.lo < 0, g.hi > 0] : [g.line.runA, g.line.runB]
     for (const [cap, run, tip, from] of [[g.line.capA, runs[0], seg.from, seg.to], [g.line.capB, runs[1], seg.to, seg.from]] as const) {
       if (!run || len(sub(tip, from)) < 1e-9) {
         ends.push(tip)
@@ -358,7 +367,16 @@ export function buildCircle(s: Settings) {
     angles,
     curves,
     /** The points, which are dragged and clicked, and the center, which is clicked. */
-    handles: geo.nodes.filter((n) => n.kind === 'center' || n.kind === 'point').map((n) => ({ key: n.key, at: px(n.at), dir: n.kind === 'point' ? degOf(n.at) : null })),
+    // A point on the circle is dragged round it, and one off it anywhere; the center and touch points are only clicked.
+    handles: geo.nodes
+      .filter((n) => n.kind === 'center' || n.kind === 'point' || n.kind === 'touch' || n.kind === 'mid')
+      .map((n) => ({ key: n.key, at: px(n.at), dir: n.kind === 'point' ? degOf(n.at) : null, dist: n.kind === 'point' ? len(n.at) : null, on: n.onCircle }))
+      // And the middle of every line between two places, to join to or name, though it isn't a place on the figure yet.
+      .concat(
+        [...geo.where]
+          .filter(([key, at]) => key.endsWith(':mid') && !geo.nodes.some((n) => n.key === key || len(sub(n.at, at)) < 1e-6))
+          .map(([key, at]) => ({ key, at: px(at), dir: null, dist: null, on: false })),
+      ),
     /** Where lines cross or meet the circle, where a point can be named. */
     spots: geo.nodes
       .filter((n) => n.kind === 'crossing' || n.kind === 'meet')

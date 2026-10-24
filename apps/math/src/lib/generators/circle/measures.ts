@@ -30,8 +30,10 @@ export function circleMeasures(s: Settings, faces: Face[], name: (face: Face) =>
   const both = (k: number, rest: number, suffix: string) => {
     const total = `${roundTo(k * Math.PI + rest, p)}${suffix}`
     if (Math.abs(k) < 1e-9) return total
-    const extra = Math.abs(rest) < 1e-9 ? '' : ` ${rest > 0 ? '+' : '−'} ${roundTo(Math.abs(rest), p)}`
-    return `${ofPi(k, p)}${extra}${suffix} ≈ ${total}`
+    if (Math.abs(rest) < 1e-9) return `${ofPi(k, p)}${suffix} ≈ ${total}`
+    // A number less a multiple of π, outside the circle; otherwise the multiple of π first.
+    if (k < 0) return `${roundTo(rest, p)} − ${ofPi(-k, p)}${suffix} ≈ ${total}`
+    return `${ofPi(k, p)} ${rest > 0 ? '+' : '−'} ${roundTo(Math.abs(rest), p)}${suffix} ≈ ${total}`
   }
   const out: Measure[] = [
     { name: 'Circumference', values: [both(2 * r, 0, len)] },

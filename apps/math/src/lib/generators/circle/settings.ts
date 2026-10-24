@@ -38,21 +38,33 @@ export const MAX_POINTS = 12
 export const MAX_LINES = 24
 export const CENTER = 'o'
 
-/** A point on the circle: its name and its direction from the center in degrees, as typed. */
-export type Point = { id: string; name: string; dir: string }
+/**
+ * A point: its name, its direction from the center in degrees, and its
+ * distance from the center in radii, as typed. At distance 1 it's on the
+ * circle; anywhere else it's inside or outside it.
+ */
+export type Point = { id: string; name: string; dir: string; dist: string }
+
+/** Which of the two tangents from a point outside the circle: the one on the left or the right, looking from the point toward the center. */
+export const SIDES = ['left', 'right'] as const
+export type Side = (typeof SIDES)[number]
 
 /**
- * A line. A join runs from point `a` to point `b` (either can be the center);
- * a tangent touches the circle at `a`, and its b end is the way the circle
- * turns counterclockwise. Each end can stop at its point or run on past it
- * (`runA`, `runB`), finishing in a cap. A run-on end that would cross the
- * circle goes all the way through it.
+ * A line. A join runs from place `a` to place `b`: the center, a point,
+ * where a tangent from a point touches the circle ("l3:t"), or the middle of
+ * another line ("l2:mid"). A tangent touches
+ * the circle at point `a`, and its b end is the way the circle turns
+ * counterclockwise. A tangent from a point (`from`) runs from point `a`,
+ * outside the circle, to where it touches the circle on its `side`. Each end
+ * can stop at its place or run on past it (`runA`, `runB`), finishing in a
+ * cap. A run-on end that would cross the circle goes all the way through it.
  */
 export type Line = {
   id: string
-  kind: 'join' | 'tangent'
+  kind: 'join' | 'tangent' | 'from'
   a: string
   b: string
+  side: Side
   runA: boolean
   runB: boolean
   capA: Cap
@@ -100,19 +112,25 @@ export type Settings = {
 
 export const LINE_DEFAULTS = {
   runA: false, runB: false, capA: 'none' as Cap, capB: 'none' as Cap, style: 'solid' as LineStyle,
-  label: 'none' as AngleLabel, text: '', ticks: 0, arrows: 0, flip: false,
+  label: 'none' as AngleLabel, text: '', ticks: 0, arrows: 0, flip: false, side: 'left' as Side,
 }
 export const newJoin = (id: string, a: string, b: string): Line => ({ id, kind: 'join', a, b, ...LINE_DEFAULTS })
 /** A tangent runs on both ways from where it touches, unless an end is cut back. */
 const TANGENT_RUNS = { runA: true, runB: true }
 export const newTangent = (id: string, at: string): Line => ({ id, kind: 'tangent', a: at, b: '', ...LINE_DEFAULTS, ...TANGENT_RUNS })
+export const newTangentFrom = (id: string, from: string, side: Side): Line => ({ id, kind: 'from', a: from, b: '', ...LINE_DEFAULTS, side })
+/** Where a tangent from a point touches the circle: a place that can be named and joined. */
+export const touchKey = (lineId: string) => `${lineId}:t`
+/** The middle of a line between two places: a place that can be named and joined, such as where a line from the center meets a chord square to it. */
+export const midKey = (lineId: string) => `${lineId}:mid`
+export const isMid = (key: string) => key.endsWith(':mid')
 
 // A central angle and an inscribed angle on the same arc, labeled, so the figure says what it is at a glance.
 export const DEFAULT_SETTINGS: Settings = {
   points: [
-    { id: 'p1', name: 'A', dir: '210' },
-    { id: 'p2', name: 'B', dir: '330' },
-    { id: 'p3', name: 'C', dir: '100' },
+    { id: 'p1', name: 'A', dir: '210', dist: '1' },
+    { id: 'p2', name: 'B', dir: '330', dist: '1' },
+    { id: 'p3', name: 'C', dir: '100', dist: '1' },
   ],
   lines: [newJoin('l1', CENTER, 'p1'), newJoin('l2', CENTER, 'p2'), newJoin('l3', 'p3', 'p1'), newJoin('l4', 'p3', 'p2')],
   angles: {
@@ -153,12 +171,12 @@ function withIds<T extends { id: string }>(list: T[], prefix: 'p' | 'l'): T[] {
 /** The point and line ids a part's key is made from (but the center's, which is always there). */
 export const idsIn = (key: string): string[] => key.match(/[pl]\d+/g) ?? []
 
-const NODE = String.raw`(o|p\d+|l\d+(\.l\d+)+|l\d+:[abm]\d+)`
+const NODE = String.raw`(o|p\d+|l\d+(\.l\d+)+|l\d+:([abm]\d+|t|mid))`
 const RAY = String.raw`l\d+[+-]`
 const ANGLE_KEY = new RegExp(`^${NODE}@${RAY}~${RAY}$`)
 const ARC_KEY = new RegExp(`^${NODE}~${NODE}$`)
 const FACE_KEY = new RegExp(`^(c|l\\d+|${NODE}~${NODE})(\\+(l\\d+|${NODE}~${NODE}))*$`)
-const MARK_KEY = /^(l\d+(\.l\d+)+|l\d+:[abm]\d+)$/
+const MARK_KEY = /^(l\d+(\.l\d+)+|l\d+:([abm]\d+|t|mid))$/
 
 /** A point's direction in degrees, from 0 up to 360, or what to fix about it. */
 export function readDir(typed: string): number | string {
@@ -166,6 +184,18 @@ export function readDir(typed: string): number | string {
   if (v === null) return 'Type a direction in degrees, like 40.'
   return ((v % 360) + 360) % 360
 }
+
+export const MIN_DIST = 0.1
+export const MAX_DIST = 5
+/** A point's distance from the center in radii, or what to fix about it. */
+export function readDist(typed: string): number | string {
+  const v = parseNumber(typed)
+  if (v === null) return 'Type a distance from the center in radii, like 2.'
+  if (v < MIN_DIST || v > MAX_DIST) return `Keep the distance between ${MIN_DIST} and ${MAX_DIST} radii.`
+  return v
+}
+/** Whether a point is on the circle, by its distance as typed. */
+export const onCircle = (p: Pick<Point, 'dist'>) => readDist(p.dist) === 1
 
 /** Tidy raw values (from a form, a link or a stored preset) into usable settings. */
 export function cleanSettings(s: RawSettings): Settings {
@@ -175,17 +205,18 @@ export function cleanSettings(s: RawSettings): Settings {
       id: String(p?.id ?? ''),
       name: cleanName(p?.name),
       dir: String(p?.dir ?? '').slice(0, 20),
+      dist: String(p?.dist ?? '1').slice(0, 20),
     })),
     'p',
   )
   const pointIds = new Set([CENTER, ...points.map((p) => p.id)])
-  const onCircle = new Set(points.map((p) => p.id))
-  const lines = withIds(
+  const KINDS = ['join', 'tangent', 'from'] as const
+  const raw = withIds(
     (Array.isArray(s.lines) ? s.lines : d.lines).slice(0, MAX_LINES).map((l: any): Line => ({
       id: String(l?.id ?? ''),
-      kind: l?.kind === 'tangent' ? 'tangent' : 'join',
+      kind: oneOf(KINDS, l?.kind, 'join'),
       a: String(l?.a ?? ''),
-      b: l?.kind === 'tangent' ? '' : String(l?.b ?? ''),
+      b: l?.kind === 'join' || !l?.kind ? String(l?.b ?? '') : '',
       runA: bool(l?.runA, LINE_DEFAULTS.runA),
       runB: bool(l?.runB, LINE_DEFAULTS.runB),
       capA: oneOf(CAP_LIST, l?.capA, 'none'),
@@ -196,9 +227,20 @@ export function cleanSettings(s: RawSettings): Settings {
       ticks: oneOf(COUNTS, num(l?.ticks, 0), 0),
       arrows: oneOf(COUNTS, num(l?.arrows, 0), 0),
       flip: bool(l?.flip, false),
+      side: oneOf(SIDES, l?.side, 'left'),
     })),
     'l',
-  ).filter((l) => (l.kind === 'tangent' ? onCircle.has(l.a) && (l.runA || l.runB) : pointIds.has(l.a) && pointIds.has(l.b) && l.a !== l.b))
+  )
+  // A tangent needs its point, and a join its two places, a tangent's touch point needing its tangent and a
+  // midpoint its line, joining two places that aren't midpoints themselves.
+  const touches = new Set(raw.filter((l) => l.kind === 'from' && pointIds.has(l.a) && l.a !== CENTER).map((l) => touchKey(l.id)))
+  const mids = new Set(raw.filter((l) => l.kind === 'join' && !isMid(l.a) && !isMid(l.b)).map((l) => midKey(l.id)))
+  const place = (key: string) => pointIds.has(key) || touches.has(key) || mids.has(key)
+  const lines = raw.filter((l) =>
+    l.kind === 'tangent' ? pointIds.has(l.a) && l.a !== CENTER && (l.runA || l.runB)
+    : l.kind === 'from' ? touches.has(touchKey(l.id))
+    : place(l.a) && place(l.b) && l.a !== l.b,
+  )
   const out: Settings = {
     points,
     lines,
@@ -273,7 +315,7 @@ function splitParts(value: string): [string, Record<string, string>] {
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b)
 const SIMPLE = ['centerName', 'centerDot', 'dots', 'radius', 'unit', 'round', 'labelSize'] as const
 // A point's name and direction are always written, so a blank one isn't mistaken for the default.
-const POINT_ALWAYS = { name: null, dir: null }
+const POINT_ALWAYS = { name: null, dir: null, dist: '1' }
 
 export function settingsToQuery(s: Settings): string {
   const d = DEFAULT_SETTINGS
@@ -284,12 +326,13 @@ export function settingsToQuery(s: Settings): string {
   }
   // The points and lines only when they aren't the opening ones; then all of them, in order.
   if (!same([s.points, s.lines], [d.points, d.lines])) {
-    for (const p of s.points) params.append('pt', joinParts(p.id, { name: p.name, dir: p.dir }, POINT_ALWAYS))
+    for (const p of s.points) params.append('pt', joinParts(p.id, { name: p.name, dir: p.dir, dist: p.dist }, POINT_ALWAYS))
     for (const l of s.lines) {
-      const { id, kind, b, ...rest } = l
+      const { id, kind, b, side, ...rest } = l
       const tangent = kind === 'tangent'
-      const values = tangent ? { kind, ...rest } : { ...rest, b }
-      params.append('l', joinParts(id, values, { ...LINE_DEFAULTS, ...(tangent ? TANGENT_RUNS : {}), kind: 'join', a: null, b: null }))
+      // A join's ends, a tangent's point, or the point a tangent comes from and its side, always written.
+      const values = kind === 'join' ? { ...rest, b } : kind === 'from' ? { kind, ...rest, side } : { kind, ...rest }
+      params.append('l', joinParts(id, values, { ...LINE_DEFAULTS, ...(tangent ? TANGENT_RUNS : {}), kind: 'join', a: null, b: null, side: null }))
     }
     if (!s.lines.length) params.append('l', '')
   }
@@ -311,7 +354,7 @@ export function settingsFromParams(params: URLSearchParams): Settings {
   if (params.has('pt') || params.has('l')) {
     s.points = params.getAll('pt').map((v) => {
       const [id, values] = splitParts(v)
-      return { name: '', dir: '', ...values, id }
+      return { name: '', dir: '', dist: '1', ...values, id }
     })
     s.lines = params.getAll('l').filter(Boolean).map((v) => {
       const [id, values] = splitParts(v)
@@ -342,7 +385,7 @@ export function freshNames(s: Pick<Settings, 'points' | 'centerName'>, count: nu
 
 /** A direction for a new point: the middle of the widest gap between the points already on the circle. */
 export function freeDir(points: Point[]): number {
-  const dirs = points.map((p) => readDir(p.dir)).filter((v): v is number => typeof v === 'number').sort((a, b) => a - b)
+  const dirs = points.filter(onCircle).map((p) => readDir(p.dir)).filter((v): v is number => typeof v === 'number').sort((a, b) => a - b)
   if (!dirs.length) return 90
   let best = { at: dirs[0] + 180, gap: -1 }
   dirs.forEach((v, i) => {
