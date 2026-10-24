@@ -30,6 +30,8 @@ import * as polygon from './regular-polygon/settings.js'
 import { family as trapezoid } from './trapezoid/family.js'
 import { buildTriangle } from './triangle/layout.js'
 import * as triangle from './triangle/settings.js'
+import { buildStemAndLeaf } from './stem-and-leaf/layout.js'
+import * as stem from './stem-and-leaf/settings.js'
 
 const eq = (...rows: string[]) => rows.map((r) => `eq=${encodeURIComponent(r)}`).join('&')
 
@@ -282,6 +284,24 @@ describe('bar graph', () => {
     const s = bar.settingsFromParams(params(q))
     const { layout, ...figure } = buildBarGraph(s)
     expect({ query: bar.settingsToQuery(s), figure, layout: { ...layout, px: undefined } }).toMatchSnapshot()
+  })
+})
+
+const STEM = [
+  '',
+  'data=58%2C62%2C65%2C67%2C71%2C72%2C74%2C74%2C78%2C79%2C81%2C83%2C85%2C86%2C88%2C90%2C92%2C97&titleMode=text&title=Test%20scores',
+  'layout=back&data=24%2C27%2C31%2C33%2C45&name=Class%20A&data2=21%2C30%2C34%2C41%2C49&name2=Class%20B&keyWords=means',
+  'data=1.4%2C2.6%2C2.65%2C3.7&unit=0.1&keyUnit=cm&headings=0&order=typed',
+  'data=31%2C33%2C36%2C38%2C41%2C47%2C52&split=2&boxes=1&boxCount=5',
+  'data=-12%2C-8%2C-1%2C0%2C4%2C15&split=5&keyMode=blank&labelSize=large',
+  'from=1&to=5&boxes=1&boxCount=8&keyValue=23&keyWords=means&keyUnit=minutes&titleMode=blank',
+  'data=12%2Cx&from=abc&unit=1&keyValue=1%2C99&layout=back',
+]
+
+describe('stem-and-leaf plot', () => {
+  test.each(STEM)('%s', (q) => {
+    const s = stem.settingsFromParams(params(q))
+    expect({ query: stem.settingsToQuery(s), figure: buildStemAndLeaf(s) }).toMatchSnapshot()
   })
 })
 

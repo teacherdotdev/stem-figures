@@ -10,6 +10,7 @@ import type { LengthSettings } from '$lib/generators/length-reading/settings'
 import type { Settings as MappingSettings } from '$lib/generators/mapping-diagram/settings'
 import type { Settings as NumberLineSettings } from '$lib/generators/number-line/settings'
 import type { Settings as PolygonSettings } from '$lib/generators/regular-polygon/settings'
+import type { Settings as StemAndLeafSettings } from '$lib/generators/stem-and-leaf/settings'
 import type { Settings as TriangleSettings } from '$lib/generators/triangle/settings'
 import type { Settings as QuadrilateralSettings } from '$lib/shapes/quadrilateral/settings'
 
@@ -30,6 +31,7 @@ export interface SettingsById {
   'sphere': ShapeSettings
   'box-plot': BoxPlotSettings
   'bar-graph': BarGraphSettings
+  'stem-and-leaf': StemAndLeafSettings
   'mapping-diagram': MappingSettings
   'length-reading': LengthSettings
 }

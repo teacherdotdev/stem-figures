@@ -617,6 +617,48 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Elementary school', 'Middle school', 'High school'],
   },
 
+  'stem-and-leaf': {
+    heading: 'Stem-and-leaf plots from a data set',
+    intro: [
+      'The Stem-and-Leaf Plot Generator draws a stem-and-leaf plot from numbers you type or paste. Each value is split into a stem, written down the left, and a leaf, its last digit, written across its stem’s row, with every stem from the lowest to the highest shown and a key under the plot. Leaves line up in even columns, so the rows compare like bars.',
+      'Put two data sets back to back to compare them, with one set’s leaves running left from the stems and the other’s running right. Leave the data empty for a plot students fill in: type the first and last stems for empty rows, or put the leaves in boxes for empty boxes. Under the data you can read each set’s n, minimum, maximum, range, median, mode and quartiles.',
+    ],
+    settings: [
+      'One data set, or two back to back with a name for each',
+      'The leaf unit: the last digit typed, or 0.01, 0.1, 1, 10 or 100, with digits past it cut off, not rounded',
+      'Each stem on one row, split into two (leaves 0–4 and 5–9) or into five',
+      'The first and last stems, to start or end the plot past the data, or to draw empty rows with no data',
+      'Leaves in order or as typed, and negative values on negative stems, with −0 apart from 0',
+      'Headings, and leaves in boxes with empty boxes up to a count in each row',
+      'A key written with = or “means” and a unit, its example value, a blank line for students, or no key',
+      'A chart title, as text or a blank line for students',
+    ],
+    faqs: [
+      {
+        q: 'How do I make a stem-and-leaf plot?',
+        a: 'Type or paste the data, separated by commas or spaces. Each value’s last digit becomes its leaf and the digits before it its stem, so 34 is written 3 | 4. The leaves are put in order and the key is written for you.',
+      },
+      {
+        q: 'How do I make a back-to-back stem-and-leaf plot?',
+        a: 'Choose Back-to-back at the top of the Data card, then type the two data sets and name them, like Class A and Class B. The first set’s leaves run left from the stems and the second’s run right, and the key names both.',
+      },
+      {
+        q: 'What happens to decimals?',
+        a: 'The leaf is the last digit typed, so 2.3 is written 2 | 3 and 1.25 is written 1.2 | 5. Pick a leaf unit to change it. Digits past the leaf unit are cut off, not rounded, as textbooks do, and the values that were cut are listed under the data.',
+      },
+      {
+        q: 'What are split stems?',
+        a: 'When many values share a stem, each stem can take two rows, one for leaves 0 to 4 and one for 5 to 9, or five rows, one for each pair of digits. Choose Twice or 5 times under Rows for each stem.',
+      },
+      {
+        q: 'How do I make a blank stem-and-leaf plot for students?',
+        a: 'Leave the data empty and type the first and last stems, for stems with empty rows. Turn on Leaves in boxes and type how many boxes go in each row for empty boxes. With nothing typed at all, the stems are left blank too. Set the key to a blank line for students to write it.',
+      },
+    ],
+    imageAlt: 'A printable stem-and-leaf plot of test scores with stems from 5 to 9 and a key, made with the Stem-and-Leaf Plot Generator',
+    educationalLevel: ['Elementary school', 'Middle school', 'High school'],
+  },
+
   'mapping-diagram': {
     heading: 'Mapping diagrams for functions and relations',
     intro: [
