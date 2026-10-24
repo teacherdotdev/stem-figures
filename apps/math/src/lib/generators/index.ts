@@ -13,6 +13,7 @@ import CompositeShapePreview from '$lib/editors/composite-shape/Preview.svelte'
 import ConePreview from './cone/Preview.svelte'
 import CoordinateGridPreview from './coordinate-grid/Preview.svelte'
 import CylinderPreview from './cylinder/Preview.svelte'
+import HistogramPreview from './histogram/Preview.svelte'
 import KitePreview from './kite/Preview.svelte'
 import LengthReadingPreview from './length-reading/Preview.svelte'
 import MappingDiagramPreview from './mapping-diagram/Preview.svelte'
@@ -46,6 +47,7 @@ export const PREVIEWS: Record<string, Component> = {
   'sphere': SpherePreview,
   'box-plot': BoxPlotPreview,
   'bar-graph': BarGraphPreview,
+  'histogram': HistogramPreview,
   'mapping-diagram': MappingDiagramPreview,
   'length-reading': LengthReadingPreview,
   'composite-shape': CompositeShapePreview,

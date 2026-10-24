@@ -37,6 +37,13 @@ and `docs/adr/` for decisions.
   each row, a series in each column), drawn as upright columns or sideways
   bars, side by side or stacked, with values on the bars, ± error bars, a key,
   color or black-and-white fills. A value left empty draws no bar.
+- `/histogram` **Histogram Generator**: a data set sorted into bins (a start
+  and a width, or ones that fit the data, with values on an edge going the
+  way the teacher picks), or a frequency table of bins typed like 10–20 or
+  10 ≤ x < 20, equal or unequal. The vertical axis shows frequency, relative
+  frequency or frequency density; a frequency polygon can go over the bars or
+  alone; the horizontal axis is numbered at the bin edges or every step, with
+  a zig-zag break when it starts past 0. A frequency left empty draws no bar.
 - `/<generator>/examples/<slug>` **Example figures** (see below), and
   `/reuse`, how teachers may reuse them.
 - `/about`, `/privacy`, `/sitemap.xml`, `/robots.txt`

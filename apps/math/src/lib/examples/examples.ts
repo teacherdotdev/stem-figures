@@ -766,6 +766,139 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('histogram', [
+    {
+      slug: 'histogram-of-student-heights',
+      title: 'Histogram of student heights',
+      alt: 'A histogram titled Heights of students with six touching blue bars over bins from 150 to 180 cm, with a zig-zag break on the horizontal axis before 150',
+      caption:
+        'A histogram titled Heights of students, with six touching blue bars for the bins 150 ≤ h < 155 up to 175 ≤ h < 180. The horizontal axis is titled Height (cm) and numbered at the bin edges from 150 to 180, with a zig-zag break between the corner and 150. The vertical axis is titled Frequency and numbered from 0 to 11, and the tallest bar, 165 to 170, reaches 11.',
+      settings: {
+        source: 'table',
+        rows: [
+          { name: '150 ≤ h < 155', cells: [{ value: '2' }] },
+          { name: '155 ≤ h < 160', cells: [{ value: '5' }] },
+          { name: '160 ≤ h < 165', cells: [{ value: '9' }] },
+          { name: '165 ≤ h < 170', cells: [{ value: '11' }] },
+          { name: '170 ≤ h < 175', cells: [{ value: '7' }] },
+          { name: '175 ≤ h < 180', cells: [{ value: '4' }] },
+        ],
+        title: 'Heights of students',
+        titleMode: 'text',
+        xTitle: 'Height (cm)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'histogram-from-a-data-set-of-test-scores',
+      title: 'Histogram from a data set of test scores',
+      alt: 'A histogram of 30 test scores in bins of 10 from 40 to 100, with each bar’s frequency written above it',
+      caption:
+        'A histogram titled Test scores, drawn from a data set of 30 scores sorted into bins of 10 from 40 to 100. Each bar’s frequency is written above it: 2, 4, 6, 9, 6 and 3. The horizontal axis is titled Score, with a zig-zag break before 40, and the vertical axis is titled Number of students and numbered from 0 to 10.',
+      settings: {
+        data: '42, 48, 51, 55, 58, 59, 61, 63, 64, 66, 67, 68, 70, 71, 72, 73, 74, 75, 77, 78, 79, 81, 82, 84, 85, 87, 88, 91, 93, 96',
+        binStart: '40',
+        binWidth: '10',
+        values: true,
+        title: 'Test scores',
+        titleMode: 'text',
+        xTitle: 'Score',
+        xTitleMode: 'text',
+        yTitle: 'Number of students',
+      },
+    },
+    {
+      slug: 'frequency-density-histogram-with-unequal-class-widths',
+      title: 'Frequency density histogram with unequal class widths',
+      alt: 'A gray histogram on graph paper with five bars of different widths for times from 0 to 50 minutes, over a frequency density axis from 0 to 3',
+      caption:
+        'A GCSE-style histogram with unequal class widths: five gray bars for 0 < t ≤ 10, 10 < t ≤ 15, 15 < t ≤ 20, 20 < t ≤ 30 and 30 < t ≤ 50, so each bar’s area stands for its frequency. The vertical axis is titled Frequency density and numbered from 0 to 3 by 0.5, with each block split into fifths by minor gridlines, and the horizontal axis is titled Time (t minutes) and numbered at the bin edges 0, 10, 15, 20, 30 and 50.',
+      settings: {
+        source: 'table',
+        rows: [
+          { name: '0 < t ≤ 10', cells: [{ value: '8' }] },
+          { name: '10 < t ≤ 15', cells: [{ value: '12' }] },
+          { name: '15 < t ≤ 20', cells: [{ value: '15' }] },
+          { name: '20 < t ≤ 30', cells: [{ value: '10' }] },
+          { name: '30 < t ≤ 50', cells: [{ value: '6' }] },
+        ],
+        fill: 'gray',
+        gridlines: 'standard',
+        minor: 5,
+        xTitle: 'Time (t minutes)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'histogram-with-a-frequency-polygon',
+      title: 'Histogram with a frequency polygon',
+      alt: 'A histogram of the masses of apples with white bars from 100 to 200 g and a frequency polygon joining the middle of each bar’s top, closed down to the axis at each end',
+      caption:
+        'A histogram titled Masses of apples, with five white bars for bins of 20 g from 100 to 200 g, and a frequency polygon drawn over them through the middle of the top of each bar. The polygon is closed down to the horizontal axis half a bin past each end, at 90 and 210 g. The vertical axis is titled Frequency and numbered from 0 to 16 by 2, and the horizontal axis, titled Mass (g), has a zig-zag break before 100.',
+      settings: {
+        source: 'table',
+        rows: [
+          { name: '100–120', cells: [{ value: '4' }] },
+          { name: '120–140', cells: [{ value: '9' }] },
+          { name: '140–160', cells: [{ value: '15' }] },
+          { name: '160–180', cells: [{ value: '10' }] },
+          { name: '180–200', cells: [{ value: '2' }] },
+        ],
+        polygon: 'over',
+        fill: 'white',
+        title: 'Masses of apples',
+        titleMode: 'text',
+        xTitle: 'Mass (g)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'histogram-with-a-bar-left-for-students-to-draw',
+      title: 'Histogram with a bar left for students to draw',
+      alt: 'A histogram of distances from school with the bar for 10 to 15 km left off, on bold gridlines with minor lines',
+      caption:
+        'A histogram of how far students live from school, with bars for the bins 0–5, 5–10, 15–20 and 20–25 km and no bar for 10–15 km, so students draw it from a frequency table. The vertical axis is titled Frequency and numbered from 0 to 12, on bold gridlines split into halves, and the horizontal axis is titled Distance from school (km).',
+      settings: {
+        source: 'table',
+        rows: [
+          { name: '0–5', cells: [{ value: '3' }] },
+          { name: '5–10', cells: [{ value: '7' }] },
+          { name: '10–15', cells: [{ value: '' }] },
+          { name: '15–20', cells: [{ value: '6' }] },
+          { name: '20–25', cells: [{ value: '2' }] },
+        ],
+        yTo: '12',
+        gridlines: 'bold',
+        minor: 2,
+        xTitle: 'Distance from school (km)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'histogram-with-no-numbers-on-the-frequency-density-axis',
+      title: 'Histogram with no numbers on the frequency density axis',
+      alt: 'A histogram of masses from 20 to 70 kg with unequal bins and a frequency density axis with gridlines but no numbers',
+      caption:
+        'A histogram of masses with five white bars of unequal width for 20 < m ≤ 30, 30 < m ≤ 35, 35 < m ≤ 40, 40 < m ≤ 50 and 50 < m ≤ 70 kg. The vertical axis is titled Frequency density but has no numbers, only gridlines, with each block split into fifths by minor ones, so students work out its scale from one bar’s frequency. The horizontal axis is titled Mass (m kg), with a zig-zag break before 20.',
+      settings: {
+        source: 'table',
+        rows: [
+          { name: '20 < m ≤ 30', cells: [{ value: '15' }] },
+          { name: '30 < m ≤ 35', cells: [{ value: '20' }] },
+          { name: '35 < m ≤ 40', cells: [{ value: '30' }] },
+          { name: '40 < m ≤ 50', cells: [{ value: '25' }] },
+          { name: '50 < m ≤ 70', cells: [{ value: '10' }] },
+        ],
+        fill: 'white',
+        every: 0,
+        gridlines: 'standard',
+        minor: 5,
+        xTitle: 'Mass (m kg)',
+        xTitleMode: 'text',
+      },
+    },
+  ]),
+
   ...examplesOf('mapping-diagram', [
     {
       slug: 'mapping-diagram-of-a-function',

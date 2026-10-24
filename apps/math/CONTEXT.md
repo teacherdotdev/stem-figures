@@ -371,16 +371,32 @@ How a bar is colored in: one of the graph inks, or a black-and-white fill (gray,
 _Avoid_: Pattern, shading (that's an angle's or a region's), color (for the black-and-white ones)
 
 **Histogram**:
-A figure of touching bars over a numbered axis, one bar per bin, whose heights show how many values fall in each bin. Its generator is the Histogram Generator.
+A figure of touching bars over a numbered axis, one bar per bin, whose heights show how many values fall in each bin (with unequal bins, their areas, over a frequency density axis). Its generator is the Histogram Generator.
 _Avoid_: Bar graph (bars there are separate categories), column chart
 
 **Bin**:
-One stretch of the histogram's axis, such as 10 to 20, numbered at its edges. A value on an edge belongs to the bin that starts there. Bins come from a data set with a start and bin width, or are typed with their counts as a frequency table.
+One stretch of the histogram's axis, such as 10 to 20, numbered at its edges. A value on an edge belongs to the bin that starts there (10 ≤ x < 20), unless the teacher picks the bin that ends there (10 < x ≤ 20). Bins come from a data set with a start and bin width, or are typed with their counts as a frequency table, where a bin typed as an inequality says which end it holds. Whole-number bins like 10–19 are read as their edges, so 10–19, 20–29 leave a gap; the generator offers 9.5–19.5, 19.5–29.5 instead. On the page they're bins; class, class interval and class width are the same words in UK textbooks.
 _Avoid_: Interval, class, bucket, range (a range is an axis's From, To and Step)
 
 **Frequency**:
 How many values fall in a bin: the height of its bar, read off the histogram's vertical axis.
 _Avoid_: Count (fine in speech), tally
+
+**Frequency density**:
+A bin's frequency divided by its width, the height of its bar on a histogram with unequal bins, so each bar's area stands for its frequency. The Histogram Generator chooses it for unequal bins; a frequency axis can still be picked, with a warning.
+_Avoid_: Density (alone, fine in speech), frequency per unit
+
+**Relative frequency**:
+A bin's frequency as a share of n, the total of all the frequencies, as a decimal or a percent.
+_Avoid_: Proportion, percentage frequency
+
+**Frequency polygon**:
+A line through the middle of the top of each histogram bar, drawn over the bars or alone, and closed down to the axis half a bin past each end unless the teacher leaves it open.
+_Avoid_: Line graph (points joined across a coordinate grid), frequency curve
+
+**Axis break**:
+A zig-zag on the horizontal axis between the corner and the first bin, when the axis starts past 0, so data like heights from 150 to 190 cm don't need an empty stretch from 0.
+_Avoid_: Broken axis, squiggle, axis jump
 
 **Line plot**:
 A number line with a mark stacked above each value of a data set, as grades 3–6 use the name. No generator makes one yet.

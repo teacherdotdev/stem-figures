@@ -25,14 +25,16 @@
     placeholders?: { column?: string }
     /** called with a column's index when it's removed, for settings kept per column */
     onremovecolumn?: (j: number) => void
+    /** the most value columns the table takes, for a table with one column of values (a frequency table) */
+    maxColumns?: number
   }
   let {
     id, columns = $bindable(), rows = $bindable(), errors = $bindable(false),
-    rowName, columnName, placeholders = {}, onremovecolumn,
+    rowName, columnName, placeholders = {}, onremovecolumn, maxColumns = MAX_COLUMNS,
   }: Props = $props()
 
   let table = $state<HTMLElement>()
-  const canAddColumn = $derived(columns.length < MAX_COLUMNS)
+  const canAddColumn = $derived(columns.length < maxColumns)
   const canAddRow = $derived(rows.length < MAX_ROWS)
 
   // Each box's id: the heading of column j, or row i's name, value j or ± j
@@ -92,8 +94,8 @@
     const pasted = parsePasted(e.clipboardData?.getData('text/plain') ?? '')
     if (!pasted || !pasted.rows.length) return
     e.preventDefault()
-    const n = pasted.columns?.length ?? Math.max(1, ...pasted.rows.map((r) => r.cells.length))
-    columns = pasted.columns ?? Array.from({ length: n }, (_, j) => columns[j] ?? '')
+    const n = Math.min(maxColumns, pasted.columns?.length ?? Math.max(1, ...pasted.rows.map((r) => r.cells.length)))
+    columns = pasted.columns?.slice(0, n) ?? Array.from({ length: n }, (_, j) => columns[j] ?? '')
     rows = pasted.rows.map((r) => ({ ...r, cells: Array.from({ length: n }, (_, j) => r.cells[j] ?? blankCell()) }))
     if (rows.some((r) => r.cells.some((c) => c.error))) errors = true
   }

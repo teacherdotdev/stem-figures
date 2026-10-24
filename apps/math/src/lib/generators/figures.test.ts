@@ -12,6 +12,8 @@ import { buildPlot } from './box-plot/boxplot.js'
 import * as box from './box-plot/settings.js'
 import { buildGraph } from './coordinate-grid/graph.js'
 import * as grid from './coordinate-grid/settings.js'
+import { buildHistogram } from './histogram/layout.js'
+import * as histogram from './histogram/settings.js'
 import { buildLine } from './number-line/numberline.js'
 import * as line from './number-line/settings.js'
 import { buildDiagram } from './mapping-diagram/layout.js'
@@ -254,6 +256,18 @@ const BAR = [
   'titleMode=text&title=Votes&valueTitleMode=blank&categoryTitleMode=text&categoryTitle=Color&from=abc&step=0',
 ]
 
+const HISTOGRAM = [
+  '',
+  'data=42%2C48%2C51%2C55%2C58%2C59%2C61%2C63%2C64%2C66%2C70%2C71%2C72%2C81%2C93&binStart=40&binWidth=10&values=1',
+  'data=10%2C12%2C19%2C20%2C25%2C30&edges=right&polygon=over',
+  `source=table&${rows('150–155|2', '155–160|5', '160–165|9', '165–170|7')}`,
+  `source=table&fill=gray&minor=5&gridlines=standard&${rows('0 < t ≤ 10|8', '10 < t ≤ 15|12', '15 < t ≤ 20|15', '20 < t ≤ 30|10', '30 < t ≤ 50|6')}`,
+  `source=table&measure=frequency&polygon=alone&closePolygon=0&${rows('0–10|3', '10–15|4', '15–30|2')}`,
+  `source=table&measure=percent&xNumbers=steps&xFrom=150&xStep=5&${rows('152.5–157.5|3', '157.5–162.5|6', '162.5–167.5|')}`,
+  `source=table&every=0&labelSize=large&titleMode=text&title=Masses&xTitleMode=blank&yTitleMode=none&${rows('10–19|3', '20–29|5')}`,
+  'source=table&yTo=abc&yStep=0&xNumbers=steps&xFrom=x',
+]
+
 describe('coordinate grid', () => {
   test.each(GRID)('%s', (q) => {
     const s = grid.settingsFromParams(params(q))
@@ -282,6 +296,14 @@ describe('bar graph', () => {
     const s = bar.settingsFromParams(params(q))
     const { layout, ...figure } = buildBarGraph(s)
     expect({ query: bar.settingsToQuery(s), figure, layout: { ...layout, px: undefined } }).toMatchSnapshot()
+  })
+})
+
+describe('histogram', () => {
+  test.each(HISTOGRAM)('%s', (q) => {
+    const s = histogram.settingsFromParams(params(q))
+    const { layout, ...figure } = buildHistogram(s)
+    expect({ query: histogram.settingsToQuery(s), figure, layout: { ...layout, px: undefined } }).toMatchSnapshot()
   })
 })
 
