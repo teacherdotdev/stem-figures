@@ -268,7 +268,7 @@ export const MATH: CatalogEntry[] = [
     path: '/bar-graph',
     blurb: 'Bar graphs and column graphs from a table, with one or several bars per category.',
     description:
-      'Bar graphs and column graphs from a table you type or paste: upright or sideways bars, double bar graphs side by side or stacked, values written on the bars, and error bars.',
+      'Bar and column graphs, single, double or stacked, with error bars.',
     keywords: [
       'bar graph', 'bar graphs', 'bar chart', 'bar charts', 'column graph', 'column graphs', 'column chart',
       'vertical bar graph', 'horizontal bar graph', 'double bar graph', 'grouped bar chart', 'side-by-side bar chart',
@@ -284,7 +284,7 @@ export const MATH: CatalogEntry[] = [
     path: '/stem-and-leaf',
     blurb: 'Stem-and-leaf plots from a data set, single or back-to-back, with a key.',
     description:
-      'Stem-and-leaf plots from a data set you type or paste: single or back-to-back, with split stems, decimal or negative stems, leaves in order or as typed, leaves in boxes, a key, and empty rows or boxes for students to fill in.',
+      'Stem-and-leaf plots, single or back-to-back, with split stems and a key.',
     keywords: [
       'stem and leaf', 'stem-and-leaf plot', 'stem and leaf plot', 'stem and leaf diagram', 'stem-and-leaf display', 'stemplot', 'stem plot',
       'back-to-back stem and leaf', 'back to back', 'leaves', 'stems', 'key', 'ordered stem and leaf', 'split stems',
@@ -298,7 +298,7 @@ export const MATH: CatalogEntry[] = [
     path: '/cumulative-frequency',
     blurb: 'Cumulative frequency curves from a frequency table, with the median and quartiles read off.',
     description:
-      'Cumulative frequency graphs from a frequency table, a cumulative table or a data set: points at each upper bound joined by a smooth curve or straight lines, a cumulative frequency or percent axis, and dashed lines reading off the median, quartiles or any percentile, with their values written or left blank.',
+      'Cumulative frequency graphs with the median, quartiles and percentiles read off.',
     keywords: [
       'cumulative frequency', 'cumulative frequency graph', 'cumulative frequency curve', 'cumulative frequency diagram',
       'cumulative frequency polygon', 'ogive', 'cumulative relative frequency', 'cumulative percentage', 'running total',
@@ -314,7 +314,7 @@ export const MATH: CatalogEntry[] = [
     path: '/two-way-table',
     blurb: 'Two-way tables with totals, cells left blank for students, and relative frequencies.',
     description:
-      'Two-way tables typed or pasted, with row and column totals, any cell left blank or written as a letter, and counts or relative frequencies of the grand total, each row or each column, as decimals, percents or fractions.',
+      'Two-way tables of counts or relative frequencies, with totals.',
     keywords: [
       'two-way table', 'two way table', 'two-way tables', 'two way tables', 'two-way frequency table', 'contingency table',
       'relative frequency', 'relative frequency table', 'joint relative frequency', 'marginal relative frequency',
@@ -331,7 +331,7 @@ export const MATH: CatalogEntry[] = [
     path: '/histogram',
     blurb: 'Histograms from a data set or a frequency table, with equal or unequal bins.',
     description:
-      'Histograms from a data set or a frequency table you type or paste: touching bars over equal or unequal bins, frequency, relative frequency or frequency density, a frequency polygon, and a zig-zag break when the axis starts past 0.',
+      'Histograms with equal or unequal bins, frequency density and frequency polygons.',
     keywords: [
       'histogram', 'histograms', 'frequency histogram', 'relative frequency histogram', 'frequency density',
       'unequal class widths', 'class width', 'class interval', 'class intervals', 'grouped data', 'grouped frequency table',
@@ -346,7 +346,7 @@ export const MATH: CatalogEntry[] = [
     path: '/venn-diagram',
     blurb: 'Venn diagrams of one, two or three sets, with numbers or elements in each region and regions shaded.',
     description:
-      'Venn diagrams of one, two or three sets inside a universal set: overlapping, separate or one inside the other, with a number, the elements or a letter in each region, and any regions shaded.',
+      'Venn diagrams of one, two or three sets, with shaded regions.',
     keywords: [
       'venn diagram', 'venn diagrams', 'sets', 'set notation', 'union', 'intersection', 'complement', 'universal set',
       'ξ', 'subset', 'disjoint', 'mutually exclusive', 'a ∩ b', 'a ∪ b', 'a′', 'shading', 'shade the region',
@@ -361,7 +361,7 @@ export const MATH: CatalogEntry[] = [
     path: '/pie-chart',
     blurb: 'Pie charts from a table, with sectors labeled by name, value, percent or angle.',
     description:
-      'Pie charts from a table you type or paste, of counts, percents or degrees: sectors labeled by name, value, percent, angle or fraction, angle marks at the center, a key, color or black-and-white fills, and blank circles or charts left partly drawn.',
+      'Pie charts of counts, percents or degrees, with labeled sectors and a key.',
     keywords: [
       'pie chart', 'pie charts', 'pie graph', 'circle graph', 'circle graphs', 'sector', 'sectors', 'slice', 'slices',
       'angle', 'angles', 'degrees', '360', 'percentage', 'percent', 'proportion', 'fraction',
