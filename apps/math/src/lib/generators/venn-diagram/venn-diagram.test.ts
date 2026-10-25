@@ -27,7 +27,7 @@ describe('the page address', () => {
 
   test('regions, shading, lists and choices round-trip', () => {
     const s = cleanSettings({
-      mode: 'elements', sets: 3, nameA: 'Football', universe: 'U', universeList: '1-20', listA: '2, 4, 6',
+      mode: 'sets', sets: 3, nameA: 'Football', universe: 'U', universeList: '1-20', listA: '2, 4, 6',
       values: { ab: '5', out: '12' }, shaded: ['out', 'a'], shade: 'hatch', empty: 'line',
     })
     expect(s.shaded).toEqual(['a', 'out'])
@@ -37,9 +37,14 @@ describe('the page address', () => {
     expect(settingsFromParams(new URLSearchParams(q))).toEqual(s)
   })
 
+  test('older links’ modes open as their new names: numbers as text, elements as sets', () => {
+    expect(settingsFromParams(new URLSearchParams('mode=numbers&r_a=5')).mode).toBe('text')
+    expect(settingsFromParams(new URLSearchParams('mode=elements&listA=1-3')).mode).toBe('sets')
+  })
+
   test('unknown choices fall back to the defaults, and empty regions are dropped', () => {
     const s = cleanSettings({ mode: 'pictures', sets: 4, arrangement: 'nested', shade: 'ink', values: { a: '  ', zz: '3' }, shaded: ['q'] })
-    expect([s.mode, s.sets, s.arrangement, s.shade, s.values, s.shaded]).toEqual(['numbers', 2, 'overlap', 'blue', {}, []])
+    expect([s.mode, s.sets, s.arrangement, s.shade, s.values, s.shaded]).toEqual(['text', 2, 'overlap', 'blue', {}, []])
   })
 })
 
@@ -106,20 +111,21 @@ describe('numbers and text', () => {
     const g = venn({ values: { a: '5' }, empty: 'line' })
     expect(g.items).toHaveLength(1)
     expect(g.blanks).toHaveLength(3)
-    expect(venn({ mode: 'elements', empty: 'line' }).blanks).toHaveLength(0)
+    expect(venn({ mode: 'sets', empty: 'line' }).blanks).toHaveLength(0)
   })
 
-  test('a word or letter that isn’t a number is a problem in numbers mode, but fine as text', () => {
-    expect(readVenn(cleanSettings({ values: { ab: 'x' } })).problems.values.ab).toContain('isn’t a number')
-    expect(readVenn(cleanSettings({ values: { ab: '-2' } })).problems.values.ab).toContain('less than 0')
-    expect(readVenn(cleanSettings({ mode: 'text', values: { ab: 'x' } })).problems.values).toEqual({})
+  test('text takes numbers, letters and words alike', () => {
+    // Text takes numbers, letters and words alike; a region holding one number counts toward the readout.
+    const read = readVenn(cleanSettings({ values: { a: '12', ab: 'x', b: 'red flesh, 3' } }))
+    expect(read.problems).toEqual({ elements: null })
+    expect([read.counts.a, read.counts.ab, read.counts.b]).toEqual([12, null, null])
   })
 
   test('the readout adds up the regions, leaving out sums with a region unknown', () => {
     const lines = (s: RawSettings) => readVenn(cleanSettings(s)).readout.counts.map((l) => `${l.label} = ${l.value}`)
     expect(lines({ values: { a: '12', ab: '5', b: '8', out: '3' } })).toEqual(['n(U) = 28', 'n(A) = 17', 'n(B) = 13', 'n(A ∩ B) = 5', 'n(A ∪ B) = 25'])
     expect(lines({ values: { a: '12', ab: '5' } })).toEqual(['n(A) = 17', 'n(A ∩ B) = 5'])
-    expect(lines({ mode: 'text', values: { a: '12', ab: '5', b: '8', out: '3' } })).toEqual([])
+    expect(lines({ values: { a: 'x', ab: '5', b: '8', out: '3' } })).toEqual(['n(B) = 13', 'n(A ∩ B) = 5'])
     const three = lines({ sets: 3, nameA: 'Cats', universe: 'U', values: { a: '1', b: '2', ab: '3', c: '4', ac: '5', bc: '6', abc: '7', out: '8' } })
     expect(three).toContain('n(U) = 36')
     expect(three).toContain('n(Cats ∩ B ∩ C) = 7')
@@ -139,22 +145,22 @@ describe('elements', () => {
   })
 
   test('elements land in the regions of the sets they’re in', () => {
-    const r = sortElements(cleanSettings({ mode: 'elements', universeList: '1-12', listA: '2, 4, 6, 8, 10, 12', listB: '3 6 9 12' })).regions
+    const r = sortElements(cleanSettings({ mode: 'sets', universeList: '1-12', listA: '2, 4, 6, 8, 10, 12', listB: '3 6 9 12' })).regions
     expect(r).toEqual({ out: ['1', '5', '7', '11'], a: ['2', '4', '8', '10'], b: ['3', '9'], ab: ['6', '12'] })
   })
 
   test('a repeated element is another copy, so prime factors sort as they should', () => {
-    const r = sortElements(cleanSettings({ mode: 'elements', listA: '2, 2, 3, 3', listB: '2, 2, 3, 5' })).regions
+    const r = sortElements(cleanSettings({ mode: 'sets', listA: '2, 2, 3, 3', listB: '2, 2, 3, 5' })).regions
     expect(r).toEqual({ ab: ['2', '2', '3'], a: ['3'], b: ['5'] })
   })
 
   test('words match whatever their case, and three sets sort too', () => {
-    const r = sortElements(cleanSettings({ mode: 'elements', sets: 3, listA: 'Ann, Ben, Cal', listB: 'cal, Dee', listC: 'Ben, CAL' })).regions
+    const r = sortElements(cleanSettings({ mode: 'sets', sets: 3, listA: 'Ann, Ben, Cal', listB: 'cal, Dee', listC: 'Ben, CAL' })).regions
     expect(r).toEqual({ ac: ['Ben'], abc: ['Cal'], b: ['Dee'], a: ['Ann'] })
   })
 
   test('an element missing from the universal set, or in two separate sets, is a problem', () => {
-    const problem = (s: RawSettings) => sortElements(cleanSettings({ mode: 'elements', ...s })).problem
+    const problem = (s: RawSettings) => sortElements(cleanSettings({ mode: 'sets', ...s })).problem
     expect(problem({ universeList: '1-10', listA: '2, 12' })).toBe('12 is in A but not in U. Add it to U, or take it out of A.')
     expect(problem({ universeList: '2, 3', listA: '2, 2' })).toBe('2 is in A twice but in U once.')
     expect(problem({ arrangement: 'separate', listA: '1, 2', listB: '2, 3' })).toContain('2 is in both A and B')
@@ -163,7 +169,7 @@ describe('elements', () => {
   })
 
   test('the readout counts each region and lists its members', () => {
-    const read = readVenn(cleanSettings({ mode: 'elements', universeList: '1-6', listA: '2, 4, 6', listB: '3, 6' }))
+    const read = readVenn(cleanSettings({ mode: 'sets', universeList: '1-6', listA: '2, 4, 6', listB: '3, 6' }))
     expect(read.readout.counts.map((l) => `${l.label} = ${l.value}`)).toEqual(['n(U) = 6', 'n(A) = 3', 'n(B) = 2', 'n(A ∩ B) = 1', 'n(A ∪ B) = 4'])
     expect(read.readout.members).toEqual([
       { label: 'A only', value: '2, 4' },
@@ -177,7 +183,7 @@ describe('elements', () => {
     test(`${name}: long lists grow the diagram, and every element stays inside its region, clear of the rest`, () => {
       const lists = { universeList: '1-60', listA: '1-30', listB: '20-45', listC: '10-25, 40-50' }
       const subset = raw.arrangement === 'subset' ? { listB: '5-20' } : raw.arrangement === 'separate' ? { listB: '31-45' } : {}
-      const s = { ...raw, ...lists, ...subset, mode: 'elements' }
+      const s = { ...raw, ...lists, ...subset, mode: 'sets' }
       const g = venn(s)
       expect(g.problem).toBeNull()
       expect(readVenn(cleanSettings(s)).problems.elements).toBeNull()
@@ -188,8 +194,8 @@ describe('elements', () => {
   }
 
   test('a crowded outside region wraps round the circles, every element still inside it', () => {
-    expectInside({ mode: 'elements', universeList: '1-60', listA: '1-5' })
-    expectInside({ mode: 'elements', sets: 3, universeList: '1-70', listA: '1-4', listB: '5, 6', listC: '7' })
+    expectInside({ mode: 'sets', universeList: '1-60', listA: '1-5' })
+    expectInside({ mode: 'sets', sets: 3, universeList: '1-70', listA: '1-4', listB: '5, 6', listC: '7' })
   })
 
   /** Every element's box lies wholly in its own region and in the frame, clear of the other elements and the names. */
@@ -216,8 +222,8 @@ describe('elements', () => {
   }
 
   test('a list too long for a region grows the whole diagram rather than shrinking the text', () => {
-    const base = venn({ mode: 'elements' })
-    const g = venn({ mode: 'elements', listA: '1-30', listB: '20-45' })
+    const base = venn({ mode: 'sets' })
+    const g = venn({ mode: 'sets', listA: '1-30', listB: '20-45' })
     expect(g.circles[0].r).toBeGreaterThan(base.circles[0].r)
     expect(g.width).toBeGreaterThan(base.width)
     expect(g.fs).toBe(base.fs)
@@ -243,7 +249,6 @@ describe('examples', () => {
     expect(settingsFromParams(new URLSearchParams(settingsToQuery(s)))).toEqual(s)
     const read = readVenn(s)
     expect(read.problems.elements).toBeNull()
-    expect(read.problems.values).toEqual({})
     expect(buildVenn(s).problem).toBeNull()
   })
 })

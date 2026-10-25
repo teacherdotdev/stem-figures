@@ -1,9 +1,9 @@
 // Every choice the teacher makes, with its default. The page address carries
 // any non-default values so a Venn diagram can be bookmarked or shared.
 //
-// What's in each region is kept as typed: a number or some math per region
-// (r_ab=5), or, in elements mode, each set's members as a list ("1-20",
-// "2, 4, 6"). readVenn() works out what they mean: which regions the diagram
+// What's in each region is kept as typed: text per region, split at its
+// commas (r_ab=5, r_a=red flesh, mushy), or, in sets mode, each set's members
+// as a list ("1-20", "2, 4, 6") to be sorted into the regions. readVenn() works out what they mean: which regions the diagram
 // has, what goes in each, the counts for the readout, and anything the
 // teacher should fix.
 
@@ -14,15 +14,17 @@ import { readValue } from '$lib/stats/table'
 
 export { fmt }
 
-/** What's written in each region: one number, the elements themselves, or a letter or expression. */
-export const MODES = { numbers: 'Numbers', elements: 'Elements', text: 'Text' } as const
+/** What's typed: each region's text (numbers, letters, words), or each set's members, sorted into the regions. */
+export const MODES = { text: 'Text', sets: 'Sets' } as const
+/** The modes of older links: numbers are text now, and elements are sets. */
+const OLD_MODES: Record<string, Mode> = { numbers: 'text', elements: 'sets' }
 export const SET_COUNTS = [1, 2, 3] as const
 /** How two sets are drawn: overlapping, apart (mutually exclusive), or B inside A (a subset). */
 export const ARRANGEMENTS = { overlap: 'Overlapping', separate: 'Separate', subset: 'B inside A' } as const
 /** The universal set's name in the top left corner. */
 export const UNIVERSES = { U: 'U', xi: 'ξ', S: 'S', epsilon: 'ε', word: 'Word', none: 'None' } as const
 export const UNIVERSE_SYMBOLS: Partial<Record<Universe, string>> = { xi: 'ξ', U: 'U', S: 'S', epsilon: 'ε' }
-/** What an empty region shows, in numbers and text modes. */
+/** What an empty region shows, in text mode. */
 export const EMPTIES = { none: 'Nothing', line: 'A blank line' } as const
 /** The fills a shaded region can take: the tints, gray and the patterns (not white or black). */
 export const SHADES = ['blue', 'red', 'green', 'orange', 'purple', 'gray', 'hatch', 'backhatch', 'cross', 'dots'] as const satisfies readonly Fill[]
@@ -53,7 +55,7 @@ export type Settings = {
   universeWord: string
   /** what's typed in each region, in numbers and text modes; regions left empty aren't kept */
   values: Partial<Record<RegionKey, string>>
-  /** in elements mode: the universal set's members, and each set's, as typed */
+  /** in sets mode: the universal set's members, and each set's, as typed */
   universeList: string
   listA: string
   listB: string
@@ -68,7 +70,7 @@ export type Settings = {
 export type RawSettings = Record<string, any>
 
 export const DEFAULT_SETTINGS: Settings = {
-  mode: 'numbers',
+  mode: 'text',
   sets: 2,
   arrangement: 'overlap',
   nameA: 'A',
@@ -105,7 +107,7 @@ export function cleanSettings(s: RawSettings): Settings {
   }
   const shaded = Array.isArray(s.shaded) ? s.shaded : []
   return {
-    mode: oneOf(MODES, s.mode, d.mode),
+    mode: oneOf(MODES, OLD_MODES[s.mode] ?? s.mode, d.mode),
     sets: (SET_COUNTS as readonly number[]).includes(Number(s.sets)) ? (Number(s.sets) as SetCount) : d.sets,
     arrangement: oneOf(ARRANGEMENTS, s.arrangement, d.arrangement),
     nameA: text(s.nameA, d.nameA),
@@ -312,10 +314,10 @@ export function readVenn(s: Settings) {
   const keys = regionsOf(s.sets, s.arrangement)
   const contents: Partial<Record<RegionKey, string[]>> = {}
   const counts: Partial<Record<RegionKey, number | null>> = {}
-  const problems: { values: Partial<Record<RegionKey, string>>; elements: string | null } = { values: {}, elements: null }
+  const problems: { elements: string | null } = { elements: null }
   let members: Partial<Record<RegionKey, string[]>> | null = null
 
-  if (s.mode === 'elements') {
+  if (s.mode === 'sets') {
     const sorted = sortElements(s)
     problems.elements = sorted.problem
     members = sorted.regions
@@ -326,21 +328,19 @@ export function readVenn(s: Settings) {
   } else {
     for (const k of keys) {
       const typed = s.values[k]?.trim() ?? ''
-      contents[k] = s.mode === 'text' ? splitAtCommas(typed) : typed ? [typed] : []
-      if (s.mode !== 'numbers') continue
-      const v = readValue(typed)
-      if (v.bad) problems.values[k] = `“${v.bad}” isn’t a number. Choose Text at the top to write letters or fractions.`
-      else if (v.value !== null && v.value < 0) problems.values[k] = 'A region can’t hold less than 0.'
-      counts[k] = v.value !== null && v.value >= 0 ? v.value : null
+      contents[k] = splitAtCommas(typed)
+      // A region holding one number counts toward n(A) and the rest; anything else is unknown.
+      const v = contents[k]!.length === 1 ? readValue(contents[k]![0]) : null
+      counts[k] = v && v.value !== null && v.value >= 0 ? v.value : null
     }
   }
-  return { keys, contents, counts: s.mode === 'text' ? null : counts, members, problems, readout: readout(s, keys, s.mode === 'text' ? null : counts, members) }
+  return { keys, contents, counts, members, problems, readout: readout(s, keys, counts, members) }
 }
 
 /**
  * The readout's numbers: n(ξ), each set, where they meet, and their unions,
  * each the sum of its regions (left out while any of those is unknown); then,
- * in elements mode, each region's members.
+ * in sets mode, each region's members.
  */
 function readout(s: Settings, keys: RegionKey[], counts: Partial<Record<RegionKey, number | null>> | null, members: Partial<Record<RegionKey, string[]>> | null) {
   if (!counts) return { counts: [] as ReadoutLine[], members: [] as ReadoutLine[] }

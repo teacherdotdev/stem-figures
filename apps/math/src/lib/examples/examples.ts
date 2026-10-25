@@ -1306,7 +1306,7 @@ export const EXAMPLES: Example[] = [
       caption:
         'The numbers 1 to 20 sorted into two overlapping circles named Even and Multiples of 3, inside a box marked U. 2, 4, 8, 10, 14, 16 and 20 are in Even only; 6, 12 and 18 are in both; 3, 9 and 15 are in Multiples of 3 only; and 1, 5, 7, 11, 13, 17 and 19 are outside both circles, in the lower right corner.',
       settings: {
-        mode: 'elements',
+        mode: 'sets',
         nameA: 'Even',
         nameB: 'Multiples of 3',
         universeList: '1-20',
@@ -1320,7 +1320,7 @@ export const EXAMPLES: Example[] = [
       alt: 'A Venn diagram of the prime factors of 36 and 60, with 2, 2 and 3 in the overlap, 3 in the 36 circle only and 5 in the 60 circle only',
       caption:
         'Two overlapping circles named 36 and 60, in a box with no universal set symbol, holding the prime factors of each number: 36 = 2 × 2 × 3 × 3 and 60 = 2 × 2 × 3 × 5. The factors they share, 2, 2 and 3, are in the overlap, the other 3 is in 36 only, and 5 is in 60 only. Students find the HCF and LCM of 36 and 60 from it.',
-      settings: { mode: 'elements', nameA: '36', nameB: '60', universe: 'none', listA: '2, 2, 3, 3', listB: '2, 2, 3, 5' },
+      settings: { mode: 'sets', nameA: '36', nameB: '60', universe: 'none', listA: '2, 2, 3, 3', listB: '2, 2, 3, 5' },
     },
     {
       slug: 'venn-diagram-shade-a-intersect-b-complement',

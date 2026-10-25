@@ -72,7 +72,7 @@ export function buildVenn(s: Settings) {
       const box = lay(t, fs)
       return box ? [{ box, w: box.w, asc: box.asc, desc: box.desc }] : []
     })
-    if (!list.length && s.mode !== 'elements' && s.empty === 'line') list.push(blankItem)
+    if (!list.length && s.mode === 'text' && s.empty === 'line') list.push(blankItem)
     items.set(k, list)
   }
   const names = [s.nameA, s.nameB, s.nameC].slice(0, s.sets).map((t) => (t.trim() ? lay(t.trim(), nameFs) : null))

@@ -345,7 +345,7 @@ function histogramAnswer(s: SettingsById['histogram']): ExampleDetails['answer']
 
 function vennAnswer(s: SettingsById['venn-diagram']): ExampleDetails['answer'] {
   const read = venn.readVenn(s)
-  const problem = read.problems.elements ?? Object.values(read.problems.values)[0]
+  const problem = read.problems.elements
   if (problem) throw new Error(`The Venn diagram example can’t be drawn as written: ${problem}`)
   // The counts the diagram gives, and in elements mode each region's members.
   const lines = [...read.readout.counts, ...read.readout.members].map((l) => `${l.label}${read.readout.members.includes(l) ? ':' : ' ='} ${l.value}`)

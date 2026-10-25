@@ -65188,7 +65188,6 @@ exports[`venn diagram >  1`] = `
       "members": null,
       "problems": {
         "elements": null,
-        "values": {},
       },
       "readout": {
         "counts": [],
@@ -65402,7 +65401,6 @@ exports[`venn diagram > arrangement=separate&universe=U&r_a=6&r_b=4&empty=line 1
       "members": null,
       "problems": {
         "elements": null,
-        "values": {},
       },
       "readout": {
         "counts": [
@@ -65628,7 +65626,11 @@ exports[`venn diagram > arrangement=subset&nameA=Mammals&nameB=Dogs&mode=text&r_
         ],
         "out": [],
       },
-      "counts": null,
+      "counts": {
+        "a": null,
+        "ab": null,
+        "out": null,
+      },
       "keys": [
         "a",
         "ab",
@@ -65637,7 +65639,6 @@ exports[`venn diagram > arrangement=subset&nameA=Mammals&nameB=Dogs&mode=text&r_
       "members": null,
       "problems": {
         "elements": null,
-        "values": {},
       },
       "readout": {
         "counts": [],
@@ -65698,7 +65699,7 @@ exports[`venn diagram > arrangement=subset&nameA=Mammals&nameB=Dogs&mode=text&r_
     },
     "width": 335.6101730552664,
   },
-  "query": "mode=text&arrangement=subset&nameA=Mammals&nameB=Dogs&universe=word&universeWord=Animals&r_a=x&r_ab=2x%2B1",
+  "query": "arrangement=subset&nameA=Mammals&nameB=Dogs&universe=word&universeWord=Animals&r_a=x&r_ab=2x%2B1",
 }
 `;
 
@@ -66516,7 +66517,6 @@ exports[`venn diagram > mode=elements&sets=3&universeList=1-30&listA=1-15&listB=
       },
       "problems": {
         "elements": null,
-        "values": {},
       },
       "readout": {
         "counts": [
@@ -66709,7 +66709,7 @@ exports[`venn diagram > mode=elements&sets=3&universeList=1-30&listA=1-15&listB=
     },
     "width": 492.3815774924507,
   },
-  "query": "mode=elements&sets=3&universeList=1-30&listA=1-15&listB=10-25&listC=5-12%2C20-26",
+  "query": "mode=sets&sets=3&universeList=1-30&listA=1-15&listB=10-25&listC=5-12%2C20-26",
 }
 `;
 
@@ -66925,7 +66925,6 @@ exports[`venn diagram > mode=elements&universe=none&nameA=36&nameB=60&listA=2%2C
       },
       "problems": {
         "elements": null,
-        "values": {},
       },
       "readout": {
         "counts": [
@@ -67015,7 +67014,7 @@ exports[`venn diagram > mode=elements&universe=none&nameA=36&nameB=60&listA=2%2C
     "universe": null,
     "width": 415,
   },
-  "query": "mode=elements&nameA=36&nameB=60&universe=none&listA=2%2C2%2C3%2C3&listB=2%2C2%2C3%2C5",
+  "query": "mode=sets&nameA=36&nameB=60&universe=none&listA=2%2C2%2C3%2C3&listB=2%2C2%2C3%2C5",
 }
 `;
 
@@ -67564,7 +67563,6 @@ exports[`venn diagram > mode=elements&universeList=1-20&listA=2%2C4%2C6%2C8%2C10
       },
       "problems": {
         "elements": null,
-        "values": {},
       },
       "readout": {
         "counts": [
@@ -67673,7 +67671,7 @@ exports[`venn diagram > mode=elements&universeList=1-20&listA=2%2C4%2C6%2C8%2C10
     },
     "width": 415,
   },
-  "query": "mode=elements&universeList=1-20&listA=2%2C4%2C6%2C8%2C10%2C12%2C14%2C16%2C18%2C20&listB=3%2C6%2C9%2C12%2C15%2C18",
+  "query": "mode=sets&universeList=1-20&listA=2%2C4%2C6%2C8%2C10%2C12%2C14%2C16%2C18%2C20&listB=3%2C6%2C9%2C12%2C15%2C18",
 }
 `;
 
@@ -67857,7 +67855,6 @@ exports[`venn diagram > nameA=Football&nameB=Tennis&r_a=12&r_ab=5&r_b=8&r_out=15
       "members": null,
       "problems": {
         "elements": null,
-        "values": {},
       },
       "readout": {
         "counts": [
@@ -68058,7 +68055,6 @@ exports[`venn diagram > sets=1&labelSize=large&r_a=0.3&r_out=0.7&shade=gray&shad
       "members": null,
       "problems": {
         "elements": null,
-        "values": {},
       },
       "readout": {
         "counts": [
@@ -68427,7 +68423,6 @@ exports[`venn diagram > sets=3&r_a=9&r_b=7&r_ab=4&r_c=3&r_ac=2&r_bc=1&r_abc=2&r_
       "members": null,
       "problems": {
         "elements": null,
-        "values": {},
       },
       "readout": {
         "counts": [

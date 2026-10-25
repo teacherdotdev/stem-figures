@@ -793,7 +793,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       'Put a number in each region for counting and probability questions, a letter or expression like x or 2x + 1 for algebra, or words to compare and contrast, like red flesh, mushy, savory, one to a line. Or list the members of each set, or a range like 1-20, and every element is sorted into its region for you, prime factors included. Click any region on the figure to fill it in or shade it, and leave regions empty for students to fill in.',
     ],
     settings: [
-      'What goes in each region: a number, the elements of sets you list, or text, like a letter, an expression or words for comparing two things, with commas splitting it into lines',
+      'Text mode: whatever you type in each region, a number, a letter, an expression or words for comparing two things, with commas splitting it into lines. Sets mode: each set’s members, sorted into the regions where the sets meet',
       'One, two or three sets; two sets overlapping, separate, or one inside the other',
       'Each set’s name, as a letter or a word',
       'The universal set’s name: U, ξ, S, ε, a word or nothing',
@@ -807,11 +807,11 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'Can it sort numbers into the diagram for me?',
-        a: 'Yes. Choose Elements, type the universal set (like 1-20) and each set’s members (like 2, 4, 6, 8), and each number is written in the region of every set it belongs to. An element that’s in a set but not in the universal set is pointed out so you can fix it.',
+        a: 'Yes. Choose Sets, type the universal set (like 1-20) and each set’s members (like 2, 4, 6, 8), and each number is written in the region of every set it belongs to. An element that’s in a set but not in the universal set is pointed out so you can fix it.',
       },
       {
         q: 'How do I make a prime factor Venn diagram for the HCF and LCM?',
-        a: 'Choose Elements and name the sets after the two numbers. Type each number’s prime factors with repeats, like 2, 2, 3, 3 for 36 and 2, 2, 3, 5 for 60. Each repeated factor is another copy, so the factors the numbers share go in the middle.',
+        a: 'Choose Sets and name the sets after the two numbers. Type each number’s prime factors with repeats, like 2, 2, 3, 3 for 36 and 2, 2, 3, 5 for 60. Each repeated factor is another copy, so the factors the numbers share go in the middle.',
       },
       {
         q: 'Can I use it for probability?',

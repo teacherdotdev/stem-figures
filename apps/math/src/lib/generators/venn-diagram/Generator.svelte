@@ -73,7 +73,7 @@
   const labelsSummary = $derived(
     [
       universeText(clean) ? `Universal set ${universeText(clean)}` : 'No universal set name',
-      clean.mode !== 'elements' && clean.empty === 'line' && 'blank lines in empty regions',
+      clean.mode === 'text' && clean.empty === 'line' && 'blank lines in empty regions',
     ].filter(Boolean).join(' · '),
   )
   const shadingSummary = $derived(
@@ -106,17 +106,18 @@
       <div class="head-row">
         <h2 class="card-head">Sets</h2>
         <HelpTip id="venn-tip" label="How to fill in the diagram">
-          Numbers puts one number in each region, such as how many people are in it. Elements sorts lists into the regions for
-          you: type the universal set and each set's members with commas between, or a range like 1-20. Repeat an element to
-          put it in twice, as for prime factors. Text writes words, a letter or an expression in each region, like x, 2x + 1 or 3/20; commas split it into lines, as in red flesh, mushy, savory. Leave a
-          region empty for students to fill in. Click any region on the figure to fill it in or shade it.
+          Text writes what you type in each region: a number, a letter or expression like x, 2x + 1 or 3/20, or words. Commas
+          split it into lines, as in red flesh, mushy, savory. Sets sorts lists into the regions for you: type the universal set
+          and each set's members with commas between, or a range like 1-20, and each one lands where the sets meet. Repeat an
+          element to put it in twice, as for prime factors. Leave a region empty for students to fill in. Click any region on the
+          figure to fill it in or shade it.
         </HelpTip>
       </div>
       {@render choice({ key: 'mode', name: 'In each region', options: MODES })}
       {@render choice({ key: 'sets', name: 'Sets', options: Object.fromEntries(SET_COUNTS.map((n) => [n, String(n)])) })}
       {#if clean.sets === 2}{@render choice({ key: 'arrangement', name: 'Arrangement', options: ARRANGEMENTS })}{/if}
 
-      {#if clean.mode === 'elements'}
+      {#if clean.mode === 'sets'}
         <div class="lists">
           <span class="set-name universe" class:word={[...universeText(clean)].length > 1} aria-hidden="true">{universeText(clean) || 'U'}</span>
           <input type="text" aria-label="Members of the universal set" placeholder="1-20" bind:value={s.universeList} />
@@ -143,19 +144,11 @@
           </div>
         </div>
         <div class="regions" role="group" aria-label="Regions">
-          <span class="col-head">Region</span><span class="col-head">{clean.mode === 'numbers' ? 'Number' : 'Text'}</span><span class="col-head shade-head">Shaded</span>
+          <span class="col-head">Region</span><span class="col-head">Text</span><span class="col-head shade-head">Shaded</span>
           {#each read.keys as k (k)}
             <label class="region-name" for="region-{k}">{regionName(clean, k)}</label>
-            {#if clean.mode === 'numbers'}
-              <input
-                type="text" class="value" id="region-{k}" inputmode="decimal" aria-invalid={!!read.problems.values[k]}
-                bind:value={() => value(k), (v) => setValue(k, v)}
-              />
-            {:else}
-              <input type="text" class="text" id="region-{k}" bind:value={() => value(k), (v) => setValue(k, v)} />
-            {/if}
+            <input type="text" class="text" id="region-{k}" bind:value={() => value(k), (v) => setValue(k, v)} />
             {@render shadeBox(k)}
-            {#if read.problems.values[k]}<p class="help problem wide">{read.problems.values[k]}</p>{/if}
           {/each}
         </div>
       {/if}
@@ -173,7 +166,7 @@
           <input type="text" placeholder="Students" bind:value={s.universeWord} />
         </label>
       {/if}
-      {#if clean.mode !== 'elements'}{@render choice({ key: 'empty', name: 'Empty regions', options: EMPTIES })}{/if}
+      {#if clean.mode === 'text'}{@render choice({ key: 'empty', name: 'Empty regions', options: EMPTIES })}{/if}
     </Section>
 
     <Section title="Shading" icon={PaintBucket} summary={shadingSummary}>
@@ -198,13 +191,7 @@
   {@const k = popup.key}
   <Popover at={popup.at} onclose={close} label="Settings for this region">
     <div class="pop-head"><span>{regionName(clean, k)}</span></div>
-    {#if clean.mode === 'numbers'}
-      <label class="group">
-        <span class="name">Number</span>
-        <input type="text" inputmode="decimal" aria-invalid={!!read.problems.values[k]} bind:value={() => value(k), (v) => setValue(k, v)} />
-      </label>
-      {#if read.problems.values[k]}<p class="help problem">{read.problems.values[k]}</p>{/if}
-    {:else if clean.mode === 'text'}
+    {#if clean.mode === 'text'}
       <div class="group">
         <span class="name" id="pop-text">Text</span>
         <input type="text" aria-labelledby="pop-text" bind:value={() => value(k), (v) => setValue(k, v)} />
@@ -237,7 +224,7 @@
   .names input { flex: 1; min-width: 0; }
   .set-name { font-family: 'Times New Roman', Times, serif; font-size: 1.05rem; }
 
-  /* Elements: the universal set, then each set, a name and its members. */
+  /* Sets: the universal set, then each set, a name and its members. */
   .lists { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 0.4rem; align-items: center; }
   .lists input { min-width: 0; }
   .universe { font-style: italic; font-size: 1.2rem; padding-left: 0.55rem; overflow-wrap: anywhere; }
@@ -248,8 +235,6 @@
   .regions.elements { grid-template-columns: minmax(0, 1fr) auto; }
   .col-head { font-size: 0.75rem; font-weight: 700; color: var(--muted); }
   .region-name { font-size: 0.88rem; font-weight: 600; overflow-wrap: anywhere; }
-  .regions input.value { min-width: 0; text-align: right; font-variant-numeric: tabular-nums; }
-  .regions .wide { grid-column: 1 / -1; }
   .shade-head { justify-self: center; }
   .shade { justify-self: center; width: 1.05rem; height: 1.05rem; margin: 0 0.6rem; accent-color: var(--blue); }
 
