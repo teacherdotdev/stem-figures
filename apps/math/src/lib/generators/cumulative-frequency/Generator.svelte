@@ -133,6 +133,13 @@
 {/snippet}
 
 <!-- 40% of the window for the settings: the data table needs the room. -->
+{#snippet startsAt()}
+  <label class="starts">
+    <span>First bin starts at</span>
+    <input type="text" inputmode="decimal" placeholder={graph.lowestGuess !== null ? n(graph.lowestGuess) : '0'} bind:value={s.lowest} />
+  </label>
+{/snippet}
+
 <GeneratorPage name="Cumulative Frequency Graph Generator" {filename} {gen} {svg} settingsWidth="minmax(28rem, 40%)" bind:labelSize={s.labelSize}>
   {#snippet inputs()}
     <section class="data">
@@ -140,11 +147,13 @@
         <h2 class="card-head">Data</h2>
         <HelpTip id="data-tip" label="How to fill in the data">
           {#if clean.mode === 'frequency'}
-            Type each bin (class interval) and its frequency, or paste the table from Sheets or Excel. Type bins like 10–20, 10 ≤ x &lt; 20
-            or 20 &lt; t ≤ 30, in order, each starting where the one before ends. Each point is plotted at a bin’s upper bound.
+            Type where the first bin starts, then each bin’s upper end (Up to) and its frequency, in order, or paste the table from
+            Sheets or Excel. A bin like 140 &lt; h ≤ 150 pasted from a worksheet is read as up to 150. Each point is plotted at a bin’s
+            upper end. Left empty, the first bin starts as far below its upper end as the next bin is wide.
           {:else if clean.mode === 'cumulative'}
-            Type each upper bound and the cumulative frequency up to it, or paste the table. Bounds can be typed as 20, ≤ 20 or
-            0 &lt; h ≤ 20; type the first as a bin, like 0 &lt; h ≤ 10, for the curve to start from 0.
+            Type where the first bin starts, then each upper bound (Up to) and the cumulative frequency up to it, in order, or paste
+            the table. The curve starts from 0 where the first bin starts; left empty, that’s as far below the first upper bound as
+            the next one is above it.
           {:else}
             Type or paste the numbers, separated by commas or spaces. They’re sorted into bins from the start, each as wide as
             the bin width, both fitted to the data unless you type them.
@@ -159,9 +168,11 @@
       </div>
 
       {#if clean.mode === 'frequency'}
-        <TableInput id="table" rowName="Bin" columnName="Frequency" columns={FREQUENCY} fixed bind:rows={s.rows} />
+        {@render startsAt()}
+        <TableInput id="table" rowName="Up to" columnName="Frequency" columns={FREQUENCY} fixed numberNames addRow="Add a bin" bind:rows={s.rows} />
       {:else if clean.mode === 'cumulative'}
-        <TableInput id="totals" rowName="Upper bound" columnName="Cumulative frequency" columns={CUMULATIVE} fixed bind:rows={s.totals} />
+        {@render startsAt()}
+        <TableInput id="totals" rowName="Up to" columnName="Cumulative frequency" columns={CUMULATIVE} fixed numberNames addRow="Add an upper bound" bind:rows={s.totals} />
       {:else}
         <textarea
           id="data-set" rows="3" aria-label="Data set" placeholder="152, 158, 161, 163, 170, 174" inputmode="decimal"
@@ -313,6 +324,8 @@
     font: inherit; font-size: 0.95rem; background: #fff; color: var(--ink); resize: vertical;
   }
   textarea:focus { outline: none; border-color: var(--blue); }
+  .starts { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; font-size: 0.88rem; }
+  .starts input { width: 6rem; text-align: right; }
   .bin-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
   .data .part { margin-bottom: 0; }
   .check { align-self: flex-start; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.88rem; margin: 0 0 0.75rem; cursor: pointer; }

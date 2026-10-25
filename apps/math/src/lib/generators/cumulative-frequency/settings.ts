@@ -15,9 +15,9 @@ import { MAX_BLOCKS, EVERY, MINOR, TITLE_MODES, type TitleMode } from '$shared/g
 import { GRIDLINES, type Gridlines } from '$shared/graph/grid'
 import { fmt, niceText, numberingOf, type Numbering } from '$shared/graph/numbering'
 import { parseNumber } from '$lib/shared/math.js'
-import { binData, checkBins, parseBin, type Bin, type Edge } from '$lib/stats/bins'
+import { binData, parseBin, type Bin, type Edge } from '$lib/stats/bins'
 import { niceRange, parseData } from '$lib/stats/data'
-import { cleanRows, filledRows, readTable, rowFromParam, rowToParam, type TableRow } from '$lib/stats/table'
+import { cleanRows, filledRows, readTable, readValue, rowFromParam, rowToParam, type TableRow } from '$lib/stats/table'
 
 export { EVERY, MINOR, fmt }
 
@@ -53,10 +53,12 @@ export type Quartile = (typeof QUARTILES)[number]
 
 export type Settings = {
   mode: Mode
-  /** the frequency table: each row a bin as typed, and its frequency */
+  /** the frequency table: each row the number its bin goes up to, and its frequency */
   rows: TableRow[]
-  /** the cumulative table: each row an upper bound as typed, and its running total */
+  /** the cumulative table: each row an upper bound, and its running total */
   totals: TableRow[]
+  /** where the first bin starts, for either table ("" for as wide as the next bin) */
+  lowest: string
   /** the data set, as typed or pasted */
   data: string
   binStart: string
@@ -100,6 +102,7 @@ export const DEFAULT_SETTINGS: Settings = {
   mode: 'frequency', // as GCSE questions give it
   rows: [],
   totals: [],
+  lowest: '',
   data: '',
   binStart: '', // blank: worked out from the data
   binWidth: '',
@@ -158,6 +161,7 @@ export function cleanSettings(s: RawSettings): Settings {
     mode: oneOf(MODES, s.mode, d.mode),
     rows: cleanRows(s.rows, 1),
     totals: cleanRows(s.totals, 1),
+    lowest: text(s.lowest, d.lowest),
     data: text(s.data, d.data),
     binStart: text(s.binStart, d.binStart),
     binWidth: text(s.binWidth, d.binWidth),
@@ -240,61 +244,62 @@ export function parseBound(typed: string): { lo: number | null; hi: number } | {
 export type Total = { x: number; cf: number }
 
 /** What the table or data set gives: the running totals, n, and where the curve can start. */
-type Totals = { totals: Total[]; lowest: number | null; bins: Bin[]; problem: string | null }
+type Totals = { totals: Total[]; lowest: number | null; guess?: number | null; bins: Bin[]; problem: string | null }
 
-function fromFrequencies(s: Settings): Totals {
-  const table = readTable(s.rows)
+/**
+ * Where the first bin starts: as typed in Starts at, or else the lower end of
+ * a first bin pasted whole (0 < h ≤ 10), or else as wide as the bin after it
+ * (`guess`, which Starts at shows while it's empty).
+ */
+function lowestOf(s: Settings, totals: Total[], pastedLo: number | null): { lowest: number | null; guess: number | null; problem: string | null } {
+  const guess = pastedLo ?? (totals.length > 1 ? Number((2 * totals[0].x - totals[1].x).toPrecision(12)) : null)
+  if (!s.lowest.trim()) return { lowest: guess, guess, problem: null }
+  const v = readValue(s.lowest).value
+  if (v === null) return { lowest: guess, guess, problem: `Type where the first bin starts as a number, like 0 or 140.` }
+  if (totals.length && v >= totals[0].x) return { lowest: guess, guess, problem: `The first bin has to start before ${fmt(totals[0].x)}, where it ends.` }
+  return { lowest: v, guess, problem: null }
+}
+
+/** The bins between the lowest bound and each upper bound in turn. */
+const binsOf = (totals: Total[], lowest: number | null): Bin[] =>
+  totals.flatMap((t, i) => (i || lowest !== null ? [{ lo: i ? totals[i - 1].x : lowest!, hi: t.x, holds: null }] : []))
+
+/**
+ * A table of "up to" numbers, each with its frequency (or, with `running`,
+ * its running total), read as the points to plot. A whole bin pasted from a
+ * worksheet (140 < h ≤ 150, 10–20) is read as its upper bound.
+ */
+function fromTable(s: Settings, rows: TableRow[], running: boolean): Totals {
+  const table = readTable(rows)
   let problem = table.problem
-  const filled = filledRows(s.rows)
-  const bins: Bin[] = []
+  const filled = filledRows(rows)
+  const what = running ? 'cumulative frequency' : 'frequency'
   const totals: Total[] = []
+  let pastedLo: number | null = null
   let cf = 0
   table.rows.forEach((r, i) => {
     const typed = filled[i].name.trim()
-    const f = r.values[0]
+    const v = r.values[0]
     if (!typed) {
-      problem ??= f !== null ? `Type the bin for the frequency ${fmt(f)}, like 10–20.` : null
-      return
-    }
-    const bin = parseBin(typed)
-    if ('problem' in bin) return void (problem ??= bin.problem)
-    if (f === null) return void (problem ??= r.values[0] === null && !filled[i].cells[0].value.trim() ? `Type a frequency for ${typed}.` : null)
-    if (f < 0) return void (problem ??= `A frequency can’t be below 0, so make ${filled[i].cells[0].value.trim()} positive.`)
-    bins.push(bin)
-    cf += f
-    totals.push({ x: bin.hi, cf })
-  })
-  problem ??= checkBins(bins)
-  return { totals, lowest: bins[0]?.lo ?? null, bins, problem }
-}
-
-function fromTotals(s: Settings): Totals {
-  const table = readTable(s.totals)
-  let problem = table.problem
-  const filled = filledRows(s.totals)
-  const totals: Total[] = []
-  let lowest: number | null = null
-  table.rows.forEach((r, i) => {
-    const typed = filled[i].name.trim()
-    const cf = r.values[0]
-    if (!typed) {
-      problem ??= cf !== null ? `Type the upper bound for the cumulative frequency ${fmt(cf)}, like ≤ 20.` : null
+      problem ??= v !== null ? `Type what the bin with the ${what} ${fmt(v)} goes up to, like 20.` : null
       return
     }
     const bound = parseBound(typed)
     if ('problem' in bound) return void (problem ??= bound.problem)
-    if (cf === null) return void (problem ??= !filled[i].cells[0].value.trim() ? `Type a cumulative frequency for ${typed}.` : null)
-    if (cf < 0) return void (problem ??= `A cumulative frequency can’t be below 0, so make ${filled[i].cells[0].value.trim()} positive.`)
+    if (v === null) return void (problem ??= !filled[i].cells[0].value.trim() ? `Type the ${what} up to ${typed}.` : null)
+    if (v < 0) return void (problem ??= `A ${what} can’t be below 0, so make ${filled[i].cells[0].value.trim()} positive.`)
     const before = totals.at(-1)
-    if (before && bound.hi <= before.x) return void (problem ??= `The upper bounds have to go up, so put ${typed} before ${fmt(before.x)}.`)
-    if (before && cf < before.cf) {
-      problem ??= `The cumulative frequencies go down, from ${fmt(before.cf)} to ${fmt(cf)} at ${typed}. Each one is at least the one before.`
+    if (before && bound.hi <= before.x) return void (problem ??= `The “up to” numbers have to go up, so put ${typed} before ${fmt(before.x)}.`)
+    if (running && before && v < before.cf) {
+      problem ??= `The cumulative frequencies go down, from ${fmt(before.cf)} to ${fmt(v)} up to ${typed}. Each one is at least the one before.`
       return
     }
-    if (!totals.length && bound.lo !== null && bound.lo < bound.hi) lowest = bound.lo
+    if (!totals.length && bound.lo !== null && bound.lo < bound.hi) pastedLo = bound.lo
+    cf = running ? v : cf + v
     totals.push({ x: bound.hi, cf })
   })
-  return { totals, lowest, bins: [], problem }
+  const { lowest, guess, problem: lowestProblem } = lowestOf(s, totals, pastedLo)
+  return { totals, lowest, guess, bins: binsOf(totals, lowest), problem: problem ?? lowestProblem }
 }
 
 function fromData(s: Settings): Totals & { auto: { start: number; width: number }; problems: { data: string | null; binStart: string | null; binWidth: string | null } } {
@@ -357,7 +362,7 @@ function readRange(typed: Record<RangeKey, string>, auto: Range, reach: { lo: nu
  * teacher should fix, as messages for the settings panel.
  */
 export function readGraph(s: Settings) {
-  const source = s.mode === 'frequency' ? fromFrequencies(s) : s.mode === 'cumulative' ? fromTotals(s) : fromData(s)
+  const source = s.mode === 'frequency' ? fromTable(s, s.rows, false) : s.mode === 'cumulative' ? fromTable(s, s.totals, true) : fromData(s)
   const data = s.mode === 'data' ? (source as ReturnType<typeof fromData>) : null
   const n = source.totals.at(-1)?.cf ?? 0
   const percent = s.scale === 'percent'
@@ -375,10 +380,10 @@ export function readGraph(s: Settings) {
   const x = readRange({ From: s.xFrom, To: s.xTo, Step: s.xStep }, xAuto, xReach)
   const y = readRange({ From: s.yFrom, To: s.yTo, Step: s.yStep }, yAuto, yReach)
 
-  // Starting from 0 needs a lowest bound, which a cumulative table of plain upper bounds doesn't give.
+  // Starting from 0 needs to know where the first bin starts.
   const start =
-    s.start && s.mode === 'cumulative' && source.totals.length && source.totals[0].cf > 0 && startsAt === null
-      ? 'Type the first bound as a bin, like 0 < h ≤ 10, for the curve to start from 0 at its lower end.'
+    s.start && s.mode !== 'data' && source.totals.length && startsAt === null && source.lowest === null
+      ? 'Type where the first bin starts, under the table, for the curve to start from 0 there.'
       : null
 
   return {
@@ -394,6 +399,8 @@ export function readGraph(s: Settings) {
     y: { ...y, auto: yAuto },
     /** a data set's bins as fitted, for the placeholders */
     binAuto: data?.auto ?? null,
+    /** where a table's first bin starts when Starts at is left empty, for its placeholder */
+    lowestGuess: source.guess ?? null,
     problems: {
       table: source.problem,
       data: data?.problems.data ?? null,

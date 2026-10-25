@@ -7,7 +7,7 @@ import { cleanSettings, parseBound, readGraph, settingsFromParams, settingsToQue
 const row = (name: string, value = '') => ({ name, cells: [{ value }] })
 const graph = (s: RawSettings) => buildCumulative(cleanSettings(s))
 // 50 heights in five bins: running totals 4, 14, 32, 44, 50.
-const HEIGHTS = [row('0–10', '4'), row('10–20', '10'), row('20–30', '18'), row('30–40', '12'), row('40–50', '6')]
+const HEIGHTS = [row('10', '4'), row('20', '10'), row('30', '18'), row('40', '12'), row('50', '6')]
 
 /** The drawn path's corners, back from its "M1,2L3,4" form. */
 const corners = (d: string) => [...d.matchAll(/[ML]([-\d.]+),([-\d.]+)/g)].map((m) => ({ x: Number(m[1]), y: Number(m[2]) }))
@@ -30,6 +30,7 @@ describe('the page address', () => {
     const s = cleanSettings({
       rows: HEIGHTS,
       totals: [row('≤ 10', '4'), row('≤ 20', '14')],
+      lowest: '5',
       data: '1, 2, 3',
       mode: 'cumulative',
       join: 'straight',
@@ -39,7 +40,7 @@ describe('the page address', () => {
       xTo: '60',
     })
     const q = settingsToQuery(s)
-    expect(q).toContain('row=0%E2%80%9310%7C4')
+    expect(q).toContain('row=10%7C4')
     expect(q).toContain('read=up%7C35%7Clines')
     expect(settingsFromParams(new URLSearchParams(q))).toEqual(s)
   })
@@ -109,10 +110,22 @@ describe('points', () => {
     expect(g.read.points).toEqual([{ x: 0, cf: 0 }, { x: 10, cf: 4 }, { x: 20, cf: 14 }, { x: 30, cf: 32 }])
   })
 
-  test('plain upper bounds give no start, with a message while it is on', () => {
-    const read = readGraph(cleanSettings({ mode: 'cumulative', totals: [row('≤ 10', '4'), row('≤ 20', '14')] }))
-    expect(read.points[0]).toEqual({ x: 10, cf: 4 })
-    expect(read.problems.start).toBeTruthy()
+  test('the first bin starts where typed, or as far below its upper end as the next bin is wide', () => {
+    const totals = [row('10', '4'), row('20', '14')]
+    expect(readGraph(cleanSettings({ mode: 'cumulative', totals })).points[0]).toEqual({ x: 0, cf: 0 })
+    expect(readGraph(cleanSettings({ mode: 'cumulative', totals, lowest: '5' })).points[0]).toEqual({ x: 5, cf: 0 })
+    expect(readGraph(cleanSettings({ rows: [row('150', '4'), row('160', '12')] })).points[0]).toEqual({ x: 140, cf: 0 })
+  })
+
+  test('a pasted whole bin gives the start, and one plain upper bound alone gives none, with a message', () => {
+    expect(readGraph(cleanSettings({ rows: [row('140 < h ≤ 150', '4'), row('150 < h ≤ 170', '9')] })).points[0]).toEqual({ x: 140, cf: 0 })
+    const one = readGraph(cleanSettings({ mode: 'cumulative', totals: [row('≤ 10', '4')] }))
+    expect(one.points[0]).toEqual({ x: 10, cf: 4 })
+    expect(one.problems.start).toBeTruthy()
+  })
+
+  test('a start at or past the first upper bound gets a message', () => {
+    expect(readGraph(cleanSettings({ rows: [row('10', '4'), row('20', '3')], lowest: '10' })).problems.table).toContain('start before 10')
   })
 
   test('upper bounds are read as typed', () => {
@@ -127,14 +140,13 @@ describe('problems', () => {
     expect(read.problems.table).toContain('go down')
   })
 
-  test('bins with a gap or an overlap get a message', () => {
-    expect(readGraph(cleanSettings({ rows: [row('0–10', '4'), row('15–20', '3')] })).problems.table).toContain('gap')
-    expect(readGraph(cleanSettings({ rows: [row('0–10', '4'), row('5–20', '3')] })).problems.table).toContain('overlap')
+  test('upper ends that don’t go up get a message', () => {
+    expect(readGraph(cleanSettings({ rows: [row('20', '4'), row('10', '3')] })).problems.table).toContain('have to go up')
   })
 
   test('a bin with no frequency, or a frequency with no bin, gets a message', () => {
-    expect(readGraph(cleanSettings({ rows: [row('0–10', '4'), row('10–20')] })).problems.table).toContain('Type a frequency')
-    expect(readGraph(cleanSettings({ rows: [row('', '4')] })).problems.table).toContain('Type the bin')
+    expect(readGraph(cleanSettings({ rows: [row('10', '4'), row('20')] })).problems.table).toContain('Type the frequency up to 20')
+    expect(readGraph(cleanSettings({ rows: [row('', '4')] })).problems.table).toContain('goes up to')
   })
 
   test('readings with no join are off, with a message', () => {

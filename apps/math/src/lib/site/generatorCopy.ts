@@ -666,7 +666,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       'Dashed lines read the median and quartiles off the curve, or any percentile, or go up from a value to estimate how many are below it. Each value is written at the axis, left as a blank line for students, or left off. Every reading is taken from the curve as drawn, so it matches what students measure on the printed graph.',
     ],
     settings: [
-      'The data: a frequency table of bins, a cumulative table of upper bounds, or a data set sorted into bins of a width you choose',
+      'The data: a frequency table of each bin’s upper end and frequency, a cumulative table of upper bounds, or a data set sorted into bins of a width you choose, with no inequalities to type',
       'Crosses or dots at the points, joined by a smooth curve, straight lines or nothing, starting from 0 at the lowest bound or not',
       'A vertical axis of cumulative frequency or cumulative percent',
       'Reading lines for the median, lower and upper quartiles, any percentile, across from a cumulative frequency or up from a value, each with its value, a blank line or neither',
@@ -689,7 +689,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'Can I type a cumulative frequency table instead?',
-        a: 'Yes. Choose Cumulative table and type each upper bound with its running total, or paste the table. Type the first bound as a bin, like 0 < h ≤ 10, for the curve to start from 0 at its lower end.',
+        a: 'Yes. Choose Cumulative table, type where the first bin starts, then each upper bound with its running total, or paste the table. The curve starts from 0 where the first bin starts.',
       },
       {
         q: 'How do I make a graph for students to draw on?',

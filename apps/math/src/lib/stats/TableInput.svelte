@@ -51,6 +51,10 @@
     totalRow?: boolean
     /** "text" when a value can be a letter as well as a number */
     inputmode?: 'decimal' | 'text'
+    /** the rows are named by numbers (a bin's upper bound), typed and lined up like values */
+    numberNames?: boolean
+    /** what the empty last row says, when "Add a <row name>" doesn't read well */
+    addRow?: string
     /** called with a row's index when it's removed, for settings kept per row */
     onremoverow?: (i: number) => void
     /** called when a paste replaces the whole table */
@@ -60,7 +64,7 @@
     id, columns = $bindable(), rows = $bindable(), errors = $bindable(false),
     rowName, columnName, placeholders = {}, onremovecolumn, fixed = false, maxColumns = MAX_COLUMNS,
     rowTotals = $bindable(), columnTotals = $bindable(), grand = $bindable(''),
-    totalColumn = $bindable(false), totalRow = $bindable(false), inputmode = 'decimal', onremoverow, onreplace,
+    totalColumn = $bindable(false), totalRow = $bindable(false), inputmode = 'decimal', numberNames = false, addRow, onremoverow, onreplace,
   }: Props = $props()
 
   let table = $state<HTMLElement>()
@@ -167,6 +171,7 @@
     onreplace?.()
   }
 
+  const addRowLabel = $derived(addRow ?? `Add a ${rowName.toLowerCase()}`)
   const columnLabel = (j: number) => columns[j]?.trim() || `${columnName} ${j + 1}`
   const rowLabel = (i: number) => rows[i]?.name.trim() || `${rowName} ${i + 1}`
   // The columns of values, the Total column counted in.
@@ -174,7 +179,7 @@
   // The width each column takes, in rem, below which the table scrolls.
   const minWidth = $derived(6.5 + valueColumns * (errors ? 6.2 : 3.6) + (canAddColumn ? 2.4 : 0))
   // Values take a share of the width (less each as there are more), the names the rest.
-  const valueWidth = $derived(errors ? Math.min(16, 56 / valueColumns) : Math.min(40, 60 / valueColumns))
+  const valueWidth = $derived(numberNames ? 50 / valueColumns : errors ? Math.min(16, 56 / valueColumns) : Math.min(40, 60 / valueColumns))
   const errorWidth = $derived(errors ? Math.min(10, 34 / columns.length) : 0)
 </script>
 
@@ -188,7 +193,7 @@
     </colgroup>
     <thead>
       <tr>
-        <th class="corner" scope="col">{rowName}</th>
+        <th class="corner" class:number={numberNames} scope="col">{rowName}</th>
         {#each columns as _, j}
           <th scope="col" class:fixed>
             {#if fixed}
@@ -218,7 +223,7 @@
       {#each rows as row, i}
         <tr>
           <th scope="row">
-            <input type="text" class="name" id={cellId(i, 'name')} aria-label="{rowName} {i + 1}" bind:value={row.name} onkeydown={(e) => down(e, i, 'name')} />
+            <input type="text" class="name" class:number={numberNames} inputmode={numberNames ? 'decimal' : undefined} id={cellId(i, 'name')} aria-label="{rowName} {i + 1}" bind:value={row.name} onkeydown={(e) => down(e, i, 'name')} />
           </th>
           {#each row.cells as cell, j}
             <td>
@@ -251,20 +256,20 @@
         <tr class="new">
           <th scope="row">
             <input
-              type="text" class="name" id={cellId(rows.length, 'name')} aria-label="Add a {rowName.toLowerCase()}"
-              placeholder="Add a {rowName.toLowerCase()}" oninput={(e) => newRow(e, 'name')}
+              type="text" class="name" class:number={numberNames} inputmode={numberNames ? 'decimal' : undefined} id={cellId(rows.length, 'name')} aria-label={addRowLabel}
+              placeholder={addRowLabel} oninput={(e) => newRow(e, 'name')}
             />
           </th>
           {#each columns as _, j}
             <td>
               <input
-                type="text" class="value" {inputmode} id={cellId(rows.length, `v${j}`)} aria-label="Add a {rowName.toLowerCase()}: {columnLabel(j)}"
+                type="text" class="value" {inputmode} id={cellId(rows.length, `v${j}`)} aria-label="{addRowLabel}: {columnLabel(j)}"
                 oninput={(e) => newRow(e, `v${j}`)} onkeydown={showTotalRow ? (e) => down(e, rows.length, `v${j}`) : undefined}
               />
             </td>
             {#if errors}
               <td class="pm">
-                <input type="text" class="value" inputmode="decimal" id={cellId(rows.length, `e${j}`)} aria-label="Add a {rowName.toLowerCase()}: ± for {columnLabel(j)}" oninput={(e) => newRow(e, `e${j}`)} />
+                <input type="text" class="value" inputmode="decimal" id={cellId(rows.length, `e${j}`)} aria-label="{addRowLabel}: ± for {columnLabel(j)}" oninput={(e) => newRow(e, `e${j}`)} />
               </td>
             {/if}
           {/each}
@@ -272,7 +277,7 @@
           {#if showTotalColumn}
             <td>
               <input
-                type="text" class="value" {inputmode} id={cellId(rows.length, 't')} aria-label="Add a {rowName.toLowerCase()}: total"
+                type="text" class="value" {inputmode} id={cellId(rows.length, 't')} aria-label="{addRowLabel}: total"
                 oninput={(e) => newRow(e, 't')} onkeydown={showTotalRow ? (e) => down(e, rows.length, 't') : undefined}
               />
             </td>
@@ -321,6 +326,8 @@
   table input:focus { outline: 2px solid var(--blue); outline-offset: -2px; background: #fff; }
   table input::placeholder { color: #9aa3b2; font-weight: 400; }
   .heading { font-weight: 700; }
+  .name.number { text-align: right; font-variant-numeric: tabular-nums; }
+  .corner.number { text-align: right; }
   .value { text-align: right; font-variant-numeric: tabular-nums; }
   th.new, td.new, tr.new > * { background: #fff; border: 1px dashed #c9cfd8; }
   tr.new input::placeholder, th.new input::placeholder { color: var(--blue-dark); opacity: 0.75; }

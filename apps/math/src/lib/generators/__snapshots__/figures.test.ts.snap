@@ -24661,6 +24661,7 @@ exports[`cumulative frequency >  1`] = `
     "read": {
       "binAuto": null,
       "bins": [],
+      "lowestGuess": null,
       "n": 0,
       "percent": false,
       "points": [],
@@ -25050,6 +25051,7 @@ exports[`cumulative frequency > join=straight&mark=dot&scale=percent&yTitle=Cumu
           "lo": 20,
         },
       ],
+      "lowestGuess": 0,
       "n": 32,
       "percent": true,
       "points": [
@@ -25320,7 +25322,7 @@ exports[`cumulative frequency > join=straight&mark=dot&scale=percent&yTitle=Cumu
 }
 `;
 
-exports[`cumulative frequency > median=value&lower=blank&upper=lines&row=140%20%3C%20h%20%E2%89%A4%20150%7C4&row=150%20%3C%20h%20%E2%89%A4%20160%7C12&row=160%20%3C%20h%20%E2%89%A4%20170%7C26&row=170%20%3C%20h%20%E2%89%A4%20180%7C24&row=180%20%3C%20h%20%E2%89%A4%20190%7C10 1`] = `
+exports[`cumulative frequency > median=value&lower=blank&upper=lines&lowest=140&row=150%7C4&row=160%7C12&row=170%7C26&row=180%7C24&row=190%7C10 1`] = `
 {
   "figure": {
     "blanks": [
@@ -25475,30 +25477,31 @@ exports[`cumulative frequency > median=value&lower=blank&upper=lines&row=140%20%
       "bins": [
         {
           "hi": 150,
-          "holds": "right",
+          "holds": null,
           "lo": 140,
         },
         {
           "hi": 160,
-          "holds": "right",
+          "holds": null,
           "lo": 150,
         },
         {
           "hi": 170,
-          "holds": "right",
+          "holds": null,
           "lo": 160,
         },
         {
           "hi": 180,
-          "holds": "right",
+          "holds": null,
           "lo": 170,
         },
         {
           "hi": 190,
-          "holds": "right",
+          "holds": null,
           "lo": 180,
         },
       ],
+      "lowestGuess": 140,
       "n": 76,
       "percent": false,
       "points": [
@@ -25788,11 +25791,11 @@ exports[`cumulative frequency > median=value&lower=blank&upper=lines&row=140%20%
       "y2": 14,
     },
   },
-  "query": "median=value&lower=blank&upper=lines&row=140+%3C+h+%E2%89%A4+150%7C4&row=150+%3C+h+%E2%89%A4+160%7C12&row=160+%3C+h+%E2%89%A4+170%7C26&row=170+%3C+h+%E2%89%A4+180%7C24&row=180+%3C+h+%E2%89%A4+190%7C10",
+  "query": "lowest=140&median=value&lower=blank&upper=lines&row=150%7C4&row=160%7C12&row=170%7C26&row=180%7C24&row=190%7C10",
 }
 `;
 
-exports[`cumulative frequency > mode=cumulative&cum=0%20%3C%20w%20%E2%89%A4%202%7C8&cum=0%20%3C%20w%20%E2%89%A4%204%7C30&cum=0%20%3C%20w%20%E2%89%A4%206%7C64&look=bw&median=blank 1`] = `
+exports[`cumulative frequency > mode=cumulative&lowest=0&cum=2%7C8&cum=4%7C30&cum=6%7C64&look=bw&median=blank 1`] = `
 {
   "figure": {
     "blanks": [
@@ -25905,7 +25908,24 @@ exports[`cumulative frequency > mode=cumulative&cum=0%20%3C%20w%20%E2%89%A4%202%
     },
     "read": {
       "binAuto": null,
-      "bins": [],
+      "bins": [
+        {
+          "hi": 2,
+          "holds": null,
+          "lo": 0,
+        },
+        {
+          "hi": 4,
+          "holds": null,
+          "lo": 2,
+        },
+        {
+          "hi": 6,
+          "holds": null,
+          "lo": 4,
+        },
+      ],
+      "lowestGuess": 0,
       "n": 64,
       "percent": false,
       "points": [
@@ -26180,7 +26200,7 @@ exports[`cumulative frequency > mode=cumulative&cum=0%20%3C%20w%20%E2%89%A4%202%
       "y2": 14,
     },
   },
-  "query": "mode=cumulative&look=bw&median=blank&cum=0+%3C+w+%E2%89%A4+2%7C8&cum=0+%3C+w+%E2%89%A4+4%7C30&cum=0+%3C+w+%E2%89%A4+6%7C64",
+  "query": "mode=cumulative&lowest=0&look=bw&median=blank&cum=2%7C8&cum=4%7C30&cum=6%7C64",
 }
 `;
 
@@ -26275,6 +26295,7 @@ exports[`cumulative frequency > mode=data&data=12%2C18%2C23%2C25%2C31%2C33%2C41%
           "lo": 40,
         },
       ],
+      "lowestGuess": null,
       "n": 8,
       "percent": false,
       "points": [
@@ -26564,7 +26585,7 @@ exports[`cumulative frequency > mode=data&data=12%2C18%2C23%2C25%2C31%2C33%2C41%
 }
 `;
 
-exports[`cumulative frequency > row=0%E2%80%9310%7C4&row=10%E2%80%9320%7C10&row=20%E2%80%9330%7C18&row=30%E2%80%9340%7C12&row=40%E2%80%9350%7C6 1`] = `
+exports[`cumulative frequency > row=10%7C4&row=20%7C10&row=30%7C18&row=40%7C12&row=50%7C6 1`] = `
 {
   "figure": {
     "blanks": [],
@@ -26693,6 +26714,7 @@ exports[`cumulative frequency > row=0%E2%80%9310%7C4&row=10%E2%80%9320%7C10&row=
           "lo": 40,
         },
       ],
+      "lowestGuess": 0,
       "n": 50,
       "percent": false,
       "points": [
@@ -26990,7 +27012,375 @@ exports[`cumulative frequency > row=0%E2%80%9310%7C4&row=10%E2%80%9320%7C10&row=
       "y2": 14,
     },
   },
-  "query": "row=0%E2%80%9310%7C4&row=10%E2%80%9320%7C10&row=20%E2%80%9330%7C18&row=30%E2%80%9340%7C12&row=40%E2%80%9350%7C6",
+  "query": "row=10%7C4&row=20%7C10&row=30%7C18&row=40%7C12&row=50%7C6",
+}
+`;
+
+exports[`cumulative frequency > row=140%20%3C%20h%20%E2%89%A4%20150%7C4&row=150%20%3C%20h%20%E2%89%A4%20160%7C12&row=160%20%3C%20h%20%E2%89%A4%20170%7C26 1`] = `
+{
+  "figure": {
+    "blanks": [],
+    "colors": {
+      "curve": "#2563eb",
+      "reading": "#dc2626",
+    },
+    "fs": 14,
+    "grid": {
+      "labelSize": "medium",
+      "minor": 0,
+      "title": "",
+      "titleMode": "none",
+      "xEndCap": "none",
+      "xEvery": 1,
+      "xLabel": "",
+      "xLabelMode": "none",
+      "xStartCap": "none",
+      "xTitle": "",
+      "xTitleMode": "none",
+      "yEndCap": "none",
+      "yEvery": 1,
+      "yLabel": "",
+      "yLabelMode": "none",
+      "yStartCap": "none",
+      "yTitle": "Cumulative frequency",
+      "yTitleMode": "text",
+    },
+    "guides": [],
+    "labels": [],
+    "mark": "cross",
+    "paths": [
+      "M67.6,302L69.6,301.96L71.6,301.85L73.6,301.67L75.6,301.43L77.6,301.11L79.6,300.73L81.6,300.3L83.6,299.8L85.6,299.25L87.6,298.64L89.6,297.98L91.6,297.27L93.6,296.52L95.6,295.72L97.6,294.88L99.6,294L101.6,293.08L103.6,292.13L105.6,291.14L107.6,290.13L109.6,289.08L111.6,288.01L113.6,286.92L115.6,285.8L117.6,284.67L119.6,283.52L121.6,282.35L123.6,281.18L125.6,279.99L127.6,278.8L129.6,277.6L131.6,276.4L133.6,275.15L135.6,273.81L137.6,272.38L139.6,270.86L141.6,269.25L143.6,267.56L145.6,265.78L147.6,263.93L149.6,261.99L151.6,259.97L153.6,257.88L155.6,255.71L157.6,253.47L159.6,251.16L161.6,248.78L163.6,246.34L165.6,243.83L167.6,241.25L169.6,238.62L171.6,235.92L173.6,233.17L175.6,230.36L177.6,227.49L179.6,224.58L181.6,221.61L183.6,218.6L185.6,215.54L187.6,212.43L189.6,209.28L191.6,206.09L193.6,202.87L195.6,199.6L197.6,196.24L199.6,192.73L201.6,189.08L203.6,185.28L205.6,181.34L207.6,177.27L209.6,173.06L211.6,168.72L213.6,164.25L215.6,159.66L217.6,154.95L219.6,150.12L221.6,145.17L223.6,140.11L225.6,134.94L227.6,129.66L229.6,124.28L231.6,118.8L233.6,113.22L235.6,107.55L237.6,101.79L239.6,95.93L241.6,89.99L243.6,83.97L245.6,77.87L247.6,71.7L249.6,65.45L251.6,59.13L253.6,52.74L255.6,46.29L257.6,39.77L259.6,33.2",
+    ],
+    "points": [
+      {
+        "x": 67.6,
+        "y": 302,
+      },
+      {
+        "x": 131.6,
+        "y": 276.4,
+      },
+      {
+        "x": 195.6,
+        "y": 199.6,
+      },
+      {
+        "x": 259.6,
+        "y": 33.2,
+      },
+    ],
+    "problems": {
+      "join": null,
+      "readings": [],
+    },
+    "quartiles": {
+      "lower": {
+        "at": {
+          "x": 156.3770936475578,
+          "y": 10.5,
+        },
+        "axis": "x",
+        "name": "Lower quartile",
+        "show": "lines",
+        "text": "156.5",
+        "value": 156.5,
+      },
+      "median": {
+        "at": {
+          "x": 162.57843155305062,
+          "y": 21,
+        },
+        "axis": "x",
+        "name": "Median",
+        "show": "lines",
+        "text": "162.5",
+        "value": 162.5,
+      },
+      "upper": {
+        "at": {
+          "x": 166.63650855051364,
+          "y": 31.5,
+        },
+        "axis": "x",
+        "name": "Upper quartile",
+        "show": "lines",
+        "text": "166.5",
+        "value": 166.5,
+      },
+    },
+    "read": {
+      "binAuto": null,
+      "bins": [
+        {
+          "hi": 150,
+          "holds": null,
+          "lo": 140,
+        },
+        {
+          "hi": 160,
+          "holds": null,
+          "lo": 150,
+        },
+        {
+          "hi": 170,
+          "holds": null,
+          "lo": 160,
+        },
+      ],
+      "lowestGuess": 140,
+      "n": 42,
+      "percent": false,
+      "points": [
+        {
+          "cf": 0,
+          "x": 140,
+        },
+        {
+          "cf": 4,
+          "x": 150,
+        },
+        {
+          "cf": 16,
+          "x": 160,
+        },
+        {
+          "cf": 42,
+          "x": 170,
+        },
+      ],
+      "problems": {
+        "binStart": null,
+        "binWidth": null,
+        "data": null,
+        "start": null,
+        "table": null,
+        "xFrom": null,
+        "xStep": null,
+        "xTo": null,
+        "yFrom": null,
+        "yStep": null,
+        "yTo": null,
+      },
+      "totals": [
+        {
+          "cf": 4,
+          "x": 150,
+        },
+        {
+          "cf": 16,
+          "x": 160,
+        },
+        {
+          "cf": 42,
+          "x": 170,
+        },
+      ],
+      "x": {
+        "auto": {
+          "from": 140,
+          "step": 5,
+          "to": 170,
+        },
+        "numbering": "decimal",
+        "problems": {
+          "From": null,
+          "Step": null,
+          "To": null,
+        },
+        "range": {
+          "from": 140,
+          "step": 5,
+          "to": 170,
+        },
+      },
+      "y": {
+        "auto": {
+          "from": 0,
+          "step": 5,
+          "to": 45,
+        },
+        "numbering": "decimal",
+        "problems": {
+          "From": null,
+          "Step": null,
+          "To": null,
+        },
+        "range": {
+          "from": 0,
+          "step": 5,
+          "to": 45,
+        },
+      },
+      "yOf": [Function],
+    },
+    "readings": [],
+  },
+  "layout": {
+    "blanks": [],
+    "box": {
+      "x0": 140,
+      "x1": 170,
+      "y0": 0,
+      "y1": 45,
+    },
+    "fs": 14,
+    "grid": {
+      "h": 288,
+      "w": 192,
+      "x": 67.6,
+      "y": 14,
+    },
+    "hLines": [
+      14,
+      46,
+      78,
+      110,
+      142,
+      174,
+      206,
+      238,
+      270,
+      302,
+    ],
+    "height": 338,
+    "labels": [
+      {
+        "kind": "side",
+        "rotate": true,
+        "text": "Cumulative frequency",
+        "x": 26.6,
+        "y": 158,
+      },
+    ],
+    "minorH": [],
+    "minorV": [],
+    "numbers": [
+      {
+        "anchor": "middle",
+        "text": "140",
+        "x": 67.6,
+        "y": 322,
+      },
+      {
+        "anchor": "middle",
+        "text": "145",
+        "x": 99.6,
+        "y": 322,
+      },
+      {
+        "anchor": "middle",
+        "text": "150",
+        "x": 131.6,
+        "y": 322,
+      },
+      {
+        "anchor": "middle",
+        "text": "155",
+        "x": 163.6,
+        "y": 322,
+      },
+      {
+        "anchor": "middle",
+        "text": "160",
+        "x": 195.6,
+        "y": 322,
+      },
+      {
+        "anchor": "middle",
+        "text": "165",
+        "x": 227.6,
+        "y": 322,
+      },
+      {
+        "anchor": "middle",
+        "text": "170",
+        "x": 259.6,
+        "y": 322,
+      },
+      {
+        "anchor": "end",
+        "text": "0",
+        "x": 61.599999999999994,
+        "y": 306.9,
+      },
+      {
+        "anchor": "end",
+        "text": "5",
+        "x": 61.599999999999994,
+        "y": 274.9,
+      },
+      {
+        "anchor": "end",
+        "text": "10",
+        "x": 61.599999999999994,
+        "y": 242.9,
+      },
+      {
+        "anchor": "end",
+        "text": "15",
+        "x": 61.599999999999994,
+        "y": 210.9,
+      },
+      {
+        "anchor": "end",
+        "text": "20",
+        "x": 61.599999999999994,
+        "y": 178.9,
+      },
+      {
+        "anchor": "end",
+        "text": "25",
+        "x": 61.599999999999994,
+        "y": 146.9,
+      },
+      {
+        "anchor": "end",
+        "text": "30",
+        "x": 61.599999999999994,
+        "y": 114.9,
+      },
+      {
+        "anchor": "end",
+        "text": "35",
+        "x": 61.599999999999994,
+        "y": 82.9,
+      },
+      {
+        "anchor": "end",
+        "text": "40",
+        "x": 61.599999999999994,
+        "y": 50.9,
+      },
+      {
+        "anchor": "end",
+        "text": "45",
+        "x": 61.599999999999994,
+        "y": 18.9,
+      },
+    ],
+    "px": undefined,
+    "vLines": [
+      67.6,
+      99.6,
+      131.6,
+      163.6,
+      195.6,
+      227.6,
+      259.6,
+    ],
+    "width": 286.2,
+    "xAxis": {
+      "x1": 67.6,
+      "x2": 259.6,
+      "y": 302,
+    },
+    "yAxis": {
+      "x": 67.6,
+      "y1": 302,
+      "y2": 14,
+    },
+  },
+  "query": "row=140+%3C+h+%E2%89%A4+150%7C4&row=150+%3C+h+%E2%89%A4+160%7C12&row=160+%3C+h+%E2%89%A4+170%7C26",
 }
 `;
 
@@ -27040,6 +27430,7 @@ exports[`cumulative frequency > xFrom=0&xTo=60&xStep=5&yTo=80&yStep=10&titleMode
     "read": {
       "binAuto": null,
       "bins": [],
+      "lowestGuess": null,
       "n": 0,
       "percent": false,
       "points": [],
