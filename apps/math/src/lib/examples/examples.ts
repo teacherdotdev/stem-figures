@@ -1338,20 +1338,6 @@ export const EXAMPLES: Example[] = [
         'Two overlapping circles named A and B inside a box marked U, with a probability in each region: 0.3 in A only, the unknown x in the overlap, 0.25 in B only, and 0.15 outside both circles in the lower right corner. Students find x, then probabilities such as P(A ∪ B).',
       settings: { mode: 'text', values: { a: '0.3', ab: 'x', b: '0.25', out: '0.15' } },
     },
-    {
-      slug: 'compare-and-contrast-venn-diagram-tomato-and-apple',
-      title: 'Compare and contrast Venn diagram: tomato and apple',
-      alt: 'A Venn diagram comparing Tomato and Apple, with red flesh, mushy and savory in Tomato only, fruit, round and smooth-skinned in both, and white flesh, firm and sweet in Apple only',
-      caption:
-        'Two overlapping circles named Tomato and Apple, used to compare and contrast. Tomato only lists red flesh, mushy and savory, one to a line; the overlap lists fruit, round and smooth-skinned; Apple only lists white flesh, firm and sweet. The box round them has no symbol for the universal set.',
-      settings: {
-        mode: 'text',
-        nameA: 'Tomato',
-        nameB: 'Apple',
-        universe: 'none',
-        values: { a: 'red flesh, mushy, savory', ab: 'fruit, round, smooth-skinned', b: 'white flesh, firm, sweet' },
-      },
-    },
   ]),
 
   ...examplesOf('pie-chart', [
