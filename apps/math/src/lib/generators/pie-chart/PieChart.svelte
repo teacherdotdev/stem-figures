@@ -1,6 +1,6 @@
 <script lang="ts">
-  // The pie chart itself: its sectors, any part left empty, the arcs and dot
-  // at the center, the labels with their leader lines, the key and the title,
+  // The pie chart itself: its sectors, any part left empty, the dot at the
+  // center, the labels with their leader lines, the key and the title,
   // as one self-contained SVG for printing and export.
   import { INK, SANS } from '$shared/graph/grid'
   import FillPatterns from '$lib/stats/FillPatterns.svelte'
@@ -47,9 +47,6 @@
     </g>
     {#if settings.look !== 'color'}<circle r={R} fill="none" stroke={INK} stroke-width="1.5" />{/if}
 
-    <g stroke={INK} stroke-width="1.5" fill="none">
-      {#each p.arcs as d}<path {d} />{/each}
-    </g>
     {#if p.centerDot}<circle r={p.dot} fill={INK} />{/if}
 
     <g stroke={INK} stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -57,7 +54,7 @@
     </g>
 
     <g font-family={SANS} font-size={p.fs} font-weight="bold" stroke-width="3.5" paint-order="stroke" stroke-linejoin="round">
-      {#each [...p.measures, ...p.labels] as l}
+      {#each p.labels as l}
         <!-- Each line centered: its text, then any blank line to write on. -->
         {#each l.lines as line, k}
           {@const start = l.x - l.widths[k] / 2}

@@ -45567,7 +45567,6 @@ exports[`parallelogram > nameA=P&nameB=Q&nameC=R&nameD=S&unit=cm&ALabel=measure&
 exports[`pie chart >  1`] = `
 {
   "figure": {
-    "arcs": [],
     "blankCircle": true,
     "blankW": 44.800000000000004,
     "centerDot": true,
@@ -45585,7 +45584,6 @@ exports[`pie chart >  1`] = `
     "key": null,
     "labels": [],
     "lineH": 16.8,
-    "measures": [],
     "partFills": [],
     "read": {
       "gap": 360,
@@ -45614,7 +45612,6 @@ exports[`pie chart >  1`] = `
 exports[`pie chart > labelSize=large&labels=name&row=Big%7C92&row=One%7C1&row=Two%7C1&row=Three%7C1&row=Four%7C1&row=Five%7C1&row=Six%7C1&row=Seven%7C1&row=Eight%7C1 1`] = `
 {
   "figure": {
-    "arcs": [],
     "blankCircle": false,
     "blankW": 62.72,
     "centerDot": false,
@@ -45994,7 +45991,6 @@ exports[`pie chart > labelSize=large&labels=name&row=Big%7C92&row=One%7C1&row=Tw
       },
     ],
     "lineH": 23.519999999999996,
-    "measures": [],
     "partFills": [
       {
         "fill": "blue",
@@ -46386,7 +46382,6 @@ exports[`pie chart > labelSize=large&labels=name&row=Big%7C92&row=One%7C1&row=Tw
 exports[`pie chart > labels=name-percent&titleMode=text&title=Fruit&keyAt=right&row=Apples%7C12&row=Bananas%7C8&row=Cherries%7C6&row=Grapes%7C4 1`] = `
 {
   "figure": {
-    "arcs": [],
     "blankCircle": false,
     "blankW": 44.800000000000004,
     "centerDot": false,
@@ -46579,7 +46574,6 @@ exports[`pie chart > labels=name-percent&titleMode=text&title=Fruit&keyAt=right&
       },
     ],
     "lineH": 16.8,
-    "measures": [],
     "partFills": [
       {
         "fill": "blue",
@@ -46776,7 +46770,6 @@ exports[`pie chart > labels=name-percent&titleMode=text&title=Fruit&keyAt=right&
 exports[`pie chart > look=white&titleMode=blank&row=Dog%7C&row=Cat%7C 1`] = `
 {
   "figure": {
-    "arcs": [],
     "blankCircle": true,
     "blankW": 44.800000000000004,
     "centerDot": true,
@@ -46796,7 +46789,6 @@ exports[`pie chart > look=white&titleMode=blank&row=Dog%7C&row=Cat%7C 1`] = `
     "key": null,
     "labels": [],
     "lineH": 16.8,
-    "measures": [],
     "partFills": [
       {
         "fill": "white",
@@ -46861,7 +46853,6 @@ exports[`pie chart > look=white&titleMode=blank&row=Dog%7C&row=Cat%7C 1`] = `
 exports[`pie chart > row=Apples%7C12&row=Bananas%7C8&row=Cherries%7C6&row=Grapes%7C4 1`] = `
 {
   "figure": {
-    "arcs": [],
     "blankCircle": false,
     "blankW": 44.800000000000004,
     "centerDot": false,
@@ -46985,7 +46976,6 @@ exports[`pie chart > row=Apples%7C12&row=Bananas%7C8&row=Cherries%7C6&row=Grapes
       },
     ],
     "lineH": 16.8,
-    "measures": [],
     "partFills": [
       {
         "fill": "blue",
@@ -47177,7 +47167,6 @@ exports[`pie chart > row=Apples%7C12&row=Bananas%7C8&row=Cherries%7C6&row=Grapes
 exports[`pie chart > total=60&labels=name-angle&fills=dots&centerDot=off&row=Soccer%7C20&row=Basketball%7C15&row=Tennis%7C&row=Swimming%7C 1`] = `
 {
   "figure": {
-    "arcs": [],
     "blankCircle": false,
     "blankW": 44.800000000000004,
     "centerDot": false,
@@ -47263,7 +47252,6 @@ exports[`pie chart > total=60&labels=name-angle&fills=dots&centerDot=off&row=Soc
       },
     ],
     "lineH": 16.8,
-    "measures": [],
     "partFills": [
       {
         "fill": "dots",
@@ -47402,15 +47390,9 @@ exports[`pie chart > total=60&labels=name-angle&fills=dots&centerDot=off&row=Soc
 }
 `;
 
-exports[`pie chart > values=degrees&angleMarks=measures&lab=%7C%7Cletter%7Cblank&look=bw&row=Red%7C110&row=Blue%7C80&row=Green%7C100&row=Yellow%7C70 1`] = `
+exports[`pie chart > values=degrees&labels=name-angle&lab=%7C%7Cletter%7Cblank&look=bw&row=Red%7C110&row=Blue%7C80&row=Green%7C100&row=Yellow%7C70 1`] = `
 {
   "figure": {
-    "arcs": [
-      "M0,-23.8 A23.8,23.8 0 0 1 22.4,8.1",
-      "M22.4,8.1 A23.8,23.8 0 0 1 -4.1,23.4",
-      "M-4.1,23.4 A23.8,23.8 0 0 1 -22.4,-8.1",
-      "M-22.4,-8.1 A23.8,23.8 0 0 1 0,-23.8",
-    ],
     "blankCircle": false,
     "blankW": 44.800000000000004,
     "centerDot": true,
@@ -47430,12 +47412,12 @@ exports[`pie chart > values=degrees&angleMarks=measures&lab=%7C%7Cletter%7Cblank
     "labels": [
       {
         "box": {
-          "x0": 65.41559625174321,
-          "x1": 91.86159625174321,
-          "y0": -62.62333788970042,
-          "y1": -47.50333788970042,
+          "x0": 62.76259625174321,
+          "x1": 94.51459625174321,
+          "y0": -71.02333788970043,
+          "y1": -39.10333788970042,
         },
-        "h": 15.120000000000001,
+        "h": 31.92,
         "halo": false,
         "inside": true,
         "leader": null,
@@ -47444,109 +47426,6 @@ exports[`pie chart > values=degrees&angleMarks=measures&lab=%7C%7Cletter%7Cblank
             "blank": false,
             "text": "Red",
           },
-        ],
-        "sector": 0,
-        "w": 26.446,
-        "white": false,
-        "widths": [
-          26.446,
-        ],
-        "x": 78.63859625174321,
-        "y": -55.06333788970042,
-      },
-      {
-        "box": {
-          "x0": 32.83099999999999,
-          "x1": 63.169,
-          "y0": 75.57843876330611,
-          "y1": 90.69843876330611,
-        },
-        "h": 15.120000000000001,
-        "halo": false,
-        "inside": true,
-        "leader": null,
-        "lines": [
-          {
-            "blank": false,
-            "text": "Blue",
-          },
-        ],
-        "sector": 1,
-        "w": 30.338,
-        "white": false,
-        "widths": [
-          30.338,
-        ],
-        "x": 47.99999999999999,
-        "y": 83.13843876330611,
-      },
-      {
-        "box": {
-          "x0": -103.3684387633061,
-          "x1": -62.908438763306094,
-          "y0": 40.44000000000004,
-          "y1": 55.560000000000045,
-        },
-        "h": 15.120000000000001,
-        "halo": true,
-        "inside": true,
-        "leader": null,
-        "lines": [
-          {
-            "blank": false,
-            "text": "Green",
-          },
-        ],
-        "sector": 2,
-        "w": 40.46,
-        "white": false,
-        "widths": [
-          40.46,
-        ],
-        "x": -83.1384387633061,
-        "y": 48.00000000000004,
-      },
-      {
-        "box": {
-          "x0": -77.46333788970047,
-          "x1": -32.66333788970046,
-          "y0": -86.1985962517432,
-          "y1": -71.07859625174319,
-        },
-        "h": 15.120000000000001,
-        "halo": true,
-        "inside": true,
-        "leader": null,
-        "lines": [
-          {
-            "blank": true,
-            "text": "",
-          },
-        ],
-        "sector": 3,
-        "w": 44.800000000000004,
-        "white": false,
-        "widths": [
-          44.800000000000004,
-        ],
-        "x": -55.06333788970046,
-        "y": -78.6385962517432,
-      },
-    ],
-    "lineH": 16.8,
-    "measures": [
-      {
-        "box": {
-          "x0": 23.27946771701381,
-          "x1": 55.031467717013804,
-          "y0": -34.97695365758,
-          "y1": -19.85695365758,
-        },
-        "h": 15.120000000000001,
-        "halo": false,
-        "inside": true,
-        "leader": null,
-        "lines": [
           {
             "blank": false,
             "text": "110°",
@@ -47556,64 +47435,107 @@ exports[`pie chart > values=degrees&angleMarks=measures&lab=%7C%7Cletter%7Cblank
         "w": 31.752,
         "white": false,
         "widths": [
+          26.446,
           31.752,
         ],
-        "x": 39.155467717013806,
-        "y": -27.41695365758,
+        "x": 78.63859625174321,
+        "y": -55.06333788970042,
       },
       {
         "box": {
-          "x0": 8.915999999999995,
-          "x1": 32.88399999999999,
-          "y0": 28.639861878189535,
-          "y1": 43.75986187818954,
+          "x0": 32.83099999999999,
+          "x1": 63.169,
+          "y0": 67.1784387633061,
+          "y1": 99.09843876330612,
         },
-        "h": 15.120000000000001,
+        "h": 31.92,
         "halo": false,
         "inside": true,
         "leader": null,
         "lines": [
           {
             "blank": false,
+            "text": "Blue",
+          },
+          {
+            "blank": false,
             "text": "80°",
           },
         ],
         "sector": 1,
-        "w": 23.968,
+        "w": 30.338,
         "white": false,
         "widths": [
+          30.338,
           23.968,
         ],
-        "x": 20.899999999999995,
-        "y": 36.19986187818954,
+        "x": 47.99999999999999,
+        "y": 83.13843876330611,
       },
       {
         "box": {
-          "x0": -44.29186187818952,
-          "x1": -28.107861878189524,
-          "y0": 13.340000000000016,
-          "y1": 28.460000000000015,
+          "x0": -103.3684387633061,
+          "x1": -62.908438763306094,
+          "y0": 32.04000000000004,
+          "y1": 63.96000000000004,
         },
-        "h": 15.120000000000001,
+        "h": 31.92,
         "halo": true,
         "inside": true,
         "leader": null,
         "lines": [
           {
             "blank": false,
+            "text": "Green",
+          },
+          {
+            "blank": false,
             "text": "x°",
           },
         ],
         "sector": 2,
-        "w": 16.184,
+        "w": 40.46,
         "white": false,
         "widths": [
+          40.46,
           16.184,
         ],
-        "x": -36.19986187818952,
-        "y": 20.900000000000016,
+        "x": -83.1384387633061,
+        "y": 48.00000000000004,
+      },
+      {
+        "box": {
+          "x0": -77.46333788970047,
+          "x1": -32.66333788970046,
+          "y0": -94.5985962517432,
+          "y1": -62.678596251743194,
+        },
+        "h": 31.92,
+        "halo": true,
+        "inside": true,
+        "leader": null,
+        "lines": [
+          {
+            "blank": false,
+            "text": "Yellow",
+          },
+          {
+            "blank": true,
+            "text": "",
+          },
+        ],
+        "sector": 3,
+        "w": 44.800000000000004,
+        "white": false,
+        "widths": [
+          44.352,
+          44.800000000000004,
+        ],
+        "x": -55.06333788970046,
+        "y": -78.6385962517432,
       },
     ],
+    "lineH": 16.8,
     "partFills": [
       {
         "fill": "gray",
@@ -47798,14 +47720,13 @@ exports[`pie chart > values=degrees&angleMarks=measures&lab=%7C%7Cletter%7Cblank
     "titleBlank": null,
     "width": 330,
   },
-  "query": "values=degrees&look=bw&angleMarks=measures&lab=%7C%7Cletter%7Cblank&row=Red%7C110&row=Blue%7C80&row=Green%7C100&row=Yellow%7C70",
+  "query": "values=degrees&labels=name-angle&look=bw&lab=%7C%7Cletter%7Cblank&row=Red%7C110&row=Blue%7C80&row=Green%7C100&row=Yellow%7C70",
 }
 `;
 
 exports[`pie chart > values=percent&labels=value-percent&look=bw&keyAt=below&order=largest&row=Walk%7C35&row=Car%7C30&row=Bus%7C25&row=Bike%7C8 1`] = `
 {
   "figure": {
-    "arcs": [],
     "blankCircle": false,
     "blankW": 44.800000000000004,
     "centerDot": true,
@@ -47995,7 +47916,6 @@ exports[`pie chart > values=percent&labels=value-percent&look=bw&keyAt=below&ord
       },
     ],
     "lineH": 16.8,
-    "measures": [],
     "partFills": [
       {
         "fill": "gray",
@@ -48187,7 +48107,6 @@ exports[`pie chart > values=percent&labels=value-percent&look=bw&keyAt=below&ord
 exports[`pie chart > values=percent&row=A%7C60&row=B%7Clots&row=C%7C-3 1`] = `
 {
   "figure": {
-    "arcs": [],
     "blankCircle": false,
     "blankW": 44.800000000000004,
     "centerDot": true,
@@ -48236,7 +48155,6 @@ exports[`pie chart > values=percent&row=A%7C60&row=B%7Clots&row=C%7C-3 1`] = `
       },
     ],
     "lineH": 16.8,
-    "measures": [],
     "partFills": [
       {
         "fill": "blue",

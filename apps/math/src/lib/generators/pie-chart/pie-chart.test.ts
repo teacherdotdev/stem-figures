@@ -20,9 +20,9 @@ function offCenter(a: number[], b: number[]) {
 }
 const farthest = (b: Box) => Math.hypot(Math.max(-b.x0, b.x1), Math.max(-b.y0, b.y1))
 
-/** Every label and measure is clear of every other, and of every sector but its own. */
+/** Every label is clear of every other, and of every sector but its own. */
 function expectClear(p: PieLayout) {
-  const all = [...p.measures, ...p.labels]
+  const all = p.labels
   for (let i = 0; i < all.length; i++) for (let j = i + 1; j < all.length; j++) expect(overlaps(all[i].box, all[j].box), `${all[i].lines[0]?.text} / ${all[j].lines[0]?.text}`).toBe(false)
   for (const l of all) {
     if (!l.inside) {
@@ -46,7 +46,7 @@ describe('the page address', () => {
   test('the table and settings round-trip', () => {
     const s = cleanSettings({
       rows: FRUIT, values: 'count', total: '40', order: 'largest', labels: 'name-percent', sectorLabels: ['', 'blank', '', 'letter'],
-      look: 'bw', fills: ['', 'hatch'], keyAt: 'below', angleMarks: 'measures', centerDot: 'off', titleMode: 'text', title: 'Fruit',
+      look: 'bw', fills: ['', 'hatch'], keyAt: 'below', centerDot: 'off', titleMode: 'text', title: 'Fruit',
     })
     const q = settingsToQuery(s)
     expect(q).toContain('row=Apples%7C12')
@@ -169,8 +169,8 @@ describe('for students', () => {
   })
 
   test('a blank label never writes its numbers, a letter label writes x', () => {
-    const p = pie({ rows: FRUIT, labels: 'name-angle', angleMarks: 'measures', sectorLabels: ['', 'blank', 'letter', 'letter'] })
-    const texts = [...p.labels, ...p.measures].flatMap((l) => l.lines.map((x) => x.text))
+    const p = pie({ rows: FRUIT, labels: 'name-angle', sectorLabels: ['', 'blank', 'letter', 'letter'] })
+    const texts = p.labels.flatMap((l) => l.lines.map((x) => x.text))
     expect(texts).not.toContain('96°')
     expect(texts).toContain('x°')
     expect(texts).toContain('y°')
@@ -178,11 +178,11 @@ describe('for students', () => {
     expect(p.labels[1].lines).toEqual([{ text: 'Bananas', blank: false }, { text: '', blank: true }])
   })
 
-  test('the center dot is on by default once something is left to draw or measure', () => {
+  test('the center dot is on by default once something is left for students', () => {
     expect(pie({ rows: FRUIT }).centerDot).toBe(false)
-    expect(pie({ rows: FRUIT, angleMarks: 'arcs' }).centerDot).toBe(true)
+    expect(pie({ rows: FRUIT, sectorLabels: ['', 'letter'] }).centerDot).toBe(true)
     expect(pie({ rows: [...FRUIT, row('Kiwi')], total: '40' }).centerDot).toBe(true)
-    expect(pie({ rows: FRUIT, angleMarks: 'arcs', centerDot: 'off' }).centerDot).toBe(false)
+    expect(pie({ rows: FRUIT, sectorLabels: ['', 'letter'], centerDot: 'off' }).centerDot).toBe(false)
   })
 })
 
@@ -215,24 +215,8 @@ describe('labels', () => {
     const thin = Array.from({ length: 8 }, (_, i) => row(`Thin ${i + 1}`, '1'))
     for (const rows of [FRUIT, [row('Big', '92'), ...thin], [...thin, row('Big', '92')], [row('A', '1'), row('B', '1'), row('C', '200'), row('D', '1'), row('E', '1'), row('F', '150')]]) {
       for (const labels of ['name', 'name-percent', 'value-percent', 'name-fraction'])
-        for (const labelSize of ['small', 'medium', 'large']) {
-          for (const angleMarks of ['none', 'measures']) expectClear(pie({ rows, labels, labelSize, angleMarks }))
-        }
+        for (const labelSize of ['small', 'medium', 'large']) expectClear(pie({ rows, labels, labelSize }))
     }
-  })
-
-  test('angle marks: one arc per sector, its measure matching the sector drawn', () => {
-    const p = pie({ rows: FRUIT, angleMarks: 'measures', labels: 'name' })
-    expect(p.arcs).toHaveLength(4)
-    const measured = new Map<number, string>()
-    for (const m of p.measures) measured.set(m.sector, m.lines[0].text)
-    for (const l of p.labels) if (l.lines.length > 1) measured.set(l.sector, l.lines.at(-1)!.text)
-    p.sectors.forEach((t, i) => expect(measured.get(i)).toBe(`${Math.round((t.to - t.from) * 10) / 10}°`))
-  })
-
-  test('arcs with no measures write none', () => {
-    const p = pie({ rows: FRUIT, angleMarks: 'arcs', labels: 'none' })
-    expect([p.arcs.length, p.measures.length, p.labels.length]).toEqual([4, 0, 0])
   })
 })
 

@@ -387,7 +387,7 @@ A circle cut into sectors, one for each category, each sector's angle the catego
 _Avoid_: Circle graph, pie graph (fine as search words, not as the name)
 
 **Sector (of a pie chart)**:
-The slice of a pie chart for one category, between two radii. Its label is inside it where it fits, or outside with a short leader line, and says its name, value, percent, angle or fraction, or two of them; a sector's own label can be a blank line or a letter (x°) for students to work out. An arc at the center can mark its angle.
+The slice of a pie chart for one category, between two radii. Its label is inside it where it fits, or outside with a short leader line, and says its name, value, percent, angle or fraction, or two of them; a sector's own label can be a blank line or a letter (x°) for students to work out.
 _Avoid_: Slice, wedge, segment (a segment is cut off by a chord)
 
 **Histogram**:

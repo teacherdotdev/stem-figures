@@ -67,9 +67,9 @@ and `docs/adr/` for decisions.
 - `/pie-chart` **Pie Chart Generator**: a table of counts, percents or
   degrees typed or pasted, drawn as sectors clockwise from 12 o'clock, labeled
   inside or outside by name, value, percent, angle or fraction (each sector's
-  own label can be a blank line or a letter), with angle marks at the center,
-  a key, and color or black-and-white fills. A value left empty leaves its
-  share as one empty sector; a table with no values draws a blank circle.
+  own label can be a blank line or a letter), with a key and color or
+  black-and-white fills. A value left empty leaves its share as one empty
+  sector; a table with no values draws a blank circle.
 - `/<generator>/examples/<slug>` **Example figures** (see below), and
   `/reuse`, how teachers may reuse them.
 - `/about`, `/privacy`, `/sitemap.xml`, `/robots.txt`

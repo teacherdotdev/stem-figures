@@ -830,11 +830,11 @@ export const COPY: Record<string, GeneratorCopy> = {
     heading: 'Pie charts and circle graphs from a table',
     intro: [
       'The Pie Chart Generator draws a pie chart from a table you type or paste: a category on each row, like Apples or Bananas, and its count, percent or angle in degrees. The sectors run clockwise from 12 o’clock, as pie charts are drawn by hand, in the order typed or largest first. Each sector is labeled inside where it fits, or outside with a short leader line, by its name, value, percent, angle or fraction, or by a key.',
-      'Leave a value empty and its share of the circle is left as one empty sector, for students to complete the pie chart; leave every value empty for a blank circle with its center marked and a radius drawn up to 12 o’clock. Give one sector a blank line or a letter (x°) instead of its label, and mark the angles at the center for measuring with a protractor or working out a missing angle.',
+      'Leave a value empty and its share of the circle is left as one empty sector, for students to complete the pie chart; leave every value empty for a blank circle with its center marked and a radius drawn up to 12 o’clock. Give one sector a blank line or a letter (x°) instead of its label, for students to measure with a protractor or work out a missing angle.',
     ],
     settings: [
       'The table: a category and a value on each row, typed or pasted from a spreadsheet, as counts, percents or degrees, with the total for counts',
-      'The sectors in the order typed or largest first, arcs at the center with or without their measures, and a center dot',
+      'The sectors in the order typed or largest first, and a center dot',
       'Sector labels by name, value, percent, angle or fraction, or a name and a number, with any sector’s own label, a blank line or a letter',
       'Color, black-and-white fills that photocopy, or white sectors to shade, with a fill picked for each sector, and a key on the right or below',
       'A chart title, as text or a blank line for students',
@@ -858,7 +858,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'How do I label a missing angle x?',
-        a: 'Type the sector’s value, then under Labels pick Letter (x°) for it. Its label becomes x°, or x% when the chart is labeled by percents, and the next sector given a letter gets y. Turn on angle marks to put an arc and the other angles at the center.',
+        a: 'Type the sector’s value, then under Labels pick Letter (x°) for it. Its label becomes x°, or x% when the chart is labeled by percents, and the next sector given a letter gets y.',
       },
     ],
     imageAlt: 'A printable pie chart of favorite fruit, with a colored sector for each fruit labeled with its name and percent, made with the Pie Chart Generator',

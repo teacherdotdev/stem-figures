@@ -15,7 +15,7 @@
   import PieChart from './PieChart.svelte'
   import { buildPieChart } from './layout.js'
   import {
-    ANGLE_MARKS, KEY_PLACES, LABEL_MODES, ORDERS, SECTOR_LABELS, VALUE_KINDS,
+    KEY_PLACES, LABEL_MODES, ORDERS, SECTOR_LABELS, VALUE_KINDS,
     cleanSettings, filledAt, fmt, nice, settingsFromParams, settingsToQuery, type RawSettings, type Settings,
   } from './settings.js'
 
@@ -67,7 +67,6 @@
   const sectorsSummary = $derived(
     [
       ORDERS[clean.order],
-      clean.angleMarks !== 'none' && ANGLE_MARKS[clean.angleMarks].toLowerCase(),
       built.centerDot && 'center dot',
     ].filter(Boolean).join(' · '),
   )
@@ -145,7 +144,6 @@
   {#snippet settings()}
     <Section title="Sectors" icon={ChartPie} summary={sectorsSummary}>
       {@render choice({ key: 'order', name: 'Order', options: ORDERS })}
-      {@render choice({ key: 'angleMarks', name: 'Angle marks at the center', options: ANGLE_MARKS })}
       <label class="check">
         <input type="checkbox" checked={built.centerDot} onchange={(e) => (s.centerDot = e.currentTarget.checked ? 'on' : 'off')} />
         <span>Center dot</span>

@@ -400,7 +400,7 @@ const PIE = [
   rows('Apples|12', 'Bananas|8', 'Cherries|6', 'Grapes|4'),
   `labels=name-percent&titleMode=text&title=Fruit&keyAt=right&${rows('Apples|12', 'Bananas|8', 'Cherries|6', 'Grapes|4')}`,
   `values=percent&labels=value-percent&look=bw&keyAt=below&order=largest&${rows('Walk|35', 'Car|30', 'Bus|25', 'Bike|8')}`,
-  `values=degrees&angleMarks=measures&lab=%7C%7Cletter%7Cblank&look=bw&${rows('Red|110', 'Blue|80', 'Green|100', 'Yellow|70')}`,
+  `values=degrees&labels=name-angle&lab=%7C%7Cletter%7Cblank&look=bw&${rows('Red|110', 'Blue|80', 'Green|100', 'Yellow|70')}`,
   `total=60&labels=name-angle&fills=dots&centerDot=off&${rows('Soccer|20', 'Basketball|15', 'Tennis|', 'Swimming|')}`,
   `labelSize=large&labels=name&${rows('Big|92', 'One|1', 'Two|1', 'Three|1', 'Four|1', 'Five|1', 'Six|1', 'Seven|1', 'Eight|1')}`,
   `look=white&titleMode=blank&${rows('Dog|', 'Cat|')}`,

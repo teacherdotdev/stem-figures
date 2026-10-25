@@ -187,14 +187,14 @@ export function buildPieChart(s: Settings) {
    * `far`, where the lines fit clear of everything, nearest the middle of
    * that room.
    */
-  function fitInside(t: { from: number; to: number }, lines: Line[], near: number, far: number, hug = false) {
+  function fitInside(t: { from: number; to: number }, lines: Line[], near: number, far: number) {
     const { widths, w, h } = sizeOf(lines)
     const mid = dir((t.from + t.to) / 2)
     const rays = t.to - t.from > 359.999 ? [] : [t.from, t.to].map((a) => ({ x1: 0, y1: 0, x2: dir(a)[0] * R, y2: dir(a)[1] * R }))
     // Best toward the middle of the sector's room, then nearer the center or the rim.
     const steps: number[] = []
     for (let r = near; r <= far + 1e-9; r += 3) steps.push(r)
-    const ideal = hug ? near : (near + far) / 2
+    const ideal = (near + far) / 2
     steps.sort((a, b) => Math.abs(a - ideal) - Math.abs(b - ideal))
     for (const r of steps) {
       const box = boxAt(mid[0] * r, mid[1] * r, w, h)
@@ -210,12 +210,10 @@ export function buildPieChart(s: Settings) {
   }
 
   // Each sector's label: inside if it fits, else outside.
-  const measured = s.angleMarks === 'measures' && marked
   const labels: Label[] = []
   const outside: { i: number; lines: Line[]; widths: number[]; w: number; h: number; mid: number }[] = []
   sectors.forEach((t, i) => {
-    let lines = labelLines(t.part, s.labels, s.values, t.letter, measured && !folded.has(i))
-    if (folded.has(i)) lines = [...lines, { text: t.letter ? `${t.letter}°` : `${nice(t.part.angle!)}°`, blank: false }]
+    const lines = labelLines(t.part, s.labels, s.values, t.letter)
     if (!lines.length) return
     const whole = t.to - t.from > 359.999
     const spot = whole ? fitInside(t, lines, clearOf + 4, R * 0.75) : fitInside(t, lines, Math.max(clearOf + 4, R * 0.3), R - MARGIN)
@@ -350,8 +348,6 @@ export function buildPieChart(s: Settings) {
     startRadius: blankCircle,
     centerDot,
     dot: DOT,
-    arcs: marks.arcs,
-    measures,
     labels,
     key,
     title,

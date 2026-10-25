@@ -1403,9 +1403,9 @@ export const EXAMPLES: Example[] = [
     {
       slug: 'pie-chart-find-the-missing-angle-x',
       title: 'Pie chart: find the missing angle x',
-      alt: 'A black-and-white pie chart of Red, Blue, Green and Yellow with each angle marked at the center, 110°, 80° and 100°, and Yellow’s marked x°',
+      alt: 'A black-and-white pie chart of Red, 110°, Blue, 80°, Green, 100°, and Yellow, x°',
       caption:
-        'A black-and-white pie chart of four sectors named Red, Blue, Green and Yellow, with a dot at the center and an arc there marking each angle: 110°, 80° and 100°, and x° for Yellow. Students find x from the angles around a point adding up to 360°.',
+        'A black-and-white pie chart of four sectors, each labeled with its name and angle: Red 110°, Blue 80°, Green 100° and Yellow x°, with a dot at the center. Students find x from the angles around a point adding up to 360°.',
       settings: {
         rows: [
           { name: 'Red', cells: [{ value: '110' }] },
@@ -1414,9 +1414,9 @@ export const EXAMPLES: Example[] = [
           { name: 'Yellow', cells: [{ value: '70' }] },
         ],
         values: 'degrees',
+        labels: 'name-angle',
         sectorLabels: ['', '', '', 'letter'],
         look: 'bw',
-        angleMarks: 'measures',
       },
     },
     {
