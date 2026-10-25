@@ -492,12 +492,16 @@ describe('angle labels', () => {
     return { l, from: dist([l.cx, l.cy], f.handles.find((h) => h.key === 'o')!.at) }
   }
 
-  test('a narrow angle’s label gets smaller and stays by its corner', () => {
+  test('an angle’s label is always inside it, however narrow, smaller when it’s narrow', () => {
     const wide = central(60)
-    for (const sweep of [5, 12, 25]) {
+    for (const sweep of [5, 12, 25, 60]) {
       const { l, from } = central(sweep)
-      expect(from).toBeLessThan(60)
-      expect(l.box.w).toBeLessThan(wide.l.box.w)
+      // Between its two rays (from 0° round to the sweep, the page's y running down), and no further out than they reach.
+      const deg = (Math.atan2(-l.cy, l.cx) * 180) / Math.PI
+      expect(deg).toBeGreaterThan(0)
+      expect(deg).toBeLessThan(sweep)
+      expect(from).toBeLessThan(130)
+      if (sweep < 60) expect(l.box.w).toBeLessThan(wide.l.box.w)
     }
   })
 })
