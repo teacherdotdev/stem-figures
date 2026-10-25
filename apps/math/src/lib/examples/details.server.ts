@@ -10,6 +10,8 @@
 import { settingsFor as solidSettings } from '$lib/generators/3d-shape/settings'
 import { partName, radiusOf, readShape } from '$lib/generators/3d-shape/solve'
 import * as boxPlot from '$lib/generators/box-plot/settings'
+import { circleAnswer } from '$lib/generators/circle/answer'
+import * as circle from '$lib/generators/circle/settings'
 import { parseEquation, readEquations } from '$lib/generators/coordinate-grid/equations'
 import * as grid from '$lib/generators/coordinate-grid/settings'
 import { family as kiteFamily } from '$lib/generators/kite/family'
@@ -302,6 +304,7 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'box-plot': { definition: definitionOf(boxPlot), answer: boxPlotAnswer },
   'mapping-diagram': { definition: definitionOf(mapping), answer: mappingAnswer },
   'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthAnswer(s).split(' · ') }) },
+  'circle': { definition: definitionOf(circle), answer: circleAnswer },
 }
 
 /** Whether a kept value has everything the example gives: a list's rows,

@@ -179,6 +179,20 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'circle',
+    site: 'math',
+    name: 'Circle Generator',
+    path: '/circle',
+    blurb: 'A circle with points, chords, radii and tangents, its angles, arcs and areas labeled right on the figure.',
+    description: 'Circles with chords, radii, tangents and secants, their angles, arcs and shaded sectors labeled on the figure.',
+    keywords: [
+      'circle', 'circles', 'circle theorems', 'parts of a circle', 'chord', 'chords', 'radius', 'diameter', 'tangent', 'tangents', 'secant',
+      'arc', 'arcs', 'intercepted arc', 'arc measure', 'arc length', 'central angle', 'inscribed angle', 'inscribed angles',
+      'angle in a semicircle', 'angles in the same segment', 'cyclic quadrilateral', 'alternate segment theorem', 'tangent and radius',
+      'intersecting chords', 'inscribed polygon', 'inscribed hexagon', 'sector', 'segment', 'geometry', 'diagram', 'labels', 'printable',
+    ],
+  },
+  {
     id: 'prism',
     site: 'math',
     name: 'Prism Generator',

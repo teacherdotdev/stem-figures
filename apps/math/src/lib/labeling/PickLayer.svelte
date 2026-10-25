@@ -53,6 +53,9 @@
 <svg bind:this={svg} class="layer" viewBox="{f.x} {f.y} {f.w} {f.h}" aria-label="Parts of the figure">
   <!-- Highlights -->
   <g pointer-events="none">
+    {#each figure.areas ?? [] as a (a.key)}
+      {#if lit({ kind: 'area', key: a.key })}<path d={a.d} fill={BLUE} fill-opacity="0.12" />{/if}
+    {/each}
     {#each figure.angles as a (a.key)}
       {#if lit({ kind: 'angle', key: a.key }) && a.key !== ghost}<path d={a.wedge} fill={BLUE} fill-opacity="0.18" />{/if}
     {/each}
@@ -78,7 +81,15 @@
     {/each}
   </g>
 
-  <!-- What can be pointed at: angles over lines, so near a crossing the angle wins, even right on a line -->
+  <!-- What can be pointed at: enclosed areas under everything; angles over lines, so near a crossing the angle wins, even right on a line -->
+  {#each figure.areas ?? [] as a (a.key)}
+    {@const part = { kind: 'area', key: a.key } as Part}
+    <path
+      d={a.d} fill="transparent" class="hit" role="button" tabindex="0" aria-label={a.name ?? 'Enclosed area'}
+      onclick={() => pick(part, a.anchor)}
+      onpointerenter={(e) => enter(e, part)} onpointerleave={() => leave(part)} onkeydown={(e) => key(e, part, a.anchor)}
+    />
+  {/each}
   {#each figure.segments as g (g.id)}
     {@const part = { kind: 'line', key: g.id } as Part}
     <line

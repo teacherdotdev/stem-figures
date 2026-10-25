@@ -769,6 +769,192 @@ export const EXAMPLES: Example[] = [
       settings: { system: 'imperial', imperialMarks: '4', start: 1, length: 2.5 },
     },
   ]),
+  ...examplesOf('circle', [
+    {
+      slug: 'central-angle-and-inscribed-angle-on-the-same-arc',
+      title: 'Central angle and inscribed angle on the same arc',
+      alt: 'A circle with center O and points A, B and C on it; radii OA and OB make a central angle labeled 120°, and chords CA and CB make an inscribed angle at C labeled x',
+      caption:
+        'A circle with its center O and three points A, B and C on it. The radii OA and OB meet at O in a central angle marked with an arc and labeled 120°, and the chords CA and CB meet at C in an inscribed angle on the same arc AB, marked and labeled x, for the angle at the center is twice the angle at the circumference.',
+      settings: {},
+    },
+    {
+      slug: 'parts-of-a-circle-radius-diameter-chord-tangent-secant',
+      title: 'Parts of a circle: radius, diameter, chord, tangent and secant',
+      alt: 'A circle with center O, a diameter AB, a radius OC, a chord DE, a tangent touching the circle at F and a secant through G and H that runs on past both',
+      caption:
+        'A circle with its center O and eight named points on it. A diameter runs from A through O to B, a radius from O to C, and a chord from D to E along the bottom. A tangent touches the circle at F, and a secant cuts through G and H and runs on past both, for naming the parts of a circle.',
+      settings: {
+        points: [
+          { id: 'p1', name: 'A', dir: '200' }, { id: 'p2', name: 'B', dir: '20' }, { id: 'p3', name: 'C', dir: '125' }, { id: 'p4', name: 'D', dir: '240' },
+          { id: 'p5', name: 'E', dir: '300' }, { id: 'p6', name: 'F', dir: '155' }, { id: 'p7', name: 'G', dir: '45' }, { id: 'p8', name: 'H', dir: '75' },
+        ],
+        lines: [
+          { id: 'l1', a: 'p1', b: 'p2' }, { id: 'l2', a: 'o', b: 'p3' }, { id: 'l3', a: 'p4', b: 'p5' },
+          { id: 'l4', kind: 'tangent', a: 'p6' }, { id: 'l5', a: 'p7', b: 'p8', runA: true, runB: true },
+        ],
+        angles: {},
+      },
+    },
+    {
+      slug: 'shaded-sector-with-radius-central-angle-and-arc-length',
+      title: 'Shaded sector with its radius, central angle and arc length',
+      alt: 'A circle with center O and a shaded sector between radii OA and OB; OA is labeled 6 cm, the central angle 100° and the arc AB 10.5 cm',
+      caption:
+        'A circle with its center O and a sector shaded blue between the radii OA and OB. The radius OA is labeled 6 cm, the central angle at O is marked with an arc and labeled 100°, and the arc from A to B is labeled with its length, 10.5 cm, for finding the sector’s area.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '30' }, { id: 'p2', name: 'B', dir: '130' }],
+        lines: [{ id: 'l1', a: 'o', b: 'p1', label: 'measure' }, { id: 'l2', a: 'o', b: 'p2' }],
+        angles: { 'o@l1+~l2+': { label: 'measure', mark: '1' } },
+        arcs: { 'p1~p2': { label: 'length' } },
+        faces: { 'l1+l2+p1~p2': 1 },
+      },
+    },
+    {
+      slug: 'shaded-segment-of-a-circle-cut-off-by-a-chord',
+      title: 'Shaded segment of a circle cut off by a chord',
+      alt: 'A circle with center O and a chord AB; the segment below the chord is shaded, dashed radii OA and OB meet at O at 140°, and OA is labeled 6 cm',
+      caption:
+        'A circle with its center O and a chord AB across its lower part, with the segment between the chord and the circle shaded blue. Dashed radii run from O to A and B, OA labeled 6 cm, and the central angle between them is marked and labeled 140°, for finding the area of the segment.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '200' }, { id: 'p2', name: 'B', dir: '340' }],
+        lines: [{ id: 'l1', a: 'p1', b: 'p2' }, { id: 'l2', a: 'o', b: 'p1', style: 'dashed', label: 'measure' }, { id: 'l3', a: 'o', b: 'p2', style: 'dashed' }],
+        angles: { 'o@l2+~l3+': { label: 'measure', mark: '1' } },
+        faces: { 'l1+p1~p2': 1 },
+      },
+    },
+    {
+      slug: 'angles-in-the-same-segment-circle-theorem',
+      title: 'Angles in the same segment',
+      alt: 'A circle with points A and B at the bottom and C and D at the top; chords from C and from D to A and B make two angles on the same arc, the one at D labeled 70° and the one at C labeled x',
+      caption:
+        'A circle with A and B on its lower part and C and D on its upper part. Chords run from C to A and B and from D to A and B, crossing in the middle, so the angles at C and D both stand on the arc AB. The angle at D is marked and labeled 70°, and the angle at C is marked and labeled x.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '200' }, { id: 'p2', name: 'B', dir: '340' }, { id: 'p3', name: 'C', dir: '60' }, { id: 'p4', name: 'D', dir: '120' }],
+        lines: [{ id: 'l1', a: 'p3', b: 'p1' }, { id: 'l2', a: 'p3', b: 'p2' }, { id: 'l3', a: 'p4', b: 'p1' }, { id: 'l4', a: 'p4', b: 'p2' }],
+        angles: { 'p3@l1+~l2+': { label: 'text', text: 'x', mark: '1' }, 'p4@l3+~l4+': { label: 'measure', mark: '1' } },
+      },
+    },
+    {
+      slug: 'angle-in-a-semicircle-triangle-on-a-diameter',
+      title: 'Angle in a semicircle: a triangle on a diameter',
+      alt: 'A circle with diameter AB through its center O and a point C on the circle; triangle ABC has a right-angle square at C, the angle at B labeled 55° and the angle at A labeled x',
+      caption:
+        'A circle with a diameter AB through its center O and a point C on the upper half. The chords CA and CB make a triangle on the diameter, with a right-angle square at C. The angle at B is marked and labeled 55° and the angle at A is marked and labeled x.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '180' }, { id: 'p2', name: 'B', dir: '0' }, { id: 'p3', name: 'C', dir: '70' }],
+        lines: [{ id: 'l1', a: 'p1', b: 'p2' }, { id: 'l2', a: 'p3', b: 'p1' }, { id: 'l3', a: 'p3', b: 'p2' }],
+        angles: { 'p1@l1+~l2-': { label: 'text', text: 'x', mark: '1' }, 'p2@l3-~l1-': { label: 'measure', mark: '1' } },
+      },
+    },
+    {
+      slug: 'cyclic-quadrilateral-opposite-angles',
+      title: 'Cyclic quadrilateral: opposite angles',
+      alt: 'A quadrilateral ABCD with all four corners on a circle; the angle at C is labeled 95° and the opposite angle at A is labeled x',
+      caption:
+        'A quadrilateral ABCD drawn inside a circle with all four corners on it, the circle’s center not shown. The angle at C is marked and labeled 95°, and the opposite angle at A is marked and labeled x, for the opposite angles of a cyclic quadrilateral.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '225' }, { id: 'p2', name: 'B', dir: '320' }, { id: 'p3', name: 'C', dir: '30' }, { id: 'p4', name: 'D', dir: '130' }],
+        lines: [{ id: 'l1', a: 'p1', b: 'p2' }, { id: 'l2', a: 'p2', b: 'p3' }, { id: 'l3', a: 'p3', b: 'p4' }, { id: 'l4', a: 'p4', b: 'p1' }],
+        angles: { 'p1@l1+~l4-': { label: 'text', text: 'x', mark: '1' }, 'p3@l3+~l2-': { label: 'measure', mark: '1' } },
+        centerDot: false,
+        centerName: '',
+      },
+    },
+    {
+      slug: 'tangent-and-radius-angle-x',
+      title: 'Tangent and radius: find the angle',
+      alt: 'A circle with center O, a radius OA labeled 6 cm and a tangent touching the circle at A; the angle between the radius and the tangent is labeled x',
+      caption:
+        'A circle with its center O and a radius from O to a point A on the circle, labeled 6 cm. A tangent touches the circle at A and runs on both ways, and the angle between it and the radius is labeled x with no right-angle mark, for the angle between a tangent and a radius.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '300' }],
+        lines: [{ id: 'l1', a: 'o', b: 'p1', label: 'measure' }, { id: 'l2', kind: 'tangent', a: 'p1' }],
+        angles: { 'p1@l2+~l1-': { label: 'text', text: 'x' } },
+      },
+    },
+    {
+      slug: 'two-tangents-from-an-external-point',
+      title: 'Two tangents from a point outside a circle',
+      alt: 'A circle with center O and a point P outside it; tangents from P touch the circle at A and B, each marked with a tick, radii OA and OB meet them at right angles, angle AOB is labeled 120° and angle APB is labeled x',
+      caption:
+        'A circle with its center O and a point P outside it, two radii away from O. Two tangents run from P to the circle, touching it at A and B, each marked with one tick to show they are equal. The radii OA and OB meet the tangents at right angles, marked with squares; the angle AOB is labeled 120° and the angle APB is labeled x.',
+      settings: {
+        points: [{ id: 'p1', name: 'P', dir: '0', dist: '2' }],
+        lines: [
+          { id: 'l1', kind: 'from', a: 'p1', side: 'left', ticks: 1 }, { id: 'l2', kind: 'from', a: 'p1', side: 'right', ticks: 1 },
+          { id: 'l3', a: 'o', b: 'l1:t' }, { id: 'l4', a: 'o', b: 'l2:t' },
+        ],
+        angles: { 'p1@l2+~l1+': { label: 'text', text: 'x', mark: '1' }, 'o@l3+~l4+': { label: 'measure', mark: '1' } },
+        marks: { 'l1:t': 'A', 'l2:t': 'B' },
+      },
+    },
+    {
+      slug: 'alternate-segment-theorem-tangent-and-chord',
+      title: 'Alternate segment theorem: tangent and chord',
+      alt: 'A circle with a tangent at A and a triangle ABC inside it; the angle between the tangent and the chord AB is labeled 60° and the angle at C is labeled x',
+      caption:
+        'A circle with a tangent touching it at A, at the bottom, and a triangle ABC with all three corners on the circle. The angle between the tangent and the chord AB is marked and labeled 60°, and the angle at C, in the alternate segment, is marked and labeled x.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '270' }, { id: 'p2', name: 'B', dir: '30' }, { id: 'p3', name: 'C', dir: '140' }],
+        lines: [{ id: 'l1', kind: 'tangent', a: 'p1' }, { id: 'l2', a: 'p1', b: 'p2' }, { id: 'l3', a: 'p1', b: 'p3' }, { id: 'l4', a: 'p2', b: 'p3' }],
+        angles: { 'p1@l1+~l2+': { label: 'measure', mark: '1' }, 'p3@l3-~l4-': { label: 'text', text: 'x', mark: '1' } },
+        centerDot: false,
+        centerName: '',
+      },
+    },
+    {
+      slug: 'intersecting-chords-angle-and-intercepted-arcs',
+      title: 'Intersecting chords: the angle and its intercepted arcs',
+      alt: 'A circle with chords AB and CD crossing at E; arc AC is labeled 90°, arc BD is labeled 110°, and the angle AEC between them is labeled x',
+      caption:
+        'A circle with two chords, AB and CD, crossing inside it at a point named E. The arc from C to A is labeled 90° and the opposite arc from D to B is labeled 110°, and the angle at E facing arc AC is labeled x, for the angle formed by two chords.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '150' }, { id: 'p2', name: 'B', dir: '340' }, { id: 'p3', name: 'C', dir: '60' }, { id: 'p4', name: 'D', dir: '230' }],
+        lines: [{ id: 'l1', a: 'p1', b: 'p2' }, { id: 'l2', a: 'p3', b: 'p4' }],
+        angles: { 'l1.l2@l2-~l1-': { label: 'text', text: 'x', mark: '1' } },
+        arcs: { 'p3~p1': { label: 'degrees' }, 'p4~p2': { label: 'degrees' } },
+        marks: { 'l1.l2': 'E' },
+        centerDot: false,
+        centerName: '',
+      },
+    },
+    {
+      slug: 'two-secants-from-an-external-point',
+      title: 'Two secants from a point outside a circle',
+      alt: 'A circle and a point P outside it; two secants from P cut the circle at A and B and at C and D, the near arc AC is labeled 60°, the far arc BD 180°, and the angle at P x',
+      caption:
+        'A circle and a point P outside it to the left. Two secants run from P through the circle, the upper one cutting it at A and then B, the lower one at C and then D. The near arc between A and C is labeled 60°, the far arc between B and D is labeled 180°, and the angle at P is marked and labeled x.',
+      settings: {
+        points: [{ id: 'p1', name: 'P', dir: '180', dist: 'sqrt(3)' }, { id: 'p2', name: 'A', dir: '150' }, { id: 'p3', name: 'C', dir: '210' }],
+        lines: [{ id: 'l1', a: 'p1', b: 'p2', runB: true }, { id: 'l2', a: 'p1', b: 'p3', runB: true }],
+        angles: { 'p1@l2+~l1+': { label: 'text', text: 'x', mark: '1' } },
+        arcs: { 'p2~p3': { label: 'degrees' }, 'l2:b1~l1:b1': { label: 'degrees' } },
+        marks: { 'l1:b1': 'B', 'l2:b1': 'D' },
+        centerDot: false,
+        centerName: '',
+      },
+    },
+    {
+      slug: 'regular-hexagon-inscribed-in-a-circle',
+      title: 'Regular hexagon inscribed in a circle',
+      alt: 'A regular hexagon ABCDEF inscribed in a circle with center O; every side has a tick, the radius OA is labeled 6 cm and the side AB is labeled x',
+      caption:
+        'A regular hexagon ABCDEF with all six corners on a circle, its center O dotted. Every side is marked with one tick to show they are equal. The radius from O to A is labeled 6 cm and the side AB along the bottom is labeled x.',
+      settings: {
+        points: [
+          { id: 'p1', name: 'A', dir: '240' }, { id: 'p2', name: 'B', dir: '300' }, { id: 'p3', name: 'C', dir: '0' },
+          { id: 'p4', name: 'D', dir: '60' }, { id: 'p5', name: 'E', dir: '120' }, { id: 'p6', name: 'F', dir: '180' },
+        ],
+        lines: [
+          { id: 'l1', a: 'p1', b: 'p2', ticks: 1, label: 'text', text: 'x' }, { id: 'l2', a: 'p2', b: 'p3', ticks: 1 }, { id: 'l3', a: 'p3', b: 'p4', ticks: 1 },
+          { id: 'l4', a: 'p4', b: 'p5', ticks: 1 }, { id: 'l5', a: 'p5', b: 'p6', ticks: 1 }, { id: 'l6', a: 'p6', b: 'p1', ticks: 1 },
+          { id: 'l7', a: 'o', b: 'p1', label: 'measure' },
+        ],
+        angles: {},
+      },
+    },
+  ]),
 ]
 
 /** A generator's examples, in order; the first is its best. */

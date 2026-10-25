@@ -328,6 +328,56 @@ _Avoid_: Heading, bearing, rotation
 The angle over 180° that wraps around the outside, such as the 300° beside a 60° angle. It's an angle like any other, so it can be labeled, marked and shaded.
 _Avoid_: Exterior angle (a shape's is different), outside angle
 
+### Circles
+
+**Circle** (the figure):
+One circle with its center, points on it and lines between them, with the angles and arcs labeled for students: parts of a circle, central and inscribed angles, the circle theorems. Its generator is the Circle Generator. The circle is always drawn the same size; its **radius** (a length and unit, such as 6 cm) only sets the lengths the figure measures.
+_Avoid_: Circle diagram, circle theorems (fine as search words), unit circle (that's a different figure)
+
+**Center**:
+The circle's center, named O unless the teacher changes it, with a dot that can be hidden. It can be joined like any point, but not moved.
+_Avoid_: Origin, middle
+
+**Point** (in this figure):
+A place with an optional name, such as A, set by its **direction** from the center (0° to the right, counting counterclockwise, as the Angles Generator measures) and its distance from the center in radii. At a distance of 1 it's on the circle, anywhere else off it, inside or outside. Every point is added on the circle; dragged, a point on the circle slides round it (in 5° steps, 1° with Ctrl or Cmd held) until it's pulled a third of a radius away, and a point off it moves anywhere (its distance in quarter radii) and snaps back on within a tenth of a radius. An arc's popup can add a point in its middle.
+_Avoid_: Vertex, dot (that's how it's drawn)
+
+**Line** (in this figure):
+A straight line joining two places (the center, points, touch points or midpoints), or a **tangent**. It's named by what it is: a **radius** (from the center to the circle), a **diameter** (circle to circle through the center), a **chord** (circle to circle), a **secant** (a chord run on past both ends, or any line crossing the circle twice as drawn), or just a line (from a point off the circle, not crossing it twice). Each end stops at its point or runs on past it, ending in a cap; an end running into the circle goes all the way through it first. A run-on end can instead run until it meets another line (two tangents to where they cross, say), and that line runs on to meet it too; where they meet is a crossing, which can be named. Lines are drawn from a point's popup ("Join to") or the left card. A line's label goes beside it by itself, and can be dragged across the line to the other side.
+_Avoid_: Segment (alone), side, edge
+
+**Tangent**:
+A line touching the circle at one point. A tangent at a point on the circle is square to the radius there and runs on the same set length each way; either end can be cut back to where it touches. A tangent from a point outside the circle runs from that point to its **touch point**; a point has two, named on the page by where they touch (left and right, or top and bottom), and the popup draws none, either or both.
+_Avoid_: Tangent line (fine), touching line
+
+**Touch point**:
+Where a tangent from a point outside the circle touches it. It can be named and joined like a point (a radius to it, say), but it moves with its point and tangent, and goes when the tangent does.
+_Avoid_: Point of tangency (fine in teaching), contact point
+
+**Midpoint**:
+The middle of a line joining two places, such as a chord's. Clicking the middle of the line names it or draws a line from it to the center or a point (the line from the center square to a chord); midpoints aren't offered anywhere else, and a line from one is added with Add midpoint line, or from the midpoint's popup, and has its own row in the left card, "Midpoint of [AB] to [O]"; once joined or named it's a place on the figure, and the line's congruence ticks go on each half.
+_Avoid_: Apothem (that's a regular polygon's), bisector
+
+**Crossing** (in this figure):
+Where two lines cross away from a point, or a line meets the circle away from a point (a run-on end through the circle, say). Nothing shows there until the teacher clicks it and names a point there.
+_Avoid_: Intersection (fine in teaching)
+
+**Angle** (in this figure):
+The space between two neighboring lines at the center, a point or a crossing, labeled and marked as on a Parallel Lines and Transversal. It isn't shaded: enclosed areas are. A right angle's square comes on its own, at the first right angle in each place (where a triangle stands on a diameter, or a radius meets its tangent), until the teacher takes it off. Only the center has reflex angles (a reflex central angle); everywhere else, only angles up to 180° count.
+_Avoid_: Central angle and inscribed angle as names in the figure (they're fine in teaching; every angle is edited the same way)
+
+**Arc**:
+The piece of the circle between two neighboring places on it (points, and where lines meet it). Its label is nothing, its measure in degrees, its length (from the radius) or text; it can carry congruence ticks and be drawn bold or in a color, to show an intercepted arc, or hidden, leaving the rest of the circle drawn (it shows faintly dashed while the figure is edited). An arc split by a point in the middle is labeled piece by piece.
+_Avoid_: Curve, minor arc and major arc (an arc is always between neighboring places)
+
+**Enclosed area**:
+Any region the circle and the lines close off: a **sector** (between two radii and an arc), a **segment** (between a chord and an arc), a triangle of chords, or a piece where chords cross. Clicking inside one shades it in one of the shading colors. It keeps its shading while its points move, until a line is drawn across it. Lines' loose ends, and a tangent, close nothing off.
+_Avoid_: Region, face, shape (that's a different figure)
+
+**Measures** (in this figure):
+The circle's circumference and area, and each shaded enclosed area's size (with its arc's angle and length when it runs along one arc, as a sector or segment does), worked out from the radius and shown on the page in terms of π and as a decimal. They're for the teacher and never printed in the figure.
+_Avoid_: Answers, results, solutions
+
 ### Data displays
 
 **Data set**:
