@@ -9,21 +9,30 @@
 
 import { settingsFor as solidSettings } from '$lib/generators/3d-shape/settings'
 import { partName, radiusOf, readShape } from '$lib/generators/3d-shape/solve'
+import * as barGraph from '$lib/generators/bar-graph/settings'
 import * as boxPlot from '$lib/generators/box-plot/settings'
 import { circleAnswer } from '$lib/generators/circle/answer'
 import * as circle from '$lib/generators/circle/settings'
+import { buildCumulative } from '$lib/generators/cumulative-frequency/layout'
+import * as cumulative from '$lib/generators/cumulative-frequency/settings'
 import { parseEquation, readEquations } from '$lib/generators/coordinate-grid/equations'
 import * as grid from '$lib/generators/coordinate-grid/settings'
+import * as histogram from '$lib/generators/histogram/settings'
 import { family as kiteFamily } from '$lib/generators/kite/family'
 import { lengthSettings, answerLine as lengthAnswer } from '$lib/generators/length-reading/settings'
 import * as mapping from '$lib/generators/mapping-diagram/settings'
+import { buildPieChart, hiddenText } from '$lib/generators/pie-chart/layout'
+import * as pieChart from '$lib/generators/pie-chart/settings'
 import type { Interval } from '$lib/generators/number-line/inequality'
 import * as numberLine from '$lib/generators/number-line/settings'
 import { family as parallelogramFamily } from '$lib/generators/parallelogram/family'
 import { family as rectangleFamily } from '$lib/generators/rectangle/family'
 import * as polygon from '$lib/generators/regular-polygon/settings'
+import * as stemAndLeaf from '$lib/generators/stem-and-leaf/settings'
 import { family as trapezoidFamily } from '$lib/generators/trapezoid/family'
 import * as triangle from '$lib/generators/triangle/settings'
+import * as twoWay from '$lib/generators/two-way-table/settings'
+import * as venn from '$lib/generators/venn-diagram/settings'
 import * as shapeParts from '$lib/shapes/parts'
 import * as quadKinds from '$lib/shapes/quadrilateral/kinds'
 import * as quad from '$lib/shapes/quadrilateral/settings'
@@ -278,6 +287,85 @@ function boxPlotAnswer(s: SettingsById['box-plot']): ExampleDetails['answer'] {
   return { heading: 'Answer key', lines: out }
 }
 
+function barGraphAnswer(s: SettingsById['bar-graph']): ExampleDetails['answer'] {
+  const read = barGraph.readGraph(s)
+  const problem = read.problems.table ?? read.problems.from ?? read.problems.to ?? read.problems.step
+  if (problem) throw new Error(`The bar graph example can’t be drawn as written: ${problem}`)
+  // The figure shows every value it has; a bar left for students has none to give.
+  return null
+}
+
+function stemAndLeafAnswer(s: SettingsById['stem-and-leaf']): ExampleDetails['answer'] {
+  const read = stemAndLeaf.readPlot(s)
+  const problem = Object.values(read.problems).find(Boolean)
+  if (problem) throw new Error(`The stem-and-leaf example can’t be drawn as written: ${problem}`)
+  // Each data set's numbers, as the generator's readout gives them; a blank plot has none.
+  const lines = read.sets.flatMap((set) => (set.summary ? [`${read.back && set.name ? `${set.name}: ` : ''}${stemAndLeaf.readoutOf(set)}`] : []))
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
+function cumulativeAnswer(s: SettingsById['cumulative-frequency']): ExampleDetails['answer'] {
+  const built = buildCumulative(s)
+  const problem = Object.values(built.read.problems).find(Boolean) ?? built.problems.readings.find(Boolean) ?? built.problems.join
+  if (problem) throw new Error(`The cumulative frequency example can’t be drawn as written: ${problem}`)
+  // Each reading drawn without its value, read off the drawn join as students would.
+  const { quartiles } = built
+  const unwritten = [
+    ...cumulative.QUARTILES.filter((q) => s[q] === 'lines' || s[q] === 'blank').map((q) => quartiles[q]),
+    ...built.readings.filter((r) => r && r.show !== 'value'),
+  ].filter((r) => r !== null)
+  const lines = unwritten.map((r) => `${r!.name}: ${r!.text}`)
+  if (s.lower !== 'off' && s.upper !== 'off' && (s.lower !== 'value' || s.upper !== 'value') && quartiles.lower && quartiles.upper) {
+    lines.push(`Interquartile range: ${cumulative.fmt(Number((quartiles.upper.value - quartiles.lower.value).toPrecision(12)))}`)
+  }
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
+function twoWayAnswer(s: SettingsById['two-way-table']): ExampleDetails['answer'] {
+  const read = twoWay.readTwoWay(s)
+  const problem = read.problems.sums ?? read.problems.relative ?? read.problems.fractions
+  if (problem) throw new Error(`The two-way table example can’t be drawn as written: ${problem}`)
+  // Each cell left blank (or written as a letter), as the generator's panel
+  // works it out. A blank table, filled in from a description, has none.
+  const found = read.missing.filter((m) => m.value !== null)
+  if (!found.length) return null
+  if (found.length < read.missing.length) throw new Error('The two-way table example has a missing value that can’t be worked out')
+  return { heading: 'Answer key', lines: found.map((m) => `${m.name}: ${m.typed ? `${m.typed} = ` : ''}${m.value}`) }
+}
+
+function histogramAnswer(s: SettingsById['histogram']): ExampleDetails['answer'] {
+  const read = histogram.readHistogram(s)
+  const problem = Object.values(read.problems).find(Boolean)
+  if (problem) throw new Error(`The histogram example can’t be drawn as written: ${problem}`)
+  if (!read.bins.length) throw new Error('The histogram example has no bins')
+  // A data set's frequency table, which students work out; a typed table gives its own.
+  if (s.source !== 'data') return null
+  return { heading: 'Answer key', lines: [...read.bins.map((b) => `${b.name}: ${histogram.fmt(b.frequency ?? 0)}`), `n = ${histogram.fmt(read.n)}`] }
+}
+
+function vennAnswer(s: SettingsById['venn-diagram']): ExampleDetails['answer'] {
+  const read = venn.readVenn(s)
+  const problem = read.problems.elements ?? Object.values(read.problems.values)[0]
+  if (problem) throw new Error(`The Venn diagram example can’t be drawn as written: ${problem}`)
+  // The counts the diagram gives, and in elements mode each region's members.
+  const lines = [...read.readout.counts, ...read.readout.members].map((l) => `${l.label}${read.readout.members.includes(l) ? ':' : ' ='} ${l.value}`)
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
+function pieChartAnswer(s: SettingsById['pie-chart']): ExampleDetails['answer'] {
+  const pie = buildPieChart(s)
+  const problem = pie.read.problems.table ?? pie.read.problems.total ?? pie.read.problems.sum
+  if (problem) throw new Error(`The pie chart example can’t be drawn as written: ${problem}`)
+  // Only what's left for students has an answer: each letter, each blank, and the empty sector.
+  const lines = pie.sectors.flatMap((t) => {
+    if (t.letter) return [`${t.letter} = ${hiddenText(t.part, s.labels, s.values)}`]
+    if (t.part.label === 'blank') return [`${t.part.name || 'Blank'}: ${hiddenText(t.part, s.labels, s.values)}`]
+    return []
+  })
+  if (pie.empty && pie.sectors.length) lines.push(`Left empty: ${pieChart.nice(pie.read.gap)}° (${pieChart.nice((pie.read.gap / 360) * 100)}%)`)
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
 function mappingAnswer(s: SettingsById['mapping-diagram']): ExampleDetails['answer'] {
   const map = mapping.readMapping(s)
   if (!map.inputs.length || !map.outputs.length) throw new Error('The mapping diagram example has no inputs or outputs')
@@ -302,6 +390,13 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'cone': { definition: definitionOf(solidSettings('cone')), answer: solidAnswer },
   'sphere': { definition: definitionOf(solidSettings('sphere')), answer: solidAnswer },
   'box-plot': { definition: definitionOf(boxPlot), answer: boxPlotAnswer },
+  'bar-graph': { definition: definitionOf(barGraph), answer: barGraphAnswer },
+  'stem-and-leaf': { definition: definitionOf(stemAndLeaf), answer: stemAndLeafAnswer },
+  'cumulative-frequency': { definition: definitionOf(cumulative), answer: cumulativeAnswer },
+  'two-way-table': { definition: definitionOf(twoWay), answer: twoWayAnswer },
+  'histogram': { definition: definitionOf(histogram), answer: histogramAnswer },
+  'venn-diagram': { definition: definitionOf(venn), answer: vennAnswer },
+  'pie-chart': { definition: definitionOf(pieChart), answer: pieChartAnswer },
   'mapping-diagram': { definition: definitionOf(mapping), answer: mappingAnswer },
   'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthAnswer(s).split(' · ') }) },
   'circle': { definition: definitionOf(circle), answer: circleAnswer },

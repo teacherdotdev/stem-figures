@@ -6,14 +6,24 @@ import { describe, expect, test } from 'vitest'
 import { buildShape } from './3d-shape/layout.js'
 import * as shape from './3d-shape/settings.js'
 import { readShape } from './3d-shape/solve.js'
+import { buildBarGraph } from './bar-graph/layout.js'
+import * as bar from './bar-graph/settings.js'
 import { buildPlot } from './box-plot/boxplot.js'
 import * as box from './box-plot/settings.js'
+import { buildCumulative } from './cumulative-frequency/layout.js'
+import * as cumulative from './cumulative-frequency/settings.js'
 import { buildGraph } from './coordinate-grid/graph.js'
 import * as grid from './coordinate-grid/settings.js'
+import { buildHistogram } from './histogram/layout.js'
+import * as histogram from './histogram/settings.js'
 import { buildLine } from './number-line/numberline.js'
 import * as line from './number-line/settings.js'
 import { buildDiagram } from './mapping-diagram/layout.js'
 import * as mapping from './mapping-diagram/settings.js'
+import { buildTable } from './two-way-table/layout.js'
+import * as twoWay from './two-way-table/settings.js'
+import { buildPieChart } from './pie-chart/layout.js'
+import * as pie from './pie-chart/settings.js'
 import { buildQuadrilateral } from '$lib/shapes/quadrilateral/layout.js'
 import { readQuadrilateral } from '$lib/shapes/quadrilateral/settings.js'
 import { family as kite } from './kite/family.js'
@@ -28,6 +38,10 @@ import * as polygon from './regular-polygon/settings.js'
 import { family as trapezoid } from './trapezoid/family.js'
 import { buildTriangle } from './triangle/layout.js'
 import * as triangle from './triangle/settings.js'
+import { buildStemAndLeaf } from './stem-and-leaf/layout.js'
+import * as stem from './stem-and-leaf/settings.js'
+import { buildVenn } from './venn-diagram/layout.js'
+import * as venn from './venn-diagram/settings.js'
 
 const eq = (...rows: string[]) => rows.map((r) => `eq=${encodeURIComponent(r)}`).join('&')
 
@@ -240,6 +254,66 @@ const SHAPE = [
 
 const params = (q: string) => new URLSearchParams(q)
 
+const rows = (...r: string[]) => r.map((x) => `row=${encodeURIComponent(x)}`).join('&')
+const BAR = [
+  '',
+  rows('Soccer|8', 'Basketball|6', 'Swimming|5', 'Tennis|3', 'Running|4'),
+  `cols=Boys%7CGirls&${rows('Dog|9|7', 'Cat|5|8', 'Fish|3|2')}`,
+  `cols=Boys%7CGirls&stacking=stacked&values=inside&look=bw&keyAt=below&${rows('Dog|9|7', 'Cat|5|8')}`,
+  `direction=bars&values=end&${rows('Strawberry milkshake|12', 'Hot chocolate|7', 'Water|-3')}`,
+  `errorBars=1&crossbars=wide&errorNote=Error%20bars%20show%20%C2%B11%20SEM&${rows('None|12.4±1.1', 'A|18.9±1.6', 'B|', '|15.2±2.3')}`,
+  `gridlines=bold&minor=2&to=20&step=2&every=2&labelSize=large&${rows('Strawberry milkshake|3', 'Hot chocolate|5', 'Sparkling water|9')}`,
+  'titleMode=text&title=Votes&valueTitleMode=blank&categoryTitleMode=text&categoryTitle=Color&from=abc&step=0',
+]
+const CUMULATIVE = [
+  '',
+  rows('10|4', '20|10', '30|18', '40|12', '50|6'),
+  `median=value&lower=blank&upper=lines&lowest=140&${rows('150|4', '160|12', '170|26', '180|24', '190|10')}`,
+  // A worksheet's bins pasted whole are read as their upper ends.
+  `${rows('140 < h ≤ 150|4', '150 < h ≤ 160|12', '160 < h ≤ 170|26')}`,
+  `join=straight&mark=dot&scale=percent&yTitle=Cumulative%20percent&read=percentile%7C90%7Cvalue&read=up%7C35%7Cblank&${rows('0–10|4', '10–20|10', '20–30|18')}`,
+  'mode=cumulative&lowest=0&cum=2%7C8&cum=4%7C30&cum=6%7C64&look=bw&median=blank',
+  'mode=data&data=12%2C18%2C23%2C25%2C31%2C33%2C41%2C47&binStart=10&binWidth=10&edges=right&join=none&gridlines=bold&minor=2',
+  `xFrom=0&xTo=60&xStep=5&yTo=80&yStep=10&titleMode=text&title=Times&xTitleMode=blank&labelSize=large&start=0&${rows('0–10|x', '10–5|3')}`,
+]
+
+const TRAVEL = `cols=Walk%7CBus%7CCar&${rows('Year 7|12|10|8|30', 'Year 8|15|8|6|29', 'Year 9|9|14|5|28')}&tot=36%7C32%7C19%7C87`
+const TWO_WAY = [
+  '',
+  TRAVEL,
+  `cols=Walk%7CBus%7CCar&${rows('Year 7||10|8|30', 'Year 8|15|x|6|', 'Year 9|9|14|5|28')}&tot=36%7C%7C19%7C`,
+  `${TRAVEL}&show=relative&relativeTo=row&form=fraction&totalsBold=1`,
+  `${TRAVEL}&show=relative&relativeTo=column&form=percent&places=1&rules=some&headers=plain`,
+  `${TRAVEL}&columnTitle=Transport&rowTitle=Year&titleMode=text&title=Travel%20to%20school`,
+  `${TRAVEL}&columnTitle=Transport&rowTitle=Year%20group&corner=diagonal&labelSize=large`,
+  `totalColumn=0&cols=Strawberry%20milkshake%7CHot%20chocolate&${rows('A very long row category|3|4', 'B|5|6')}&tot=8%7C10&titleMode=blank`,
+]
+
+const HISTOGRAM = [
+  '',
+  'data=42%2C48%2C51%2C55%2C58%2C59%2C61%2C63%2C64%2C66%2C70%2C71%2C72%2C81%2C93&binStart=40&binWidth=10&values=1',
+  'data=10%2C12%2C19%2C20%2C25%2C30&edges=right&polygon=over',
+  `source=table&lowest=150&${rows('155|2', '160|5', '165|9', '170|7')}`,
+  `source=table&fill=gray&minor=5&gridlines=standard&${rows('0 < t ≤ 10|8', '10 < t ≤ 15|12', '15 < t ≤ 20|15', '20 < t ≤ 30|10', '30 < t ≤ 50|6')}`,
+  `source=table&${rows('10|8', '15|12', '20|15', '30|10', '50|6')}`,
+  `source=table&measure=frequency&polygon=alone&closePolygon=0&lowest=0&${rows('10|3', '15|4', '30|2')}`,
+  `source=table&measure=percent&xNumbers=steps&xFrom=150&xStep=5&lowest=152.5&${rows('157.5|3', '162.5|6', '167.5|')}`,
+  `source=table&every=0&labelSize=large&titleMode=text&title=Masses&xTitleMode=blank&yTitleMode=none&${rows('10–19|3', '20–29|5')}`,
+  'source=table&yTo=abc&yStep=0&xNumbers=steps&xFrom=x',
+]
+
+const VENN = [
+  '',
+  'nameA=Football&nameB=Tennis&r_a=12&r_ab=5&r_b=8&r_out=15&shaded=ab',
+  'sets=3&r_a=9&r_b=7&r_ab=4&r_c=3&r_ac=2&r_bc=1&r_abc=2&r_out=5&shade=hatch&shaded=abc%7Cout',
+  'arrangement=separate&universe=U&r_a=6&r_b=4&empty=line',
+  'arrangement=subset&nameA=Mammals&nameB=Dogs&mode=text&r_a=x&r_ab=2x%2B1&universe=word&universeWord=Animals',
+  'sets=1&labelSize=large&r_a=0.3&r_out=0.7&shade=gray&shaded=a',
+  'mode=elements&universeList=1-20&listA=2%2C4%2C6%2C8%2C10%2C12%2C14%2C16%2C18%2C20&listB=3%2C6%2C9%2C12%2C15%2C18',
+  'mode=elements&universe=none&nameA=36&nameB=60&listA=2%2C2%2C3%2C3&listB=2%2C2%2C3%2C5',
+  'mode=elements&sets=3&universeList=1-30&listA=1-15&listB=10-25&listC=5-12%2C20-26',
+]
+
 describe('coordinate grid', () => {
   test.each(GRID)('%s', (q) => {
     const s = grid.settingsFromParams(params(q))
@@ -260,6 +334,83 @@ describe('box plot', () => {
     const s = box.settingsFromParams(params(q))
     const { rows, problems } = box.readPlot(s)
     expect({ query: box.settingsToQuery(s), rows, problems, plot: buildPlot(s) }).toMatchSnapshot()
+  })
+})
+
+describe('bar graph', () => {
+  test.each(BAR)('%s', (q) => {
+    const s = bar.settingsFromParams(params(q))
+    const { layout, ...figure } = buildBarGraph(s)
+    expect({ query: bar.settingsToQuery(s), figure, layout: { ...layout, px: undefined } }).toMatchSnapshot()
+  })
+})
+
+describe('cumulative frequency', () => {
+  test.each(CUMULATIVE)('%s', (q) => {
+    const s = cumulative.settingsFromParams(params(q))
+    // The join's points are in its drawn paths already.
+    const { layout, join: _, ...figure } = buildCumulative(s)
+    expect({ query: cumulative.settingsToQuery(s), figure, layout: { ...layout, px: undefined } }).toMatchSnapshot()
+  })
+})
+
+const STEM = [
+  '',
+  'data=58%2C62%2C65%2C67%2C71%2C72%2C74%2C74%2C78%2C79%2C81%2C83%2C85%2C86%2C88%2C90%2C92%2C97&titleMode=text&title=Test%20scores',
+  'layout=back&data=24%2C27%2C31%2C33%2C45&name=Class%20A&data2=21%2C30%2C34%2C41%2C49&name2=Class%20B&keyWords=means',
+  'data=1.4%2C2.6%2C2.65%2C3.7&unit=0.1&keyUnit=cm&headings=0&order=typed',
+  'data=31%2C33%2C36%2C38%2C41%2C47%2C52&split=2&boxes=1&boxCount=5',
+  'data=-12%2C-8%2C-1%2C0%2C4%2C15&split=5&keyMode=blank&labelSize=large',
+  'from=1&to=5&boxes=1&boxCount=8&keyValue=23&keyWords=means&keyUnit=minutes&titleMode=blank',
+  'data=12%2Cx&from=abc&unit=1&keyValue=1%2C99&layout=back',
+]
+
+describe('stem-and-leaf plot', () => {
+  test.each(STEM)('%s', (q) => {
+    const s = stem.settingsFromParams(params(q))
+    expect({ query: stem.settingsToQuery(s), figure: buildStemAndLeaf(s) }).toMatchSnapshot()
+  })
+})
+
+describe('two-way table', () => {
+  test.each(TWO_WAY)('%s', (q) => {
+    const s = twoWay.settingsFromParams(params(q))
+    const { read, ...figure } = buildTable(s)
+    expect({ query: twoWay.settingsToQuery(s), missing: read.missing, problems: read.problems, figure }).toMatchSnapshot()
+  })
+})
+
+describe('histogram', () => {
+  test.each(HISTOGRAM)('%s', (q) => {
+    const s = histogram.settingsFromParams(params(q))
+    const { layout, ...figure } = buildHistogram(s)
+    expect({ query: histogram.settingsToQuery(s), figure, layout: { ...layout, px: undefined } }).toMatchSnapshot()
+  })
+})
+
+describe('venn diagram', () => {
+  test.each(VENN)('%s', (q) => {
+    const s = venn.settingsFromParams(params(q))
+    expect({ query: venn.settingsToQuery(s), figure: buildVenn(s) }).toMatchSnapshot()
+  })
+})
+
+const PIE = [
+  '',
+  rows('Apples|12', 'Bananas|8', 'Cherries|6', 'Grapes|4'),
+  `labels=name-percent&titleMode=text&title=Fruit&keyAt=right&${rows('Apples|12', 'Bananas|8', 'Cherries|6', 'Grapes|4')}`,
+  `values=percent&labels=value-percent&look=bw&keyAt=below&order=largest&${rows('Walk|35', 'Car|30', 'Bus|25', 'Bike|8')}`,
+  `values=degrees&labels=name-angle&lab=%7C%7Cletter%7Cblank&look=bw&${rows('Red|110', 'Blue|80', 'Green|100', 'Yellow|70')}`,
+  `total=60&labels=name-angle&fills=dots&centerDot=off&${rows('Soccer|20', 'Basketball|15', 'Tennis|', 'Swimming|')}`,
+  `labelSize=large&labels=name&${rows('Big|92', 'One|1', 'Two|1', 'Three|1', 'Four|1', 'Five|1', 'Six|1', 'Seven|1', 'Eight|1')}`,
+  `look=white&titleMode=blank&${rows('Dog|', 'Cat|')}`,
+  `values=percent&${rows('A|60', 'B|lots', 'C|-3')}`,
+]
+
+describe('pie chart', () => {
+  test.each(PIE)('%s', (q) => {
+    const s = pie.settingsFromParams(params(q))
+    expect({ query: pie.settingsToQuery(s), figure: buildPieChart(s) }).toMatchSnapshot()
   })
 })
 

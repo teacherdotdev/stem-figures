@@ -33,6 +33,43 @@ and `docs/adr/` for decisions.
   show a function or a relation that isn't one; the panel says which, and why.
   Each side is titled (Input and Output, or text, a blank line or nothing) and
   drawn in an oval, a box or nothing.
+- `/bar-graph` **Bar Graph Generator**: a table typed or pasted (a category on
+  each row, a series in each column), drawn as upright columns or sideways
+  bars, side by side or stacked, with values on the bars, ± error bars, a key,
+  color or black-and-white fills. A value left empty draws no bar.
+- `/stem-and-leaf` **Stem-and-Leaf Plot Generator**: one data set, or two
+  back to back, split into stems and leaves at a leaf unit (digits past it
+  cut off), with split stems, negative stems, leaves in order or as typed,
+  leaves in boxes and a key. With no data it draws empty rows or boxes.
+- `/cumulative-frequency` **Cumulative Frequency Graph Generator**: a frequency
+  table, a cumulative table or a data set binned from a start and width, drawn
+  as crosses or dots at each upper bound joined by a smooth (monotone) curve or
+  straight lines, over a cumulative frequency or percent axis, with dashed
+  readings of the median, quartiles, a percentile or a value, each written,
+  blank or left off.
+- `/two-way-table` **Two-Way Table Generator**: a table of counts typed or
+  pasted, totals included (a Total column, a Total row and the grand total,
+  each typed or worked out), drawn as an SVG table with counts or relative
+  frequencies of the grand total, each row or each column, as decimals,
+  percents or fractions. An empty cell is blank on the figure and a letter is
+  written as typed; the panel says which missing values can be worked out.
+- `/histogram` **Histogram Generator**: a data set sorted into bins (a start
+  and a width, or ones that fit the data, with values on an edge going the
+  way the teacher picks), or a frequency table of bins typed like 10–20 or
+  10 ≤ x < 20, equal or unequal. The vertical axis shows frequency, relative
+  frequency or frequency density; a frequency polygon can go over the bars or
+  alone; the horizontal axis is numbered at the bin edges or every step, with
+  a zig-zag break when it starts past 0. A frequency left empty draws no bar.
+- `/venn-diagram` **Venn Diagram Generator**: one, two or three sets in a box for
+  the universal set (two overlapping, separate or one inside the other), with a
+  number, a letter or expression, or the sorted elements of typed lists in each
+  region, and regions shaded by clicking them on the figure.
+- `/pie-chart` **Pie Chart Generator**: a table of counts, percents or
+  degrees typed or pasted, drawn as sectors clockwise from 12 o'clock, labeled
+  inside or outside by name, value, percent, angle or fraction (each sector's
+  own label can be a blank line or a letter), with a key and color or
+  black-and-white fills. A value left empty leaves its share as one empty
+  sector; a table with no values draws a blank circle.
 - `/<generator>/examples/<slug>` **Example figures** (see below), and
   `/reuse`, how teachers may reuse them.
 - `/about`, `/privacy`, `/sitemap.xml`, `/robots.txt`

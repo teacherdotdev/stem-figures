@@ -57,9 +57,15 @@ export type GridLayout = Omit<ReturnType<typeof layoutGrid>, 'px' | 'box'>
 /**
  * `edges` puts the axes along the grid's left and bottom edges even when 0 is
  * on the grid, for a graph whose negative values aren't a second quadrant
- * (temperatures below 0 °C).
+ * (temperatures below 0 °C). `room` keeps space under the grid (`x`) or left
+ * of it (`y`) for labels the generator draws itself, such as a bar graph's
+ * category names; the axis titles move out past it.
  */
-export function layoutGrid(s: GridSettings, { x, y }: Axes, { edges = false }: { edges?: boolean } = {}) {
+export function layoutGrid(
+  s: GridSettings,
+  { x, y }: Axes,
+  { edges = false, room = {} }: { edges?: boolean; room?: { x?: number; y?: number } } = {},
+) {
   const FS = BASE_FS * LABEL_SCALE[s.labelSize]
   const CHAR = FS * 0.6 // rough width of one digit
   const x0 = x.start
@@ -98,7 +104,8 @@ export function layoutGrid(s: GridSettings, { x, y }: Axes, { edges = false }: {
   const xTip = !!xLabel
   const yTip = !!yLabel
 
-  const yNumW = !yAxisInside && yTicks.length ? Math.max(...yTicks.map((t) => t.text.length)) * CHAR + 8 : 0
+  const yNumW = (!yAxisInside && yTicks.length ? Math.max(...yTicks.map((t) => t.text.length)) * CHAR + 8 : 0) + (room.y ?? 0)
+  const xRoom = room.x ?? 0
   const xNumH = !xAxisInside && xTicks.length ? FS + 8 : 0
   const lastX = xTicks.at(-1)?.text.length ?? 0
 
@@ -116,7 +123,7 @@ export function layoutGrid(s: GridSettings, { x, y }: Axes, { edges = false }: {
     extR + (xTip ? xLabel.length * TIP_CHAR + 8 : 0),
     yTipHalf - (gridW - yAxisOffset),
   )
-  const B = PAD + Math.max(extB, Math.max(xNumH, yAxisInside ? extB : 0) + (xSide ? FS * 1.2 + 14 : 0))
+  const B = PAD + Math.max(extB, Math.max(xNumH, yAxisInside ? extB : 0) + xRoom + (xSide ? FS * 1.2 + 14 : 0))
 
   const axisX = L + yAxisOffset
   const axisY = xAxisInside ? T + gridH + (y0 / y.step) * CELL : T + gridH
@@ -148,7 +155,7 @@ export function layoutGrid(s: GridSettings, { x, y }: Axes, { edges = false }: {
   if (title) labels.push({ x: midX, y: titleY, text: title, kind: 'title' })
   else if (titleBlank) blanks.push({ x1: midX - Math.min(130, gridW / 2), y1: titleY, x2: midX + Math.min(130, gridW / 2), y2: titleY })
 
-  const xSideY = T + gridH + Math.max(xNumH, yAxisInside ? extB : 0) + FS * 1.2 + 6
+  const xSideY = T + gridH + Math.max(xNumH, yAxisInside ? extB : 0) + xRoom + FS * 1.2 + 6
   if (xTip) labels.push({ x: L + gridW + extR + 6, y: axisY + FS * 0.4, text: xLabel, kind: 'tip', anchor: 'start' })
   if (xTitle) labels.push({ x: midX, y: xSideY, text: xTitle, kind: 'side' })
   else if (xBlank) blanks.push({ x1: midX - Math.min(100, gridW / 2), y1: xSideY, x2: midX + Math.min(100, gridW / 2), y2: xSideY })
