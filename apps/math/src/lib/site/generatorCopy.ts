@@ -789,14 +789,14 @@ export const COPY: Record<string, GeneratorCopy> = {
   'venn-diagram': {
     heading: 'Venn diagrams with numbers, elements or shading',
     intro: [
-      'The Venn Diagram Generator draws one, two or three circles inside a box for the universal set, marked ξ unless you choose U, S, ε, a word or nothing. Two sets can overlap, sit apart for mutually exclusive events, or one can sit inside the other for a subset. Each set is named outside its circle, with a letter like A or a word like Football.',
-      'Put a number in each region for counting and probability questions, or a letter or expression like x or 2x + 1 for algebra. Or list the members of each set, or a range like 1-20, and every element is sorted into its region for you, prime factors included. Click any region on the figure to fill it in or shade it, and leave regions empty for students to fill in.',
+      'The Venn Diagram Generator draws one, two or three circles inside a box for the universal set, marked U unless you choose ξ (as GCSE papers write it), S, ε, a word or nothing. Two sets can overlap, sit apart for mutually exclusive events, or one can sit inside the other for a subset. Each set is named outside its circle, with a letter like A or a word like Football.',
+      'Put a number in each region for counting and probability questions, a letter or expression like x or 2x + 1 for algebra, or words to compare and contrast, like red flesh, mushy, savory, one to a line. Or list the members of each set, or a range like 1-20, and every element is sorted into its region for you, prime factors included. Click any region on the figure to fill it in or shade it, and leave regions empty for students to fill in.',
     ],
     settings: [
-      'What goes in each region: a number, the elements of sets you list, or a letter or expression',
+      'What goes in each region: a number, the elements of sets you list, or text, like a letter, an expression or words for comparing two things, with commas splitting it into lines',
       'One, two or three sets; two sets overlapping, separate, or one inside the other',
       'Each set’s name, as a letter or a word',
-      'The universal set’s name: ξ, U, S, ε, a word or nothing',
+      'The universal set’s name: U, ξ, S, ε, a word or nothing',
       'Any regions shaded, in a color tint, gray or a black-and-white pattern',
       'Empty regions left empty or given a blank line for students',
     ],
@@ -818,8 +818,8 @@ export const COPY: Record<string, GeneratorCopy> = {
         a: 'Yes. Type a probability in each region, like 0.3, or choose Text for fractions and unknowns like x. Leave a region empty, or give empty regions a blank line, for students to work out.',
       },
       {
-        q: 'Why ξ for the universal set?',
-        a: 'GCSE papers in England write the universal set as ξ, so it’s the starting choice. U is one click away under Labels, along with S, ε, a word or nothing.',
+        q: 'Can I use ξ for the universal set?',
+        a: 'Yes. The box is marked U to start with; GCSE papers in England write the universal set as ξ, which is one click away under Labels, along with S, ε, a word or nothing.',
       },
     ],
     imageAlt: 'A printable Venn diagram of students who play football and tennis, with the number of students in each region, made with the Venn Diagram Generator',

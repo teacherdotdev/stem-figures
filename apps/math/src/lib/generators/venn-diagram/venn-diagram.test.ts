@@ -3,7 +3,7 @@ import { EXAMPLES } from '$lib/examples/examples'
 import { buildVenn } from './layout.js'
 import { buildRegions, circlesFor, maskAt, pathCovers, type Vec } from './regions.js'
 import {
-  cleanSettings, maskOf, parseList, readVenn, regionsOf, settingsFromParams, settingsToQuery, sortElements, type RawSettings,
+  cleanSettings, maskOf, parseList, readVenn, regionsOf, settingsFromParams, settingsToQuery, sortElements, splitAtCommas, type RawSettings,
 } from './settings.js'
 
 const venn = (s: RawSettings) => buildVenn(cleanSettings(s))
@@ -117,7 +117,7 @@ describe('numbers and text', () => {
 
   test('the readout adds up the regions, leaving out sums with a region unknown', () => {
     const lines = (s: RawSettings) => readVenn(cleanSettings(s)).readout.counts.map((l) => `${l.label} = ${l.value}`)
-    expect(lines({ values: { a: '12', ab: '5', b: '8', out: '3' } })).toEqual(['n(ξ) = 28', 'n(A) = 17', 'n(B) = 13', 'n(A ∩ B) = 5', 'n(A ∪ B) = 25'])
+    expect(lines({ values: { a: '12', ab: '5', b: '8', out: '3' } })).toEqual(['n(U) = 28', 'n(A) = 17', 'n(B) = 13', 'n(A ∩ B) = 5', 'n(A ∪ B) = 25'])
     expect(lines({ values: { a: '12', ab: '5' } })).toEqual(['n(A) = 17', 'n(A ∩ B) = 5'])
     expect(lines({ mode: 'text', values: { a: '12', ab: '5', b: '8', out: '3' } })).toEqual([])
     const three = lines({ sets: 3, nameA: 'Cats', universe: 'U', values: { a: '1', b: '2', ab: '3', c: '4', ac: '5', bc: '6', abc: '7', out: '8' } })
@@ -153,10 +153,10 @@ describe('elements', () => {
     expect(r).toEqual({ ac: ['Ben'], abc: ['Cal'], b: ['Dee'], a: ['Ann'] })
   })
 
-  test('an element missing from ξ, or in two separate sets, is a problem', () => {
+  test('an element missing from the universal set, or in two separate sets, is a problem', () => {
     const problem = (s: RawSettings) => sortElements(cleanSettings({ mode: 'elements', ...s })).problem
-    expect(problem({ universeList: '1-10', listA: '2, 12' })).toBe('12 is in A but not in ξ. Add it to ξ, or take it out of A.')
-    expect(problem({ universeList: '2, 3', listA: '2, 2' })).toBe('2 is in A twice but in ξ once.')
+    expect(problem({ universeList: '1-10', listA: '2, 12' })).toBe('12 is in A but not in U. Add it to U, or take it out of A.')
+    expect(problem({ universeList: '2, 3', listA: '2, 2' })).toBe('2 is in A twice but in U once.')
     expect(problem({ arrangement: 'separate', listA: '1, 2', listB: '2, 3' })).toContain('2 is in both A and B')
     expect(problem({ arrangement: 'subset', listA: '1, 2', listB: '2, 3' })).toContain('3 is in B but not in A')
     expect(problem({ universeList: '1-10', listA: '2, 4', listB: '4, 6' })).toBeNull()
@@ -164,7 +164,7 @@ describe('elements', () => {
 
   test('the readout counts each region and lists its members', () => {
     const read = readVenn(cleanSettings({ mode: 'elements', universeList: '1-6', listA: '2, 4, 6', listB: '3, 6' }))
-    expect(read.readout.counts.map((l) => `${l.label} = ${l.value}`)).toEqual(['n(ξ) = 6', 'n(A) = 3', 'n(B) = 2', 'n(A ∩ B) = 1', 'n(A ∪ B) = 4'])
+    expect(read.readout.counts.map((l) => `${l.label} = ${l.value}`)).toEqual(['n(U) = 6', 'n(A) = 3', 'n(B) = 2', 'n(A ∩ B) = 1', 'n(A ∪ B) = 4'])
     expect(read.readout.members).toEqual([
       { label: 'A only', value: '2, 4' },
       { label: 'A and B', value: '6' },
@@ -245,5 +245,25 @@ describe('examples', () => {
     expect(read.problems.elements).toBeNull()
     expect(read.problems.values).toEqual({})
     expect(buildVenn(s).problem).toBeNull()
+  })
+})
+
+describe('text split at commas', () => {
+  test('commas outside brackets split a region’s text into pieces', () => {
+    expect(splitAtCommas('red flesh, mushy, savory')).toEqual(['red flesh', 'mushy', 'savory'])
+    expect(splitAtCommas('(1, 2), x')).toEqual(['(1, 2)', 'x'])
+    expect(splitAtCommas(' , 3/20 ,')).toEqual(['3/20'])
+  })
+
+  test('the pieces are stacked one to a line, each inside its region', () => {
+    const g = venn({ mode: 'text', values: { a: 'red flesh, mushy, savory', ab: 'fruit, round, smooth-skinned' } })
+    const regionOf = (p: (typeof g.items)[number]) => maskAt(g.circles, [p.x + p.box.w / 2, p.y - p.box.asc / 2])
+    for (const key of ['a', 'ab'] as const) {
+      const pieces = g.items.filter((p) => regionOf(p) === maskOf(key))
+      expect(pieces).toHaveLength(3)
+      // One to a row, top to bottom, none overlapping.
+      expect(new Set(pieces.map((p) => Math.round(p.y))).size).toBe(3)
+      for (let i = 1; i < pieces.length; i++) expect(overlaps(rectOf(pieces[i - 1]), rectOf(pieces[i]))).toBe(false)
+    }
   })
 })

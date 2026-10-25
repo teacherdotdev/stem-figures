@@ -5,6 +5,7 @@
 //
 // What goes in a region is laid out in rows across it, centered on the point
 // farthest from its edges, and every row is kept wholly inside the region.
+// Text split at commas goes one piece to a row, stacked down the region.
 // When something doesn't fit, the whole diagram grows (circles, box and all)
 // rather than the text shrinking.
 
@@ -223,8 +224,10 @@ export function buildVenn(s: Settings) {
         return spans
       }
       const total = list.reduce((t, it) => t + it.w + across, 0)
+      // Text's pieces are stacked, one to a row; elements fill rows across.
+      const stacked = s.mode === 'text'
       for (const together of [true, false]) {
-        for (let k = 1; k <= most; k++) {
+        for (let k = stacked ? list.length : 1; k <= (stacked ? list.length : most); k++) {
           for (let j = 0; j <= most * 2; j++) {
             for (const sign of j ? [1, -1] : [1]) {
               const center = my + (sign * j * rowH) / 2
@@ -235,7 +238,7 @@ export function buildVenn(s: Settings) {
               })
               const room = spans.flat().reduce((t, [a, b]) => t + b - a + across, 0)
               if (room < total) continue
-              for (let cap = Math.ceil(list.length / k); cap <= list.length; cap++) {
+              for (let cap = Math.ceil(list.length / k); cap <= (stacked ? 1 : list.length); cap++) {
                 const spots = fill(list, rows, spans, cap, mx, h, across)
                 if (spots) return spots
               }

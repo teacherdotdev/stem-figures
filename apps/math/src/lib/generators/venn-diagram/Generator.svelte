@@ -13,7 +13,6 @@
   import PickLayer from '$lib/labeling/PickLayer.svelte'
   import Popover from '$lib/labeling/Popover.svelte'
   import type { Part } from '$lib/labeling/pick.js'
-  import MathInput from '$lib/shared/MathInput.svelte'
   import { buildVenn } from './layout.js'
   import VennDiagram from './VennDiagram.svelte'
   import {
@@ -100,7 +99,8 @@
   <input type="checkbox" class="shade" aria-label="Shade {regionName(clean, k)}" checked={isShaded(k)} onchange={(e) => setShaded(k, e.currentTarget.checked)} />
 {/snippet}
 
-<GeneratorPage name="Venn Diagram Generator" {filename} {gen} {svg} bind:labelSize={s.labelSize}>
+<!-- 40% of the window for the settings: the regions take typed text. -->
+<GeneratorPage name="Venn Diagram Generator" {filename} {gen} settingsWidth="minmax(28rem, 40%)" {svg} bind:labelSize={s.labelSize}>
   {#snippet inputs()}
     <section class="card-body">
       <div class="head-row">
@@ -108,7 +108,7 @@
         <HelpTip id="venn-tip" label="How to fill in the diagram">
           Numbers puts one number in each region, such as how many people are in it. Elements sorts lists into the regions for
           you: type the universal set and each set's members with commas between, or a range like 1-20. Repeat an element to
-          put it in twice, as for prime factors. Text writes a letter or expression in each region, like x or 2x + 1. Leave a
+          put it in twice, as for prime factors. Text writes words, a letter or an expression in each region, like x, 2x + 1 or 3/20; commas split it into lines, as in red flesh, mushy, savory. Leave a
           region empty for students to fill in. Click any region on the figure to fill it in or shade it.
         </HelpTip>
       </div>
@@ -118,7 +118,7 @@
 
       {#if clean.mode === 'elements'}
         <div class="lists">
-          <span class="set-name universe" class:word={[...universeText(clean)].length > 1} aria-hidden="true">{universeText(clean) || 'ξ'}</span>
+          <span class="set-name universe" class:word={[...universeText(clean)].length > 1} aria-hidden="true">{universeText(clean) || 'U'}</span>
           <input type="text" aria-label="Members of the universal set" placeholder="1-20" bind:value={s.universeList} />
           {#each NAME_KEYS.slice(0, clean.sets) as key, i}
             <input type="text" class="set-name" aria-label="Name of set {LETTERS[i]}" placeholder={LETTERS[i]} bind:value={s[key]} />
@@ -152,7 +152,7 @@
                 bind:value={() => value(k), (v) => setValue(k, v)}
               />
             {:else}
-              <MathInput id="region-{k}" bind:value={() => value(k), (v) => setValue(k, v)} />
+              <input type="text" class="text" id="region-{k}" bind:value={() => value(k), (v) => setValue(k, v)} />
             {/if}
             {@render shadeBox(k)}
             {#if read.problems.values[k]}<p class="help problem wide">{read.problems.values[k]}</p>{/if}
@@ -160,12 +160,6 @@
         </div>
       {/if}
 
-      {#if read.readout.counts.length || read.readout.members.length}
-        <dl class="readout">
-          {#each read.readout.counts as line}<div><dt>{line.label}</dt><dd>{line.value}</dd></div>{/each}
-          {#each read.readout.members as line}<div class="members"><dt>{line.label}</dt><dd>{line.value}</dd></div>{/each}
-        </dl>
-      {/if}
       {#if drawing.problem}<p class="help problem">{drawing.problem}</p>{/if}
     </section>
   {/snippet}
@@ -213,7 +207,7 @@
     {:else if clean.mode === 'text'}
       <div class="group">
         <span class="name" id="pop-text">Text</span>
-        <MathInput aria-labelledby="pop-text" bind:value={() => value(k), (v) => setValue(k, v)} />
+        <input type="text" aria-labelledby="pop-text" bind:value={() => value(k), (v) => setValue(k, v)} />
       </div>
     {/if}
     <label class="check">
@@ -260,13 +254,6 @@
   .shade { justify-self: center; width: 1.05rem; height: 1.05rem; margin: 0 0.6rem; accent-color: var(--blue); }
 
   /* The counts run on in lines, each kept whole where it fits; each region's members get a line of their own. */
-  .readout { margin: 0; padding: 0.55rem 0.75rem; border-radius: 10px; background: var(--blue-soft); font-size: 0.85rem; font-weight: 600; display: flex; flex-wrap: wrap; gap: 0.2rem 1.1rem; }
-  .readout div { min-width: 0; overflow-wrap: anywhere; }
-  .readout dt, .readout dd { display: inline; margin: 0; }
-  .readout dd::before { content: ' = '; }
-  .readout .members { flex-basis: 100%; }
-  .readout .members dt::after { content: ': '; }
-  .readout .members dd::before { content: none; }
 
   .stage { position: relative; }
   .check { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.88rem; margin: 0; cursor: pointer; }

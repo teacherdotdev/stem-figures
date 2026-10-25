@@ -1280,17 +1280,17 @@ export const EXAMPLES: Example[] = [
     {
       slug: 'venn-diagram-football-and-tennis',
       title: 'Venn diagram with numbers: football and tennis',
-      alt: 'A Venn diagram of two overlapping circles, Football and Tennis, in a box marked ξ, with 12 in Football only, 5 in both, 8 in Tennis only and 15 outside',
+      alt: 'A Venn diagram of two overlapping circles, Football and Tennis, in a box marked U, with 12 in Football only, 5 in both, 8 in Tennis only and 15 outside',
       caption:
-        'Two overlapping circles named Football and Tennis inside a box marked ξ for the universal set, with the number of students in each region: 12 play football only, 5 play both, 8 play tennis only, and 15, written outside the circles in the lower left corner, play neither. Students read off totals, such as how many play football, or probabilities.',
+        'Two overlapping circles named Football and Tennis inside a box marked U for the universal set, with the number of students in each region: 12 play football only, 5 play both, 8 play tennis only, and 15, written outside the circles in the lower left corner, play neither. Students read off totals, such as how many play football, or probabilities.',
       settings: { nameA: 'Football', nameB: 'Tennis', values: { a: '12', ab: '5', b: '8', out: '15' } },
     },
     {
       slug: 'three-set-venn-diagram-with-numbers',
       title: 'Three-set Venn diagram with numbers: pets',
-      alt: 'A three-set Venn diagram of Cat, Dog and Fish in a box marked ξ, with a number in each of its eight regions',
+      alt: 'A three-set Venn diagram of Cat, Dog and Fish in a box marked U, with a number in each of its eight regions',
       caption:
-        'Three overlapping circles named Cat, Dog and Fish inside a box marked ξ, with the number of students owning each mix of pets in every region: 9 cat only, 7 dog only, 3 fish only, 4 cat and dog only, 2 cat and fish only, 1 dog and fish only, 2 all three, and 5, in the lower right corner, none of them.',
+        'Three overlapping circles named Cat, Dog and Fish inside a box marked U, with the number of students owning each mix of pets in every region: 9 cat only, 7 dog only, 3 fish only, 4 cat and dog only, 2 cat and fish only, 1 dog and fish only, 2 all three, and 5, in the lower right corner, none of them.',
       settings: {
         sets: 3,
         nameA: 'Cat',
@@ -1304,7 +1304,7 @@ export const EXAMPLES: Example[] = [
       title: 'Venn diagram sorting the numbers 1 to 20: even numbers and multiples of 3',
       alt: 'A Venn diagram sorting the numbers 1 to 20 into two overlapping circles, Even and Multiples of 3, with the numbers in neither outside the circles',
       caption:
-        'The numbers 1 to 20 sorted into two overlapping circles named Even and Multiples of 3, inside a box marked ξ. 2, 4, 8, 10, 14, 16 and 20 are in Even only; 6, 12 and 18 are in both; 3, 9 and 15 are in Multiples of 3 only; and 1, 5, 7, 11, 13, 17 and 19 are outside both circles, in the lower right corner.',
+        'The numbers 1 to 20 sorted into two overlapping circles named Even and Multiples of 3, inside a box marked U. 2, 4, 8, 10, 14, 16 and 20 are in Even only; 6, 12 and 18 are in both; 3, 9 and 15 are in Multiples of 3 only; and 1, 5, 7, 11, 13, 17 and 19 are outside both circles, in the lower right corner.',
       settings: {
         mode: 'elements',
         nameA: 'Even',
@@ -1325,9 +1325,9 @@ export const EXAMPLES: Example[] = [
     {
       slug: 'venn-diagram-shade-a-intersect-b-complement',
       title: 'Venn diagram with A ∩ B′ shaded',
-      alt: 'A Venn diagram of two overlapping circles, A and B, in a box marked ξ, with the part of A outside B hatched and nothing written in the regions',
+      alt: 'A Venn diagram of two overlapping circles, A and B, in a box marked U, with the part of A outside B hatched and nothing written in the regions',
       caption:
-        'Two overlapping circles named A and B inside a box marked ξ, with the region in A but not in B, A ∩ B′, shaded with diagonal hatching that photocopies well. Nothing is written in the regions, so students write the set notation for the shaded region.',
+        'Two overlapping circles named A and B inside a box marked U, with the region in A but not in B, A ∩ B′, shaded with diagonal hatching that photocopies well. Nothing is written in the regions, so students write the set notation for the shaded region.',
       settings: { shaded: ['a'], shade: 'hatch' },
     },
     {
@@ -1335,8 +1335,22 @@ export const EXAMPLES: Example[] = [
       title: 'Venn diagram of probabilities: find x',
       alt: 'A Venn diagram of probabilities with 0.3 in A only, x in the overlap of A and B, 0.25 in B only and 0.15 outside both circles',
       caption:
-        'Two overlapping circles named A and B inside a box marked ξ, with a probability in each region: 0.3 in A only, the unknown x in the overlap, 0.25 in B only, and 0.15 outside both circles in the lower right corner. Students find x, then probabilities such as P(A ∪ B).',
+        'Two overlapping circles named A and B inside a box marked U, with a probability in each region: 0.3 in A only, the unknown x in the overlap, 0.25 in B only, and 0.15 outside both circles in the lower right corner. Students find x, then probabilities such as P(A ∪ B).',
       settings: { mode: 'text', values: { a: '0.3', ab: 'x', b: '0.25', out: '0.15' } },
+    },
+    {
+      slug: 'compare-and-contrast-venn-diagram-tomato-and-apple',
+      title: 'Compare and contrast Venn diagram: tomato and apple',
+      alt: 'A Venn diagram comparing Tomato and Apple, with red flesh, mushy and savory in Tomato only, fruit, round and smooth-skinned in both, and white flesh, firm and sweet in Apple only',
+      caption:
+        'Two overlapping circles named Tomato and Apple, used to compare and contrast. Tomato only lists red flesh, mushy and savory, one to a line; the overlap lists fruit, round and smooth-skinned; Apple only lists white flesh, firm and sweet. The box round them has no symbol for the universal set.',
+      settings: {
+        mode: 'text',
+        nameA: 'Tomato',
+        nameB: 'Apple',
+        universe: 'none',
+        values: { a: 'red flesh, mushy, savory', ab: 'fruit, round, smooth-skinned', b: 'white flesh, firm, sweet' },
+      },
     },
   ]),
 

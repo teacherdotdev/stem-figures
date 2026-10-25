@@ -455,11 +455,11 @@ One circle of a Venn diagram, named outside it by a letter (A, B, C) or a word (
 _Avoid_: Group, category (that's a bar graph's), circle (fine in speech)
 
 **Universal Set**:
-Everything a Venn diagram is about, drawn as the box round the circles and named in its top left corner: ξ (the default, as GCSE writes it), U, S, ε, a word or nothing. In elements mode its members are typed as a list or a range like 1-20; left empty, it's just the sets' own members.
+Everything a Venn diagram is about, drawn as the box round the circles and named in its top left corner: U (the default), ξ (as GCSE writes it), S, ε, a word or nothing. In elements mode its members are typed as a list or a range like 1-20; left empty, it's just the sets' own members.
 _Avoid_: Universe, sample space (fine in teaching), rectangle
 
 **Region**:
-The part of a Venn diagram inside exactly some of the sets and outside the rest, such as A only (A ∩ B′) or neither: four for two overlapping sets, eight for three, outside included. Each holds a number, a letter or expression, or the elements that belong there, written in rows round its middle; one left empty is drawn empty, or with a blank line when the teacher asks for one. Clicking a region on the figure fills it in or shades it. A shaded region is filled with a tint, gray or a black-and-white pattern, under the circles' outlines.
+The part of a Venn diagram inside exactly some of the sets and outside the rest, such as A only (A ∩ B′) or neither: four for two overlapping sets, eight for three, outside included. Each holds a number, text (split at its commas, one piece to a line, as in red flesh, mushy, savory), or the elements that belong there, written in rows round its middle; one left empty is drawn empty, or with a blank line when the teacher asks for one. Clicking a region on the figure fills it in or shades it. A shaded region is filled with a tint, gray or a black-and-white pattern, under the circles' outlines.
 _Avoid_: Section, area (that's a shape's measure), zone, part
 
 ### 3D shapes

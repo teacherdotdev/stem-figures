@@ -20,7 +20,7 @@ export const SET_COUNTS = [1, 2, 3] as const
 /** How two sets are drawn: overlapping, apart (mutually exclusive), or B inside A (a subset). */
 export const ARRANGEMENTS = { overlap: 'Overlapping', separate: 'Separate', subset: 'B inside A' } as const
 /** The universal set's name in the top left corner. */
-export const UNIVERSES = { xi: 'ξ', U: 'U', S: 'S', epsilon: 'ε', word: 'Word', none: 'None' } as const
+export const UNIVERSES = { U: 'U', xi: 'ξ', S: 'S', epsilon: 'ε', word: 'Word', none: 'None' } as const
 export const UNIVERSE_SYMBOLS: Partial<Record<Universe, string>> = { xi: 'ξ', U: 'U', S: 'S', epsilon: 'ε' }
 /** What an empty region shows, in numbers and text modes. */
 export const EMPTIES = { none: 'Nothing', line: 'A blank line' } as const
@@ -74,7 +74,7 @@ export const DEFAULT_SETTINGS: Settings = {
   nameA: 'A',
   nameB: 'B',
   nameC: 'C',
-  universe: 'xi', // as GCSE writes it
+  universe: 'U',
   universeWord: '',
   values: {},
   universeList: '',
@@ -290,6 +290,24 @@ export type ReadoutLine = { label: string; value: string }
  * typed, or the elements), the counts as numbers (null where a region's count
  * isn't known), and messages for the settings panel.
  */
+/** Text split at its commas (not those inside brackets, as in (1, 2)): "red flesh, mushy, savory" is three things. */
+export function splitAtCommas(typed: string): string[] {
+  const out: string[] = []
+  let depth = 0
+  let from = 0
+  for (let i = 0; i <= typed.length; i++) {
+    const ch = typed[i]
+    if (ch === '(' || ch === '[' || ch === '{') depth++
+    else if (ch === ')' || ch === ']' || ch === '}') depth = Math.max(0, depth - 1)
+    else if (i === typed.length || (ch === ',' && !depth)) {
+      const piece = typed.slice(from, i).trim()
+      if (piece) out.push(piece)
+      from = i + 1
+    }
+  }
+  return out
+}
+
 export function readVenn(s: Settings) {
   const keys = regionsOf(s.sets, s.arrangement)
   const contents: Partial<Record<RegionKey, string[]>> = {}
@@ -308,7 +326,7 @@ export function readVenn(s: Settings) {
   } else {
     for (const k of keys) {
       const typed = s.values[k]?.trim() ?? ''
-      contents[k] = typed ? [typed] : []
+      contents[k] = s.mode === 'text' ? splitAtCommas(typed) : typed ? [typed] : []
       if (s.mode !== 'numbers') continue
       const v = readValue(typed)
       if (v.bad) problems.values[k] = `“${v.bad}” isn’t a number. Choose Text at the top to write letters or fractions.`

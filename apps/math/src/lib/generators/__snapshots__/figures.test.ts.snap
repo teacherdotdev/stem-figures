@@ -65246,12 +65246,12 @@ exports[`venn diagram >  1`] = `
             "italic": true,
             "kind": "text",
             "size": 23,
-            "text": "ξ",
+            "text": "U",
             "x": 0,
             "y": 0,
           },
         ],
-        "w": 12.65,
+        "w": 16.605999999999998,
       },
       "halo": false,
       "x": 13,
@@ -65480,7 +65480,7 @@ exports[`venn diagram > arrangement=separate&universe=U&r_a=6&r_b=4&empty=line 1
     },
     "width": 558,
   },
-  "query": "arrangement=separate&universe=U&empty=line&r_a=6&r_b=4",
+  "query": "arrangement=separate&empty=line&r_a=6&r_b=4",
 }
 `;
 
@@ -66521,7 +66521,7 @@ exports[`venn diagram > mode=elements&sets=3&universeList=1-30&listA=1-15&listB=
       "readout": {
         "counts": [
           {
-            "label": "n(ξ)",
+            "label": "n(U)",
             "value": "30",
           },
           {
@@ -66696,12 +66696,12 @@ exports[`venn diagram > mode=elements&sets=3&universeList=1-30&listA=1-15&listB=
             "italic": true,
             "kind": "text",
             "size": 23,
-            "text": "ξ",
+            "text": "U",
             "x": 0,
             "y": 0,
           },
         ],
-        "w": 12.65,
+        "w": 16.605999999999998,
       },
       "halo": false,
       "x": 13,
@@ -67569,7 +67569,7 @@ exports[`venn diagram > mode=elements&universeList=1-20&listA=2%2C4%2C6%2C8%2C10
       "readout": {
         "counts": [
           {
-            "label": "n(ξ)",
+            "label": "n(U)",
             "value": "20",
           },
           {
@@ -67660,12 +67660,12 @@ exports[`venn diagram > mode=elements&universeList=1-20&listA=2%2C4%2C6%2C8%2C10
             "italic": true,
             "kind": "text",
             "size": 23,
-            "text": "ξ",
+            "text": "U",
             "x": 0,
             "y": 0,
           },
         ],
-        "w": 12.65,
+        "w": 16.605999999999998,
       },
       "halo": false,
       "x": 13,
@@ -67862,7 +67862,7 @@ exports[`venn diagram > nameA=Football&nameB=Tennis&r_a=12&r_ab=5&r_b=8&r_out=15
       "readout": {
         "counts": [
           {
-            "label": "n(ξ)",
+            "label": "n(U)",
             "value": "40",
           },
           {
@@ -67936,12 +67936,12 @@ exports[`venn diagram > nameA=Football&nameB=Tennis&r_a=12&r_ab=5&r_b=8&r_out=15
             "italic": true,
             "kind": "text",
             "size": 23,
-            "text": "ξ",
+            "text": "U",
             "x": 0,
             "y": 0,
           },
         ],
-        "w": 12.65,
+        "w": 16.605999999999998,
       },
       "halo": false,
       "x": 13,
@@ -68063,7 +68063,7 @@ exports[`venn diagram > sets=1&labelSize=large&r_a=0.3&r_out=0.7&shade=gray&shad
       "readout": {
         "counts": [
           {
-            "label": "n(ξ)",
+            "label": "n(U)",
             "value": "1",
           },
           {
@@ -68105,12 +68105,12 @@ exports[`venn diagram > sets=1&labelSize=large&r_a=0.3&r_out=0.7&shade=gray&shad
             "italic": true,
             "kind": "text",
             "size": 32.199999999999996,
-            "text": "ξ",
+            "text": "U",
             "x": 0,
             "y": 0,
           },
         ],
-        "w": 17.71,
+        "w": 23.248399999999997,
       },
       "halo": false,
       "x": 16.6,
@@ -68432,7 +68432,7 @@ exports[`venn diagram > sets=3&r_a=9&r_b=7&r_ab=4&r_c=3&r_ac=2&r_bc=1&r_abc=2&r_
       "readout": {
         "counts": [
           {
-            "label": "n(ξ)",
+            "label": "n(U)",
             "value": "33",
           },
           {
@@ -68574,12 +68574,12 @@ exports[`venn diagram > sets=3&r_a=9&r_b=7&r_ab=4&r_c=3&r_ac=2&r_bc=1&r_abc=2&r_
             "italic": true,
             "kind": "text",
             "size": 23,
-            "text": "ξ",
+            "text": "U",
             "x": 0,
             "y": 0,
           },
         ],
-        "w": 12.65,
+        "w": 16.605999999999998,
       },
       "halo": true,
       "x": 13,
