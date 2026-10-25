@@ -32,7 +32,6 @@ export const LABEL_MODES = {
 /** A sector's own label: any of the chart's, or its number left blank or written as a letter. */
 export const SECTOR_LABELS = { ...LABEL_MODES, blank: 'Blank line', letter: 'Letter (x°)' } as const
 export const KEY_PLACES = { none: 'None', right: 'Right', below: 'Below' } as const
-export const ANGLE_MARKS = { none: 'None', arcs: 'Arcs', measures: 'Arcs and measures' } as const
 export const CENTER_DOTS = { auto: 'Auto', on: 'On', off: 'Off' } as const
 
 export type ValueKind = keyof typeof VALUE_KINDS
@@ -40,7 +39,6 @@ export type Order = keyof typeof ORDERS
 export type LabelMode = keyof typeof LABEL_MODES
 export type SectorLabel = keyof typeof SECTOR_LABELS
 export type KeyPlace = keyof typeof KEY_PLACES
-export type AngleMarks = keyof typeof ANGLE_MARKS
 export type CenterDot = keyof typeof CENTER_DOTS
 
 /** The most sectors a pie chart draws. */
@@ -60,7 +58,6 @@ export type Settings = {
   /** a fill for each row picked by the teacher, '' for the look's next one */
   fills: string[]
   keyAt: KeyPlace
-  angleMarks: AngleMarks
   centerDot: CenterDot
   title: string
   titleMode: TitleMode
@@ -79,7 +76,6 @@ export const DEFAULT_SETTINGS: Settings = {
   look: 'color',
   fills: [],
   keyAt: 'none',
-  angleMarks: 'none',
   centerDot: 'auto', // on when there's something to measure or draw
   title: '',
   titleMode: 'none',
@@ -115,7 +111,6 @@ export function cleanSettings(s: RawSettings): Settings {
     look: oneOf(LOOKS, s.look, d.look),
     fills: rowList(s.fills, FILLS, rows.length),
     keyAt: oneOf(KEY_PLACES, s.keyAt, d.keyAt),
-    angleMarks: oneOf(ANGLE_MARKS, s.angleMarks, d.angleMarks),
     centerDot: oneOf(CENTER_DOTS, s.centerDot, d.centerDot),
     title: text(s.title, d.title),
     titleMode: titleMode(s.titleMode, d.titleMode),

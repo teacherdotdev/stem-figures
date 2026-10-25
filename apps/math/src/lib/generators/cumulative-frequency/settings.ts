@@ -15,7 +15,7 @@ import { MAX_BLOCKS, EVERY, MINOR, TITLE_MODES, type TitleMode } from '$shared/g
 import { GRIDLINES, type Gridlines } from '$shared/graph/grid'
 import { fmt, niceText, numberingOf, type Numbering } from '$shared/graph/numbering'
 import { parseNumber } from '$lib/shared/math.js'
-import { binData, parseBin, type Bin, type Edge } from '$lib/stats/bins'
+import { binData, parseUpTo, type Bin, type Edge } from '$lib/stats/bins'
 import { niceRange, parseData } from '$lib/stats/data'
 import { cleanRows, filledRows, readTable, readValue, rowFromParam, rowToParam, type TableRow } from '$lib/stats/table'
 
@@ -229,16 +229,8 @@ export function settingsFromParams(params: URLSearchParams): Settings {
 
 // Reading the data.
 
-/** An upper bound as a cumulative table gives it: 20, ≤ 20, x < 20, under 20, or a bin like 0 < h ≤ 20 or 10–20. */
-const NUM = String.raw`[-−]?(?:\d+\.?\d*|\.\d+)`
-const UP_TO = new RegExp(String.raw`^\s*(?:(?:[a-z]\s*)?(?:<=|≤|<|=<)|less than|under|up to|below)?\s*(${NUM})\s*$`, 'i')
-export function parseBound(typed: string): { lo: number | null; hi: number } | { problem: string } {
-  const bin = parseBin(typed)
-  if (!('problem' in bin)) return { lo: bin.lo, hi: bin.hi }
-  const m = typed.match(UP_TO)
-  if (m) return { lo: null, hi: Number(m[1].replace('−', '-')) }
-  return { problem: `Type “${typed.trim()}” as an upper bound, like 20, ≤ 20 or 0 < h ≤ 20.` }
-}
+// An upper bound as typed: see parseUpTo in $lib/stats/bins.
+export const parseBound = parseUpTo
 
 /** One plotted point: an upper bound (or the lowest bound) and the running total up to it. */
 export type Total = { x: number; cf: number }

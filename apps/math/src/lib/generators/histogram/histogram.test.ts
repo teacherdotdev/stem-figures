@@ -85,25 +85,31 @@ describe('a frequency table', () => {
     expect(r.problems.bins).toBeNull()
   })
 
-  test('a gap or an overlap gets a message, not a figure that hides it', () => {
-    const gap = read(table(['0–10', '3'], ['20–30', '4']))
-    expect(gap.problems.bins).toContain('gap')
-    const g = build(table(['0–10', '3'], ['20–30', '4']))
-    expect(g.bars[1].x - (g.bars[0].x + g.bars[0].w)).toBeGreaterThan(10)
-    expect(read(table(['0–10', '3'], ['5–20', '4'])).problems.bins).toContain('overlap')
+  test('bins are typed by their upper ends, each starting where the one before it ends', () => {
+    const r = read(table(['10', '3'], ['20', '4'], ['40', '2']))
+    expect(r.bins.map((b) => [b.lo, b.hi])).toEqual([[0, 10], [10, 20], [20, 40]])
+    expect(read({ ...table(['150', '3'], ['160', '4']), lowest: '140' }).bins[0].lo).toBe(140)
+    // A worksheet's bins pasted whole give their upper ends, and the first one where it starts.
+    expect(read(table(['140 < h ≤ 150', '3'], ['150 < h ≤ 170', '4'])).bins.map((b) => [b.lo, b.hi])).toEqual([[140, 150], [150, 170]])
+  })
+
+  test('upper ends that don’t go up, or a start past the first, get a message', () => {
+    expect(read(table(['20', '3'], ['10', '4'])).problems.table).toContain('have to go up')
+    expect(read({ ...table(['10', '3'], ['20', '4']), lowest: '10' }).problems.bins).toContain('start before 10')
+    expect(read(table(['10', '3'])).problems.bins).toContain('first bin starts')
   })
 
   test('whole-number bins like 10–19 are offered as their edges', () => {
     const r = read(table(['10–19', '3'], ['20–29', '5'], ['30–39', '2']))
-    expect(r.problems.bins).toContain('gap')
-    expect(r.fix).toEqual(['9.5–19.5', '19.5–29.5', '29.5–39.5'])
+    expect(r.problems.bins).toContain('halfway')
+    expect(r.fix).toEqual({ lowest: '9.5', ups: ['19.5', '29.5', '39.5'] })
   })
 
   test('bad bins and frequencies get messages', () => {
     expect(read(table(['ten', '3'])).problems.table).toContain('“ten”')
-    expect(read(table(['0–10', 'x'])).problems.table).toContain('“x”')
-    expect(read(table(['0–10', '-2'])).problems.table).toContain('below 0')
-    expect(read({ source: 'table', rows: [{ name: '', cells: [{ value: '4' }] }] }).problems.table).toContain('Type a bin')
+    expect(read(table(['10', 'x'])).problems.table).toContain('“x”')
+    expect(read(table(['10', '-2'])).problems.table).toContain('below 0')
+    expect(read({ source: 'table', rows: [{ name: '', cells: [{ value: '4' }] }] }).problems.table).toContain('goes up to')
   })
 })
 

@@ -65,15 +65,18 @@
   // set's bins, so a bar can be left for students by emptying its frequency.
   function setSource(v: string) {
     if (v === 'table' && !filledRows(s.rows).length && read.bins.length) {
-      s.rows = read.bins.map((b) => ({ name: b.name, cells: [{ value: fmt(b.frequency ?? 0), error: '' }] }))
+      s.rows = read.bins.map((b) => ({ name: fmt(b.hi), cells: [{ value: fmt(b.frequency ?? 0), error: '' }] }))
+      s.lowest = fmt(read.bins[0].lo)
     }
     s.source = v as Settings['source']
   }
   /** Whole-number bins typed with gaps between them, retyped as the edges they stand for. */
   function useWholeNumberEdges() {
-    if (!read.fix) return
+    const fix = read.fix
+    if (!fix) return
     let k = 0
-    for (const r of s.rows) if (r.name.trim() && k < read.fix.length) r.name = read.fix[k++]
+    for (const r of s.rows) if (r.name.trim() && k < fix.ups.length) r.name = fix.ups[k++]
+    s.lowest = fix.lowest
   }
 
   // The edge choice, written with the first bin's own numbers.
@@ -148,8 +151,9 @@
         <h2 class="card-head">Data</h2>
         <HelpTip id="data-tip" label="How to type the data">
           Type or paste a data set, separated by commas or spaces, and it's sorted into bins (also called classes or class
-          intervals) of the width you give, or a width that fits the data. Or type a frequency table: each bin, like 10–20 or
-          10 ≤ x &lt; 20, and its frequency. Bins can have different class widths. Leave a frequency empty for no bar, such as a bar
+          intervals) of the width you give, or a width that fits the data. Or type a frequency table: where the first bin starts,
+          then each bin’s upper end (Up to) and its frequency, in order. Bins can have different class widths. Left empty, the
+          first bin is as wide as the next. A bin like 140 &lt; h ≤ 150 pasted from a worksheet is read as up to 150. Leave a frequency empty for no bar, such as a bar
           for students to draw; a frequency table started from a data set has its bins filled in.
         </HelpTip>
       </div>
@@ -179,8 +183,12 @@
         {#if read.problems.binWidth}<p class="help problem">{read.problems.binWidth}</p>{/if}
         {@render choice({ key: 'edges', name: 'A value on an edge goes in', options: EDGE_OPTIONS })}
       {:else}
+        <label class="starts">
+          <span>First bin starts at</span>
+          <input type="text" inputmode="decimal" placeholder={read.lowestGuess !== null ? fmt(read.lowestGuess) : '0'} bind:value={s.lowest} />
+        </label>
         <TableInput
-          id="table" rowName="Bin" columnName="Frequency" maxColumns={1}
+          id="table" rowName="Up to" columnName="Frequency" maxColumns={1} numberNames addRow="Add a bin"
           bind:columns={s.columns} bind:rows={s.rows} placeholders={{ column: 'Frequency' }}
         />
         {#if read.problems.table}<p class="help problem">{read.problems.table}</p>{/if}
@@ -301,6 +309,8 @@
 </GeneratorPage>
 
 <style>
+  .starts { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; font-size: 0.88rem; }
+  .starts input { width: 6rem; text-align: right; }
   .card-head { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 
   .data { padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.6rem; }

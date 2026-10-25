@@ -12,7 +12,7 @@ import { MAX_BLOCKS, EVERY, MINOR, TITLE_MODES, type TitleMode } from '$shared/g
 import { GRIDLINES, type Gridlines } from '$shared/graph/grid'
 import { fmt, niceText, numberingOf } from '$shared/graph/numbering'
 import { parseNumber } from '$lib/shared/math.js'
-import { binData, checkBins, parseBin, type Bin, type Edge } from '$lib/stats/bins'
+import { binData, parseUpTo, type Bin, type Edge } from '$lib/stats/bins'
 import { niceRange, parseData } from '$lib/stats/data'
 import { FILLS, type Fill } from '$lib/stats/fills'
 import {
@@ -49,8 +49,10 @@ export type Settings = {
   edges: Edge
   /** the frequency table's one heading */
   columns: string[]
-  /** the frequency table: each row's name is its bin, its one cell the frequency */
+  /** the frequency table: each row's name is the number its bin goes up to, its one cell the frequency */
   rows: TableRow[]
+  /** where the frequency table's first bin starts ("" for as wide as the next bin) */
+  lowest: string
   /** 'auto': frequency with equal bins, frequency density with unequal ones */
   measure: 'auto' | Measure
   fill: Fill
@@ -88,6 +90,7 @@ export const DEFAULT_SETTINGS: Settings = {
   edges: 'left', // 10 ≤ x < 20, as CONTEXT.md says
   columns: [''],
   rows: [],
+  lowest: '',
   measure: 'auto',
   fill: 'blue',
   polygon: 'none',
@@ -134,6 +137,7 @@ export function cleanSettings(s: RawSettings): Settings {
     edges: oneOf(EDGES, s.edges, d.edges),
     columns,
     rows: cleanRows(s.rows, 1),
+    lowest: text(s.lowest, d.lowest),
     measure: typeof s.measure === 'string' && s.measure in MEASURES ? (s.measure as Measure) : 'auto',
     fill: oneOf(FILLS, s.fill, d.fill),
     polygon: oneOf(POLYGONS, s.polygon, d.polygon),
@@ -230,41 +234,65 @@ function readDataSet(s: Settings) {
   return { bins, auto, problems, count: values.length }
 }
 
-/** Whole-number bins like 10–19, 20–29, with a gap of 1 between each: the edges they stand for (9.5–19.5…). */
-function wholeNumberEdges(bins: Bin[]): string[] | null {
-  if (bins.length < 2) return null
-  const whole = bins.every((b) => Number.isInteger(b.lo) && Number.isInteger(b.hi))
-  const gapsOfOne = bins.slice(1).every((b, i) => b.lo - bins[i].hi === 1)
-  return whole && gapsOfOne ? bins.map((b) => `${fmt(b.lo - 0.5)}–${fmt(b.hi + 0.5)}`) : null
-}
+/** Whole-number edges for bins typed like 10–19, 20–29: where the first starts, and each one's upper end, halfway into the gap. */
+export type WholeNumberFix = { lowest: string; ups: string[] }
 
-/** The bins from a frequency table, or the problems with it. */
+/**
+ * The bins from a frequency table: each row the number its bin goes up to,
+ * each bin starting where the one before it ends, the first where Starts at
+ * says (or as wide as the next bin), and the problems with it. A whole bin
+ * pasted from a worksheet, like 140 < h ≤ 150, is read as up to 150.
+ */
 function readTable(s: Settings) {
   let table: string | null = null
-  let fix: string[] | null = null
-  const bins: ReadBin[] = []
+  let bins: string | null = null
+  const ups: { lo: number | null; hi: number; frequency: number | null }[] = []
   for (const r of filledRows(s.rows)) {
     const typed = r.name.trim()
     const f = readValue(r.cells[0]?.value ?? '')
     if (!typed) {
-      table ??= `Type a bin for the frequency ${r.cells[0].value.trim()}, like 10–20.`
+      table ??= `Type what the bin with the frequency ${r.cells[0].value.trim()} goes up to, like 20.`
       continue
     }
-    const bin = parseBin(typed)
-    if ('problem' in bin) {
-      table ??= bin.problem
+    const up = parseUpTo(typed)
+    if ('problem' in up) {
+      table ??= up.problem
+      continue
+    }
+    const before = ups.at(-1)
+    if (before && up.hi <= before.hi) {
+      table ??= `The “up to” numbers have to go up, so put ${typed} before ${fmt(before.hi)}.`
       continue
     }
     if (f.bad) table ??= `“${f.bad}” isn't a number. Type frequencies like 12 or 3.`
     else if (f.value !== null && f.value < 0) table ??= `A frequency can't be below 0, so make ${fmt(f.value)} 0 or more.`
-    bins.push({ ...bin, frequency: f.value !== null && f.value >= 0 ? f.value : null, name: typed })
+    ups.push({ lo: up.lo, hi: up.hi, frequency: f.value !== null && f.value >= 0 ? f.value : null })
   }
-  let order = checkBins(bins)
-  if (order) {
-    fix = wholeNumberEdges(bins)
-    if (fix) order += ` For whole numbers, the edges go halfway between: ${fix.slice(0, 2).join(', ')} and so on.`
-  }
-  return { bins, problems: { table, bins: order }, fix }
+
+  // Whole-number bins pasted as 10–19, 20–29 leave a gap of 1 between them;
+  // their edges go halfway between, at 9.5, 19.5, 29.5.
+  const whole = ups.length > 1 && ups.every((u, i) => u.lo !== null && Number.isInteger(u.lo) && Number.isInteger(u.hi) && (!i || u.lo - ups[i - 1].hi === 1))
+  const fix: WholeNumberFix | null = whole ? { lowest: fmt(ups[0].lo! - 0.5), ups: ups.map((u) => fmt(u.hi + 0.5)) } : null
+  if (fix) bins = `These look like whole-number bins, ${fmt(ups[0].lo!)}–${fmt(ups[0].hi)}, ${fmt(ups[1].lo!)}–${fmt(ups[1].hi)} and so on, whose edges go halfway between: ${fix.lowest}–${fix.ups[0]}, ${fix.ups[0]}–${fix.ups[1]}.`
+
+  // Where the first bin starts: as typed, or a pasted first bin's lower end,
+  // or as far below its upper end as the next bin is wide.
+  const guess = ups[0]?.lo ?? (ups.length > 1 ? tidy(2 * ups[0].hi - ups[1].hi) : null)
+  let lowest = guess
+  if (s.lowest.trim()) {
+    const v = readValue(s.lowest).value
+    if (v === null) bins ??= 'Type where the first bin starts as a number, like 0 or 140.'
+    else if (ups.length && v >= ups[0].hi) bins ??= `The first bin has to start before ${fmt(ups[0].hi)}, where it ends.`
+    else lowest = v
+  } else if (ups.length === 1) bins ??= 'Type where the first bin starts, above the table.'
+
+  const read: ReadBin[] = ups.flatMap((u, i) => {
+    const lo = i ? ups[i - 1].hi : lowest
+    if (lo === null) return []
+    const bin = { lo, hi: u.hi, holds: null }
+    return [{ ...bin, frequency: u.frequency, name: binText(bin) }]
+  })
+  return { bins: read, problems: { table, bins }, fix, lowestGuess: guess }
 }
 
 /**
@@ -372,6 +400,8 @@ export function readHistogram(s: Settings) {
     binAuto: dataSet?.auto ?? null,
     /** whole-number bins typed with gaps, as the edges they stand for (9.5–19.5…) */
     fix: tableRead?.fix ?? null,
+    /** where the table's first bin starts when Starts at is left empty, for its placeholder */
+    lowestGuess: tableRead?.lowestGuess ?? null,
     problems,
   }
 }

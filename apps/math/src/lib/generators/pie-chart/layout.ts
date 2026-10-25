@@ -5,12 +5,12 @@
 //
 // Everything is placed around the circle's center at (0, 0); the figure moves
 // it into place. A label goes inside its sector where it fits, clear of the
-// sector's edges and the marks at the center, or else outside with a short
+// sector's edges and the dot at the center, or else outside with a short
 // leader line, the outside ones fanned out round the circle so none overlap.
 
 import { LABEL_SCALE } from '$shared/labelSize'
 import { crosses, textWidth, type Box } from '$shared/graph/labels'
-import { angleMark, sectorPath } from '$lib/labeling/marks'
+import { sectorPath } from '$lib/labeling/marks'
 import type { Vec } from '$lib/shapes/vec'
 import { ORDER, fillOf, isDark, isPattern, type Fill, type Look } from '$lib/stats/fills'
 import { layoutSwatchKey, type KeyLayout } from '$lib/stats/swatchKey'
@@ -91,15 +91,14 @@ function readMode(p: Part, mode: LabelMode, kind: Settings['values']) {
 
 /**
  * A label's lines for a sector, from the chart's label mode and the sector's
- * own. A letter with no number to stand for is the sector's angle, unless
- * it's already written at the center (`measured`).
+ * own. A letter with no number to stand for is the sector's angle.
  */
-export function labelLines(p: Part, mode: LabelMode, kind: Settings['values'], letter: string | null, measured = false): Line[] {
+export function labelLines(p: Part, mode: LabelMode, kind: Settings['values'], letter: string | null): Line[] {
   const { name: named, numbers, unitOf, line } = readMode(p, mode, kind)
   const text = (t: string): Line => ({ text: t, blank: false })
   const name = named ? [text(named)] : []
   if (p.label === 'blank') return numbers.length ? [...name, { text: '', blank: true }] : [{ text: '', blank: true }]
-  if (p.label === 'letter') return numbers.length || !measured ? [...name, text(`${letter}${numbers.length ? unitOf(numbers[0]) : '°'}`)] : name
+  if (p.label === 'letter') return [...name, text(`${letter}${numbers.length ? unitOf(numbers[0]) : '°'}`)]
   return numbers.length ? [...name, text(line)] : name
 }
 
@@ -176,34 +175,17 @@ export function buildPieChart(s: Settings) {
   // What's left undrawn: one empty sector to the end, or the whole circle.
   const empty = read.gap > 1e-6 ? { from: 360 - read.gap, to: 360, path: n ? sectorAt(R, 360 - read.gap, 360) : null } : null
   const blankCircle = n === 0
-  const marked = s.angleMarks !== 'none' && n > 1
-  const centerDot = s.centerDot === 'on' || (s.centerDot === 'auto' && (!!empty || marked || sectors.some((t) => t.letter || t.part.label === 'blank')))
+  const centerDot = s.centerDot === 'on' || (s.centerDot === 'auto' && (!!empty || sectors.some((t) => t.letter || t.part.label === 'blank')))
 
-  // The arcs at the center, and their measures where there's room.
-  const arcR = Math.max(fs * 1.7, 22)
-  const marks = { arcs: [] as string[], squares: [] as Vec[][] }
-  // The center zone the arcs and dot take, which labels inside keep clear of.
-  const clearOf = marked ? arcR + 6 : centerDot ? DOT + 8 : 0
+  // The center zone the dot takes, which labels inside keep clear of.
+  const clearOf = centerDot ? DOT + 8 : 0
   const placed: Box[] = []
   if (centerDot) placed.push({ x0: -DOT - 3, y0: -DOT - 3, x1: DOT + 3, y1: DOT + 3 })
-  const measures: Label[] = []
-  const folded = new Set<number>() // sectors whose measure goes with their label
-  if (marked) {
-    sectors.forEach((t, i) => {
-      if (t.to - t.from > 359.999) return
-      angleMark(marks, [0, 0], dir(t.from), dir(t.to), '1', false, t.to - t.from > 180, { arc: arcR, arcGap: 0, square: 0 })
-      if (s.angleMarks !== 'measures' || t.part.label === 'blank') return
-      const lines = [{ text: t.letter ? `${t.letter}°` : `${nice(t.part.angle!)}°`, blank: false }]
-      const spot = fitInside(t, lines, arcR + 3, R * 0.62, true)
-      if (spot) measures.push({ ...spot, white: isDark(t.fill) && !t.tint, halo: isPattern(t.fill), leader: null, sector: i })
-      else folded.add(i)
-    })
-  }
 
   /**
    * The best place inside the sector, out along its middle from `near` to
-   * `far`, where the lines fit clear of everything: nearest the center for
-   * `hug`, else nearest the middle of that room.
+   * `far`, where the lines fit clear of everything, nearest the middle of
+   * that room.
    */
   function fitInside(t: { from: number; to: number }, lines: Line[], near: number, far: number, hug = false) {
     const { widths, w, h } = sizeOf(lines)

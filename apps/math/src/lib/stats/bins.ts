@@ -67,3 +67,17 @@ export function binData(values: number[], start: number, width: number, holds: E
 }
 
 const tidy = (v: number) => Number(v.toPrecision(12)) || 0
+
+const UP_TO = new RegExp(String.raw`^\s*(?:(?:[a-z]\s*)?(?:<=|≤|<|=<)|less than|under|up to|below)?\s*(${NUM})\s*$`, 'i')
+
+/**
+ * An upper bound as a table gives it: 20, ≤ 20, x < 20, under 20, or a whole
+ * bin pasted from a worksheet, like 0 < h ≤ 20 or 10–20, which also gives its lower end.
+ */
+export function parseUpTo(typed: string): { lo: number | null; hi: number } | { problem: string } {
+  const bin = parseBin(typed)
+  if (!('problem' in bin)) return { lo: bin.lo, hi: bin.hi }
+  const m = typed.match(UP_TO)
+  if (m) return { lo: null, hi: Number(m[1].replace('−', '-')) }
+  return { problem: `Type “${typed.trim()}” as the number the bin goes up to, like 20.` }
+}
