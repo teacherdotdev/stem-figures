@@ -361,27 +361,26 @@ export function buildCircle(s: Settings) {
         const toSide = a.measure >= 180 ? 0 : Math.max(...[e1, e2].map((e) => (reach(b, perp(e)) + 3) / half))
         return Math.max(outer + 5 + reach(b, midWay), toSide, 12 + reach(b, midWay))
       }
-      // A narrow angle's label gets smaller to fit between its rays near the corner, and once even the
-      // smallest won't, it goes just outside the angle, beside the end of its arc.
+      // A narrow angle's label gets smaller to fit between its rays near the corner. Failing that, the smallest
+      // goes as far out between them as it needs, up to as far as its rays reach. It never leaves the angle.
       const room = R * Math.min(a.from.room, a.to.room)
+      const inside = (box: MathBox) => Math.max(room - reach(box, midWay) - 4, 0)
       const spot = (make: (size: number) => MathBox | null) => {
         for (const k of SHRINK) {
           const box = make(FS * k)
           if (!box) return null
           const d = distance(box)
-          if (a.measure >= 180 || (d <= outer + 5 + reach(box, midWay) + NEAR && d + reach(box, midWay) <= room - 4)) return { box, at: add(v, mul(midWay, d)), out: midWay }
+          if (a.measure >= 180 || (d <= outer + 5 + reach(box, midWay) + NEAR && d <= inside(box))) return { box, at: add(v, mul(midWay, d)), out: midWay, most: Math.max(d, inside(box)) }
         }
         const box = make(FS * SHRINK[SHRINK.length - 1])!
-        const sides = [[e1, e2], [e2, e1]].map(([e, other]) => {
-          const n = dot(perp(e), other) > 0 ? mul(perp(e), -1) : perp(e)
-          return { box, at: add(v, add(mul(e, Math.max(outer, 12, reach(box, e) + 4)), mul(n, reach(box, n) + 4))), out: n }
-        })
-        return sides.find((x) => !overlaps(box, x.at) && !onLine(box, x.at)) ?? sides.find((x) => !overlaps(box, x.at)) ?? sides[0]
+        const d = Math.min(distance(box), inside(box))
+        return { box, at: add(v, mul(midWay, d)), out: midWay, most: d }
       }
       const label = text && spot(text)
       if (label) {
+        // Clear of other labels, but no further out than its rays reach.
         let at = label.at
-        for (let n = 0; n < 12 && overlaps(label.box, at); n++) at = add(at, mul(label.out, 4))
+        for (let n = 0; n < 12 && overlaps(label.box, at) && len(sub(add(at, mul(label.out, 4)), v)) <= label.most; n++) at = add(at, mul(label.out, 4))
         place(`angle:${a.key}`, label.box, at, label.out)
       }
       const ghost = spot(measureBox)!
