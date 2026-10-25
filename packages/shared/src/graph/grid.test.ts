@@ -46,6 +46,21 @@ describe('layoutGrid', () => {
     expect(edges.numbers.filter((n) => n.text === '0')).toHaveLength(2)
   })
 
+  it('keeps room for a generator’s own labels, moving the axis titles out past it', () => {
+    const titled = { ...s, xTitle: 'Sport', xTitleMode: 'text' as const, yTitle: 'Votes', yTitleMode: 'text' as const }
+    const plain = layoutGrid(titled, axes)
+    const roomy = layoutGrid(titled, axes, { room: { x: 40, y: 60 } })
+    expect(roomy.height - plain.height).toBeCloseTo(40, 9)
+    expect(roomy.width - plain.width).toBeCloseTo(60, 9)
+    const side = (g: typeof plain, rotate: boolean) => g.labels.find((l) => l.kind === 'side' && !!l.rotate === rotate)!
+    expect(side(roomy, false).y - roomy.grid.y - roomy.grid.h).toBeCloseTo(side(plain, false).y - plain.grid.y - plain.grid.h + 40, 9)
+    expect(roomy.grid.x - side(roomy, true).x).toBeCloseTo(plain.grid.x - side(plain, true).x + 60, 9)
+  })
+
+  it('is unchanged without room', () => {
+    expect(layoutGrid(s, axes, { room: {} })).toEqual(expect.objectContaining({ width: layoutGrid(s, axes).width, height: layoutGrid(s, axes).height }))
+  })
+
   it('reads plain numbers, and says what to fix', () => {
     expect(axes.x).toMatchObject({ start: 0, step: 5, blocks: 10 })
     expect(readAxes({ xFrom: 'a', xTo: '5', xStep: '1', yFrom: '0', yTo: '1', yStep: '0' }).problems).toMatchObject({

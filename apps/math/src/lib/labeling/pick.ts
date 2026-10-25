@@ -1,11 +1,11 @@
 // What a figure offers to be pointed at and clicked, for PickLayer.svelte to
-// draw its highlights and hit areas from: lines, angles, places for a point
-// and curves, each by a key that stays with it as the figure changes.
+// draw its highlights and hit areas from: lines, angles, places for a point,
+// curves and enclosed areas, each by a key that stays with it as the figure changes.
 
 export type Vec = [number, number]
 
 /** Something on the figure the teacher can point at: an angle, a line, a place for a point or a curve, by its key or id. */
-export type Part = { kind: 'angle' | 'line' | 'point' | 'curve'; key: string }
+export type Part = { kind: 'angle' | 'line' | 'point' | 'curve' | 'area'; key: string }
 
 export interface Pickable {
   /** The figure's own box, which the layer's SVG matches. */
@@ -18,6 +18,8 @@ export interface Pickable {
   spots: { key: string; at: Vec; line: string | null; name?: string }[]
   /** Curves, as SVG paths, and where their popup opens. */
   curves?: { key: string; d: string; anchor: Vec; name?: string }[]
+  /** Enclosed areas, as closed SVG paths, under everything else, and where their popup opens. */
+  areas?: { key: string; d: string; anchor: Vec; name?: string }[]
   /** The labels drawn, so a ghost measure isn't written over an angle's own. */
   labels: { part: string }[]
 }

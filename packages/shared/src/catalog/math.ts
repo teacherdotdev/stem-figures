@@ -179,6 +179,20 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'circle',
+    site: 'math',
+    name: 'Circle Generator',
+    path: '/circle',
+    blurb: 'A circle with points, chords, radii and tangents, its angles, arcs and areas labeled right on the figure.',
+    description: 'Circles with chords, radii, tangents and secants, their angles, arcs and shaded sectors labeled on the figure.',
+    keywords: [
+      'circle', 'circles', 'circle theorems', 'parts of a circle', 'chord', 'chords', 'radius', 'diameter', 'tangent', 'tangents', 'secant',
+      'arc', 'arcs', 'intercepted arc', 'arc measure', 'arc length', 'central angle', 'inscribed angle', 'inscribed angles',
+      'angle in a semicircle', 'angles in the same segment', 'cyclic quadrilateral', 'alternate segment theorem', 'tangent and radius',
+      'intersecting chords', 'inscribed polygon', 'inscribed hexagon', 'sector', 'segment', 'geometry', 'diagram', 'labels', 'printable',
+    ],
+  },
+  {
     id: 'prism',
     site: 'math',
     name: 'Prism Generator',
@@ -258,6 +272,114 @@ export const MATH: CatalogEntry[] = [
       'five-number summary', 'quartile', 'quartiles', 'q1', 'q3', 'median', 'minimum', 'maximum', 'range', 'interquartile range',
       'iqr', 'outlier', 'outliers', 'statistics', 'stats', 'data', 'data set', 'data display', 'compare data', 'distribution',
       'spread', 'center', 'printable',
+    ],
+  },
+  {
+    id: 'bar-graph',
+    site: 'math',
+    alsoOn: ['biology'],
+    name: 'Bar Graph Generator',
+    path: '/bar-graph',
+    blurb: 'Bar graphs and column graphs from a table, with one or several bars per category.',
+    description:
+      'Bar and column graphs, single, double or stacked, with error bars.',
+    keywords: [
+      'bar graph', 'bar graphs', 'bar chart', 'bar charts', 'column graph', 'column graphs', 'column chart',
+      'vertical bar graph', 'horizontal bar graph', 'double bar graph', 'grouped bar chart', 'side-by-side bar chart',
+      'comparative bar chart', 'dual bar chart', 'compound bar chart', 'composite bar chart', 'component bar chart',
+      'stacked bar chart', 'stacked bar graph', 'error bars', 'standard error', 'sem', 'standard deviation',
+      'categorical data', 'frequency', 'data display', 'statistics', 'stats', 'compare data', 'key', 'legend', 'printable',
+    ],
+  },
+  {
+    id: 'stem-and-leaf',
+    site: 'math',
+    name: 'Stem-and-Leaf Plot Generator',
+    path: '/stem-and-leaf',
+    blurb: 'Stem-and-leaf plots from a data set, single or back-to-back, with a key.',
+    description:
+      'Stem-and-leaf plots, single or back-to-back, with split stems and a key.',
+    keywords: [
+      'stem and leaf', 'stem-and-leaf plot', 'stem and leaf plot', 'stem and leaf diagram', 'stem-and-leaf display', 'stemplot', 'stem plot',
+      'back-to-back stem and leaf', 'back to back', 'leaves', 'stems', 'key', 'ordered stem and leaf', 'split stems',
+      'median', 'mode', 'range', 'quartiles', 'data set', 'statistics', 'data display', 'printable',
+    ],
+  },
+  {
+    id: 'cumulative-frequency',
+    site: 'math',
+    name: 'Cumulative Frequency Graph Generator',
+    path: '/cumulative-frequency',
+    blurb: 'Cumulative frequency curves from a frequency table, with the median and quartiles read off.',
+    description:
+      'Cumulative frequency graphs with the median, quartiles and percentiles read off.',
+    keywords: [
+      'cumulative frequency', 'cumulative frequency graph', 'cumulative frequency curve', 'cumulative frequency diagram',
+      'cumulative frequency polygon', 'ogive', 'cumulative relative frequency', 'cumulative percentage', 'running total',
+      'grouped data', 'grouped frequency table', 'frequency table', 'class interval', 'upper class boundary',
+      'median', 'lower quartile', 'upper quartile', 'quartiles', 'interquartile range', 'iqr', 'percentile', 'percentiles',
+      'estimate', 'gcse', 'statistics', 'stats', 'data display', 'printable',
+    ],
+  },
+  {
+    id: 'two-way-table',
+    site: 'math',
+    name: 'Two-Way Table Generator',
+    path: '/two-way-table',
+    blurb: 'Two-way tables with totals, cells left blank for students, and relative frequencies.',
+    description:
+      'Two-way tables of counts or relative frequencies, with totals.',
+    keywords: [
+      'two-way table', 'two way table', 'two-way tables', 'two way tables', 'two-way frequency table', 'contingency table',
+      'relative frequency', 'relative frequency table', 'joint relative frequency', 'marginal relative frequency',
+      'conditional relative frequency', 'row totals', 'column totals', 'totals', 'fill in the table', 'missing values',
+      'probability', 'conditional probability', 'categorical data', 'frequency table', 'statistics', 'stats', '8.sp.a.4',
+      'printable',
+    ],
+  },
+  {
+    id: 'histogram',
+    site: 'math',
+    alsoOn: ['biology'],
+    name: 'Histogram Generator',
+    path: '/histogram',
+    blurb: 'Histograms from a data set or a frequency table, with equal or unequal bins.',
+    description:
+      'Histograms with equal or unequal bins, frequency density and frequency polygons.',
+    keywords: [
+      'histogram', 'histograms', 'frequency histogram', 'relative frequency histogram', 'frequency density',
+      'unequal class widths', 'class width', 'class interval', 'class intervals', 'grouped data', 'grouped frequency table',
+      'frequency table', 'frequency polygon', 'bins', 'bin width', 'continuous data', 'distribution', 'skewed', 'symmetric',
+      'bimodal', 'statistics', 'stats', 'data display', 'axis break', 'printable',
+    ],
+  },
+  {
+    id: 'venn-diagram',
+    site: 'math',
+    name: 'Venn Diagram Generator',
+    path: '/venn-diagram',
+    blurb: 'Venn diagrams of one, two or three sets, with numbers or elements in each region and regions shaded.',
+    description:
+      'Venn diagrams of one, two or three sets, with shaded regions.',
+    keywords: [
+      'venn diagram', 'venn diagrams', 'sets', 'set notation', 'union', 'intersection', 'complement', 'universal set',
+      'ξ', 'subset', 'disjoint', 'mutually exclusive', 'a ∩ b', 'a ∪ b', 'a′', 'shading', 'shade the region',
+      'probability', 'conditional probability', 'elements', 'factors', 'multiples', 'prime factors', 'hcf', 'lcm',
+      'sorting', 'three circles', 'three set venn diagram', 'two circles', 'printable',
+    ],
+  },
+  {
+    id: 'pie-chart',
+    site: 'math',
+    name: 'Pie Chart Generator',
+    path: '/pie-chart',
+    blurb: 'Pie charts from a table, with sectors labeled by name, value, percent or angle.',
+    description:
+      'Pie charts of counts, percents or degrees, with labeled sectors and a key.',
+    keywords: [
+      'pie chart', 'pie charts', 'pie graph', 'circle graph', 'circle graphs', 'sector', 'sectors', 'slice', 'slices',
+      'angle', 'angles', 'degrees', '360', 'percentage', 'percent', 'proportion', 'fraction',
+      'categorical data', 'key', 'legend', 'protractor', 'statistics', 'data display', 'printable',
     ],
   },
   {

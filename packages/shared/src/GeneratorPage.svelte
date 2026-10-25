@@ -3,7 +3,8 @@
   // under them down the left, and the figure card filling the rest of the
   // window. Phones stack them, figure first. `settingsWidth` is the settings
   // column's width in rem on wide screens, so a generator with long settings
-  // can take more room from the figure, or give it back. `inputs`, when given,
+  // can take more room from the figure, or give it back; or a CSS width, like
+  // "minmax(26rem, 1fr)" for half the window. `inputs`, when given,
   // is a card of its own between the presets and the settings groups, for
   // what the teacher types first (Math's equations). A site can put a card of
   // its own at the top and move presets to the bottom (see generatorLead).
@@ -22,7 +23,7 @@
     gen: ReturnType<typeof generatorState<S>>
     /** the figure to export, when it isn't the first <svg> in the figure card */
     svg?: SVGSVGElement
-    settingsWidth?: number
+    settingsWidth?: number | string
     printWidth?: number
     printHeight?: number
     /** bound to the generator's label size setting, for the picker in the figure card */
@@ -46,7 +47,7 @@
 
 <div
   class="generator"
-  style:--settings-width="{settingsWidth}rem"
+  style:--settings-width={typeof settingsWidth === 'number' ? `${settingsWidth}rem` : settingsWidth}
   style:--print-width="{printWidth}in"
   style:--print-height={printHeight ? `${printHeight}in` : 'auto'}
 >

@@ -328,6 +328,56 @@ _Avoid_: Heading, bearing, rotation
 The angle over 180° that wraps around the outside, such as the 300° beside a 60° angle. It's an angle like any other, so it can be labeled, marked and shaded.
 _Avoid_: Exterior angle (a shape's is different), outside angle
 
+### Circles
+
+**Circle** (the figure):
+One circle with its center, points on it and lines between them, with the angles and arcs labeled for students: parts of a circle, central and inscribed angles, the circle theorems. Its generator is the Circle Generator. The circle is always drawn the same size; its **radius** (a length and unit, such as 6 cm) only sets the lengths the figure measures.
+_Avoid_: Circle diagram, circle theorems (fine as search words), unit circle (that's a different figure)
+
+**Center**:
+The circle's center, named O unless the teacher changes it, with a dot that can be hidden. It can be joined like any point, but not moved.
+_Avoid_: Origin, middle
+
+**Point** (in this figure):
+A place with an optional name, such as A, set by its **direction** from the center (0° to the right, counting counterclockwise, as the Angles Generator measures) and its distance from the center in radii. At a distance of 1 it's on the circle, anywhere else off it, inside or outside. Every point is added on the circle; dragged, a point on the circle slides round it (in 5° steps, 1° with Ctrl or Cmd held) until it's pulled a third of a radius away, and a point off it moves anywhere (its distance in quarter radii) and snaps back on within a tenth of a radius. An arc's popup can add a point in its middle.
+_Avoid_: Vertex, dot (that's how it's drawn)
+
+**Line** (in this figure):
+A straight line joining two places (the center, points, touch points or midpoints), or a **tangent**. It's named by what it is: a **radius** (from the center to the circle), a **diameter** (circle to circle through the center), a **chord** (circle to circle), a **secant** (a chord run on past both ends, or any line crossing the circle twice as drawn), or just a line (from a point off the circle, not crossing it twice). Each end stops at its point or runs on past it, ending in a cap; an end running into the circle goes all the way through it first. A run-on end can instead run until it meets another line (two tangents to where they cross, say), and that line runs on to meet it too; where they meet is a crossing, which can be named. Lines are drawn from a point's popup ("Join to") or the left card. A line's label goes beside it by itself, and can be dragged across the line to the other side.
+_Avoid_: Segment (alone), side, edge
+
+**Tangent**:
+A line touching the circle at one point. A tangent at a point on the circle is square to the radius there and runs on the same set length each way; either end can be cut back to where it touches. A tangent from a point outside the circle runs from that point to its **touch point**; a point has two, named on the page by where they touch (left and right, or top and bottom), and the popup draws none, either or both.
+_Avoid_: Tangent line (fine), touching line
+
+**Touch point**:
+Where a tangent from a point outside the circle touches it. It can be named and joined like a point (a radius to it, say), but it moves with its point and tangent, and goes when the tangent does.
+_Avoid_: Point of tangency (fine in teaching), contact point
+
+**Midpoint**:
+The middle of a line joining two places, such as a chord's. Clicking the middle of the line names it or draws a line from it to the center or a point (the line from the center square to a chord); midpoints aren't offered anywhere else, and a line from one is added with Add midpoint line, or from the midpoint's popup, and has its own row in the left card, "Midpoint of [AB] to [O]"; once joined or named it's a place on the figure, and the line's congruence ticks go on each half.
+_Avoid_: Apothem (that's a regular polygon's), bisector
+
+**Crossing** (in this figure):
+Where two lines cross away from a point, or a line meets the circle away from a point (a run-on end through the circle, say). Nothing shows there until the teacher clicks it and names a point there.
+_Avoid_: Intersection (fine in teaching)
+
+**Angle** (in this figure):
+The space between two neighboring lines at the center, a point or a crossing, labeled and marked as on a Parallel Lines and Transversal. It isn't shaded: enclosed areas are. A right angle's square comes on its own, at the first right angle in each place (where a triangle stands on a diameter, or a radius meets its tangent), until the teacher takes it off. Only the center has reflex angles (a reflex central angle); everywhere else, only angles up to 180° count.
+_Avoid_: Central angle and inscribed angle as names in the figure (they're fine in teaching; every angle is edited the same way)
+
+**Arc**:
+The piece of the circle between two neighboring places on it (points, and where lines meet it). Its label is nothing, its measure in degrees, its length (from the radius) or text; it can carry congruence ticks and be drawn bold or in a color, to show an intercepted arc, or hidden, leaving the rest of the circle drawn (it shows faintly dashed while the figure is edited). An arc split by a point in the middle is labeled piece by piece.
+_Avoid_: Curve, minor arc and major arc (an arc is always between neighboring places)
+
+**Enclosed area**:
+Any region the circle and the lines close off: a **sector** (between two radii and an arc), a **segment** (between a chord and an arc), a triangle of chords, or a piece where chords cross. Clicking inside one shades it in one of the shading colors. It keeps its shading while its points move, until a line is drawn across it. Lines' loose ends, and a tangent, close nothing off.
+_Avoid_: Region, face, shape (that's a different figure)
+
+**Measures** (in this figure):
+The circle's circumference and area, and each shaded enclosed area's size (with its arc's angle and length when it runs along one arc, as a sector or segment does), worked out from the radius and shown on the page in terms of π and as a decimal. They're for the teacher and never printed in the figure.
+_Avoid_: Answers, results, solutions
+
 ### Data displays
 
 **Data set**:
@@ -346,21 +396,121 @@ _Avoid_: Summary statistics, five statistics
 A value more than 1.5 times the box's width beyond either end of the box, drawn as its own point with the whisker stopping at the last value that isn't one. Outliers are only drawn when the teacher turns them on; otherwise whiskers reach the minimum and maximum.
 _Avoid_: Extreme value, anomaly
 
+**Bar Graph**:
+A figure of separate bars, one for each category (or one for each series in each category), whose lengths show values read off a numbered value axis. The bars stand up as columns or run sideways; a column graph is a bar graph with upright bars. Its generator is the Bar Graph Generator.
+_Avoid_: Bar chart, column graph, column chart (fine as search words, not as the name); histogram (its bars touch, over a numbered axis)
+
+**Category**:
+One row of a bar graph's table, and the place along its category axis where that row's bars stand, named under them (or beside them, for sideways bars), such as Soccer. Categories are named, not numbered, and keep the order they were typed in.
+_Avoid_: Group, label, x value
+
+**Series**:
+One column of a bar graph's table, named by its heading, such as Boys: a bar in every category, all filled alike and named in the key. With two or more series a category's bars stand side by side (a double bar graph) or stacked end to end.
+_Avoid_: Data set (that's a row of numbers for a box plot), group, column (fine in speech)
+
+**Error bar**:
+A line through the end of a bar from its value minus a ± amount to its value plus it, with a short crossbar at each end unless the teacher takes them off. The teacher types each bar's ± amount (a standard error, a standard deviation, a range); the generator never works one out. Only side-by-side bars have them.
+_Avoid_: Whisker (that's a box plot's), uncertainty bar, confidence interval (fine in teaching)
+
+**Key**:
+The list beside or under a figure pairing each fill with what it stands for, such as each series of a bar graph; on a stem-and-leaf plot, the example under it that says what a stem and leaf stand for, such as 3 | 4 = 34 cm.
+_Avoid_: Legend (fine as a search word)
+
+**Fill**:
+How a bar is colored in: one of the graph inks, or a black-and-white fill (gray, white, hatching, dots, cross-hatching) that still tells the series apart once photocopied. A figure's look gives the series fills in turn, and the teacher can pick one for any series.
+_Avoid_: Pattern, shading (that's an angle's or a region's), color (for the black-and-white ones)
+
+**Stem-and-Leaf Plot**:
+A figure of a data set written as numbers: a column of stems down the left, a line, and each value's leaf written across its stem's row in even columns, so the rows' lengths compare like bars, with a key under it such as 3 | 4 = 34. Back-to-back, two data sets share the stems, one set's leaves running left and the other's right. Its generator is the Stem-and-Leaf Plot Generator.
+_Avoid_: Stem and leaf diagram, stemplot (fine as search words, not as the name)
+
+**Stem**:
+Every digit of a value before its leaf, written once for its row, such as 3 for 34, 2 for 2.3, or −0 for −4. Every stem from the lowest to the highest has a row, even an empty one. Split stems take two rows each (leaves 0–4, then 5–9) or five; a negative stem's rows run the other way, so the plot always reads from the smallest value to the largest.
+_Avoid_: Row (a split stem has several), category
+
+**Leaf**:
+A value's digit at the leaf unit, written on its stem's row. The leaf unit is the last digit typed unless the teacher picks one, and digits past it are cut off, not rounded. Leaves go in order outward from the stem (so a negative stem's biggest digit comes first), or as typed.
+_Avoid_: Last digit (fine in speech), unit digit
+
+**Pie Chart**:
+A circle cut into sectors, one for each category, each sector's angle the category's share of the whole times 360°. The sectors run clockwise from 12 o'clock in the order typed, or largest first. Values are counts, percents or degrees. Whatever isn't drawn (values left empty, or values that fall short of the whole) is one empty sector at the end. Its generator is the Pie Chart Generator.
+_Avoid_: Circle graph, pie graph (fine as search words, not as the name)
+
+**Sector (of a pie chart)**:
+The slice of a pie chart for one category, between two radii. Its label is inside it where it fits, or outside with a short leader line, and says its name, value, percent, angle or fraction, or two of them; a sector's own label can be a blank line or a letter (x°) for students to work out.
+_Avoid_: Slice, wedge, segment (a segment is cut off by a chord)
+
 **Histogram**:
-A figure of touching bars over a numbered axis, one bar per bin, whose heights show how many values fall in each bin. Its generator is the Histogram Generator.
+A figure of touching bars over a numbered axis, one bar per bin, whose heights show how many values fall in each bin (with unequal bins, their areas, over a frequency density axis). Its generator is the Histogram Generator.
 _Avoid_: Bar graph (bars there are separate categories), column chart
 
 **Bin**:
-One stretch of the histogram's axis, such as 10 to 20, numbered at its edges. A value on an edge belongs to the bin that starts there. Bins come from a data set with a start and bin width, or are typed with their counts as a frequency table.
+One stretch of the histogram's axis, such as 10 to 20, numbered at its edges. A value on an edge belongs to the bin that starts there (10 ≤ x < 20), unless the teacher picks the bin that ends there (10 < x ≤ 20). Bins come from a data set with a start and bin width, or are typed with their counts as a frequency table, where a bin typed as an inequality says which end it holds. Whole-number bins like 10–19 are read as their edges, so 10–19, 20–29 leave a gap; the generator offers 9.5–19.5, 19.5–29.5 instead. On the page they're bins; class, class interval and class width are the same words in UK textbooks.
 _Avoid_: Interval, class, bucket, range (a range is an axis's From, To and Step)
 
 **Frequency**:
 How many values fall in a bin: the height of its bar, read off the histogram's vertical axis.
 _Avoid_: Count (fine in speech), tally
 
+**Cumulative Frequency Graph**:
+A figure of running totals over a numbered axis: a point at each bin's upper bound for the number of values up to it, starting from 0 at the lowest bound, joined by a smooth curve or straight lines. The vertical axis is cumulative frequency, or cumulative percent of n. Its generator is the Cumulative Frequency Graph Generator.
+_Avoid_: Ogive, cumulative frequency curve, cumulative frequency polygon (fine as search words, not as the name)
+
+**Cumulative table**:
+A table of upper bounds, each with its cumulative frequency (the running total of values up to it), as many questions give the data for a cumulative frequency graph. Typed instead of a frequency table, its totals never go down.
+_Avoid_: Running total table, cumulative frequency table (fine in speech)
+
+**Reading**:
+A value read off a cumulative frequency graph with dashed lines: across from a cumulative frequency to the join and down to the horizontal axis (the median from n/2, the quartiles from n/4 and 3n/4, a percentile), or up from a value and across. It's read where the lines meet the join as drawn, to a tenth of a block, and its value is written at the axis, left as a blank line for students, or left off.
+_Avoid_: Estimate (fine in teaching), interpolation, guide line
+
+**Frequency density**:
+A bin's frequency divided by its width, the height of its bar on a histogram with unequal bins, so each bar's area stands for its frequency. The Histogram Generator chooses it for unequal bins; a frequency axis can still be picked, with a warning.
+_Avoid_: Density (alone, fine in speech), frequency per unit
+
+**Frequency polygon**:
+A line through the middle of the top of each histogram bar, drawn over the bars or alone, and closed down to the axis half a bin past each end unless the teacher leaves it open.
+_Avoid_: Line graph (points joined across a coordinate grid), frequency curve
+
+**Axis break**:
+A zig-zag on the horizontal axis between the corner and the first bin, when the axis starts past 0, so data like heights from 150 to 190 cm don't need an empty stretch from 0.
+_Avoid_: Broken axis, squiggle, axis jump
+
 **Line plot**:
 A number line with a mark stacked above each value of a data set, as grades 3–6 use the name. No generator makes one yet.
 _Avoid_: Dot plot is the same figure; line graph (points joined across a coordinate grid) is a different one
+
+**Two-Way Table**:
+A table of counts for two ways of sorting the same people or things: the categories of one down the side (Year 7, Year 8), the categories of the other across the top (Walk, Bus, Car), and in each cell how many are in both. Each variable can have a title, written above the headings and beside the row names, or both in a corner split by a diagonal. Its generator is the Two-Way Table Generator.
+_Avoid_: Contingency table, two-way frequency table (fine as search words, not as the name); frequency table (one variable)
+
+**Total**:
+A cell of a two-way table that adds up others: each row's total in the Total column, each column's total in the Total row, and the grand total where they meet. Totals are typed like any other cell, or filled in by Work out totals.
+_Avoid_: Sum, marginal (fine in teaching), subtotal
+
+**Missing value**:
+A cell of a two-way table left for students: left empty, so it's blank on the figure, or typed as a letter like x, written as typed. A missing value can be worked out when its row or column has no other gap, repeated until nothing changes; the generator says which can and what each one is.
+_Avoid_: Hidden value (nothing is typed and then hidden), gap (fine in speech), unknown
+
+**Relative frequency**:
+A count divided by a total. On a histogram it's a bin's frequency as a share of n, the total of all the frequencies, as a decimal or a percent. In a two-way table it's a cell divided by the grand total (a joint relative frequency), by its row's total, or by its column's total (a conditional relative frequency), written as a decimal, a percent or a fraction in lowest terms; the totals then show the matching shares, and a row's (or column's) total is 1, or 100%.
+_Avoid_: Proportion, percentage frequency, probability (fine in teaching), percentage table
+
+**Venn Diagram**:
+A figure of one, two or three equal circles, each a set, inside a box for the universal set, with something written in each region and any regions shaded. Two sets overlap, sit apart (mutually exclusive) or one sits inside the other (a subset); three always overlap. Its generator is the Venn Diagram Generator.
+_Avoid_: Set diagram, circle diagram
+
+**Set**:
+One circle of a Venn diagram, named outside it by a letter (A, B, C) or a word (Football). In sets mode it's a list of members typed by the teacher; a repeated member is another copy, so prime factors (2, 2, 3) sort as they should.
+_Avoid_: Group, category (that's a bar graph's), circle (fine in speech)
+
+**Universal Set**:
+Everything a Venn diagram is about, drawn as the box round the circles and named in its top left corner: U (the default), ξ (as GCSE writes it), S, ε, a word or nothing. In sets mode its members are typed as a list or a range like 1-20; left empty, it's just the sets' own members.
+_Avoid_: Universe, sample space (fine in teaching), rectangle
+
+**Region**:
+The part of a Venn diagram inside exactly some of the sets and outside the rest, such as A only (A ∩ B′) or neither: four for two overlapping sets, eight for three, outside included. In text mode each holds what's typed for it, numbers, letters or words, split at its commas one piece to a line (as in red flesh, mushy, savory); in sets mode, the elements that belong there, written in rows round its middle; one left empty is drawn empty, or with a blank line when the teacher asks for one. Clicking a region on the figure fills it in or shades it. A shaded region is filled with a tint, gray or a black-and-white pattern, under the circles' outlines.
+_Avoid_: Section, area (that's a shape's measure), zone, part
 
 ### 3D shapes
 

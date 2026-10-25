@@ -634,6 +634,825 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('bar-graph', [
+    {
+      slug: 'bar-graph-of-favorite-sports',
+      title: 'Bar graph of favorite sports',
+      alt: 'A bar graph titled Favorite sports with a blue column for each of five sports over an axis from 0 to 10 titled Number of students',
+      caption:
+        'A bar graph titled Favorite sports, with one blue column each for Soccer, Basketball, Swimming, Tennis and Running. The value axis is titled Number of students and numbered from 0 to 10 by 1, with light gridlines across it, and the sports are named under their columns above the title Sport. No values are written on the bars, so students read them from the axis.',
+      settings: {
+        columns: ['Students'],
+        rows: [
+          { name: 'Soccer', cells: [{ value: '8' }] },
+          { name: 'Basketball', cells: [{ value: '6' }] },
+          { name: 'Swimming', cells: [{ value: '5' }] },
+          { name: 'Tennis', cells: [{ value: '3' }] },
+          { name: 'Running', cells: [{ value: '4' }] },
+        ],
+        to: '10',
+        title: 'Favorite sports',
+        titleMode: 'text',
+        categoryTitle: 'Sport',
+        categoryTitleMode: 'text',
+        valueTitle: 'Number of students',
+        valueTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'double-bar-graph-boys-and-girls',
+      title: 'Double bar graph: favorite pets of boys and girls',
+      alt: 'A double bar graph of favorite pets with a blue bar for boys and a red bar for girls beside each pet, and a key naming them',
+      caption:
+        'A double bar graph of favorite pets, with two bars side by side for each of Dog, Cat, Fish and Rabbit: blue for Boys and red for Girls, named in a key on the right. The value axis is titled Number of students and numbered from 0 to 9. Students compare the two groups pet by pet.',
+      settings: {
+        columns: ['Boys', 'Girls'],
+        rows: [
+          { name: 'Dog', cells: [{ value: '9' }, { value: '7' }] },
+          { name: 'Cat', cells: [{ value: '5' }, { value: '8' }] },
+          { name: 'Fish', cells: [{ value: '3' }, { value: '2' }] },
+          { name: 'Rabbit', cells: [{ value: '2' }, { value: '4' }] },
+        ],
+        title: 'Favorite pets',
+        titleMode: 'text',
+        valueTitle: 'Number of students',
+        valueTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'horizontal-bar-chart-books-read',
+      title: 'Horizontal bar chart of books read, with values',
+      alt: 'A horizontal bar chart of books read by five students, each bar with its number written at its end',
+      caption:
+        'A horizontal bar chart titled Books read this term, with a sideways bar for each of five students, Amara, Ben, Chen, Dana and Eli, named down the left. Each bar has its number of books written at its end, over an axis titled Books numbered from 0 to 12.',
+      settings: {
+        rows: [
+          { name: 'Amara', cells: [{ value: '12' }] },
+          { name: 'Ben', cells: [{ value: '7' }] },
+          { name: 'Chen', cells: [{ value: '9' }] },
+          { name: 'Dana', cells: [{ value: '4' }] },
+          { name: 'Eli', cells: [{ value: '10' }] },
+        ],
+        direction: 'bars',
+        values: 'end',
+        title: 'Books read this term',
+        titleMode: 'text',
+        valueTitle: 'Books',
+        valueTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'stacked-composite-bar-chart-travel-to-school',
+      title: 'Stacked (composite) bar chart: how students travel to school',
+      alt: 'A stacked bar chart in black and white with a column for each of three year groups split into Walk, Bus and Car, and a key below',
+      caption:
+        'A stacked bar chart, also called a composite bar chart, of how students in Years 7, 8 and 9 travel to school. Each year’s column is split into Walk, Bus and Car in gray, white and hatching, named in a key below the graph, with the number in each part written inside it. Black-and-white fills keep the parts apart on a photocopy.',
+      settings: {
+        columns: ['Walk', 'Bus', 'Car'],
+        rows: [
+          { name: 'Year 7', cells: [{ value: '12' }, { value: '10' }, { value: '8' }] },
+          { name: 'Year 8', cells: [{ value: '15' }, { value: '8' }, { value: '6' }] },
+          { name: 'Year 9', cells: [{ value: '9' }, { value: '14' }, { value: '5' }] },
+        ],
+        stacking: 'stacked',
+        barWidth: 'wide',
+        values: 'inside',
+        look: 'bw',
+        keyAt: 'below',
+        valueTitle: 'Number of students',
+        valueTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'bar-graph-with-error-bars-mean-plant-height',
+      title: 'Bar graph with error bars: mean plant height',
+      alt: 'A gray bar graph of mean plant height under three fertilizers, each bar with an error bar, and the note Error bars show ±1 SEM',
+      caption:
+        'A bar graph of the mean height of plants given no fertilizer, fertilizer A and fertilizer B, in gray for printing, over an axis titled Mean height (cm). Each bar has an error bar with crossbars reaching one standard error of the mean above and below it, and the note under the graph says Error bars show ±1 SEM. Students judge whether the differences between the means are likely to be real.',
+      settings: {
+        rows: [
+          { name: 'None', cells: [{ value: '12.4', error: '1.1' }] },
+          { name: 'Fertilizer A', cells: [{ value: '18.9', error: '1.6' }] },
+          { name: 'Fertilizer B', cells: [{ value: '15.2', error: '2.3' }] },
+        ],
+        look: 'bw',
+        errorBars: true,
+        errorNote: 'Error bars show ±1 SEM',
+        categoryTitle: 'Treatment',
+        categoryTitleMode: 'text',
+        valueTitle: 'Mean height (cm)',
+        valueTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'bar-graph-with-a-bar-left-for-students-to-draw',
+      title: 'Bar graph with a bar left for students to draw',
+      alt: 'A bar graph of rainfall from Monday to Friday with Thursday’s bar missing, over bold gridlines with minor lines for drawing it',
+      caption:
+        'A bar graph of rainfall in millimeters from Monday to Friday with Thursday’s bar left off, so students draw it from a table or a description. Bold gridlines split into halves make the bar easy to draw to the nearest half millimeter, and the axis is titled Rainfall (mm).',
+      settings: {
+        rows: [
+          { name: 'Monday', cells: [{ value: '4' }] },
+          { name: 'Tuesday', cells: [{ value: '7.5' }] },
+          { name: 'Wednesday', cells: [{ value: '2' }] },
+          { name: 'Thursday' },
+          { name: 'Friday', cells: [{ value: '1' }] },
+        ],
+        gridlines: 'bold',
+        minor: 2,
+        valueTitle: 'Rainfall (mm)',
+        valueTitleMode: 'text',
+      },
+    },
+  ]),
+
+  ...examplesOf('stem-and-leaf', [
+    {
+      slug: 'stem-and-leaf-plot-of-test-scores',
+      title: 'Stem-and-leaf plot of test scores',
+      alt: 'A stem-and-leaf plot titled Test scores with stems 5 to 9, the leaves in order, and the key 5 | 8 = 58',
+      caption:
+        'A stem-and-leaf plot titled Test scores, with the headings Stem and Leaf. The stems 5, 6, 7, 8 and 9 run down the left of a line, and each score’s last digit is written in order across its stem’s row, from 5 | 8 for 58 up to 9 | 0 2 7. The key under the plot reads 5 | 8 = 58. Students find the median, mode and range from it.',
+      settings: {
+        data: '58, 62, 65, 67, 71, 72, 74, 74, 78, 79, 81, 83, 85, 86, 88, 90, 92, 97',
+        title: 'Test scores',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'back-to-back-stem-and-leaf-plot-class-a-and-class-b',
+      title: 'Back-to-back stem-and-leaf plot: Class A and Class B',
+      alt: 'A back-to-back stem-and-leaf plot titled Push-ups in one minute, with Class A’s leaves running left and Class B’s running right from shared stems 2 to 5',
+      caption:
+        'A back-to-back stem-and-leaf plot titled Push-ups in one minute, comparing Class A and Class B. The stems 2, 3, 4 and 5 run down the middle between two lines, with Class A’s leaves running left from them and Class B’s running right, each in order outward from the stem and headed with its class’s name. The key reads 4 | 2 | 1 means 24 for Class A and 21 for Class B. Students compare the two classes’ medians and ranges.',
+      settings: {
+        layout: 'back',
+        data: '24, 27, 29, 31, 33, 33, 36, 38, 40, 42, 45, 51',
+        name: 'Class A',
+        data2: '21, 23, 30, 34, 37, 41, 44, 46, 47, 49, 52, 55, 58',
+        name2: 'Class B',
+        keyWords: 'means',
+        title: 'Push-ups in one minute',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'stem-and-leaf-plot-with-decimals',
+      title: 'Stem-and-leaf plot with decimals: plant heights in cm',
+      alt: 'A stem-and-leaf plot titled Plant heights with whole-number stems 1 to 4, tenths as leaves, and the key 1 | 4 means 1.4 cm',
+      caption:
+        'A stem-and-leaf plot titled Plant heights, of heights in centimeters measured to the nearest tenth. The whole numbers 1, 2, 3 and 4 are the stems and the tenths are the leaves, so 2 | 6 stands for 2.6 cm. The key reads 1 | 4 means 1.4 cm.',
+      settings: {
+        data: '1.4, 1.8, 2.1, 2.6, 2.6, 2.9, 3.0, 3.3, 3.5, 3.7, 4.2, 4.8',
+        keyWords: 'means',
+        keyUnit: 'cm',
+        title: 'Plant heights',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'stem-and-leaf-plot-with-split-stems',
+      title: 'Stem-and-leaf plot with split stems',
+      alt: 'A stem-and-leaf plot titled Ages of club members with each of the stems 3, 4 and 5 on two rows, leaves 0 to 4 on the first and 5 to 9 on the second, and the key 3 | 1 = 31',
+      caption:
+        'A stem-and-leaf plot titled Ages of club members, with split stems: each of the stems 3, 4 and 5 takes two rows, the first for leaves 0 to 4 and the second for leaves 5 to 9, which spreads out data crowded onto a few stems. The key reads 3 | 1 = 31.',
+      settings: {
+        data: '31, 33, 36, 38, 39, 40, 41, 41, 42, 44, 45, 46, 47, 47, 49, 52, 53, 58',
+        split: 2,
+        title: 'Ages of club members',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'stem-and-leaf-plot-with-negative-stems-temperatures',
+      title: 'Stem-and-leaf plot with negative stems: temperatures',
+      alt: 'A stem-and-leaf plot titled Daily low temperatures with the stems −1, −0, 0 and 1, and the key −0 | 5 = −5 °C',
+      caption:
+        'A stem-and-leaf plot titled Daily low temperatures, of temperatures in degrees Celsius from −12 °C to 15 °C. The stems run −1, −0, 0 and 1 from the coldest to the warmest, with −0 holding −1 to −9 and 0 holding 0 to 9, and a negative stem’s leaves written so the values rise across its row. The key reads −0 | 5 = −5 °C.',
+      settings: {
+        data: '-12, -10, -8, -5, -3, -1, 0, 2, 2, 4, 7, 9, 11, 15',
+        keyValue: '-5',
+        keyUnit: '°C',
+        title: 'Daily low temperatures',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'blank-stem-and-leaf-diagram-with-boxes',
+      title: 'Blank stem-and-leaf diagram with boxes to fill in',
+      alt: 'A blank stem-and-leaf diagram with the stems 1 to 5, a row of eight empty boxes for leaves beside each, and the key 2 | 3 means 23 minutes',
+      caption:
+        'A blank stem-and-leaf diagram for students to fill in from a list of data, with the stems 1, 2, 3, 4 and 5 down the left and a row of eight empty boxes beside each for the leaves. The key reads 2 | 3 means 23 minutes, and the title is Time to finish a puzzle.',
+      settings: {
+        from: '1',
+        to: '5',
+        boxes: true,
+        boxCount: '8',
+        keyValue: '23',
+        keyWords: 'means',
+        keyUnit: 'minutes',
+        title: 'Time to finish a puzzle',
+        titleMode: 'text',
+      },
+    },
+  ]),
+
+  ...examplesOf('cumulative-frequency', [
+    {
+      slug: 'cumulative-frequency-curve-median-and-quartiles',
+      title: 'Cumulative frequency curve with the median and quartiles',
+      alt: 'A cumulative frequency curve titled Heights of 80 students, with dashed red lines reading off the median, 169, and the quartiles, 162 and 177, written under the height axis',
+      caption:
+        'A cumulative frequency curve titled Heights of 80 students, over a height axis from 140 to 200 cm by 5 and a cumulative frequency axis from 0 to 80 by 10. Crosses mark the running totals at each upper bound, starting from 0 at 140, joined by a smooth blue curve. Dashed red lines go across from 20, 40 and 60 to the curve and down, with the lower quartile 162, the median 169 and the upper quartile 177 written under the axis.',
+      settings: {
+        rows: [
+          { name: '150', cells: [{ value: '4' }] },
+          { name: '160', cells: [{ value: '12' }] },
+          { name: '170', cells: [{ value: '26' }] },
+          { name: '180', cells: [{ value: '24' }] },
+          { name: '190', cells: [{ value: '10' }] },
+          { name: '200', cells: [{ value: '4' }] },
+        ],
+        lowest: '140',
+        median: 'value',
+        lower: 'value',
+        upper: 'value',
+        title: 'Heights of 80 students',
+        titleMode: 'text',
+        xTitle: 'Height (cm)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'cumulative-frequency-points-for-students-to-draw-the-curve',
+      title: 'Cumulative frequency points for students to draw the curve',
+      alt: 'Crosses plotted for a cumulative frequency graph of time in minutes, from 0 to 60 on both axes, with no curve drawn through them',
+      caption:
+        'Six crosses on a grid with dark gridlines split into halves: one at 0 minutes with a cumulative frequency of 0, then 5 at 10 minutes, 19 at 20, 40 at 30, 52 at 40 and 60 at 60. The time axis runs from 0 to 60 minutes and the cumulative frequency axis from 0 to 60, both by 5. No curve is drawn, so students join the points with a smooth curve.',
+      settings: {
+        rows: [
+          { name: '10', cells: [{ value: '5' }] },
+          { name: '20', cells: [{ value: '14' }] },
+          { name: '30', cells: [{ value: '21' }] },
+          { name: '40', cells: [{ value: '12' }] },
+          { name: '60', cells: [{ value: '8' }] },
+        ],
+        lowest: '0',
+        join: 'none',
+        gridlines: 'standard',
+        minor: 2,
+        xTitle: 'Time (minutes)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'ogive-cumulative-percent-test-scores',
+      title: 'Ogive of test scores with a cumulative percent axis',
+      alt: 'An ogive of test scores with dots joined by straight blue lines, a cumulative percent axis from 0 to 100, and dashed red lines across from 60 and down',
+      caption:
+        'An ogive titled Test scores, with scores from 40 to 100 by 5 along the bottom and a cumulative percent axis from 0 to 100 by 10. Dots at 0% for 40, then 5%, 17.5%, 40%, 70%, 90% and 100% at each upper bound from 50 to 100, are joined by straight blue lines. Dashed red lines go across from 60% to the line and down to the score axis, with no value written, so students read the 60th percentile.',
+      settings: {
+        rows: [
+          { name: '50', cells: [{ value: '2' }] },
+          { name: '60', cells: [{ value: '5' }] },
+          { name: '70', cells: [{ value: '9' }] },
+          { name: '80', cells: [{ value: '12' }] },
+          { name: '90', cells: [{ value: '8' }] },
+          { name: '100', cells: [{ value: '4' }] },
+        ],
+        lowest: '40',
+        mark: 'dot',
+        join: 'straight',
+        scale: 'percent',
+        readings: [{ kind: 'percentile', at: '60', show: 'lines' }],
+        title: 'Test scores',
+        titleMode: 'text',
+        xTitle: 'Score',
+        xTitleMode: 'text',
+        yTitle: 'Cumulative percent',
+      },
+    },
+    {
+      slug: 'cumulative-frequency-from-a-cumulative-table-estimate-how-many',
+      title: 'Cumulative frequency graph: estimate how many from the curve',
+      alt: 'A black-and-white cumulative frequency curve titled Weights of 120 parcels, with dashed lines for the median and up from 5 kg, and blank lines at the axes for the answers',
+      caption:
+        'A cumulative frequency curve in black and white titled Weights of 120 parcels, over a weight axis from 0 to 12 kg by 1 and a cumulative frequency axis from 0 to 120 by 10, with crosses at 0 parcels for 0 kg, then 8, 30, 64, 96, 112 and 120 parcels every 2 kg up to 12. Dashed lines go across from 60 to the curve and down for the median, and up from 5 kg and across for how many parcels weigh 5 kg or less. A blank line under the weight axis and another left of the frequency axis are for students’ answers.',
+      settings: {
+        mode: 'cumulative',
+        totals: [
+          { name: '2', cells: [{ value: '8' }] },
+          { name: '4', cells: [{ value: '30' }] },
+          { name: '6', cells: [{ value: '64' }] },
+          { name: '8', cells: [{ value: '96' }] },
+          { name: '10', cells: [{ value: '112' }] },
+          { name: '12', cells: [{ value: '120' }] },
+        ],
+        lowest: '0',
+        median: 'blank',
+        readings: [{ kind: 'up', at: '5', show: 'blank' }],
+        look: 'bw',
+        title: 'Weights of 120 parcels',
+        titleMode: 'text',
+        xTitle: 'Weight (kg)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'cumulative-frequency-curve-from-a-data-set-of-test-marks',
+      title: 'Cumulative frequency curve from a data set of test marks',
+      alt: 'A cumulative frequency curve of 30 test marks with dashed red lines for the quartiles and median and three blank lines under the mark axis',
+      caption:
+        'A cumulative frequency curve of 30 test marks, sorted into bins of 10 from 10 to 90, with crosses at each upper bound joined by a smooth blue curve. The mark axis runs from 10 to 90 by 10 and the cumulative frequency axis from 0 to 30 by 5. Dashed red lines go across from 7.5, 15 and 22.5 to the curve and down, each to a blank line under the axis for students to write the lower quartile, median and upper quartile.',
+      settings: {
+        mode: 'data',
+        data: '12, 18, 23, 25, 27, 31, 33, 34, 36, 38, 39, 41, 42, 44, 45, 45, 47, 48, 51, 53, 54, 56, 58, 61, 63, 66, 68, 72, 75, 83',
+        binStart: '10',
+        binWidth: '10',
+        edges: 'right',
+        lower: 'blank',
+        median: 'blank',
+        upper: 'blank',
+        xTitle: 'Mark',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'blank-cumulative-frequency-graph-axes',
+      title: 'Blank cumulative frequency graph axes',
+      alt: 'Blank cumulative frequency graph axes on graph paper, time from 0 to 60 minutes by 5 and cumulative frequency from 0 to 80 by 10',
+      caption:
+        'A blank grid for a cumulative frequency graph, with dark gridlines each split into five smaller squares like graph paper. The horizontal axis is titled Time (minutes) and numbered from 0 to 60 by 5, and the vertical axis is titled Cumulative frequency and numbered from 0 to 80 by 10. Nothing is plotted, so students plot the points from a table and draw the curve.',
+      settings: {
+        xTo: '60',
+        xStep: '5',
+        yTo: '80',
+        yStep: '10',
+        gridlines: 'standard',
+        minor: 5,
+        xTitle: 'Time (minutes)',
+        xTitleMode: 'text',
+      },
+    },
+  ]),
+
+  ...examplesOf('two-way-table', [
+    {
+      slug: 'two-way-table-how-students-travel-to-school',
+      title: 'Two-way table: how students travel to school, with gaps to fill',
+      alt: 'A two-way table of how students in Years 7, 8 and 9 travel to school by walking, bus or car, with totals and three cells left blank',
+      caption:
+        'A two-way table titled How students travel to school, with Year down the side (Years 7, 8 and 9) and Transport across the top (Walk, Bus and Car), and a Total column and Total row. Every total is given, grand total 87, and one count in each row is left blank: Year 7 by bus, Year 8 by car and Year 9 walking. Students work each one out from its row or column.',
+      settings: {
+        columns: ['Walk', 'Bus', 'Car'],
+        rows: [
+          { name: 'Year 7', cells: [{ value: '12' }, { value: '' }, { value: '8' }] },
+          { name: 'Year 8', cells: [{ value: '15' }, { value: '8' }, { value: '' }] },
+          { name: 'Year 9', cells: [{ value: '' }, { value: '14' }, { value: '5' }] },
+        ],
+        rowTotals: ['30', '29', '28'],
+        columnTotals: ['36', '32', '19'],
+        grand: '87',
+        title: 'How students travel to school',
+        titleMode: 'text',
+        columnTitle: 'Transport',
+        rowTitle: 'Year',
+      },
+    },
+    {
+      slug: 'two-way-table-gap-fill-language-choices',
+      title: 'Two-way table gap-fill: boys’ and girls’ language choices',
+      alt: 'A two-way table of the language 100 boys and girls chose, French, German or Spanish, with five cells left blank, totals included',
+      caption:
+        'A two-way table of the language chosen by boys and girls, French, German or Spanish, with a Total column and Total row and a grand total of 100. Five cells are blank, two of them totals: the boys’ German and total, the girls’ French and Spanish, and the Spanish total. Students fill them in from the rows and columns that have only one gap, then the ones those open up.',
+      settings: {
+        columns: ['French', 'German', 'Spanish'],
+        rows: [
+          { name: 'Boys', cells: [{ value: '18' }, { value: '' }, { value: '15' }] },
+          { name: 'Girls', cells: [{ value: '' }, { value: '17' }, { value: '' }] },
+        ],
+        rowTotals: ['', '55'],
+        columnTotals: ['40', '29', ''],
+        grand: '100',
+      },
+    },
+    {
+      slug: 'two-way-table-with-an-unknown-x',
+      title: 'Two-way table with an unknown, x',
+      alt: 'A two-way table of school lunches and packed lunches in Years 10 and 11, with one count written as x and the Year 11 total left blank',
+      caption:
+        'A two-way table of how many students in Years 10 and 11 have a school lunch or a packed lunch, with totals. The Year 10 packed lunches are written as x, in italics, and the Year 11 total is left blank. Students find x from the Packed lunch column, then the missing total.',
+      settings: {
+        columns: ['School lunch', 'Packed lunch'],
+        rows: [
+          { name: 'Year 10', cells: [{ value: '46' }, { value: 'x' }] },
+          { name: 'Year 11', cells: [{ value: '38' }, { value: '41' }] },
+        ],
+        rowTotals: ['80', ''],
+        columnTotals: ['84', '75'],
+        grand: '159',
+      },
+    },
+    {
+      slug: 'joint-relative-frequency-table-pets-by-grade',
+      title: 'Joint relative frequency table: pets by grade',
+      alt: 'A two-way relative frequency table of grade 7 and grade 8 students with and without a pet, each cell a decimal of the grand total',
+      caption:
+        'A joint relative frequency table of grade 7 and grade 8 students who have a pet or don’t. Each cell is its count divided by the grand total of 80, written as a decimal to two places: 0.35, 0.15, 0.30 and 0.20. The totals are the marginal relative frequencies, 0.50 for each grade, 0.65 with a pet and 0.35 without, and the grand total is 1.00.',
+      settings: {
+        columns: ['Pet', 'No pet'],
+        rows: [
+          { name: 'Grade 7', cells: [{ value: '28' }, { value: '12' }] },
+          { name: 'Grade 8', cells: [{ value: '24' }, { value: '16' }] },
+        ],
+        rowTotals: ['40', '40'],
+        columnTotals: ['52', '28'],
+        grand: '80',
+        show: 'relative',
+        title: 'Joint relative frequencies',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'conditional-relative-frequency-table-row-percents-favorite-sport',
+      title: 'Conditional relative frequency table: favorite sport by grade, in row percents',
+      alt: 'A relative frequency table of favorite sport in grades 6, 7 and 8 as percents of each row, with lines only under the headings and before the totals',
+      caption:
+        'A two-way table of the favorite sport of students in grades 6, 7 and 8, soccer, basketball or swimming, written as percents of each row: grade 6 is 50%, 30% and 20%, so each row’s total is 100%. The Total row gives each sport’s share of all students, 40%, 40% and 20%. Plain headings and lines only under the headings and before the totals give it a textbook look.',
+      settings: {
+        columns: ['Soccer', 'Basketball', 'Swimming'],
+        rows: [
+          { name: 'Grade 6', cells: [{ value: '10' }, { value: '6' }, { value: '4' }] },
+          { name: 'Grade 7', cells: [{ value: '12' }, { value: '12' }, { value: '6' }] },
+          { name: 'Grade 8', cells: [{ value: '18' }, { value: '22' }, { value: '10' }] },
+        ],
+        rowTotals: ['20', '30', '50'],
+        columnTotals: ['40', '40', '20'],
+        grand: '100',
+        show: 'relative',
+        relativeTo: 'row',
+        form: 'percent',
+        places: 0,
+        headers: 'plain',
+        rules: 'some',
+      },
+    },
+    {
+      slug: 'relative-frequency-table-as-fractions-left-and-right-handed',
+      title: 'Relative frequency table as fractions: left- and right-handed students',
+      alt: 'A two-way table of left- and right-handed boys and girls as fractions of each column, with the corner split by a diagonal into Hand and Student',
+      caption:
+        'A two-way table of left- and right-handed boys and girls, each cell written as a fraction of its column’s total in lowest terms: 4/7 of the left-handed students are boys and 3/7 girls, 26/53 of the right-handed students are boys and 27/53 girls. The Total column shows each group is 1/2 of all 60 students. The corner is split by a diagonal, with Hand across the top and Student down the side.',
+      settings: {
+        columns: ['Left-handed', 'Right-handed'],
+        rows: [
+          { name: 'Boys', cells: [{ value: '4' }, { value: '26' }] },
+          { name: 'Girls', cells: [{ value: '3' }, { value: '27' }] },
+        ],
+        rowTotals: ['30', '30'],
+        columnTotals: ['7', '53'],
+        grand: '60',
+        show: 'relative',
+        relativeTo: 'column',
+        form: 'fraction',
+        columnTitle: 'Hand',
+        rowTitle: 'Student',
+        corner: 'diagonal',
+      },
+    },
+    {
+      slug: 'blank-two-way-table-to-complete-from-a-description',
+      title: 'Blank two-way table to complete from a description',
+      alt: 'A blank two-way table of adults and children choosing vanilla, chocolate or strawberry ice cream, with only the grand total of 60 given',
+      caption:
+        'A two-way table with rows for adults and children and columns for vanilla, chocolate and strawberry ice cream, plus a Total column and Total row. Every cell is blank except the grand total, 60, and a blank line above the table is left for its title. Students fill it in from a description, such as “25 of the 60 people are adults”.',
+      settings: {
+        columns: ['Vanilla', 'Chocolate', 'Strawberry'],
+        rows: [
+          { name: 'Adults', cells: [{ value: '' }, { value: '' }, { value: '' }] },
+          { name: 'Children', cells: [{ value: '' }, { value: '' }, { value: '' }] },
+        ],
+        grand: '60',
+        titleMode: 'blank',
+      },
+    },
+  ]),
+
+  ...examplesOf('histogram', [
+    {
+      slug: 'histogram-of-student-heights',
+      title: 'Histogram of student heights',
+      alt: 'A histogram titled Heights of students with six touching blue bars over bins from 150 to 180 cm, with a zig-zag break on the horizontal axis before 150',
+      caption:
+        'A histogram titled Heights of students, with six touching blue bars for the bins 150 ≤ h < 155 up to 175 ≤ h < 180. The horizontal axis is titled Height (cm) and numbered at the bin edges from 150 to 180, with a zig-zag break between the corner and 150. The vertical axis is titled Frequency and numbered from 0 to 11, and the tallest bar, 165 to 170, reaches 11.',
+      settings: {
+        source: 'table',
+        rows: [
+          { name: '155', cells: [{ value: '2' }] },
+          { name: '160', cells: [{ value: '5' }] },
+          { name: '165', cells: [{ value: '9' }] },
+          { name: '170', cells: [{ value: '11' }] },
+          { name: '175', cells: [{ value: '7' }] },
+          { name: '180', cells: [{ value: '4' }] },
+        ],
+        lowest: '150',
+        title: 'Heights of students',
+        titleMode: 'text',
+        xTitle: 'Height (cm)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'histogram-from-a-data-set-of-test-scores',
+      title: 'Histogram from a data set of test scores',
+      alt: 'A histogram of 30 test scores in bins of 10 from 40 to 100, with each bar’s frequency written above it',
+      caption:
+        'A histogram titled Test scores, drawn from a data set of 30 scores sorted into bins of 10 from 40 to 100. Each bar’s frequency is written above it: 2, 4, 6, 9, 6 and 3. The horizontal axis is titled Score, with a zig-zag break before 40, and the vertical axis is titled Number of students and numbered from 0 to 10.',
+      settings: {
+        data: '42, 48, 51, 55, 58, 59, 61, 63, 64, 66, 67, 68, 70, 71, 72, 73, 74, 75, 77, 78, 79, 81, 82, 84, 85, 87, 88, 91, 93, 96',
+        binStart: '40',
+        binWidth: '10',
+        values: true,
+        title: 'Test scores',
+        titleMode: 'text',
+        xTitle: 'Score',
+        xTitleMode: 'text',
+        yTitle: 'Number of students',
+      },
+    },
+    {
+      slug: 'frequency-density-histogram-with-unequal-class-widths',
+      title: 'Frequency density histogram with unequal class widths',
+      alt: 'A gray histogram on graph paper with five bars of different widths for times from 0 to 50 minutes, over a frequency density axis from 0 to 3',
+      caption:
+        'A GCSE-style histogram with unequal class widths: five gray bars for 0 < t ≤ 10, 10 < t ≤ 15, 15 < t ≤ 20, 20 < t ≤ 30 and 30 < t ≤ 50, so each bar’s area stands for its frequency. The vertical axis is titled Frequency density and numbered from 0 to 3 by 0.5, with each block split into fifths by minor gridlines, and the horizontal axis is titled Time (t minutes) and numbered at the bin edges 0, 10, 15, 20, 30 and 50.',
+      settings: {
+        source: 'table',
+        rows: [
+          { name: '10', cells: [{ value: '8' }] },
+          { name: '15', cells: [{ value: '12' }] },
+          { name: '20', cells: [{ value: '15' }] },
+          { name: '30', cells: [{ value: '10' }] },
+          { name: '50', cells: [{ value: '6' }] },
+        ],
+        lowest: '0',
+        fill: 'gray',
+        gridlines: 'standard',
+        minor: 5,
+        xTitle: 'Time (t minutes)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'histogram-with-a-frequency-polygon',
+      title: 'Histogram with a frequency polygon',
+      alt: 'A histogram of the masses of apples with white bars from 100 to 200 g and a frequency polygon joining the middle of each bar’s top, closed down to the axis at each end',
+      caption:
+        'A histogram titled Masses of apples, with five white bars for bins of 20 g from 100 to 200 g, and a frequency polygon drawn over them through the middle of the top of each bar. The polygon is closed down to the horizontal axis half a bin past each end, at 90 and 210 g. The vertical axis is titled Frequency and numbered from 0 to 16 by 2, and the horizontal axis, titled Mass (g), has a zig-zag break before 100.',
+      settings: {
+        source: 'table',
+        rows: [
+          { name: '120', cells: [{ value: '4' }] },
+          { name: '140', cells: [{ value: '9' }] },
+          { name: '160', cells: [{ value: '15' }] },
+          { name: '180', cells: [{ value: '10' }] },
+          { name: '200', cells: [{ value: '2' }] },
+        ],
+        lowest: '100',
+        polygon: 'over',
+        fill: 'white',
+        title: 'Masses of apples',
+        titleMode: 'text',
+        xTitle: 'Mass (g)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'histogram-with-a-bar-left-for-students-to-draw',
+      title: 'Histogram with a bar left for students to draw',
+      alt: 'A histogram of distances from school with the bar for 10 to 15 km left off, on bold gridlines with minor lines',
+      caption:
+        'A histogram of how far students live from school, with bars for the bins 0–5, 5–10, 15–20 and 20–25 km and no bar for 10–15 km, so students draw it from a frequency table. The vertical axis is titled Frequency and numbered from 0 to 12, on bold gridlines split into halves, and the horizontal axis is titled Distance from school (km).',
+      settings: {
+        source: 'table',
+        rows: [
+          { name: '5', cells: [{ value: '3' }] },
+          { name: '10', cells: [{ value: '7' }] },
+          { name: '15', cells: [{ value: '' }] },
+          { name: '20', cells: [{ value: '6' }] },
+          { name: '25', cells: [{ value: '2' }] },
+        ],
+        lowest: '0',
+        yTo: '12',
+        gridlines: 'bold',
+        minor: 2,
+        xTitle: 'Distance from school (km)',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'histogram-with-no-numbers-on-the-frequency-density-axis',
+      title: 'Histogram with no numbers on the frequency density axis',
+      alt: 'A histogram of masses from 20 to 70 kg with unequal bins and a frequency density axis with gridlines but no numbers',
+      caption:
+        'A histogram of masses with five white bars of unequal width for 20 < m ≤ 30, 30 < m ≤ 35, 35 < m ≤ 40, 40 < m ≤ 50 and 50 < m ≤ 70 kg. The vertical axis is titled Frequency density but has no numbers, only gridlines, with each block split into fifths by minor ones, so students work out its scale from one bar’s frequency. The horizontal axis is titled Mass (m kg), with a zig-zag break before 20.',
+      settings: {
+        source: 'table',
+        rows: [
+          { name: '30', cells: [{ value: '15' }] },
+          { name: '35', cells: [{ value: '20' }] },
+          { name: '40', cells: [{ value: '30' }] },
+          { name: '50', cells: [{ value: '25' }] },
+          { name: '70', cells: [{ value: '10' }] },
+        ],
+        lowest: '20',
+        fill: 'white',
+        every: 0,
+        gridlines: 'standard',
+        minor: 5,
+        xTitle: 'Mass (m kg)',
+        xTitleMode: 'text',
+      },
+    },
+  ]),
+
+  ...examplesOf('venn-diagram', [
+    {
+      slug: 'venn-diagram-football-and-tennis',
+      title: 'Venn diagram with numbers: football and tennis',
+      alt: 'A Venn diagram of two overlapping circles, Football and Tennis, in a box marked U, with 12 in Football only, 5 in both, 8 in Tennis only and 15 outside',
+      caption:
+        'Two overlapping circles named Football and Tennis inside a box marked U for the universal set, with the number of students in each region: 12 play football only, 5 play both, 8 play tennis only, and 15, written outside the circles in the lower left corner, play neither. Students read off totals, such as how many play football, or probabilities.',
+      settings: { nameA: 'Football', nameB: 'Tennis', values: { a: '12', ab: '5', b: '8', out: '15' } },
+    },
+    {
+      slug: 'three-set-venn-diagram-with-numbers',
+      title: 'Three-set Venn diagram with numbers: pets',
+      alt: 'A three-set Venn diagram of Cat, Dog and Fish in a box marked U, with a number in each of its eight regions',
+      caption:
+        'Three overlapping circles named Cat, Dog and Fish inside a box marked U, with the number of students owning each mix of pets in every region: 9 cat only, 7 dog only, 3 fish only, 4 cat and dog only, 2 cat and fish only, 1 dog and fish only, 2 all three, and 5, in the lower right corner, none of them.',
+      settings: {
+        sets: 3,
+        nameA: 'Cat',
+        nameB: 'Dog',
+        nameC: 'Fish',
+        values: { a: '9', b: '7', ab: '4', c: '3', ac: '2', bc: '1', abc: '2', out: '5' },
+      },
+    },
+    {
+      slug: 'venn-diagram-sorting-numbers-1-to-20',
+      title: 'Venn diagram sorting the numbers 1 to 20: even numbers and multiples of 3',
+      alt: 'A Venn diagram sorting the numbers 1 to 20 into two overlapping circles, Even and Multiples of 3, with the numbers in neither outside the circles',
+      caption:
+        'The numbers 1 to 20 sorted into two overlapping circles named Even and Multiples of 3, inside a box marked U. 2, 4, 8, 10, 14, 16 and 20 are in Even only; 6, 12 and 18 are in both; 3, 9 and 15 are in Multiples of 3 only; and 1, 5, 7, 11, 13, 17 and 19 are outside both circles, in the lower right corner.',
+      settings: {
+        mode: 'sets',
+        nameA: 'Even',
+        nameB: 'Multiples of 3',
+        universeList: '1-20',
+        listA: '2, 4, 6, 8, 10, 12, 14, 16, 18, 20',
+        listB: '3, 6, 9, 12, 15, 18',
+      },
+    },
+    {
+      slug: 'prime-factor-venn-diagram-hcf-lcm-36-and-60',
+      title: 'Prime factor Venn diagram for the HCF and LCM of 36 and 60',
+      alt: 'A Venn diagram of the prime factors of 36 and 60, with 2, 2 and 3 in the overlap, 3 in the 36 circle only and 5 in the 60 circle only',
+      caption:
+        'Two overlapping circles named 36 and 60, in a box with no universal set symbol, holding the prime factors of each number: 36 = 2 × 2 × 3 × 3 and 60 = 2 × 2 × 3 × 5. The factors they share, 2, 2 and 3, are in the overlap, the other 3 is in 36 only, and 5 is in 60 only. Students find the HCF and LCM of 36 and 60 from it.',
+      settings: { mode: 'sets', nameA: '36', nameB: '60', universe: 'none', listA: '2, 2, 3, 3', listB: '2, 2, 3, 5' },
+    },
+    {
+      slug: 'venn-diagram-shade-a-intersect-b-complement',
+      title: 'Venn diagram with A ∩ B′ shaded',
+      alt: 'A Venn diagram of two overlapping circles, A and B, in a box marked U, with the part of A outside B hatched and nothing written in the regions',
+      caption:
+        'Two overlapping circles named A and B inside a box marked U, with the region in A but not in B, A ∩ B′, shaded with diagonal hatching that photocopies well. Nothing is written in the regions, so students write the set notation for the shaded region.',
+      settings: { shaded: ['a'], shade: 'hatch' },
+    },
+    {
+      slug: 'venn-diagram-probability-find-x',
+      title: 'Venn diagram of probabilities: find x',
+      alt: 'A Venn diagram of probabilities with 0.3 in A only, x in the overlap of A and B, 0.25 in B only and 0.15 outside both circles',
+      caption:
+        'Two overlapping circles named A and B inside a box marked U, with a probability in each region: 0.3 in A only, the unknown x in the overlap, 0.25 in B only, and 0.15 outside both circles in the lower right corner. Students find x, then probabilities such as P(A ∪ B).',
+      settings: { mode: 'text', values: { a: '0.3', ab: 'x', b: '0.25', out: '0.15' } },
+    },
+  ]),
+
+  ...examplesOf('pie-chart', [
+    {
+      slug: 'pie-chart-of-favorite-fruit',
+      title: 'Pie chart of favorite fruit with percents',
+      alt: 'A pie chart titled Favorite fruit with a colored sector for each of four fruits, each labeled with its name and percent',
+      caption:
+        'A pie chart titled Favorite fruit, with its sectors running clockwise from 12 o’clock: Apples in blue, Bananas in red, Cherries in green and Grapes in orange. Each sector is labeled inside with its name and percent: 40%, 26.7%, 20% and 13.3%.',
+      settings: {
+        rows: [
+          { name: 'Apples', cells: [{ value: '12' }] },
+          { name: 'Bananas', cells: [{ value: '8' }] },
+          { name: 'Cherries', cells: [{ value: '6' }] },
+          { name: 'Grapes', cells: [{ value: '4' }] },
+        ],
+        labels: 'name-percent',
+        title: 'Favorite fruit',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'circle-graph-of-how-students-travel-to-school-with-a-key',
+      title: 'Circle graph of how students travel to school, with a key',
+      alt: 'A circle graph of how students travel to school, each sector labeled with its percent, and a key on the right naming them',
+      caption:
+        'A circle graph titled How we get to school, with sectors for Walk, Car, Bus and Bike in blue, red, green and orange, clockwise from 12 o’clock. Each sector is labeled with its percent only, 35%, 30%, 25% and 10%, and a key on the right names the colors.',
+      settings: {
+        rows: [
+          { name: 'Walk', cells: [{ value: '35' }] },
+          { name: 'Car', cells: [{ value: '30' }] },
+          { name: 'Bus', cells: [{ value: '25' }] },
+          { name: 'Bike', cells: [{ value: '10' }] },
+        ],
+        values: 'percent',
+        labels: 'percent',
+        keyAt: 'right',
+        title: 'How we get to school',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'pie-chart-with-fractions-how-sam-spends-a-day',
+      title: 'Pie chart with fractions: how Sam spends a day',
+      alt: 'A black-and-white pie chart of how Sam spends 24 hours, each sector labeled with its activity and its fraction of the day',
+      caption:
+        'A black-and-white pie chart titled How Sam spends a day, with sectors in gray, white, hatching, dots, cross-hatching and back hatching for Sleep 3/8, School 1/4, Play 1/8, Homework 1/12, Meals 1/12 and Other 1/12. Each is labeled with its name and fraction of the day, inside its sector except Homework, which is labeled outside with a short leader line.',
+      settings: {
+        rows: [
+          { name: 'Sleep', cells: [{ value: '9' }] },
+          { name: 'School', cells: [{ value: '6' }] },
+          { name: 'Play', cells: [{ value: '3' }] },
+          { name: 'Homework', cells: [{ value: '2' }] },
+          { name: 'Meals', cells: [{ value: '2' }] },
+          { name: 'Other', cells: [{ value: '2' }] },
+        ],
+        labels: 'name-fraction',
+        look: 'bw',
+        title: 'How Sam spends a day',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'pie-chart-find-the-missing-angle-x',
+      title: 'Pie chart: find the missing angle x',
+      alt: 'A black-and-white pie chart of Red, 110°, Blue, 80°, Green, 100°, and Yellow, x°',
+      caption:
+        'A black-and-white pie chart of four sectors, each labeled with its name and angle: Red 110°, Blue 80°, Green 100° and Yellow x°, with a dot at the center. Students find x from the angles around a point adding up to 360°.',
+      settings: {
+        rows: [
+          { name: 'Red', cells: [{ value: '110' }] },
+          { name: 'Blue', cells: [{ value: '80' }] },
+          { name: 'Green', cells: [{ value: '100' }] },
+          { name: 'Yellow', cells: [{ value: '70' }] },
+        ],
+        values: 'degrees',
+        labels: 'name-angle',
+        sectorLabels: ['', '', '', 'letter'],
+        look: 'bw',
+      },
+    },
+    {
+      slug: 'complete-the-pie-chart-favorite-sports',
+      title: 'Complete the pie chart: favorite sports',
+      alt: 'A pie chart of the favorite sports of 60 students with only Soccer, 120°, and Basketball, 90°, drawn and the rest of the circle left empty',
+      caption:
+        'A pie chart titled Favorite sports of 60 students with only two sectors drawn, clockwise from 12 o’clock: Soccer in blue, labeled 120°, and Basketball in red, labeled 90°. The other 150° of the circle is left as one empty sector, with a dot at the center, for students to complete.',
+      settings: {
+        rows: [
+          { name: 'Soccer', cells: [{ value: '20' }] },
+          { name: 'Basketball', cells: [{ value: '15' }] },
+          { name: 'Tennis' },
+          { name: 'Swimming' },
+        ],
+        total: '60',
+        labels: 'name-angle',
+        title: 'Favorite sports of 60 students',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'blank-circle-for-drawing-a-pie-chart',
+      title: 'Blank circle for drawing a pie chart',
+      alt: 'A blank circle with its center marked and a radius drawn up to 12 o’clock, and a key of four pets with black-and-white fills',
+      caption:
+        'A blank circle with a dot at its center and one radius drawn up to 12 o’clock, under a blank line for the title. A key on the right gives Dog gray, Cat white, Fish hatching and Rabbit dots, for students to draw and shade a pie chart from a table.',
+      settings: {
+        rows: [{ name: 'Dog' }, { name: 'Cat' }, { name: 'Fish' }, { name: 'Rabbit' }],
+        look: 'bw',
+        keyAt: 'right',
+        titleMode: 'blank',
+      },
+    },
+  ]),
+
   ...examplesOf('mapping-diagram', [
     {
       slug: 'mapping-diagram-of-a-function',
@@ -767,6 +1586,192 @@ export const EXAMPLES: Example[] = [
       caption:
         'A 6 inch ruler marked every quarter inch, with a metal cylinder lying along it from the 1 inch mark rather than 0. Magnified views show its left end on 1 inch and its right end on 3 1/2 inches, so students subtract to find its length.',
       settings: { system: 'imperial', imperialMarks: '4', start: 1, length: 2.5 },
+    },
+  ]),
+  ...examplesOf('circle', [
+    {
+      slug: 'central-angle-and-inscribed-angle-on-the-same-arc',
+      title: 'Central angle and inscribed angle on the same arc',
+      alt: 'A circle with center O and points A, B and C on it; radii OA and OB make a central angle labeled 120°, and chords CA and CB make an inscribed angle at C labeled x',
+      caption:
+        'A circle with its center O and three points A, B and C on it. The radii OA and OB meet at O in a central angle marked with an arc and labeled 120°, and the chords CA and CB meet at C in an inscribed angle on the same arc AB, marked and labeled x, for the angle at the center is twice the angle at the circumference.',
+      settings: {},
+    },
+    {
+      slug: 'parts-of-a-circle-radius-diameter-chord-tangent-secant',
+      title: 'Parts of a circle: radius, diameter, chord, tangent and secant',
+      alt: 'A circle with center O, a diameter AB, a radius OC, a chord DE, a tangent touching the circle at F and a secant through G and H that runs on past both',
+      caption:
+        'A circle with its center O and eight named points on it. A diameter runs from A through O to B, a radius from O to C, and a chord from D to E along the bottom. A tangent touches the circle at F, and a secant cuts through G and H and runs on past both, for naming the parts of a circle.',
+      settings: {
+        points: [
+          { id: 'p1', name: 'A', dir: '200' }, { id: 'p2', name: 'B', dir: '20' }, { id: 'p3', name: 'C', dir: '125' }, { id: 'p4', name: 'D', dir: '240' },
+          { id: 'p5', name: 'E', dir: '300' }, { id: 'p6', name: 'F', dir: '155' }, { id: 'p7', name: 'G', dir: '45' }, { id: 'p8', name: 'H', dir: '75' },
+        ],
+        lines: [
+          { id: 'l1', a: 'p1', b: 'p2' }, { id: 'l2', a: 'o', b: 'p3' }, { id: 'l3', a: 'p4', b: 'p5' },
+          { id: 'l4', kind: 'tangent', a: 'p6' }, { id: 'l5', a: 'p7', b: 'p8', runA: true, runB: true },
+        ],
+        angles: {},
+      },
+    },
+    {
+      slug: 'shaded-sector-with-radius-central-angle-and-arc-length',
+      title: 'Shaded sector with its radius, central angle and arc length',
+      alt: 'A circle with center O and a shaded sector between radii OA and OB; OA is labeled 6 cm, the central angle 100° and the arc AB 10.5 cm',
+      caption:
+        'A circle with its center O and a sector shaded blue between the radii OA and OB. The radius OA is labeled 6 cm, the central angle at O is marked with an arc and labeled 100°, and the arc from A to B is labeled with its length, 10.5 cm, for finding the sector’s area.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '30' }, { id: 'p2', name: 'B', dir: '130' }],
+        lines: [{ id: 'l1', a: 'o', b: 'p1', label: 'measure' }, { id: 'l2', a: 'o', b: 'p2' }],
+        angles: { 'o@l1+~l2+': { label: 'measure', mark: '1' } },
+        arcs: { 'p1~p2': { label: 'length' } },
+        faces: { 'l1+l2+p1~p2': 1 },
+      },
+    },
+    {
+      slug: 'shaded-segment-of-a-circle-cut-off-by-a-chord',
+      title: 'Shaded segment of a circle cut off by a chord',
+      alt: 'A circle with center O and a chord AB; the segment below the chord is shaded, dashed radii OA and OB meet at O at 140°, and OA is labeled 6 cm',
+      caption:
+        'A circle with its center O and a chord AB across its lower part, with the segment between the chord and the circle shaded blue. Dashed radii run from O to A and B, OA labeled 6 cm, and the central angle between them is marked and labeled 140°, for finding the area of the segment.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '200' }, { id: 'p2', name: 'B', dir: '340' }],
+        lines: [{ id: 'l1', a: 'p1', b: 'p2' }, { id: 'l2', a: 'o', b: 'p1', style: 'dashed', label: 'measure' }, { id: 'l3', a: 'o', b: 'p2', style: 'dashed' }],
+        angles: { 'o@l2+~l3+': { label: 'measure', mark: '1' } },
+        faces: { 'l1+p1~p2': 1 },
+      },
+    },
+    {
+      slug: 'angles-in-the-same-segment-circle-theorem',
+      title: 'Angles in the same segment',
+      alt: 'A circle with points A and B at the bottom and C and D at the top; chords from C and from D to A and B make two angles on the same arc, the one at D labeled 70° and the one at C labeled x',
+      caption:
+        'A circle with A and B on its lower part and C and D on its upper part. Chords run from C to A and B and from D to A and B, crossing in the middle, so the angles at C and D both stand on the arc AB. The angle at D is marked and labeled 70°, and the angle at C is marked and labeled x.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '200' }, { id: 'p2', name: 'B', dir: '340' }, { id: 'p3', name: 'C', dir: '60' }, { id: 'p4', name: 'D', dir: '120' }],
+        lines: [{ id: 'l1', a: 'p3', b: 'p1' }, { id: 'l2', a: 'p3', b: 'p2' }, { id: 'l3', a: 'p4', b: 'p1' }, { id: 'l4', a: 'p4', b: 'p2' }],
+        angles: { 'p3@l1+~l2+': { label: 'text', text: 'x', mark: '1' }, 'p4@l3+~l4+': { label: 'measure', mark: '1' } },
+      },
+    },
+    {
+      slug: 'angle-in-a-semicircle-triangle-on-a-diameter',
+      title: 'Angle in a semicircle: a triangle on a diameter',
+      alt: 'A circle with diameter AB through its center O and a point C on the circle; triangle ABC has a right-angle square at C, the angle at B labeled 55° and the angle at A labeled x',
+      caption:
+        'A circle with a diameter AB through its center O and a point C on the upper half. The chords CA and CB make a triangle on the diameter, with a right-angle square at C. The angle at B is marked and labeled 55° and the angle at A is marked and labeled x.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '180' }, { id: 'p2', name: 'B', dir: '0' }, { id: 'p3', name: 'C', dir: '70' }],
+        lines: [{ id: 'l1', a: 'p1', b: 'p2' }, { id: 'l2', a: 'p3', b: 'p1' }, { id: 'l3', a: 'p3', b: 'p2' }],
+        angles: { 'p1@l1+~l2-': { label: 'text', text: 'x', mark: '1' }, 'p2@l3-~l1-': { label: 'measure', mark: '1' } },
+      },
+    },
+    {
+      slug: 'cyclic-quadrilateral-opposite-angles',
+      title: 'Cyclic quadrilateral: opposite angles',
+      alt: 'A quadrilateral ABCD with all four corners on a circle; the angle at C is labeled 95° and the opposite angle at A is labeled x',
+      caption:
+        'A quadrilateral ABCD drawn inside a circle with all four corners on it, the circle’s center not shown. The angle at C is marked and labeled 95°, and the opposite angle at A is marked and labeled x, for the opposite angles of a cyclic quadrilateral.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '225' }, { id: 'p2', name: 'B', dir: '320' }, { id: 'p3', name: 'C', dir: '30' }, { id: 'p4', name: 'D', dir: '130' }],
+        lines: [{ id: 'l1', a: 'p1', b: 'p2' }, { id: 'l2', a: 'p2', b: 'p3' }, { id: 'l3', a: 'p3', b: 'p4' }, { id: 'l4', a: 'p4', b: 'p1' }],
+        angles: { 'p1@l1+~l4-': { label: 'text', text: 'x', mark: '1' }, 'p3@l3+~l2-': { label: 'measure', mark: '1' } },
+        centerDot: false,
+        centerName: '',
+      },
+    },
+    {
+      slug: 'tangent-and-radius-angle-x',
+      title: 'Tangent and radius: find the angle',
+      alt: 'A circle with center O, a radius OA labeled 6 cm and a tangent touching the circle at A; the angle between the radius and the tangent is labeled x',
+      caption:
+        'A circle with its center O and a radius from O to a point A on the circle, labeled 6 cm. A tangent touches the circle at A and runs on both ways, and the angle between it and the radius is labeled x with no right-angle mark, for the angle between a tangent and a radius.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '300' }],
+        lines: [{ id: 'l1', a: 'o', b: 'p1', label: 'measure' }, { id: 'l2', kind: 'tangent', a: 'p1' }],
+        angles: { 'p1@l2+~l1-': { label: 'text', text: 'x' } },
+      },
+    },
+    {
+      slug: 'two-tangents-from-an-external-point',
+      title: 'Two tangents from a point outside a circle',
+      alt: 'A circle with center O and a point P outside it; tangents from P touch the circle at A and B, each marked with a tick, radii OA and OB meet them at right angles, angle AOB is labeled 120° and angle APB is labeled x',
+      caption:
+        'A circle with its center O and a point P outside it, two radii away from O. Two tangents run from P to the circle, touching it at A and B, each marked with one tick to show they are equal. The radii OA and OB meet the tangents at right angles, marked with squares; the angle AOB is labeled 120° and the angle APB is labeled x.',
+      settings: {
+        points: [{ id: 'p1', name: 'P', dir: '0', dist: '2' }],
+        lines: [
+          { id: 'l1', kind: 'from', a: 'p1', side: 'left', ticks: 1 }, { id: 'l2', kind: 'from', a: 'p1', side: 'right', ticks: 1 },
+          { id: 'l3', a: 'o', b: 'l1:t' }, { id: 'l4', a: 'o', b: 'l2:t' },
+        ],
+        angles: { 'p1@l2+~l1+': { label: 'text', text: 'x', mark: '1' }, 'o@l3+~l4+': { label: 'measure', mark: '1' } },
+        marks: { 'l1:t': 'A', 'l2:t': 'B' },
+      },
+    },
+    {
+      slug: 'alternate-segment-theorem-tangent-and-chord',
+      title: 'Alternate segment theorem: tangent and chord',
+      alt: 'A circle with a tangent at A and a triangle ABC inside it; the angle between the tangent and the chord AB is labeled 60° and the angle at C is labeled x',
+      caption:
+        'A circle with a tangent touching it at A, at the bottom, and a triangle ABC with all three corners on the circle. The angle between the tangent and the chord AB is marked and labeled 60°, and the angle at C, in the alternate segment, is marked and labeled x.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '270' }, { id: 'p2', name: 'B', dir: '30' }, { id: 'p3', name: 'C', dir: '140' }],
+        lines: [{ id: 'l1', kind: 'tangent', a: 'p1' }, { id: 'l2', a: 'p1', b: 'p2' }, { id: 'l3', a: 'p1', b: 'p3' }, { id: 'l4', a: 'p2', b: 'p3' }],
+        angles: { 'p1@l1+~l2+': { label: 'measure', mark: '1' }, 'p3@l3-~l4-': { label: 'text', text: 'x', mark: '1' } },
+        centerDot: false,
+        centerName: '',
+      },
+    },
+    {
+      slug: 'intersecting-chords-angle-and-intercepted-arcs',
+      title: 'Intersecting chords: the angle and its intercepted arcs',
+      alt: 'A circle with chords AB and CD crossing at E; arc AC is labeled 90°, arc BD is labeled 110°, and the angle AEC between them is labeled x',
+      caption:
+        'A circle with two chords, AB and CD, crossing inside it at a point named E. The arc from C to A is labeled 90° and the opposite arc from D to B is labeled 110°, and the angle at E facing arc AC is labeled x, for the angle formed by two chords.',
+      settings: {
+        points: [{ id: 'p1', name: 'A', dir: '150' }, { id: 'p2', name: 'B', dir: '340' }, { id: 'p3', name: 'C', dir: '60' }, { id: 'p4', name: 'D', dir: '230' }],
+        lines: [{ id: 'l1', a: 'p1', b: 'p2' }, { id: 'l2', a: 'p3', b: 'p4' }],
+        angles: { 'l1.l2@l2-~l1-': { label: 'text', text: 'x', mark: '1' } },
+        arcs: { 'p3~p1': { label: 'degrees' }, 'p4~p2': { label: 'degrees' } },
+        marks: { 'l1.l2': 'E' },
+        centerDot: false,
+        centerName: '',
+      },
+    },
+    {
+      slug: 'two-secants-from-an-external-point',
+      title: 'Two secants from a point outside a circle',
+      alt: 'A circle and a point P outside it; two secants from P cut the circle at A and B and at C and D, the near arc AC is labeled 60°, the far arc BD 180°, and the angle at P x',
+      caption:
+        'A circle and a point P outside it to the left. Two secants run from P through the circle, the upper one cutting it at A and then B, the lower one at C and then D. The near arc between A and C is labeled 60°, the far arc between B and D is labeled 180°, and the angle at P is marked and labeled x.',
+      settings: {
+        points: [{ id: 'p1', name: 'P', dir: '180', dist: 'sqrt(3)' }, { id: 'p2', name: 'A', dir: '150' }, { id: 'p3', name: 'C', dir: '210' }],
+        lines: [{ id: 'l1', a: 'p1', b: 'p2', runB: true }, { id: 'l2', a: 'p1', b: 'p3', runB: true }],
+        angles: { 'p1@l2+~l1+': { label: 'text', text: 'x', mark: '1' } },
+        arcs: { 'p2~p3': { label: 'degrees' }, 'l2:b1~l1:b1': { label: 'degrees' } },
+        marks: { 'l1:b1': 'B', 'l2:b1': 'D' },
+        centerDot: false,
+        centerName: '',
+      },
+    },
+    {
+      slug: 'regular-hexagon-inscribed-in-a-circle',
+      title: 'Regular hexagon inscribed in a circle',
+      alt: 'A regular hexagon ABCDEF inscribed in a circle with center O; every side has a tick, the radius OA is labeled 6 cm and the side AB is labeled x',
+      caption:
+        'A regular hexagon ABCDEF with all six corners on a circle, its center O dotted. Every side is marked with one tick to show they are equal. The radius from O to A is labeled 6 cm and the side AB along the bottom is labeled x.',
+      settings: {
+        points: [
+          { id: 'p1', name: 'A', dir: '240' }, { id: 'p2', name: 'B', dir: '300' }, { id: 'p3', name: 'C', dir: '0' },
+          { id: 'p4', name: 'D', dir: '60' }, { id: 'p5', name: 'E', dir: '120' }, { id: 'p6', name: 'F', dir: '180' },
+        ],
+        lines: [
+          { id: 'l1', a: 'p1', b: 'p2', ticks: 1, label: 'text', text: 'x' }, { id: 'l2', a: 'p2', b: 'p3', ticks: 1 }, { id: 'l3', a: 'p3', b: 'p4', ticks: 1 },
+          { id: 'l4', a: 'p4', b: 'p5', ticks: 1 }, { id: 'l5', a: 'p5', b: 'p6', ticks: 1 }, { id: 'l6', a: 'p6', b: 'p1', ticks: 1 },
+          { id: 'l7', a: 'o', b: 'p1', label: 'measure' },
+        ],
+        angles: {},
+      },
     },
   ]),
 ]

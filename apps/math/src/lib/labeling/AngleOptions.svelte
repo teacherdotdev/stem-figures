@@ -1,6 +1,6 @@
 <script lang="ts">
   // An angle's popup body: its label, its mark (congruence arcs, or a square
-  // when it's 90°) and its shading. Every change goes through `onchange`, with
+  // when it's 90°) and, unless `shading` is off, its shading. Every change goes through `onchange`, with
   // a `merge` key while typing so the figure's history can take it as one.
   import MathInput from '$lib/shared/MathInput.svelte'
   import Swatches from './Swatches.svelte'
@@ -8,8 +8,8 @@
   import { labelPatch, MARK_NAMES, type AngleStyle, type Mark } from './options.js'
 
   let {
-    value, right, onchange,
-  }: { value: AngleStyle; right: boolean; onchange: (patch: Partial<AngleStyle>, merge?: string) => void } = $props()
+    value, right, shading = true, onchange,
+  }: { value: AngleStyle; right: boolean; shading?: boolean; onchange: (patch: Partial<AngleStyle>, merge?: string) => void } = $props()
 </script>
 
 {#snippet markIcon(m: Mark)}
@@ -45,7 +45,9 @@
     {/each}
   </div>
 </div>
-<div class="group">
-  <span class="name" id="pop-shade">Shading</span>
-  <Swatches id="pop-shade" value={value.shade} onpick={(i) => onchange({ shade: i })} />
-</div>
+{#if shading}
+  <div class="group">
+    <span class="name" id="pop-shade">Shading</span>
+    <Swatches id="pop-shade" value={value.shade} onpick={(i) => onchange({ shade: i })} />
+  </div>
+{/if}

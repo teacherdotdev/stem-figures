@@ -576,6 +576,295 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school'],
   },
 
+  'bar-graph': {
+    heading: 'Bar graphs and column graphs from a table',
+    intro: [
+      'The Bar Graph Generator draws a bar graph from a table you type or paste: a category on each row, like Soccer or Swimming, and its value. Bars stand up as columns or run sideways, over a value axis fitted to the data unless you type its range. Add a column to the table for a double bar graph, with the bars side by side or stacked and a key naming each set.',
+      'Leave a category’s value empty and its name stays with no bar, for students to draw from a table. Write the values on the bars or leave them for students to read from the axis. For science, give each bar a ± value to draw error bars, such as the standard error of a mean.',
+    ],
+    settings: [
+      'The table: categories down the side and one or more series across the top, typed or pasted from a spreadsheet',
+      'Upright columns or sideways bars; for several series, side by side or stacked; narrow, medium or wide bars',
+      'Values written at the end of each bar or inside it, or not at all',
+      'Error bars from a ± value for each bar, with or without crossbars, and a note under the graph saying what they show',
+      'Color, black-and-white fills that photocopy, or white bars to shade, with a fill picked for each series, and a key on the right or below',
+      'A chart title and axis titles, as text or a blank line for students',
+      'The value axis’s range and count-by, worked out from the data unless you type them, which lines are numbered, and the gridlines',
+    ],
+    faqs: [
+      {
+        q: 'What is the difference between a bar graph and a column graph?',
+        a: 'Nothing but the direction. A column graph is a bar graph with upright bars; in the UK and Australia “bar chart” often means sideways bars. Pick Columns or Bars under Direction to switch between them.',
+      },
+      {
+        q: 'How do I make a double bar graph?',
+        a: 'Type a heading in the + column at the end of the table, like Girls, and its values under it; name the first column too, like Boys. Each category then gets two bars side by side, and a key names them. Choose Stacked to put one on top of the other instead.',
+      },
+      {
+        q: 'Can I paste data from a spreadsheet?',
+        a: 'Yes. Copy the cells in Excel or Google Sheets, with the category names in the first column and a heading row if you like, and paste anywhere in the table. It replaces what was there.',
+      },
+      {
+        q: 'How do I add error bars?',
+        a: 'Turn on Error bars and type each bar’s ± value, such as its standard error, in the ± column beside it, or paste a column headed SEM, SD or ± after the values. Each bar gets a line from its value minus that amount to its value plus it. Error bars are drawn on side-by-side bars, not stacked ones.',
+      },
+      {
+        q: 'How do I leave a bar for students to draw?',
+        a: 'Type the category’s name and leave its value empty. Its name stays under the axis with no bar, so students can draw the bar from a table or a description.',
+      },
+    ],
+    imageAlt: 'A printable bar graph of favorite sports, with a column for each sport over a value axis titled Number of students, made with the Bar Graph Generator',
+    educationalLevel: ['Elementary school', 'Middle school', 'High school'],
+  },
+
+  'stem-and-leaf': {
+    heading: 'Stem-and-leaf plots from a data set',
+    intro: [
+      'The Stem-and-Leaf Plot Generator draws a stem-and-leaf plot from numbers you type or paste. Each value is split into a stem, written down the left, and a leaf, its last digit, written across its stem’s row, with every stem from the lowest to the highest shown and a key under the plot. Leaves line up in even columns, so the rows compare like bars.',
+      'Put two data sets back to back to compare them, with one set’s leaves running left from the stems and the other’s running right. Leave the data empty for a plot students fill in: type the first and last stems for empty rows, or put the leaves in boxes for empty boxes. Under the data you can read each set’s n, minimum, maximum, range, median, mode and quartiles.',
+    ],
+    settings: [
+      'One data set, or two back to back with a name for each',
+      'The leaf unit: the last digit typed, or 0.01, 0.1, 1, 10 or 100, with digits past it cut off, not rounded',
+      'Each stem on one row, split into two (leaves 0–4 and 5–9) or into five',
+      'The first and last stems, to start or end the plot past the data, or to draw empty rows with no data',
+      'Leaves in order or as typed, and negative values on negative stems, with −0 apart from 0',
+      'Headings, and leaves in boxes with empty boxes up to a count in each row',
+      'A key written with = or “means” and a unit, its example value, a blank line for students, or no key',
+      'A chart title, as text or a blank line for students',
+    ],
+    faqs: [
+      {
+        q: 'How do I make a stem-and-leaf plot?',
+        a: 'Type or paste the data, separated by commas or spaces. Each value’s last digit becomes its leaf and the digits before it its stem, so 34 is written 3 | 4. The leaves are put in order and the key is written for you.',
+      },
+      {
+        q: 'How do I make a back-to-back stem-and-leaf plot?',
+        a: 'Choose Back-to-back at the top of the Data card, then type the two data sets and name them, like Class A and Class B. The first set’s leaves run left from the stems and the second’s run right, and the key names both.',
+      },
+      {
+        q: 'What happens to decimals?',
+        a: 'The leaf is the last digit typed, so 2.3 is written 2 | 3 and 1.25 is written 1.2 | 5. Pick a leaf unit to change it. Digits past the leaf unit are cut off, not rounded, as textbooks do, and the values that were cut are listed under the data.',
+      },
+      {
+        q: 'What are split stems?',
+        a: 'When many values share a stem, each stem can take two rows, one for leaves 0 to 4 and one for 5 to 9, or five rows, one for each pair of digits. Choose Twice or 5 times under Rows for each stem.',
+      },
+      {
+        q: 'How do I make a blank stem-and-leaf plot for students?',
+        a: 'Leave the data empty and type the first and last stems, for stems with empty rows. Turn on Leaves in boxes and type how many boxes go in each row for empty boxes. With nothing typed at all, the stems are left blank too. Set the key to a blank line for students to write it.',
+      },
+    ],
+    imageAlt: 'A printable stem-and-leaf plot of test scores with stems from 5 to 9 and a key, made with the Stem-and-Leaf Plot Generator',
+    educationalLevel: ['Elementary school', 'Middle school', 'High school'],
+  },
+
+  'cumulative-frequency': {
+    heading: 'Cumulative frequency graphs from a frequency table',
+    intro: [
+      'The Cumulative Frequency Graph Generator draws a cumulative frequency graph from a frequency table, a cumulative table or a data set. Each point is plotted at a bin’s upper bound against the running total up to it, starting from 0 at the lowest bound, and the points are joined by a smooth curve or straight lines. The axes fit the data unless you type their ranges.',
+      'Dashed lines read the median and quartiles off the curve, or any percentile, or go up from a value to estimate how many are below it. Each value is written at the axis, left as a blank line for students, or left off. Every reading is taken from the curve as drawn, so it matches what students measure on the printed graph.',
+    ],
+    settings: [
+      'The data: a frequency table of each bin’s upper end and frequency, a cumulative table of upper bounds, or a data set sorted into bins of a width you choose, with no inequalities to type',
+      'Crosses or dots at the points, joined by a smooth curve, straight lines or nothing, starting from 0 at the lowest bound or not',
+      'A vertical axis of cumulative frequency or cumulative percent',
+      'Reading lines for the median, lower and upper quartiles, any percentile, across from a cumulative frequency or up from a value, each with its value, a blank line or neither',
+      'Color, or black and white for printing',
+      'A chart title and axis titles, as text or a blank line for students',
+      'Each axis’s range and count-by, worked out from the data unless you type them, which lines are numbered, and the gridlines',
+    ],
+    faqs: [
+      {
+        q: 'Where are the points of a cumulative frequency graph plotted?',
+        a: 'At the upper bound of each bin, against the running total up to that bound. The graph starts with a point at the lowest bound and 0, as GCSE mark schemes expect; turn off Start from 0 at the lowest bound to leave it out.',
+      },
+      {
+        q: 'Is a cumulative frequency graph the same as an ogive?',
+        a: 'Yes. US textbooks often call it an ogive and draw it with straight lines and a percent axis. Choose Straight lines under Join and Cumulative percent for the vertical axis to draw it that way.',
+      },
+      {
+        q: 'How are the median and quartiles found?',
+        a: 'A dashed line runs across from half of n (a quarter and three quarters for the quartiles) to the curve, then down to the horizontal axis. The value is read where that line meets the curve as drawn, to a tenth of a block, so a smooth curve and straight lines can give slightly different answers, as they do on paper. The panel lists the median, quartiles and interquartile range.',
+      },
+      {
+        q: 'Can I type a cumulative frequency table instead?',
+        a: 'Yes. Choose Cumulative table, type where the first bin starts, then each upper bound with its running total, or paste the table. The curve starts from 0 where the first bin starts.',
+      },
+      {
+        q: 'How do I make a graph for students to draw on?',
+        a: 'Choose None under Join for the points alone, so students draw the curve. For blank axes, leave the data empty and type each axis’s range. To have students read a value, draw its lines and choose Blank for its value.',
+      },
+    ],
+    imageAlt: 'A printable cumulative frequency curve of the heights of 80 students, with dashed lines reading off the median and quartiles, made with the Cumulative Frequency Graph Generator',
+    educationalLevel: ['Middle school', 'High school'],
+  },
+
+  'two-way-table': {
+    heading: 'Two-way tables with totals, blanks and relative frequencies',
+    intro: [
+      'The Two-Way Table Generator draws a two-way table from the counts you type or paste: one category down the side, like Year 7, Year 8 and Year 9, and another across the top, like Walk, Bus and Car, with a Total column, a Total row and the grand total. Title the variables across the top and down the side, or put both in a corner split by a diagonal.',
+      'Every cell, totals included, is written as you type it. Leave a cell empty and it’s blank on the table, or type a letter like x, for students to find. Work out totals fills in the totals the counts give, and the panel says whether the missing values can be worked out from the cells shown, and what each one is. Switch to relative frequencies of the grand total, of each row or of each column, written as decimals, percents or fractions.',
+    ],
+    settings: [
+      'The table: row categories down the side and column categories across the top, typed or pasted from a spreadsheet, totals included',
+      'A Total column and a Total row, each on or off, filled in for you or typed',
+      'Any cell left blank or written as a letter, and whether the missing values can be worked out from the rest',
+      'Counts, or relative frequencies of the grand total, each row or each column, as decimals or percents rounded to a set number of places, or as fractions in lowest terms',
+      'A table title, as text or a blank line for students, and a title for each variable, outside the table or in a corner split by a diagonal',
+      'Gray or plain headings, lines round every cell or only under the headings and before the totals, and totals in bold',
+    ],
+    faqs: [
+      {
+        q: 'How do I leave cells for students to fill in?',
+        a: 'Leave them empty. An empty cell is blank on the table, totals included. Type a letter like x instead to label one for an equation. Under the table, the panel says whether every missing value can be worked out from the cells shown, and gives each one.',
+      },
+      {
+        q: 'Do I have to type the totals?',
+        a: 'No. Type the counts and click Work out totals, which fills in every total it can. Then empty any total that students should work out.',
+      },
+      {
+        q: 'Can it show relative frequencies?',
+        a: 'Yes. Choose Relative frequencies at the top of the table, then whether each cell is divided by the grand total (joint relative frequencies), by its row’s total or by its column’s total (conditional relative frequencies). They’re written as decimals or percents, rounded as you choose, or as fractions in lowest terms. You still type the counts.',
+      },
+      {
+        q: 'Can I paste a table from a spreadsheet?',
+        a: 'Yes. Copy the cells in Excel or Google Sheets, with the row names in the first column and the column headings in the first row, and paste anywhere in the table. A last column headed Total and a last row named Total become the totals.',
+      },
+      {
+        q: 'How do I split the corner with a diagonal?',
+        a: 'Type the titles under Titles, such as Transport across the top and Year down the side, then choose Split by a diagonal under Corner. Both titles go in the corner cell, on either side of the line.',
+      },
+    ],
+    imageAlt: 'A printable two-way table of how students in Years 7, 8 and 9 travel to school, by walking, bus or car, with totals and some cells left blank, made with the Two-Way Table Generator',
+    educationalLevel: ['Middle school', 'High school', 'Algebra 1'],
+  },
+
+  'histogram': {
+    heading: 'Histograms from a data set or a frequency table',
+    intro: [
+      'The Histogram Generator draws a histogram from a data set you type or paste, sorted into bins of the width you give or one that fits the data, or from a frequency table of bins and their frequencies. In a table you type where the first bin starts, then each bin’s upper end and its frequency, with no inequalities to type. Bins can be unequal, in which case the vertical axis shows frequency density so each bar’s area stands for its frequency.',
+      'The horizontal axis is numbered at the bin edges, with a zig-zag break when it starts past 0, such as for heights from 150 cm. Draw a frequency polygon over the bars or on its own. Leave a frequency empty for a bar students draw, or hide the vertical axis’s numbers for students to work out the scale from one bar.',
+    ],
+    settings: [
+      'A data set, with where the bins start, their width, and which bin holds a value on an edge',
+      'Or a frequency table: where the first bin starts, then each bin’s upper end and its frequency, equal or unequal bins, or a table pasted from a worksheet',
+      'Frequency, relative frequency as a decimal or a percent, or frequency density on the vertical axis',
+      'Bars filled with a color, gray, a black-and-white fill or white, and each bar’s frequency written above it',
+      'A frequency polygon over the bars or alone, closed down to the axis or left open',
+      'The horizontal axis numbered at the bin edges or every step of a range you type',
+      'A chart title and axis titles, as text or a blank line for students',
+      'The vertical axis’s range and count-by, worked out from the data unless you type them, which lines are numbered, and the gridlines',
+    ],
+    faqs: [
+      {
+        q: 'What is the difference between a histogram and a bar graph?',
+        a: 'A histogram’s bars touch, because its bins run on from one to the next along a numbered axis, like heights from 150 to 190 cm. A bar graph’s bars stand apart, one for each named category, like favorite sports. Use the Bar Graph Generator for those.',
+      },
+      {
+        q: 'How do I make a histogram with unequal class widths?',
+        a: 'Choose Frequency table, type where the first bin starts, like 0, then each bin’s upper end with its frequency, like 10, then 15. With unequal bins the vertical axis shows frequency density, each bin’s frequency divided by its width, as GCSE Higher papers use. You can still pick frequency, but the panel warns you that the bars’ areas won’t match the frequencies.',
+      },
+      {
+        q: 'Which bin does a value on an edge go in?',
+        a: 'The bin that starts there, so 20 goes in 20 ≤ x < 30. Under the data set you can pick the bin that ends there instead (10 < x ≤ 20), as many UK papers write it. In a frequency table only the bins’ ends are typed, so it doesn’t matter.',
+      },
+      {
+        q: 'Why does the panel say my bins have a gap?',
+        a: 'Bins pasted as whole numbers, like 10–19 and 20–29, leave a gap of 1 between them. For whole-number data the bars meet halfway, so the generator offers to start at 9.5 and go up to 19.5, 29.5 and so on; click Use these bins to switch.',
+      },
+      {
+        q: 'How do I draw a frequency polygon?',
+        a: 'Under Bars, choose a frequency polygon over the bars or alone. It joins the middle of the top of each bar, and is closed down to the axis half a bin past each end unless you leave it open.',
+      },
+      {
+        q: 'How do I leave a bar for students to draw?',
+        a: 'Choose Frequency table (it starts from your data set’s bins if you typed one) and empty that bin’s frequency. The bin stays on the axis with no bar. Empty every frequency for a blank histogram with its axes set up.',
+      },
+    ],
+    imageAlt: 'A printable histogram of student heights, with touching bars over bins from 150 to 180 cm and a zig-zag break on the horizontal axis, made with the Histogram Generator',
+    educationalLevel: ['Middle school', 'High school'],
+  },
+
+  'venn-diagram': {
+    heading: 'Venn diagrams with numbers, elements or shading',
+    intro: [
+      'The Venn Diagram Generator draws one, two or three circles inside a box for the universal set, marked U unless you choose ξ (as GCSE papers write it), S, ε, a word or nothing. Two sets can overlap, sit apart for mutually exclusive events, or one can sit inside the other for a subset. Each set is named outside its circle, with a letter like A or a word like Football.',
+      'Put a number in each region for counting and probability questions, a letter or expression like x or 2x + 1 for algebra, or words to compare and contrast, like red flesh, mushy, savory, one to a line. Or list the members of each set, or a range like 1-20, and every element is sorted into its region for you, prime factors included. Click any region on the figure to fill it in or shade it, and leave regions empty for students to fill in.',
+    ],
+    settings: [
+      'Text mode: whatever you type in each region, a number, a letter, an expression or words for comparing two things, with commas splitting it into lines. Sets mode: each set’s members, sorted into the regions where the sets meet',
+      'One, two or three sets; two sets overlapping, separate, or one inside the other',
+      'Each set’s name, as a letter or a word',
+      'The universal set’s name: U, ξ, S, ε, a word or nothing',
+      'Any regions shaded, in a color tint, gray or a black-and-white pattern',
+      'Empty regions left empty or given a blank line for students',
+    ],
+    faqs: [
+      {
+        q: 'How do I shade a region, like A ∩ B′?',
+        a: 'Click the region on the figure and tick Shaded, or tick it in the list of regions under Sets. A ∩ B′ is the part of A outside B, called A only in the list. Pick the fill under Shading: a color tint, gray, or hatching or dots that photocopy well.',
+      },
+      {
+        q: 'Can it sort numbers into the diagram for me?',
+        a: 'Yes. Choose Sets, type the universal set (like 1-20) and each set’s members (like 2, 4, 6, 8), and each number is written in the region of every set it belongs to. An element that’s in a set but not in the universal set is pointed out so you can fix it.',
+      },
+      {
+        q: 'How do I make a prime factor Venn diagram for the HCF and LCM?',
+        a: 'Choose Sets and name the sets after the two numbers. Type each number’s prime factors with repeats, like 2, 2, 3, 3 for 36 and 2, 2, 3, 5 for 60. Each repeated factor is another copy, so the factors the numbers share go in the middle.',
+      },
+      {
+        q: 'Can I use it for probability?',
+        a: 'Yes. Type a probability in each region, like 0.3, or choose Text for fractions and unknowns like x. Leave a region empty, or give empty regions a blank line, for students to work out.',
+      },
+      {
+        q: 'Can I use ξ for the universal set?',
+        a: 'Yes. The box is marked U to start with; GCSE papers in England write the universal set as ξ, which is one click away under Labels, along with S, ε, a word or nothing.',
+      },
+    ],
+    imageAlt: 'A printable Venn diagram of students who play football and tennis, with the number of students in each region, made with the Venn Diagram Generator',
+    educationalLevel: ['Middle school', 'High school'],
+  },
+
+  'pie-chart': {
+    heading: 'Pie charts and circle graphs from a table',
+    intro: [
+      'The Pie Chart Generator draws a pie chart from a table you type or paste: a category on each row, like Apples or Bananas, and its count, percent or angle in degrees. The sectors run clockwise from 12 o’clock, as pie charts are drawn by hand, in the order typed or largest first. Each sector is labeled inside where it fits, or outside with a short leader line, by its name, value, percent, angle or fraction, or by a key.',
+      'Leave a value empty and its share of the circle is left as one empty sector, for students to complete the pie chart; leave every value empty for a blank circle with its center marked and a radius drawn up to 12 o’clock. Give one sector a blank line or a letter (x°) instead of its label, for students to measure with a protractor or work out a missing angle.',
+    ],
+    settings: [
+      'The table: a category and a value on each row, typed or pasted from a spreadsheet, as counts, percents or degrees, with the total for counts',
+      'The sectors in the order typed or largest first, and a center dot',
+      'Sector labels by name, value, percent, angle or fraction, or a name and a number, with any sector’s own label, a blank line or a letter',
+      'Color, black-and-white fills that photocopy, or white sectors to shade, with a fill picked for each sector, and a key on the right or below',
+      'A chart title, as text or a blank line for students',
+    ],
+    faqs: [
+      {
+        q: 'How do you work out the angles for a pie chart?',
+        a: 'Divide each category’s value by the total and multiply by 360°. Out of 30 students, 12 is 12 ÷ 30 × 360° = 144°. The table under the data shows each category’s angle, percent and fraction of the whole.',
+      },
+      {
+        q: 'Is a pie chart the same as a circle graph?',
+        a: 'Yes. Circle graph is the usual name in US middle school, and pie chart in the UK and Australia. Both are a circle cut into sectors whose angles show each category’s share of the whole.',
+      },
+      {
+        q: 'Can I type percents or angles instead of counts?',
+        a: 'Yes. Choose Percents or Degrees under Values are. If they add up to less than 100% or 360°, the rest is left as an empty sector and the panel says so; if they add up to more, the sectors are shrunk to fit the circle.',
+      },
+      {
+        q: 'How do I make a pie chart for students to complete?',
+        a: 'Type every category, but leave the values empty for the sectors students should draw. With counts, type the total too, so the circle leaves room for them. The sectors you gave values are drawn and the rest is one empty sector. Leave every value empty for a blank circle.',
+      },
+      {
+        q: 'How do I label a missing angle x?',
+        a: 'Type the sector’s value, then under Labels pick Letter (x°) for it. Its label becomes x°, or x% when the chart is labeled by percents, and the next sector given a letter gets y.',
+      },
+    ],
+    imageAlt: 'A printable pie chart of favorite fruit, with a colored sector for each fruit labeled with its name and percent, made with the Pie Chart Generator',
+    educationalLevel: ['Middle school', 'High school'],
+  },
+
   'mapping-diagram': {
     heading: 'Mapping diagrams for functions and relations',
     intro: [
@@ -610,6 +899,46 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'Algebra 1'],
   },
 
+  'circle': {
+    heading: 'Circle diagrams for circle theorems, arcs and sectors',
+    intro: [
+      'The Circle Generator draws a circle with its center and points on it, joined by radii, diameters, chords and secants, with tangents at points or from a point outside the circle. Drag a point round the circle, or pull it off to make a point outside, and the figure stays drawn to scale, so every angle and arc measure is exact.',
+      'Teachers use it for central and inscribed angles, the angle in a semicircle, cyclic quadrilaterals, tangents and radii, the alternate segment theorem, intersecting chords and secants, and the area of a sector or segment. Click any angle, arc, line or enclosed area on the figure to label it with its measure or with text like x, mark it, or shade it.',
+    ],
+    settings: [
+      'Points on the circle by their direction from the center, or off it by their distance in radii, each with a name, typed in or dragged on the figure',
+      'Lines between the center, points, midpoints and touch points: radii, diameters, chords and secants, each end stopping at its point or running on with an arrow, a line arrow or a dot',
+      'Tangents at points on the circle, and either or both tangents from a point outside it',
+      'Each angle labeled with its measure or text, with congruence arcs or a right-angle square, which a right angle gets on its own',
+      'Each arc labeled in degrees, by its length or with text, with congruence ticks, drawn bold, in a color or hidden; each line labeled with its length or text, with ticks and parallel arrows, solid, dashed or dotted',
+      'Enclosed areas, such as a sector or a segment, shaded in a color, with their areas given beside the figure in terms of π and as decimals',
+      'Names where lines cross or meet the circle, an inscribed polygon of 3 to 8 sides, the radius and unit, rounding, and small, medium or large labels',
+    ],
+    faqs: [
+      {
+        q: 'How do I draw a line from one point to another?',
+        a: 'Click a point on the figure and pick the point to join it to under Join to, or use Add line in the Lines list and pick its two ends. The line is named for what it is: a radius, diameter, chord or secant.',
+      },
+      {
+        q: 'Can I draw a point outside the circle?',
+        a: 'Yes. Drag a point on the circle well away from it, or type its distance from the center in radii, where 1 is on the circle. Its popup then draws either or both tangents from it, and lines from it that run on through the circle are secants.',
+      },
+      {
+        q: 'How do I shade a sector or a segment?',
+        a: 'Draw the lines that close it off, two radii for a sector or a chord for a segment, then click inside it and pick a color. Its area appears under Measures in terms of π and as a decimal, worked out from the radius you give.',
+      },
+      {
+        q: 'How do I draw the line from the center to the middle of a chord?',
+        a: 'Click the middle of the chord on the figure and join its midpoint to the center, or use Add midpoint line. It meets the chord at a right angle, marked with a square, and the chord’s congruence ticks move onto its two halves.',
+      },
+      {
+        q: 'Can a figure not match the measures, for a problem with numbers that don’t fit the drawing?',
+        a: 'Measure labels are always exact, since the figure is drawn to scale. For other numbers, label the angle, arc or line with text instead, and type what you want it to say.',
+      },
+    ],
+    imageAlt: 'A printable circle with center O, a central angle of 120° and an inscribed angle x on the same arc, made with the Circle Generator',
+    educationalLevel: ['High school', 'Geometry'],
+  },
   'length-reading': {
     heading: 'Ruler figures for measuring length',
     intro: [
