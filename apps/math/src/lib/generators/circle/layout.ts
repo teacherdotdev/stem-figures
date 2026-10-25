@@ -31,6 +31,8 @@ const ARC = 20 // angle arc radius
 const ARC_GAP = 4.5 // between congruence arcs
 const WEDGE = 40 // shading's radius, and the highlight's
 const SQUARE = 13 // right-angle square
+const SHRINK = [1, 0.85, 0.72, 0.6] // a narrow angle's label sizes, tried in turn
+const NEAR = 36 // how much further out than its arc an angle's label can sit between its rays
 const LINE_W = 2.2
 const HEAD = 12 // an arrowhead's length, and
 const HEAD_W = 5.5 // half its width
@@ -129,28 +131,60 @@ export function buildCircle(s: Settings) {
   const marked = (st: AngleStyle) => st.label !== 'none' || st.mark !== 'none' || !!st.shade
 
   /**
-   * Which way a name goes from its place: into the widest gap between the
-   * rays there not taken by a labeled or marked angle, and for a place on the
-   * circle, outside it, between the circle's own directions there.
+   * Which ways a name can go from its place, best first: into the gaps between
+   * the rays there, the widest not taken by a labeled or marked angle first,
+   * and for a place on the circle, only outside it (between the circle's own
+   * directions there). Each gap offers its middle, then nearer either side.
    */
-  function nameWay(c: Corner): Vec {
+  function nameWays(c: Corner): Vec[] {
     const n = c.node
     const dirs = c.rays.map((r) => r.u)
     if (n.onCircle) dirs.push(perp(n.at), mul(perp(n.at), -1))
-    if (!dirs.length) return n.kind === 'center' ? unit([-0.55, -0.85]) : unit(n.at)
+    if (!dirs.length) return [n.kind === 'center' ? unit([-0.55, -0.85]) : unit(n.at)]
     const sorted = [...dirs].sort((a, b) => degOf(a) - degOf(b)).filter((u, i, all) => i === 0 || degOf(u) - degOf(all[i - 1]) > 1e-6)
-    let best: { way: Vec; score: number } | null = null
+    const gaps: { from: number; gap: number; score: number }[] = []
     sorted.forEach((u, i) => {
       const next = sorted[(i + 1) % sorted.length]
       const gap = sorted.length === 1 ? 360 : (((degOf(next) - degOf(u)) % 360) + 360) % 360
-      const way = angleOn(degOf(u) + gap / 2)
-      if (n.onCircle && dot(way, n.at) < 0) return
+      if (n.onCircle && dot(angleOn(degOf(u) + gap / 2), n.at) < 0) return
       const taken = c.angles.some((a) => marked(styles.get(a.key)!.style) && Math.abs(degOf(a.from.u) - degOf(u)) < 1e-6)
-      const score = gap * (taken ? 0.3 : 1)
-      if (!best || score > best.score + 1e-9) best = { way, score }
+      gaps.push({ from: degOf(u), gap, score: gap * (taken ? 0.3 : 1) })
     })
-    return best ? (best as { way: Vec }).way : unit(n.at)
+    gaps.sort((a, b) => b.score - a.score)
+    const ways = gaps.map((g) => angleOn(g.from + g.gap / 2))
+    for (const g of gaps) if (g.gap > 60) ways.push(angleOn(g.from + g.gap / 4), angleOn(g.from + (3 * g.gap) / 4))
+    return ways.length ? ways : [unit(n.at)]
   }
+
+  /** Whether a label's box at c crosses any line as drawn. */
+  const onLine = (box: MathBox, c: Vec) => {
+    const r = boxAt(box, c)
+    return segments.some(({ from: [x0, y0], to: [x1, y1] }) => {
+      let [t0, t1] = [0, 1]
+      const [dx, dy] = [x1 - x0, y1 - y0]
+      for (const [p, q] of [[-dx, x0 - r.l], [dx, r.r - x0], [-dy, y0 - r.t], [dy, r.b - y0]]) {
+        if (Math.abs(p) < 1e-12) {
+          if (q < 0) return false
+        } else {
+          const t = q / p
+          if (p < 0) t0 = Math.max(t0, t)
+          else t1 = Math.min(t1, t)
+          if (t0 > t1) return false
+        }
+      }
+      return true
+    })
+  }
+
+  /** Whether a line as drawn runs between p and q (not just through p). */
+  const crossesLine = (p: Vec, q: Vec) =>
+    segments.some(({ from: a, to: b }) => {
+      const [r, e] = [sub(q, p), sub(b, a)]
+      const den = cross(r, e)
+      if (Math.abs(den) < 1e-9) return false
+      const [t, u] = [cross(sub(a, p), e) / den, cross(sub(a, p), r) / den]
+      return t > 0.05 && t <= 1 && u >= 0 && u <= 1
+    })
 
   // Names: the points on the circle, the center, and named crossings and meetings with the circle.
   for (const c of geo.corners) {
@@ -158,7 +192,32 @@ export function buildCircle(s: Settings) {
     const text = n.kind === 'center' ? s.centerName : n.kind === 'point' ? s.points.find((p) => p.id === n.key)!.name : s.marks[n.key]
     const box = text?.trim() ? layoutMath(text.trim(), NAME_FS) : null
     if (!box) continue
-    placeOut(`pt:${n.key}`, box, px(n.at), page(nameWay(c)), n.kind === 'center' && !c.rays.length ? 5 : 8)
+    // The first way it's clear of other labels and of the lines; else any way round it (outside the circle,
+    // for a place on it), a little further out each time, with no line between it and its place, then even
+    // across a line; else the best way, pushed clear of the labels.
+    const v = px(n.at)
+    const gap = n.kind === 'center' && !c.rays.length ? 5 : 8
+    const ways = nameWays(c)
+    const round = Array.from({ length: 24 }, (_, i) => angleOn(degOf(ways[0]) + (i % 2 ? 1 : -1) * Math.ceil(i / 2) * 15))
+      .filter((w) => !n.onCircle || dot(w, n.at) > 0.1)
+    const tries = [
+      ...[[0, ways], [0, round], [6, round], [12, round], [18, round], [24, round]].map(([extra, ws]) => [extra, ws, false] as const),
+      ...[[0, round], [6, round], [12, round]].map(([extra, ws]) => [extra, ws, true] as const),
+    ] as [number, Vec[], boolean][]
+    let clear: { w: Vec; d: number } | undefined
+    for (const [extra, ws, across] of tries) {
+      for (const w of ws.map(page)) {
+        const d = gap + extra + reach(box, w)
+        const at = add(v, mul(w, d))
+        if (!overlaps(box, at) && !onLine(box, at) && (across || !crossesLine(v, at))) {
+          clear = { w, d }
+          break
+        }
+      }
+      if (clear) break
+    }
+    if (clear) place(`pt:${n.key}`, box, add(v, mul(clear.w, clear.d)), clear.w)
+    else placeOut(`pt:${n.key}`, box, v, page(ways[0]), gap)
   }
 
   // Lines' marks and labels: ticks and parallel arrows across the middle (a quarter of the way from the
@@ -180,13 +239,25 @@ export function buildCircle(s: Settings) {
     if (through) {
       if (nrm[1] > 1e-9 || (Math.abs(nrm[1]) <= 1e-9 && nrm[0] < 0)) nrm = mul(nrm, -1)
     } else if (dot(nrm, page(m)) < 0) nrm = mul(nrm, -1)
-    const both = l.ticks && l.arrows
-    // Once its midpoint is used, its ticks go on each half, to show they're equal.
-    const halves = geo.nodes.some((n) => n.key === midKey(g.id))
-    if (halves) for (const k of [0.25, 0.75]) ticks.push(...tickMarks(px(add(g.P, mul(g.d, g.length * k))), t, nrm, l.ticks, TICK, TICK_GAP))
-    else ticks.push(...tickMarks(both ? add(mid, mul(t, -(l.ticks * TICK_GAP) / 2 - 4)) : mid, t, nrm, l.ticks, TICK, TICK_GAP))
     const way = t[0] > 1e-9 || (Math.abs(t[0]) <= 1e-9 && t[1] > 0) ? t : mul(t, -1)
-    arrows.push(...parallelArrows(both ? add(mid, mul(way, (l.arrows * ARROW_GAP) / 2 + 4)) : mid, way, nrm, l.arrows, ARROW, ARROW_W, ARROW_GAP))
+    // Ticks and arrows together sit either side of where they go.
+    const tickAt = (c: Vec, both: boolean) => tickMarks(both ? add(c, mul(way, -(l.ticks * TICK_GAP) / 2 - 4)) : c, t, nrm, l.ticks, TICK, TICK_GAP)
+    const arrowAt = (c: Vec, both: boolean) => parallelArrows(both ? add(c, mul(way, (l.arrows * ARROW_GAP) / 2 + 4)) : c, way, nrm, l.arrows, ARROW, ARROW_W, ARROW_GAP)
+    // Once its midpoint is used, its marks move off it into the middle of each half: ticks on both, to
+    // show they're equal, and the arrows on the one further along `way`.
+    if (geo.nodes.some((n) => n.key === midKey(g.id))) {
+      const forward = dot(way, t) > 0
+      for (const k of [0.25, 0.75]) {
+        const c = px(add(g.P, mul(g.d, g.length * k)))
+        const arrowsHere = !!l.arrows && (k === 0.75) === forward
+        ticks.push(...tickAt(c, arrowsHere && !!l.ticks))
+        if (arrowsHere) arrows.push(...arrowAt(c, !!l.ticks))
+      }
+    } else {
+      const both = !!(l.ticks && l.arrows)
+      ticks.push(...tickAt(mid, both))
+      arrows.push(...arrowAt(mid, both))
+    }
     const measure = radius !== null && !tangent ? g.length * radius : null
     const box = l.label === 'text' ? layoutMath(l.text, FS) : l.label === 'measure' && measure !== null ? layoutMath(rounded(measure), FS, { suffix: unitText }) : null
     if (!box) continue
@@ -280,7 +351,8 @@ export function buildCircle(s: Settings) {
       const wedge = sectorPath(v, e1, e2, radius, true, large)
       const right = isRight(a.measure)
       const outer = angleMark(marks, v, e1, e2, style.mark, right, large, MARK_SIZES)
-      const box = style.label === 'text' ? layoutMath(style.text, FS) : style.label === 'measure' ? layoutMath(rounded(a.measure), FS, { suffix: '°' }) : null
+      const measureBox = (size: number) => layoutMath(rounded(a.measure), size, { suffix: '°' })!
+      const text = style.label === 'text' ? (size: number) => layoutMath(style.text, size) : style.label === 'measure' ? measureBox : null
       // Far enough in to clear the arc, and to fit between the angle's two rays.
       const mid = large ? mul(unit(add(e1, e2)), -1) : unit(add(e1, e2))
       const midWay = len(add(e1, e2)) < 1e-9 ? perp(e2) : mid
@@ -289,12 +361,30 @@ export function buildCircle(s: Settings) {
         const toSide = a.measure >= 180 ? 0 : Math.max(...[e1, e2].map((e) => (reach(b, perp(e)) + 3) / half))
         return Math.max(outer + 5 + reach(b, midWay), toSide, 12 + reach(b, midWay))
       }
-      if (box) {
-        let d = distance(box)
-        for (let n = 0; n < 12 && overlaps(box, add(v, mul(midWay, d))); n++) d += 4
-        place(`angle:${a.key}`, box, add(v, mul(midWay, d)), midWay)
+      // A narrow angle's label gets smaller to fit between its rays near the corner, and once even the
+      // smallest won't, it goes just outside the angle, beside the end of its arc.
+      const room = R * Math.min(a.from.room, a.to.room)
+      const spot = (make: (size: number) => MathBox | null) => {
+        for (const k of SHRINK) {
+          const box = make(FS * k)
+          if (!box) return null
+          const d = distance(box)
+          if (a.measure >= 180 || (d <= outer + 5 + reach(box, midWay) + NEAR && d + reach(box, midWay) <= room - 4)) return { box, at: add(v, mul(midWay, d)), out: midWay }
+        }
+        const box = make(FS * SHRINK[SHRINK.length - 1])!
+        const sides = [[e1, e2], [e2, e1]].map(([e, other]) => {
+          const n = dot(perp(e), other) > 0 ? mul(perp(e), -1) : perp(e)
+          return { box, at: add(v, add(mul(e, Math.max(outer, 12, reach(box, e) + 4)), mul(n, reach(box, n) + 4))), out: n }
+        })
+        return sides.find((x) => !overlaps(box, x.at) && !onLine(box, x.at)) ?? sides.find((x) => !overlaps(box, x.at)) ?? sides[0]
       }
-      const ghostBox = layoutMath(rounded(a.measure), FS, { suffix: '°' })!
+      const label = text && spot(text)
+      if (label) {
+        let at = label.at
+        for (let n = 0; n < 12 && overlaps(label.box, at); n++) at = add(at, mul(label.out, 4))
+        place(`angle:${a.key}`, label.box, at, label.out)
+      }
+      const ghost = spot(measureBox)!
       return {
         key: a.key,
         node: c.node.key,
@@ -304,7 +394,7 @@ export function buildCircle(s: Settings) {
         /** Whether its square comes on its own. */
         auto,
         wedge,
-        ghost: { at: add(v, mul(midWay, distance(ghostBox))), text: `${rounded(a.measure)}°` },
+        ghost: { at: ghost.at, text: `${rounded(a.measure)}°` },
         anchor: add(v, mul(midWay, radius * 0.7)),
       }
     }),

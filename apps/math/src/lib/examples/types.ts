@@ -4,6 +4,7 @@
 
 import type { Settings as ShapeSettings } from '$lib/generators/3d-shape/settings'
 import type { Settings as BoxPlotSettings } from '$lib/generators/box-plot/settings'
+import type { Settings as CircleSettings } from '$lib/generators/circle/settings'
 import type { Settings as GridSettings } from '$lib/generators/coordinate-grid/settings'
 import type { LengthSettings } from '$lib/generators/length-reading/settings'
 import type { Settings as MappingSettings } from '$lib/generators/mapping-diagram/settings'
@@ -30,6 +31,7 @@ export interface SettingsById {
   'box-plot': BoxPlotSettings
   'mapping-diagram': MappingSettings
   'length-reading': LengthSettings
+  'circle': CircleSettings
 }
 
 export type ExampleGeneratorId = keyof SettingsById

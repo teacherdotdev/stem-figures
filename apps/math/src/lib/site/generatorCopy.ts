@@ -610,6 +610,46 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'Algebra 1'],
   },
 
+  'circle': {
+    heading: 'Circle diagrams for circle theorems, arcs and sectors',
+    intro: [
+      'The Circle Generator draws a circle with its center and points on it, joined by radii, diameters, chords and secants, with tangents at points or from a point outside the circle. Drag a point round the circle, or pull it off to make a point outside, and the figure stays drawn to scale, so every angle and arc measure is exact.',
+      'Teachers use it for central and inscribed angles, the angle in a semicircle, cyclic quadrilaterals, tangents and radii, the alternate segment theorem, intersecting chords and secants, and the area of a sector or segment. Click any angle, arc, line or enclosed area on the figure to label it with its measure or with text like x, mark it, or shade it.',
+    ],
+    settings: [
+      'Points on the circle by their direction from the center, or off it by their distance in radii, each with a name, typed in or dragged on the figure',
+      'Lines between the center, points, midpoints and touch points: radii, diameters, chords and secants, each end stopping at its point or running on with an arrow, a line arrow or a dot',
+      'Tangents at points on the circle, and either or both tangents from a point outside it',
+      'Each angle labeled with its measure or text, with congruence arcs or a right-angle square, which a right angle gets on its own',
+      'Each arc labeled in degrees, by its length or with text, with congruence ticks, drawn bold, in a color or hidden; each line labeled with its length or text, with ticks and parallel arrows, solid, dashed or dotted',
+      'Enclosed areas, such as a sector or a segment, shaded in a color, with their areas given beside the figure in terms of π and as decimals',
+      'Names where lines cross or meet the circle, an inscribed polygon of 3 to 8 sides, the radius and unit, rounding, and small, medium or large labels',
+    ],
+    faqs: [
+      {
+        q: 'How do I draw a line from one point to another?',
+        a: 'Click a point on the figure and pick the point to join it to under Join to, or use Add line in the Lines list and pick its two ends. The line is named for what it is: a radius, diameter, chord or secant.',
+      },
+      {
+        q: 'Can I draw a point outside the circle?',
+        a: 'Yes. Drag a point on the circle well away from it, or type its distance from the center in radii, where 1 is on the circle. Its popup then draws either or both tangents from it, and lines from it that run on through the circle are secants.',
+      },
+      {
+        q: 'How do I shade a sector or a segment?',
+        a: 'Draw the lines that close it off, two radii for a sector or a chord for a segment, then click inside it and pick a color. Its area appears under Measures in terms of π and as a decimal, worked out from the radius you give.',
+      },
+      {
+        q: 'How do I draw the line from the center to the middle of a chord?',
+        a: 'Click the middle of the chord on the figure and join its midpoint to the center, or use Add midpoint line. It meets the chord at a right angle, marked with a square, and the chord’s congruence ticks move onto its two halves.',
+      },
+      {
+        q: 'Can a figure not match the measures, for a problem with numbers that don’t fit the drawing?',
+        a: 'Measure labels are always exact, since the figure is drawn to scale. For other numbers, label the angle, arc or line with text instead, and type what you want it to say.',
+      },
+    ],
+    imageAlt: 'A printable circle with center O, a central angle of 120° and an inscribed angle x on the same arc, made with the Circle Generator',
+    educationalLevel: ['High school', 'Geometry'],
+  },
   'length-reading': {
     heading: 'Ruler figures for measuring length',
     intro: [

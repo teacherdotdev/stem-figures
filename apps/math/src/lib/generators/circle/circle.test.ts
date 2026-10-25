@@ -1,4 +1,6 @@
 import { describe, expect, test } from 'vitest'
+import { exampleDetails } from '$lib/examples/details.server'
+import { EXAMPLES } from '$lib/examples/examples'
 import { buildGeometry, type Geometry } from './geometry.js'
 import { angleStyle, buildCircle } from './layout.js'
 import { findFaces } from './faces.js'
@@ -405,6 +407,21 @@ describe('midpoints', () => {
     expect(buildCircle(chord([newJoin('l2', 'o', midKey('l1'))])).ticks).toHaveLength(2)
   })
 
+  test('a chord’s parallel arrows move off its midpoint, onto one half, beside the ticks there', () => {
+    const marked = (ticks: number, marks: Record<string, string> = {}) =>
+      buildCircle(figure([['p1', 200], ['p2', 340]], [{ ...newJoin('l1', 'p1', 'p2'), ticks, arrows: 2 }], { marks }))
+    const tip = (a: [number, number][]) => a[1]
+    const before = marked(0)
+    const M = before.handles.find((h) => h.key === midKey('l1'))!.at
+    expect(before.arrows.some((a) => dist(tip(a), M) < 8)).toBe(true)
+    expect(marked(0, { [midKey('l1')]: 'M' }).arrows.every((a) => dist(tip(a), M) > 15)).toBe(true)
+    const f = marked(1, { [midKey('l1')]: 'M' })
+    expect(f.arrows).toHaveLength(2)
+    for (const a of f.arrows) expect(dist(tip(a), M)).toBeGreaterThan(15)
+    // Clear of the ticks on their half, too.
+    for (const a of f.arrows) for (const [p, q] of f.ticks) expect(dist(tip(a), [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2])).toBeGreaterThan(4)
+  })
+
   test('a midpoint comes back from the page address, and goes with its line', () => {
     const s = chord([newJoin('l2', 'o', midKey('l1'))], { [midKey('l1')]: 'M' })
     expect(params(settingsToQuery(s))).toEqual(s)
@@ -415,5 +432,89 @@ describe('midpoints', () => {
   test('the areas still fill the circle', () => {
     const s = chord([newJoin('l2', 'o', midKey('l1')), newJoin('l3', 'o', 'p1')])
     expect(findFaces(buildGeometry(s)).reduce((t, f) => t + f.area, 0)).toBeCloseTo(Math.PI, 9)
+  })
+})
+
+describe('examples', () => {
+  // Every example is a starter: "Start from an example" loads its settings.
+  const answers: Record<string, string[]> = {
+    'central-angle-and-inscribed-angle-on-the-same-arc': ['x = 60°'],
+    'parts-of-a-circle-radius-diameter-chord-tangent-secant': ['Diameter AB · Radius OC · Chord DE · Tangent at F · Secant GH'],
+    'shaded-sector-with-radius-central-angle-and-arc-length': ['Shaded OAB: 100°, arc 3.3π cm ≈ 10.5 cm, area 10π cm² ≈ 31.4 cm²'],
+    'shaded-segment-of-a-circle-cut-off-by-a-chord': ['Shaded AB: 140°, arc 4.7π cm ≈ 14.7 cm, area 14π − 11.6 cm² ≈ 32.4 cm²'],
+    'angles-in-the-same-segment-circle-theorem': ['x = 70°'],
+    'angle-in-a-semicircle-triangle-on-a-diameter': ['x = 35°'],
+    'cyclic-quadrilateral-opposite-angles': ['x = 85°'],
+    'tangent-and-radius-angle-x': ['x = 90°'],
+    'two-tangents-from-an-external-point': ['x = 60°'],
+    'alternate-segment-theorem-tangent-and-chord': ['x = 60°'],
+    'intersecting-chords-angle-and-intercepted-arcs': ['x = 100°'],
+    'two-secants-from-an-external-point': ['x = 60°'],
+    'regular-hexagon-inscribed-in-a-circle': ['x = 6 cm'],
+  }
+
+  test('there are thirteen, each drawn as written, with its answer key', () => {
+    const examples = EXAMPLES.filter((e) => e.generator === 'circle')
+    expect(examples.map((e) => e.slug)).toEqual(Object.keys(answers))
+    for (const e of examples) expect([e.slug, exampleDetails(e).answer?.lines]).toEqual([e.slug, answers[e.slug]])
+  })
+})
+
+describe('running on to meet another line', () => {
+  test('two tangents run on to where they cross', () => {
+    // Tangents at 60° and 300° cross 2 radii out, to the right of the center.
+    const s = figure([['p1', 60], ['p2', 300]], [{ ...newTangent('l1', 'p1'), toA: 'l2' }, { ...newTangent('l2', 'p2'), toB: 'l1' }], { marks: { 'l1.l2': 'P' } })
+    const g = buildGeometry(s)
+    const P = nodeAt(g, 'l1.l2')
+    expect(P[0]).toBeCloseTo(2, 9)
+    expect(P[1]).toBeCloseTo(0, 9)
+    // They end there, the same length from where they touch, at 60° to each other.
+    const [A, B] = ['p1', 'p2'].map((k) => nodeAt(g, k))
+    expect(dist(A, P)).toBeCloseTo(dist(B, P), 9)
+    expect(angleAt(g, 'l1.l2').map((a) => a.measure)).toEqual([expect.closeTo(60, 9)])
+    expect(params(settingsToQuery(s))).toEqual(s)
+  })
+
+  test('an end only runs on to meet a line ahead of it, that’s still there', () => {
+    // Tangents at 0° and 180° are parallel: they never meet, so the end runs its usual length.
+    const s = figure([['p1', 0], ['p2', 180]], [{ ...newTangent('l1', 'p1'), toB: 'l2' }, newTangent('l2', 'p2')])
+    expect(buildGeometry(s).lines[0].hi).toBeCloseTo(0.9, 9)
+    expect(cleanSettings({ ...s, lines: [s.lines[0]] }).lines[0].toB).toBe('')
+  })
+})
+
+describe('angle labels', () => {
+  const central = (sweep: number) => {
+    const s = figure([['p1', 0], ['p2', sweep]], [newJoin('l1', 'o', 'p1'), newJoin('l2', 'o', 'p2')], { angles: {} })
+    const key = buildGeometry(s).corners.find((c) => c.node.key === 'o')!.angles.find((a) => a.measure < 180)!.key
+    const f = buildCircle(cleanSettings({ ...s, angles: { [key]: { label: 'measure', text: '', mark: 'none', shade: 0 } } }))
+    const l = f.labels.find((x) => x.part === `angle:${key}`)!
+    return { l, from: dist([l.cx, l.cy], f.handles.find((h) => h.key === 'o')!.at) }
+  }
+
+  test('a narrow angle’s label gets smaller and stays by its corner', () => {
+    const wide = central(60)
+    for (const sweep of [5, 12, 25]) {
+      const { l, from } = central(sweep)
+      expect(from).toBeLessThan(60)
+      expect(l.box.w).toBeLessThan(wide.l.box.w)
+    }
+  })
+})
+
+describe('names', () => {
+  test('the center’s name keeps off a chord running close by it', () => {
+    for (const dirs of [[0, 16, 190], [10, 170, 190, 350]]) {
+      const pts = dirs.map((d, i) => [`p${i + 1}`, d] as [string, number])
+      const lines = pts.map(([id], i) => newJoin(`l${i + 1}`, id, pts[(i + 1) % pts.length][0])).slice(0, dirs.length === 3 ? 2 : 4)
+      const f = buildCircle(figure(pts, lines.length === 2 ? [newJoin('l1', 'p3', 'p1'), newJoin('l2', 'p3', 'p2')] : lines))
+      const l = f.labels.find((x) => x.part === 'pt:o')!
+      const [hw, hh] = [l.box.w / 2, (l.box.asc + l.box.desc) / 2]
+      for (const g of f.segments)
+        for (let k = 0; k <= 200; k++) {
+          const [x, y] = [g.from[0] + ((g.to[0] - g.from[0]) * k) / 200, g.from[1] + ((g.to[1] - g.from[1]) * k) / 200]
+          expect(Math.abs(x - l.cx) < hw && Math.abs(y - l.cy) < hh).toBe(false)
+        }
+    }
   })
 })

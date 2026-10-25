@@ -28,7 +28,7 @@
   import CircleFigure from './CircleFigure.svelte'
   import type { Face } from './faces.js'
   import { circleMeasures } from './measures.js'
-  import { KIND_NAMES, touchPoint } from './geometry.js'
+  import { KIND_NAMES, meetAt, touchPoint } from './geometry.js'
   import { R, WHOLE, angleStyle, autoStyle, buildCircle, lineName, nodeName, type CircleLayout } from './layout.js'
   import {
     ARC_DEFAULTS, ARC_DRAWS, CENTER, MAX_LINES, MAX_POINTS,
@@ -117,6 +117,10 @@
       }
     }
     s.lines = s.lines.filter((l) => !gone.has(l.id))
+    for (const l of s.lines) {
+      if (gone.has(l.toA)) l.toA = ''
+      if (gone.has(l.toB)) l.toB = ''
+    }
     forget([...places, ...gone])
     if (popup && [...places, ...gone].some((k) => popup!.part.key === k || popup!.part.key.startsWith(`${k}:`))) close()
   }
@@ -219,6 +223,23 @@
     const next = { ...(s.arcs[key] ?? ARC_DEFAULTS), ...patch }
     if (JSON.stringify(next) === JSON.stringify(ARC_DEFAULTS)) delete s.arcs[key]
     else s.arcs[key] = next
+  }
+  /**
+   * Runs one end of a line on until it meets another line, or back to a set
+   * length (`to` empty). The other line runs on to meet it too, from
+   * whichever end faces it, so two tangents reach where they cross.
+   */
+  function setMeet(l: Line, end: 'a' | 'b', to: string) {
+    const before = lineOf(end === 'a' ? l.toA : l.toB)
+    if (before?.toA === l.id) before.toA = ''
+    if (before?.toB === l.id) before.toB = ''
+    if (end === 'a') l.toA = to
+    else l.toB = to
+    const [o, g, go] = [lineOf(to), geoLine(l.id), geoLine(to)]
+    if (!o || !g || !go) return
+    const back = (['a', 'b'] as const).find((e) => meetAt(go, g, e) !== null)
+    if (back === 'a' && !o.toA) Object.assign(o, { runA: true, toA: l.id })
+    if (back === 'b' && !o.toB) Object.assign(o, { runB: true, toB: l.id })
   }
   function setMark(key: string, name: string | undefined) {
     if (name === undefined) delete s.marks[key]
@@ -694,7 +715,17 @@
               >{tangent ? 'Stops' : `At ${named(end === 'a' ? l.a : l.b)}`}</button>
               <button type="button" role="radio" aria-checked={l[run]} class:on={l[run]} onclick={() => (l[run] = true)}>Runs on</button>
             </div>
-            {#if l[run]}<CapPicker side={end === 'a' ? 'start' : 'end'} label="{ends[end]}: cap" bind:value={l[cap]} />{/if}
+            {#if l[run]}
+              {@const meets = g ? geo.lines.filter((o) => o.id !== l.id && meetAt(g, o, end) !== null) : []}
+              {@const to = end === 'a' ? l.toA : l.toB}
+              {#if meets.length || to}
+                <select aria-label="{ends[end]}: how far it runs" value={to} onchange={(e) => setMeet(l, end, e.currentTarget.value)}>
+                  <option value="">A set length</option>
+                  {#each meets as o (o.id)}<option value={o.id}>Until it meets {lineName(clean, o).replace(/^\w/, (c) => c.toLowerCase())}</option>{/each}
+                </select>
+              {/if}
+              <CapPicker side={end === 'a' ? 'start' : 'end'} label="{ends[end]}: cap" bind:value={l[cap]} />
+            {/if}
           </div>
         </div>
       {/each}

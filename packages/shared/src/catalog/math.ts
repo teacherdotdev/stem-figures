@@ -183,9 +183,8 @@ export const MATH: CatalogEntry[] = [
     site: 'math',
     name: 'Circle Generator',
     path: '/circle',
-    blurb: 'A circle with points, chords, radii and tangents, its angles and arcs labeled right on the figure.',
-    description:
-      'Make a printable circle diagram for your class. Put points on the circle and drag them round it, join them with radii, diameters and chords, draw tangents, then click any angle or arc to label it with its measure or an expression like 2x, and copy it into a worksheet or test on circle theorems.',
+    blurb: 'A circle with points, chords, radii and tangents, its angles, arcs and areas labeled right on the figure.',
+    description: 'Circles with chords, radii, tangents and secants, their angles, arcs and shaded sectors labeled on the figure.',
     keywords: [
       'circle', 'circles', 'circle theorems', 'parts of a circle', 'chord', 'chords', 'radius', 'diameter', 'tangent', 'tangents', 'secant',
       'arc', 'arcs', 'intercepted arc', 'arc measure', 'arc length', 'central angle', 'inscribed angle', 'inscribed angles',

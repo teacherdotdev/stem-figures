@@ -21,6 +21,8 @@ const RAD = Math.PI / 180
 export const RUN = 0.45
 /** How far a tangent runs each way from where it touches. */
 export const TANGENT = 0.9
+/** How far from the center, in radii, two lines may meet when one runs on to the other. */
+const FAR = 6
 /** How close two places are, in radii, to be the same one. */
 const SAME = 1e-6
 
@@ -130,7 +132,27 @@ export function readLines(s: Settings, where: Map<string, Vec>): GeoLine[] {
     out.set(l.id, { id: l.id, line: l, kind: kindOf(l, P, Q, crossings), P, d, length, lo, hi })
     if (!isMid(l.a) && !isMid(l.b)) where.set(midKey(l.id), mul(add(P, Q), 0.5))
   }
+  // An end set to run on until it meets another line stops where it does, if that's ahead of it.
+  for (const g of out.values()) {
+    for (const end of ['a', 'b'] as const) {
+      const other = out.get(end === 'a' ? g.line.toA : g.line.toB)
+      const t = other && (end === 'a' ? g.line.runA : g.line.runB) ? meetAt(g, other, end) : null
+      if (t !== null) {
+        if (end === 'a') g.lo = t
+        else g.hi = t
+      }
+    }
+  }
   return s.lines.map((l) => out.get(l.id)).filter((g): g is GeoLine => !!g)
+}
+
+/** How far a line meets another past one of its ends, as a distance along it, or null when they don't (or only far off the page). */
+export function meetAt(g: Pick<GeoLine, 'P' | 'd' | 'length'>, other: Pick<GeoLine, 'P' | 'd'>, end: 'a' | 'b'): number | null {
+  const k = cross(g.d, other.d)
+  if (Math.abs(k) < 1e-9) return null
+  const t = cross(sub(other.P, g.P), other.d) / k
+  if (len(add(g.P, mul(g.d, t))) > FAR) return null
+  return end === 'a' ? (t < -SAME ? t : null) : t > g.length + SAME ? t : null
 }
 
 /** Every node, ray and angle on the figure, and the arcs around the circle. */

@@ -76,6 +76,9 @@ export type Line = {
   arrows: number
   /** Its label on the other side of it from where it would go. */
   flip: boolean
+  /** A run-on end that runs until it meets this line (its id), rather than a set length: two tangents to where they cross, say. */
+  toA: string
+  toB: string
 }
 
 /** How an arc is labeled: not at all, its measure in degrees, its length, or typed text. */
@@ -112,7 +115,7 @@ export type Settings = {
 
 export const LINE_DEFAULTS = {
   runA: false, runB: false, capA: 'none' as Cap, capB: 'none' as Cap, style: 'solid' as LineStyle,
-  label: 'none' as AngleLabel, text: '', ticks: 0, arrows: 0, flip: false, side: 'left' as Side,
+  label: 'none' as AngleLabel, text: '', ticks: 0, arrows: 0, flip: false, side: 'left' as Side, toA: '', toB: '',
 }
 export const newJoin = (id: string, a: string, b: string): Line => ({ id, kind: 'join', a, b, ...LINE_DEFAULTS })
 /** A tangent runs on both ways from where it touches, unless an end is cut back. */
@@ -217,8 +220,9 @@ export function cleanSettings(s: RawSettings): Settings {
       kind: oneOf(KINDS, l?.kind, 'join'),
       a: String(l?.a ?? ''),
       b: l?.kind === 'join' || !l?.kind ? String(l?.b ?? '') : '',
-      runA: bool(l?.runA, LINE_DEFAULTS.runA),
-      runB: bool(l?.runB, LINE_DEFAULTS.runB),
+      // A tangent at a point runs on both ways unless it's cut back, as in the page address.
+      runA: bool(l?.runA, l?.kind === 'tangent'),
+      runB: bool(l?.runB, l?.kind === 'tangent'),
       capA: oneOf(CAP_LIST, l?.capA, 'none'),
       capB: oneOf(CAP_LIST, l?.capB, 'none'),
       style: oneOf(Object.keys(LINE_STYLES) as LineStyle[], l?.style, 'solid'),
@@ -228,6 +232,8 @@ export function cleanSettings(s: RawSettings): Settings {
       arrows: oneOf(COUNTS, num(l?.arrows, 0), 0),
       flip: bool(l?.flip, false),
       side: oneOf(SIDES, l?.side, 'left'),
+      toA: /^l\d{1,3}$/.test(String(l?.toA)) ? String(l.toA) : '',
+      toB: /^l\d{1,3}$/.test(String(l?.toB)) ? String(l.toB) : '',
     })),
     'l',
   )
@@ -236,11 +242,14 @@ export function cleanSettings(s: RawSettings): Settings {
   const touches = new Set(raw.filter((l) => l.kind === 'from' && pointIds.has(l.a) && l.a !== CENTER).map((l) => touchKey(l.id)))
   const mids = new Set(raw.filter((l) => l.kind === 'join' && !isMid(l.a) && !isMid(l.b)).map((l) => midKey(l.id)))
   const place = (key: string) => pointIds.has(key) || touches.has(key) || mids.has(key)
-  const lines = raw.filter((l) =>
+  const kept = raw.filter((l) =>
     l.kind === 'tangent' ? pointIds.has(l.a) && l.a !== CENTER && (l.runA || l.runB)
     : l.kind === 'from' ? touches.has(touchKey(l.id))
     : place(l.a) && place(l.b) && l.a !== l.b,
   )
+  // An end runs on to meet a line that's still there, and isn't itself.
+  const there = new Set(kept.map((l) => l.id))
+  const lines = kept.map((l) => ({ ...l, toA: there.has(l.toA) && l.toA !== l.id ? l.toA : '', toB: there.has(l.toB) && l.toB !== l.id ? l.toB : '' }))
   const out: Settings = {
     points,
     lines,
@@ -259,7 +268,7 @@ export function cleanSettings(s: RawSettings): Settings {
   // Only what belongs to points and lines that are still there.
   const ids = new Set([...pointIds, ...lines.map((l) => l.id)])
   const known = (key: string) => idsIn(key).every((id) => ids.has(id))
-  for (const [key, a] of Object.entries((s.angles ?? {}) as Record<string, any>)) {
+  for (const [key, a] of Object.entries((s.angles ?? d.angles) as Record<string, any>)) {
     if (!ANGLE_KEY.test(key) || !known(key)) continue
     // Kept even when it's all defaults: a right angle's square is drawn on its own until it's taken off.
     out.angles[key] = {
