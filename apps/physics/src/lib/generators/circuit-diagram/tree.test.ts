@@ -136,3 +136,9 @@ describe('the address', () => {
     }
   })
 })
+
+test('diodes survive tree serialization without changing LED encoding', () => {
+  const circuit = loop(p('diode'), p('led'))
+  expect(shape(circuit)).toBe('e.d')
+  expect([...partsOf(roundTrip(circuit).items)].map(part => part.kind)).toEqual(['diode', 'led'])
+})

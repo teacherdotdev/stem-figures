@@ -1,12 +1,9 @@
-// Every choice the teacher makes on the Circuit Diagram Generator, with its
-// default: a 12 V battery and three resistors in series. The generator keeps
-// to the circuits worksheets start with, a cell or battery and 1 to 4
-// resistors or bulbs, all in series or all in parallel (docs/adr/0005);
-// anything else is left to a Circuit Editor, planned but not built yet. The
-// figure is laid out from a series/parallel tree built from these settings
-// (see circuit.ts).
+// Quick setup choices and the advanced editable tree for the Circuit Diagram
+// Generator. Both are laid out from the same series/parallel tree.
 
-import { bool, choice, defineSettings, label, list, type Field, type SettingsOf } from '$lib/shared/settings'
+import { bool, choice, defineSettings, int, label, list, type Field, type SettingsOf } from '$lib/shared/settings'
+import { circuitField, DEFAULT_CIRCUIT } from './tree'
+import { customSvgField } from './customSymbol'
 
 export const MAX_LOADS = 4
 
@@ -42,6 +39,40 @@ export const VOLTMETER_PLACES = ['none', 'source', '1', '2', '3', '4'] as const
 export type VoltmeterPlace = (typeof VOLTMETER_PLACES)[number]
 
 export const circuitSettings = defineSettings({
+  editor: choice('quick', ['quick', 'custom', 'grid']),
+  gridParts: list({
+    kind: choice('resistor', ['resistor', 'bulb', 'led', 'diode', 'battery', 'cell', 'switch', 'ammeter', 'voltmeter', 'wire']),
+    x: int(120, 60, 780),
+    y: int(120, 60, 540),
+    angle: int(0, 0, 359),
+  }, [], 80),
+  tileColumns: int(3, 1, 32),
+  circuitTiles: list({
+    kind: choice('wire', ['wire', 'resistor', 'bulb', 'led', 'diode', 'battery', 'cell', 'switch', 'ammeter', 'voltmeter', 'custom']),
+    column: int(0, 0, 31),
+    branch: int(0, -32, 32),
+  }, [{ kind: 'battery', column: 0, branch: 0 }, { kind: 'resistor', column: 1, branch: 0 }], 1024),
+  compactGrid: bool(false),
+  sideRows: int(2, 2, 32),
+  gridDetails: list({
+    region: choice('main', ['main', 'bottom', 'left', 'right']),
+    column: int(0, 0, 31),
+    branch: int(0, -32, 32),
+    name: label({ mode: 'none', text: '' }),
+    value: label({ mode: 'none', text: '' }),
+    cells: int(2, 1, 3),
+    open: bool(false),
+    flip: bool(false),
+    customSvg: customSvgField(),
+  }, [], 2048),
+  returnTiles: list({
+    kind: choice('wire', ['wire', 'resistor', 'bulb', 'led', 'diode', 'battery', 'cell', 'switch', 'ammeter', 'voltmeter', 'custom']),
+    side: choice('bottom', ['bottom', 'left', 'right']),
+    branch: int(0, -16, 16),
+    index: int(0, 0, 31),
+  }, [], 96),
+  topology: choice('loop', ['loop', 'open']),
+  customCircuit: circuitField(structuredClone(DEFAULT_CIRCUIT)),
   arrangement: choice('series', ['series', 'parallel']),
   loads: nonEmpty(list(load, [newLoad(0), newLoad(1), newLoad(2)], MAX_LOADS)),
   /** One cell, or a battery of two. */

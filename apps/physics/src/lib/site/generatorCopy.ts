@@ -467,13 +467,16 @@ export const COPY: Record<string, GeneratorCopy> = {
   },
 
   'circuit-diagram': {
-    heading: 'Series and parallel circuit diagrams with US or IEC symbols',
+    heading: 'Mixed series and parallel circuit diagrams with labeled components',
     intro: [
-      'The Circuit Diagram Generator draws the circuits worksheets start with: a cell or a battery of two cells and one to four resistors or bulbs, all in series round one loop or all in parallel as the rungs of a ladder. Add a switch, open or closed, and an ammeter in the main line, and a voltmeter across the battery or any one part. Wires are drawn square with no crossings, and junction dots mark where parallel branches meet.',
-      'Each part has a name and a value. Names number themselves, R₁, R₂ and L₁, until you type your own, and values can be shown, typed as a letter like x for students to work out, left as a blank line, or left off. Draw it in US symbols, a zigzag resistor and a looped bulb filament, or in IEC symbols as UK GCSE uses, a box resistor and a crossed bulb.',
+      'Make a quick series or parallel circuit, or build a mixed circuit from components and nested series and parallel groups. Choose a closed loop or an open two-terminal network between X and Y. Add resistors, bulbs, LEDs, switches, cells and meters, then label each part and its value.',
+      'Wires are routed at right angles, and parallel junctions are marked clearly. Choose US or IEC resistor and bulb symbols, then add a title, mirror the figure, or use color for slides.',
     ],
     settings: [
-      'One to four resistors or bulbs, in series or in parallel',
+      'Quick setup for one to four resistors or bulbs, or a custom tree of up to eight parts',
+      'Mix series and parallel groups, including nested groups',
+      'Closed circuit loops or open networks with X and Y terminals',
+      'Resistors, bulbs, LEDs, switches, cells, batteries, ammeters and voltmeters',
       'One cell or a battery of two cells, with + and − beside it if you like',
       'No switch, or a switch drawn open or closed, in the main line',
       'An ammeter in the main line, and a voltmeter across the battery or one part, each with its reading or none',
@@ -487,7 +490,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'What is the difference between the US and IEC symbols?',
-        a: 'US textbooks draw a resistor as a zigzag and a bulb as a circle with a looped filament. IEC symbols, used in the UK, Europe and for GCSE, draw a resistor as a plain rectangle and a lamp as a circle with a cross. Cells, batteries, switches and meters look the same in both.',
+        a: 'US textbooks draw a resistor as a zigzag and a bulb as a circle with a looped filament. IEC symbols, used in the UK, Europe and for GCSE, draw a resistor as a plain rectangle and a lamp as a circle with a cross. Cells, batteries, switches, LEDs and meters look the same in both.',
       },
       {
         q: 'How are a cell and a battery drawn?',
@@ -495,7 +498,7 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
       {
         q: 'Can I draw a circuit that mixes series and parallel?',
-        a: 'Not yet; an advanced circuit editor is coming soon. This generator keeps to all in series or all in parallel, the circuits most questions start with, so a figure is quick to set up and always drawn neatly.',
+        a: 'Yes. Choose Build a circuit, add series or parallel groups, and put components inside them. Groups can be nested to make combination circuits.',
       },
       {
         q: 'Where do the ammeter and voltmeter go?',

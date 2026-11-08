@@ -3,17 +3,15 @@
 // branch is a part or a series group. Parts name themselves (R₁, R₂, ε) until
 // the teacher types a name.
 //
-// The generator builds its tree from flat settings (circuit.ts), so it only
-// ever makes one loop or one parallel group. Nested groups, points, current
-// arrows, tidying and the address string below aren't used by it for now;
-// they're kept, with their tests, for the Circuit Editor planned in
-// docs/adr/0005, which would take a generated circuit over as a tree.
+// Quick setup still builds a tree from flat settings (circuit.ts); Build a
+// circuit edits the tree directly, including nested groups. Its compact
+// address string keeps custom diagrams shareable.
 //
 // As one setting, the whole tree is a short string:
 //
 //   b.r.[r.(r.l)]    a battery, then R₁, then R₂ in parallel with R₃ and a bulb
 //
-// b r l s a are a battery, resistor, bulb (lamp), switch and ammeter; "." joins
+// b r l d e s a are a battery, resistor, bulb (lamp), LED, diode, switch and ammeter; "." joins
 // items; ( ) is a series group and [ ] a parallel one. After a part come its
 // flags (o an open switch, 2 a battery of two cells, f a battery turned round),
 // then after any item its extras, each a letter and a quoted label: n its name,
@@ -23,8 +21,10 @@
 import { cleanLabel, decodeLabel, encodeLabel, type Label, type LabelMode } from '$lib/shared/label'
 import type { Field } from '$lib/shared/settings'
 
-export type PartKind = 'battery' | 'resistor' | 'bulb' | 'switch' | 'ammeter'
-export const PART_KINDS: readonly PartKind[] = ['battery', 'resistor', 'bulb', 'switch', 'ammeter']
+export type PartKind = 'battery' | 'resistor' | 'bulb' | 'led' | 'diode' | 'switch' | 'ammeter'
+export const PART_KINDS: readonly PartKind[] = ['battery', 'resistor', 'bulb', 'led', 'diode', 'switch', 'ammeter']
+
+export const cleanCells = (value: unknown): number => typeof value === 'number' && Number.isFinite(value) ? Math.min(10, Math.max(1, Math.round(value))) : 1
 
 export const MAX_PARTS = 8
 /** How deep groups can nest: a parallel group in the loop is 1 deep. */
@@ -55,7 +55,7 @@ export interface Part extends ItemBase {
   /** A switch: open or closed. */
   open: boolean
   /** A battery: one cell or a battery of two, and whether it's turned round. */
-  cells: 1 | 2
+  cells: number
   flip: boolean
 }
 
@@ -74,11 +74,11 @@ export interface Circuit {
 }
 
 // Each kind's letter in an address, its automatic name, and its labels as they start.
-const LETTER: Record<PartKind, string> = { battery: 'b', resistor: 'r', bulb: 'l', switch: 's', ammeter: 'a' }
+const LETTER: Record<PartKind, string> = { battery: 'b', resistor: 'r', bulb: 'l', led: 'd', diode: 'e', switch: 's', ammeter: 'a' }
 const KIND_OF = new Map(Object.entries(LETTER).map(([kind, letter]) => [letter, kind as PartKind]))
-const PREFIX: Record<PartKind, string> = { battery: 'epsilon', resistor: 'R', bulb: 'L', switch: 'S', ammeter: 'A' }
-const NAME_MODE: Record<PartKind, LabelMode> = { battery: 'text', resistor: 'text', bulb: 'text', switch: 'text', ammeter: 'none' }
-const VALUE_TEXT: Record<PartKind, string> = { battery: '12 V', resistor: '4 Omega', bulb: '', switch: '', ammeter: '0.5 A' }
+const PREFIX: Record<PartKind, string> = { battery: 'epsilon', resistor: 'R', bulb: 'L', led: 'D', diode: 'D', switch: 'S', ammeter: 'A' }
+const NAME_MODE: Record<PartKind, LabelMode> = { battery: 'text', resistor: 'text', bulb: 'text', led: 'text', diode: 'text', switch: 'text', ammeter: 'none' }
+const VALUE_TEXT: Record<PartKind, string> = { battery: '12 V', resistor: '4 Omega', bulb: '', led: '', diode: '', switch: '', ammeter: '0.5 A' }
 
 export const defaultValue = (kind: PartKind): Label => ({ mode: 'none', text: VALUE_TEXT[kind] })
 export const DEFAULT_VOLTMETER: Label = { mode: 'none', text: 'V' }
@@ -241,7 +241,7 @@ function cleanItem(v: unknown): Item | null {
       auto: typeof v.auto === 'boolean' ? v.auto : true,
       value: cleanLabel(v.value, fresh.value),
       open: kind === 'switch' && v.open === true,
-      cells: kind === 'battery' && v.cells === 2 ? 2 : 1,
+      cells: kind === 'battery' ? cleanCells(v.cells) : 1,
       flip: kind === 'battery' && v.flip === true,
     }
   }
@@ -288,7 +288,7 @@ function encodeItem(item: Item): string {
   }
   let out = LETTER[item.kind]
   if (item.open) out += 'o'
-  if (item.cells === 2) out += '2'
+  if (item.cells > 1) out += String(cleanCells(item.cells))
   if (item.flip) out += 'f'
   const name = encodeName(item)
   if (name !== null) out += `n${quote(name)}`
@@ -347,7 +347,12 @@ export function decodeCircuit(raw: string): Circuit | undefined {
     for (;;) {
       const flag = peek()
       if (flag === 'o') part.open = true
-      else if (flag === '2') part.cells = 2
+      else if (/^[0-9]$/.test(flag ?? '')) {
+        const start = i
+        while (/^[0-9]$/.test(peek() ?? '')) i++
+        part.cells = cleanCells(Number(raw.slice(start, i)))
+        continue
+      }
       else if (flag === 'f') part.flip = true
       else break
       i++
@@ -379,7 +384,7 @@ export function decodeCircuit(raw: string): Circuit | undefined {
 // A written description, for screen readers. Labels are left out, so a blank
 // is never given away.
 
-const PART_WORDS: Record<PartKind, string> = { battery: 'a battery', resistor: 'a resistor', bulb: 'a bulb', switch: 'a switch', ammeter: 'an ammeter' }
+const PART_WORDS: Record<PartKind, string> = { battery: 'a battery', resistor: 'a resistor', bulb: 'a bulb', led: 'an LED', diode: 'a diode', switch: 'a switch', ammeter: 'an ammeter' }
 
 function describeItem(item: Item): string {
   if (item.type === 'part') {

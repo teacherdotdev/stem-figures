@@ -11,11 +11,11 @@
   import type { CircuitSettings } from './settings'
   import { describeCircuit } from './tree'
 
-  let { settings, id = 'c' }: { settings: CircuitSettings; id?: string } = $props()
+  let { settings, id = 'c', customCircuit }: { settings: CircuitSettings; id?: string; customCircuit?: import('./tree').Circuit } = $props()
 
   const hasTitle = $derived(settings.title.mode !== 'none' && (settings.title.mode === 'blank' || settings.title.text.trim() !== ''))
-  const circuit = $derived(circuitOf(settings))
-  const fig = $derived(buildCircuit(circuit, { title: hasTitle, polarity: settings.polarity }))
+  const circuit = $derived(customCircuit ?? circuitOf(settings))
+  const fig = $derived(buildCircuit(circuit, { title: hasTitle, polarity: settings.polarity, topology: settings.editor === 'custom' ? 'open' : 'loop' }))
   const p = $derived(palette(settings.color))
   /** Symbols stand out in blue on slides; wires stay black. */
   const partInk = $derived(settings.color ? '#1d4ed8' : p.ink)

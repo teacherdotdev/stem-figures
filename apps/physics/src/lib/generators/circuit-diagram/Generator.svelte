@@ -1,7 +1,7 @@
 <script lang="ts">
   // The Circuit Diagram Generator: the circuit, its meters and its symbols on
   // the left, the figure on the right. Settings live in the page address.
-  import { BatteryFull, ChevronDown, CircuitBoard, Gauge, Heading, Palette, Plus, Trash2 } from '@lucide/svelte'
+  import { BatteryFull, ChevronDown, CircuitBoard, Gauge, Heading, Palette, Plus, SlidersHorizontal, Trash2 } from '@lucide/svelte'
   import { SvelteSet } from 'svelte/reactivity'
   import Choice from '$lib/shared/Choice.svelte'
   import { createGenerator } from '$lib/shared/generator.svelte'
@@ -11,21 +11,25 @@
   import type { Label } from '$lib/shared/label'
   import Section from '$lib/shared/Section.svelte'
   import CircuitDiagram from './CircuitDiagram.svelte'
+  import TreeEditor from './TreeEditor.svelte'
+  import SelectedTileOptions from './SelectedTileOptions.svelte'
+  import type { TileSelection } from './tileSelection'
+  import GridWorkspace from './GridWorkspace.svelte'
   import { loadNames, plainText } from './circuit'
   import { circuitSettings, MAX_LOADS, newLoad, type Load, type VoltmeterPlace } from './settings'
+  import { describeCircuit } from './tree'
 
   const gen = createGenerator(circuitSettings, 'circuit-diagram')
+  let selectedTile = $state<TileSelection | null>(null)
   const s = $derived(gen.snapshot())
 
-  const KINDS = { resistor: 'Resistor', bulb: 'Bulb' }
+  const KINDS = { resistor: 'Resistor', bulb: 'Bulb', led: 'LED' }
   const shown = (l: Label) => (l.mode === 'text' ? plainText(l.text) : l.mode === 'blank' ? 'blank' : '')
   const names = $derived(loadNames(s).map(plainText))
   const rowSummary = (load: Load, i: number) =>
     [load.name.mode === 'text' ? names[i] : shown(load.name), shown(load.value)].filter(Boolean).join(' · ') || 'no labels'
 
-  const circuitSummary = $derived(
-    `${s.loads.length === 1 ? 'one part' : `${s.loads.length} in ${s.arrangement}`} · ${s.loads.map((l, i) => names[i] || KINDS[l.kind].toLowerCase()).join(', ')}`,
-  )
+  const circuitSummary = $derived(s.editor === 'grid' ? `${[...s.circuitTiles, ...s.returnTiles].filter(t => t.kind !== 'wire').length} symbols on tiles` : s.editor === 'custom' ? describeCircuit(s.customCircuit) : `${s.loads.length === 1 ? 'one part' : `${s.loads.length} in ${s.arrangement}`} · ${s.loads.map((l, i) => names[i] || KINDS[l.kind].toLowerCase()).join(', ')}`)
   const sourceSummary = $derived([s.source === 'cell' ? 'One cell' : 'Battery', shown(s.sourceValue), s.polarity ? '+ and −' : ''].filter(Boolean).join(' · '))
   const meterSummary = $derived(
     [s.switch === 'none' ? '' : `${s.switch} switch`, s.ammeter ? 'ammeter' : '', s.voltmeter === 'none' ? '' : 'voltmeter'].filter(Boolean).join(' · ') || 'none',
@@ -63,6 +67,16 @@
 <GeneratorPage name="Circuit Diagram Generator" filename="circuit-diagram" {gen}>
   {#snippet settings()}
     <Section title="Circuit" icon={CircuitBoard} summary={circuitSummary}>
+      <div class="field">
+        Editor
+        <Choice name="Circuit editor" options={[["quick", "Quick setup"], ["custom", "Open circuit"], ["grid", "Grid workspace"]]} bind:value={gen.s.editor} />
+      </div>
+      {#if s.editor === 'grid'}
+        <p class="note">Select a tile to edit its component. Use Shift+h/j/k/l to add tiles and Shift+X to remove them.</p>
+      {:else if s.editor === 'custom'}
+        <p class="note">Build an open circuit between X and Y. Add components in series, or group components in parallel. You can add a group inside another group.</p>
+        <TreeEditor items={gen.s.customCircuit.items} bind:polarity={gen.s.polarity} />
+      {:else}
       {#if s.loads.length > 1}
         <div class="field">
           Resistors and bulbs
@@ -99,9 +113,10 @@
         {full ? `A circuit holds up to ${MAX_LOADS} resistors and bulbs` : 'Add a resistor or bulb'}
       </button>
       <p class="note">Leave a name empty to number it automatically.</p>
-      <p class="note">Need a mixed or more complex circuit? An advanced circuit editor is coming soon.</p>
+      {/if}
     </Section>
 
+    {#if s.editor === 'quick'}
     <Section title="Cell or battery" icon={BatteryFull} summary={sourceSummary}>
       <div class="field">
         <Choice name="Cell or battery" options={[['cell', 'One cell'], ['battery', 'Battery of two cells']]} bind:value={gen.s.source} />
@@ -130,6 +145,11 @@
         <div class="field">Voltmeter reading <LabelField name="Voltmeter reading" bind:label={gen.s.voltmeterLabel} /></div>
       {/if}
     </Section>
+    {/if}
+
+    {#if s.editor === 'grid'}
+      <SelectedTileOptions selection={selectedTile} settings={gen.s} />
+    {/if}
 
     <Section title="Symbols" icon={Palette} summary={s.symbols === 'us' ? 'US symbols' : 'IEC (UK) symbols'}>
       <div class="field">
@@ -138,14 +158,26 @@
       </div>
     </Section>
 
+    {#if s.editor !== 'grid'}
     <Section title="Chart title" icon={Heading} summary={titleSummary}>
       <div class="field"><LabelField name="Chart title" placeholder="Title" bind:label={gen.s.title} /></div>
     </Section>
     <FigureOptions bind:mirror={gen.s.mirror} bind:color={gen.s.color} />
+    {:else}
+      <Section title="Figure" icon={SlidersHorizontal} summary={[s.color ? 'color' : 'black and white', s.compactGrid ? 'compact' : ''].filter(Boolean).join(' · ')}>
+        <label class="check"><input type="checkbox" bind:checked={gen.s.color} /> Color (for slides)</label>
+        <label class="check"><input type="checkbox" bind:checked={gen.s.compactGrid} /> Compact layout</label>
+        <p class="note">Shorten empty wire sections in the diagram and exports.</p>
+      </Section>
+    {/if}
   {/snippet}
 
   {#snippet figure()}
-    <CircuitDiagram settings={s} id="f" />
+    {#if s.editor === 'grid'}
+      <GridWorkspace compact={s.compactGrid} bind:selection={selectedTile} bind:sideRows={gen.s.sideRows} bind:details={gen.s.gridDetails} bind:tiles={gen.s.circuitTiles} bind:returnTiles={gen.s.returnTiles} bind:columns={gen.s.tileColumns} symbols={s.symbols} color={s.color} />
+    {:else}
+      <CircuitDiagram settings={s} customCircuit={s.editor === 'custom' ? s.customCircuit : undefined} id="f" />
+    {/if}
   {/snippet}
 </GeneratorPage>
 

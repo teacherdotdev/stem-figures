@@ -158,13 +158,13 @@ export const PHYSICS: CatalogEntry[] = [
     site: 'physics',
     name: 'Circuit Diagram Generator',
     path: '/circuit-diagram',
-    blurb: 'A battery with resistors or bulbs in series or in parallel.',
+    blurb: 'Build labeled circuit diagrams with mixed series and parallel components.',
     description:
-      'Make printable circuit diagrams for physics tests. Draw a cell or battery with up to four resistors or bulbs in series or parallel, with meters, labeled or left blank.',
+      'Make printable circuit diagrams for physics tests. Mix series and parallel groups, draw closed loops or open terminal networks, and label components including LEDs.',
     keywords: [
       'circuit', 'circuits', 'circuit diagram', 'schematic', 'electric', 'electricity', 'series', 'parallel', 'resistor',
       'resistance', 'ohm', "ohm's law", 'battery', 'cell', 'emf', 'bulb', 'lamp', 'switch', 'ammeter', 'voltmeter',
-      'current', 'voltage', 'potential difference', 'equivalent resistance', 'symbols', 'iec', 'gcse', 'printable',
+      'current', 'voltage', 'potential difference', 'equivalent resistance', 'symbols', 'iec', 'gcse', 'printable', 'led', 'open circuit', 'mixed circuit',
     ],
   },
   {

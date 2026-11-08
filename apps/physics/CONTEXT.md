@@ -218,15 +218,15 @@ On a Motion Map, every velocity arrow is on one scale, so equal speeds are drawn
 ### Circuit Diagram
 
 **Circuit Diagram**:
-A schematic of a cell or battery with 1 to 4 resistors or bulbs, all in series or all in parallel, for current and resistance problems. Its generator is the Circuit Diagram Generator. It is drawn from a series/parallel tree built from its settings, not placed by hand (ADRs 0004 and 0005). Any other circuit is left to a Circuit Editor, planned but not built yet.
+A schematic drawn by the Circuit Diagram Generator: use quick setup for a cell or battery with up to four resistors or bulbs in series or parallel, or build a custom tree of up to eight parts with nested series/parallel groups. Custom circuits can be closed loops or open networks between X and Y. Parts include resistors, bulbs, LEDs, switches, cells, batteries and meters, with editable names and values. The compact tree is saved in the page address; the layout routes wires at right angles (ADRs 0004 and 0005).
 _Avoid_: Circuit (alone, for the figure), schematic (fine as a search word), wiring diagram
 
 **Arrangement**:
-How a Circuit Diagram's resistors and bulbs are joined: all in series round one loop, or all in parallel as the rungs of a ladder. A switch and an ammeter are always in the main line.
+How parts in a Circuit Diagram are joined: in series, or in parallel branches, including nested groups. Quick setup uses one arrangement; Build a circuit allows mixed arrangements.
 _Avoid_: Layout, topology, mode
 
 **Part**:
-One symbol on a circuit diagram: a battery, resistor, bulb, switch or ammeter. Each has a name label (R₁) and a value label (4 Ω). Names are numbered automatically until the teacher types one. On the Circuit Diagram a voltmeter is not a part: it goes across the battery or one part.
+One symbol on a circuit diagram: a battery, resistor, bulb, LED, switch or ammeter. Each has a name label (R₁) and a value label (4 Ω). Names are numbered automatically until the teacher types one. On the Circuit Diagram a voltmeter is not a part: it goes across the battery or one part.
 _Avoid_: Component, element, device
 
 **Group**:

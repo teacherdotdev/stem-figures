@@ -5,15 +5,16 @@
   import { ChevronDown, type LucideIcon } from '@lucide/svelte'
 
   interface Props {
+    open?: boolean
     title: string
     summary: string
     icon: LucideIcon
     children: Snippet
   }
-  let { title, summary, icon: Icon, children }: Props = $props()
+  let { open = $bindable(false), title, summary, icon: Icon, children }: Props = $props()
 </script>
 
-<details class="section">
+<details class="section" bind:open>
   <summary>
     <span class="icon"><Icon size={18} aria-hidden="true" /></span>
     <span class="text">

@@ -69,6 +69,8 @@ export interface LayoutOptions {
   title: boolean
   /** + and − beside each battery. */
   polarity: boolean
+  /** A two-terminal network instead of a closed loop. */
+  topology?: 'loop' | 'open'
 }
 
 export const LABEL_SIZE = 20
@@ -94,9 +96,11 @@ const TITLE_SIZE = 24
 /** Half a symbol's length along the wire, and its half-height either side of it. */
 export function symbolSize(part: Part): { half: number; up: number; down: number } {
   const SIZES: Record<PartKind, { half: number; up: number; down: number }> = {
-    battery: { half: part.cells === 2 ? 15 : 5, up: 17, down: 17 },
+    battery: { half: part.cells * 10 - 5, up: 17, down: 17 },
     resistor: { half: 22, up: 9, down: 9 },
     bulb: { half: 15, up: 15, down: 15 },
+    led: { half: 30, up: 20, down: 11.1 },
+    diode: { half: 30, up: 11.1, down: 11.1 },
     switch: { half: 17, up: part.open ? 18 : 4, down: 4 },
     ammeter: { half: 15, up: 15, down: 15 },
   }
@@ -511,9 +515,24 @@ export function partBox(p: PlacedPart): Box {
   return { left: Math.min(...xs), right: Math.max(...xs), top: Math.min(...ys), bottom: Math.max(...ys) }
 }
 
+function openDrawing(circuit: Circuit): Drawing {
+  const out = emptyDrawing()
+  const block = seriesBlock(circuit.items, false)
+  const lead = 34
+  const y = Math.max(48, block.up + 18)
+  const frame: Frame = { origin: { x: lead, y }, angle: 0 }
+  draw(out, block, frame)
+  out.wires.push([{ x: 0, y }, frame.origin], [toScreen(frame, { x: block.len, y: 0 }), { x: lead + block.len + lead, y }])
+  out.labels.push(
+    { label: { mode: 'text', text: 'X' }, x: 0, y: y + ASCENT * 0.45, anchor: 'end' },
+    { label: { mode: 'text', text: 'Y' }, x: lead + block.len + lead, y: y + ASCENT * 0.45, anchor: 'start' },
+  )
+  return out
+}
+
 export function buildCircuit(circuit: Circuit, options: LayoutOptions): CircuitFigure {
   const ladder = ladderOf(circuit)
-  const d = ladder ? ladderDrawing(ladder.rest, ladder.group, circuit.current) : loopDrawing(circuit)
+  const d = options.topology === 'open' ? openDrawing(circuit) : ladder ? ladderDrawing(ladder.rest, ladder.group, circuit.current) : loopDrawing(circuit)
 
   // Fit the figure round everything drawn.
   const boxes: Box[] = [
