@@ -118,8 +118,8 @@ After adding or changing an example, or changing how a generator draws, take
 the pictures again. With the site running:
 
 ```sh
-./scripts/agent-dev.mjs stemfigures/apps/economics                          # from the workspace root; prints its address
-node --experimental-strip-types scripts/snapshot-examples.mjs --app=economics http://localhost:10003/  # from stemfigures/, with that address
+(cd apps/economics && bun run dev)                          # from the repo root; Vite prints its address
+node --experimental-strip-types scripts/snapshot-examples.mjs --app=economics http://localhost:5173/  # from stemfigures/, with that address
 ```
 
 It needs the Chromium Playwright installs (`npx playwright install chromium`).
@@ -165,7 +165,7 @@ definition in `details.server.ts`).
 
 ```bash
 npm install   # once, from the stemfigures repo root (npm workspaces)
-../../../scripts/agent-dev.mjs stemfigures/apps/economics   # from the workspace, never npm run dev directly
+bun run dev   # Vite dev server; prints its address
 npm run check   # svelte-check
 npm run build
 ```

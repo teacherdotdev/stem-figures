@@ -27,7 +27,7 @@ its full history, so `git log -- apps/math` shows the site's past commits.
 
 ```bash
 npm install                    # once, at the repo root: installs every app
-../scripts/agent-dev.mjs stemfigures/apps/math   # from the workspace, never npm run dev directly
+cd apps/math && bun run dev   # Vite dev server for one app
 npm run check                  # svelte-check in every app
 npm test                       # vitest in every app and packages/shared
 npm run build                  # build every app

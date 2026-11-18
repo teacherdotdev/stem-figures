@@ -17,10 +17,13 @@ import TransformationsPreview from '$lib/editors/transformations/Preview.svelte'
 import ConePreview from './cone/Preview.svelte'
 import CoordinateGridPreview from './coordinate-grid/Preview.svelte'
 import CylinderPreview from './cylinder/Preview.svelte'
+import DotPlotPreview from './dot-plot/Preview.svelte'
 import HistogramPreview from './histogram/Preview.svelte'
 import KitePreview from './kite/Preview.svelte'
 import LengthReadingPreview from './length-reading/Preview.svelte'
 import MappingDiagramPreview from './mapping-diagram/Preview.svelte'
+import NetPreview from './net/Preview.svelte'
+import NormalCurvePreview from './normal-curve/Preview.svelte'
 import NumberLinePreview from './number-line/Preview.svelte'
 import ParallelLinesPreview from './parallel-lines/Preview.svelte'
 import ParallelogramPreview from './parallelogram/Preview.svelte'
@@ -29,9 +32,13 @@ import PrismPreview from './prism/Preview.svelte'
 import PyramidPreview from './pyramid/Preview.svelte'
 import RectanglePreview from './rectangle/Preview.svelte'
 import RegularPolygonPreview from './regular-polygon/Preview.svelte'
+import ScatterPlotPreview from './scatter-plot/Preview.svelte'
+import SegmentAdditionPreview from './segment-addition/Preview.svelte'
 import SpherePreview from './sphere/Preview.svelte'
 import StemAndLeafPreview from './stem-and-leaf/Preview.svelte'
+import TableOfValuesPreview from './table-of-values/Preview.svelte'
 import TrapezoidPreview from './trapezoid/Preview.svelte'
+import TreeDiagramPreview from './tree-diagram/Preview.svelte'
 import TrianglePreview from './triangle/Preview.svelte'
 import VennDiagramPreview from './venn-diagram/Preview.svelte'
 
@@ -47,21 +54,28 @@ export const PREVIEWS: Record<string, Component> = {
   'regular-polygon': RegularPolygonPreview,
   'angles': AnglesPreview,
   'parallel-lines': ParallelLinesPreview,
+  'segment-addition': SegmentAdditionPreview,
   'circle': CirclePreview,
   'prism': PrismPreview,
   'cylinder': CylinderPreview,
   'pyramid': PyramidPreview,
   'cone': ConePreview,
   'sphere': SpherePreview,
+  'net': NetPreview,
   'box-plot': BoxPlotPreview,
+  'dot-plot': DotPlotPreview,
+  'scatter-plot': ScatterPlotPreview,
   'bar-graph': BarGraphPreview,
   'stem-and-leaf': StemAndLeafPreview,
   'cumulative-frequency': CumulativeFrequencyPreview,
   'two-way-table': TwoWayTablePreview,
   'histogram': HistogramPreview,
+  'normal-curve': NormalCurvePreview,
   'venn-diagram': VennDiagramPreview,
+  'tree-diagram': TreeDiagramPreview,
   'pie-chart': PieChartPreview,
   'mapping-diagram': MappingDiagramPreview,
+  'table-of-values': TableOfValuesPreview,
   'length-reading': LengthReadingPreview,
   'composite-shape': CompositeShapePreview,
   transformations: TransformationsPreview,

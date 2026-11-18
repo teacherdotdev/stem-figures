@@ -40,7 +40,7 @@ one entry to `src/lib/sites.ts`, and add STEM Figures' link to that site's
 
 ```bash
 npm install   # once, from the stemfigures repo root (npm workspaces)
-../../../scripts/agent-dev.mjs stemfigures/apps/stem --no-pocketbase   # from the workspace, never npm run dev directly
+bun run dev   # Vite dev server; prints its address
 npm run check   # svelte-check
 npm run build
 ```

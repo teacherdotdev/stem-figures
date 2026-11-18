@@ -28,15 +28,48 @@ and `docs/adr/` for decisions.
 - `/regular-polygon` **Regular Polygon Generator**: a regular polygon of 3 to
   20 sides, sized by its side, radius or apothem, with the apothem, a radius or
   all the radii drawn from its center, and marks on every side and angle.
+- `/segment-addition` **Segment Addition Generator**: two to seven points in
+  order on a segment, ray or line, each part between neighbours labeled above
+  the line with a length, an expression in one letter, a blank line or
+  nothing, with congruence ticks; up to three braces under the line for spans
+  like AC, and a named line crossing at any point (a bisector). Labels in one
+  letter are solved as a check, and the parts are drawn to the solved lengths
+  unless typed.
+- `/net` **Net Generator**: a 3D shape unfolded flat and drawn to scale from
+  the 3D shape generators' measures: a cube in any of its 11 nets, a prism
+  (rectangle, right or isosceles triangle, or regular polygon base), a pyramid
+  (rectangle or regular polygon base), a cylinder or a cone. Fold lines dashed
+  or solid, cut edges solid; one edge of each measure labeled (measure, text or
+  nothing), with slant heights, a triangle's height, an apothem, a radius, a
+  cylinder's circumference and a cone's sector angle; face names and areas,
+  matching faces tinted, glue tabs, and the 3D shape beside the net.
 - `/mapping-diagram` **Mapping Diagram Generator**: inputs and outputs typed or
   pasted as lists (or as ordered pairs), and arrows chosen per input, so it can
   show a function or a relation that isn't one; the panel says which, and why.
   Each side is titled (Input and Output, or text, a blank line or nothing) and
   drawn in an oval, a box or nothing.
+- `/table-of-values` **Table of Values Generator**: x-values (a range or a
+  list) and the y-value a rule gives for each, or pairs typed or pasted,
+  running across or down. Any value can be clicked into a blank; the panel
+  gives each blank's value and whether the pairs are linear. Values are
+  written as fractions or decimals, and the rule above the table, written or
+  as a blank line.
 - `/bar-graph` **Bar Graph Generator**: a table typed or pasted (a category on
   each row, a series in each column), drawn as upright columns or sideways
   bars, side by side or stacked, with values on the bars, ± error bars, a key,
   color or black-and-white fills. A value left empty draws no bar.
+- `/dot-plot` **Dot Plot Generator**: one data set typed or pasted as a list
+  of values or as a table of values and counts (switching fills the other in),
+  drawn as dots or X's stacked over a number line that fits the data's own
+  step (whole numbers by 1, eighths by 1/8) unless typed, with fractions and
+  mixed numbers numbering it in fractions. Marks shrink as a column grows.
+- `/scatter-plot` **Scatter Plot Generator**: paired data typed as a table
+  of x and y or pasted as a list of pairs (one a line, or in brackets;
+  switching fills the other in), drawn as dots or crosses on axes that fit
+  the data unless typed, each starting at 0 when the data comes close to it
+  and otherwise after a zig-zag break. A line of best fit (least squares, or
+  the teacher's own y = mx + b) runs across the graph, with its equation and
+  r or r² placed clear of the points, written or as blank lines.
 - `/stem-and-leaf` **Stem-and-Leaf Plot Generator**: one data set, or two
   back to back, split into stems and leaves at a leaf unit (digits past it
   cut off), with split stems, negative stems, leaves in order or as typed,
@@ -60,10 +93,24 @@ and `docs/adr/` for decisions.
   frequency or frequency density; a frequency polygon can go over the bars or
   alone; the horizontal axis is numbered at the bin edges or every step, with
   a zig-zag break when it starts past 0. A frequency left empty draws no bar.
+- `/normal-curve` **Normal Curve Generator**: a normal curve from a mean and
+  standard deviation, with ticks to ±3σ or ±4σ numbered in values, z-scores or
+  μ ± σ (one or two rows, or blank lines), dashed SD lines, and the empirical
+  rule's section percents or exact ones. Up to four shaded regions, left of,
+  right of, between or outside bounds typed as values or z-scores or worked
+  out from an area (invNorm), each with its area written as a probability or
+  percent or left blank; marked values with their percentile ranks; and an
+  optional density axis. Areas come from `$lib/stats/normal.ts`.
 - `/venn-diagram` **Venn Diagram Generator**: one, two or three sets in a box for
   the universal set (two overlapping, separate or one inside the other), with a
   number, a letter or expression, or the sorted elements of typed lists in each
   region, and regions shaded by clicking them on the figure.
+- `/tree-diagram` **Tree Diagram Generator**: a probability tree of up to four
+  stages, each with two to six outcomes that every branch of the stage splits
+  into, probabilities on the branches as typed (the same on every branch, or
+  typed per branch for dependent events), an outcome column of each path and
+  its probability multiplied out, left to right or top to bottom; any label
+  can be a blank line, by kind or by clicking it on the figure.
 - `/pie-chart` **Pie Chart Generator**: a table of counts, percents or
   degrees typed or pasted, drawn as sectors clockwise from 12 o'clock, labeled
   inside or outside by name, value, percent, angle or fraction (each sector's
@@ -154,9 +201,9 @@ After adding or changing an example, or changing how a generator draws, take
 the pictures again. With the site running:
 
 ```sh
-./scripts/agent-dev.mjs stemfigures/apps/math                          # from the workspace root; prints its address
-node scripts/snapshot-examples.mjs --app=math http://localhost:10003/  # from stemfigures/, with that address
-node scripts/snapshot-examples.mjs --app=math http://localhost:10003/ triangle   # just the examples whose page matches "triangle"
+(cd apps/math && bun run dev)                          # from the repo root; Vite prints its address
+node scripts/snapshot-examples.mjs --app=math http://localhost:5173/  # from stemfigures/, with that address
+node scripts/snapshot-examples.mjs --app=math http://localhost:5173/ triangle   # just the examples whose page matches "triangle"
 ```
 
 It opens each example's generator, exports the figure as the Download buttons
@@ -170,7 +217,7 @@ them, and delete the PNG of an example you removed or renamed.
 
 ```bash
 npm install   # once, from the stemfigures repo root (npm workspaces)
-../../../scripts/agent-dev.mjs stemfigures/apps/math   # from the workspace, never npm run dev directly
+bun run dev   # Vite dev server; prints its address
 npm run check   # svelte-check: strict TypeScript across .ts and .svelte files
 npm test        # unit tests and figure snapshots
 npm run build

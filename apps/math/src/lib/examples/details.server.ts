@@ -11,6 +11,7 @@ import { settingsFor as solidSettings } from '$lib/generators/3d-shape/settings'
 import { partName, radiusOf, readShape } from '$lib/generators/3d-shape/solve'
 import * as barGraph from '$lib/generators/bar-graph/settings'
 import * as boxPlot from '$lib/generators/box-plot/settings'
+import * as dotPlot from '$lib/generators/dot-plot/settings'
 import { circleAnswer } from '$lib/generators/circle/answer'
 import * as circle from '$lib/generators/circle/settings'
 import { buildCumulative } from '$lib/generators/cumulative-frequency/layout'
@@ -24,12 +25,23 @@ import * as mapping from '$lib/generators/mapping-diagram/settings'
 import { buildPieChart, hiddenText } from '$lib/generators/pie-chart/layout'
 import * as pieChart from '$lib/generators/pie-chart/settings'
 import type { Interval } from '$lib/generators/number-line/inequality'
+import { buildCurve } from '$lib/generators/normal-curve/layout'
+import { areaOf, unfold } from '$lib/generators/net/layout'
+import * as net from '$lib/generators/net/settings'
+import { partName as netPartName, readNet } from '$lib/generators/net/solve'
+import * as normal from '$lib/generators/normal-curve/settings'
 import * as numberLine from '$lib/generators/number-line/settings'
 import { family as parallelogramFamily } from '$lib/generators/parallelogram/family'
 import { family as rectangleFamily } from '$lib/generators/rectangle/family'
 import * as polygon from '$lib/generators/regular-polygon/settings'
+import * as scatter from '$lib/generators/scatter-plot/settings'
+import * as segment from '$lib/generators/segment-addition/settings'
+import { show as showLength, solve as solveSegments } from '$lib/generators/segment-addition/solve'
+import { describeCorrelation, leastSquares } from '$lib/stats/regression'
 import * as stemAndLeaf from '$lib/generators/stem-and-leaf/settings'
+import * as tableOfValues from '$lib/generators/table-of-values/settings'
 import { family as trapezoidFamily } from '$lib/generators/trapezoid/family'
+import * as tree from '$lib/generators/tree-diagram/settings'
 import * as triangle from '$lib/generators/triangle/settings'
 import * as twoWay from '$lib/generators/two-way-table/settings'
 import * as venn from '$lib/generators/venn-diagram/settings'
@@ -274,6 +286,34 @@ function solidAnswer(s: SettingsById['prism']): ExampleDetails['answer'] {
   return { heading: 'Answer key', lines: [...solved, `Volume: ${volume}`, ...(area ? [`${areaName}: ${area}`] : [])] }
 }
 
+/** A net's worked-out measures, each face's area and the surface area,
+ *  rounded as its labels are. */
+function netAnswer(s: SettingsById['net']): ExampleDetails['answer'] {
+  const read = readNet(s)
+  const v = read.values
+  if (!v) throw new Error(`The net example doesn’t make a shape: ${read.problem ?? Object.values(read.problems)[0]}`)
+  const { form } = read
+  const length = lengthIn(s)
+  const rounded = (x: number) => shapeParts.roundTo(x, s.round)
+  const area = (x: number) => `${rounded(x)}${s.unit.trim() === 'units' ? ' square units' : squared(s)}`
+  const name = (k: (typeof form.parts)[number]) => {
+    const n = netPartName(s, form, k)
+    return n[0].toUpperCase() + n.slice(1)
+  }
+  const solved = form.parts
+    .filter((k) => !(form.inputs as string[]).includes(k) || read.given[k] === null)
+    .filter((k) => k !== 'angle')
+    .map((k) => `${name(k)}: ${length(v[k])}`)
+  if (form.parts.includes('angle')) solved.push(`Sector angle: ${rounded(v.angle)}°`)
+  const faces = unfold(s, { ...read, values: v }).faces.map(areaOf)
+  const total = faces.reduce((t, a) => t + a, 0)
+  // Faces of the same area, counted together: 2 × 15 cm².
+  const counts = new Map<string, number>()
+  for (const a of faces) counts.set(rounded(a), (counts.get(rounded(a)) ?? 0) + 1)
+  const list = [...counts].map(([a, n]) => `${n > 1 ? `${n} × ` : ''}${a}${s.unit.trim() === 'units' ? ' square units' : squared(s)}`).join(' + ')
+  return { heading: 'Answer key', lines: [...solved, `Faces: ${list}`, `Surface area: ${area(total)}`] }
+}
+
 function boxPlotAnswer(s: SettingsById['box-plot']): ExampleDetails['answer'] {
   const { rows } = boxPlot.readPlot(s)
   const out = rows.flatMap((r, i) => {
@@ -285,6 +325,49 @@ function boxPlotAnswer(s: SettingsById['box-plot']): ExampleDetails['answer'] {
     return [`${r.name ? `${r.name}: ` : ''}Minimum ${f(min)} · Q1 ${f(q1)} · Median ${f(median)} · Q3 ${f(q3)} · Maximum ${f(max)} · IQR ${f(q3 - q1)}${outliers}`]
   })
   return { heading: 'Answer key', lines: out }
+}
+
+function dotPlotAnswer(s: SettingsById['dot-plot']): ExampleDetails['answer'] {
+  const read = dotPlot.readPlot(s)
+  const problem = Object.values(read.problems).find(Boolean)
+  if (problem) throw new Error(`The dot plot example can’t be drawn as written: ${problem}`)
+  const stats = dotPlot.statsOf(read.stacks)
+  if (!stats) throw new Error('The dot plot example has no data')
+  const n = (v: number) => niceText(v, read.numbering)
+  return {
+    heading: 'Answer key',
+    lines: [
+      `Number of values: ${stats.n}`,
+      `Mode: ${stats.modes.map(n).join(' and ')} (${stats.most} ${stats.modes.length > 1 ? 'times each' : 'times'})`,
+      `Median: ${n(stats.median)}`,
+      `Range: ${n(stats.max - stats.min)} (from ${n(stats.min)} to ${n(stats.max)})`,
+    ],
+  }
+}
+
+function scatterAnswer(s: SettingsById['scatter-plot']): ExampleDetails['answer'] {
+  const read = scatter.readScatter(s)
+  const problem = Object.values(read.problems).find(Boolean)
+  if (problem) throw new Error(`The scatter plot example can’t be drawn as written: ${problem}`)
+  if (read.all.length < 2) return null
+  // The least-squares line and r, whether or not the figure shows them, to two places.
+  const fit = leastSquares(read.all)
+  const lines = [`Number of points: ${read.all.length}`]
+  if (fit) lines.push(`Line of best fit (least squares): ${scatter.equationText(fit, 2)}`)
+  if (read.r !== null) lines.push(`r = ${scatter.rounded(read.r, 2)} (${describeCorrelation(read.r)}), r² = ${scatter.rounded(read.r * read.r, 2)}`)
+  return { heading: 'Answer key', lines }
+}
+
+function segmentAnswer(s: SettingsById['segment-addition']): ExampleDetails['answer'] {
+  const r = solveSegments(s)
+  if (r.problem) throw new Error(`The segment addition example doesn’t work out as written: ${r.problem}`)
+  // What the figure says, then the letter and every length that can be worked out.
+  const lengths = [
+    ...s.parts.map((_, k) => [segment.partName(s, k), r.parts[k]] as const),
+    ...s.spans.map((sp, k) => [segment.spanName(s, sp), r.spans[k]] as const),
+  ].flatMap(([name, v]) => (v === null ? [] : [`${name} = ${showLength(v)}`]))
+  const lines = [...r.equations, ...(r.letter && r.value !== null ? [`${r.letter} = ${showLength(r.value)}`] : []), ...lengths]
+  return lines.length ? { heading: 'Answer key', lines } : null
 }
 
 function barGraphAnswer(s: SettingsById['bar-graph']): ExampleDetails['answer'] {
@@ -343,12 +426,51 @@ function histogramAnswer(s: SettingsById['histogram']): ExampleDetails['answer']
   return { heading: 'Answer key', lines: [...read.bins.map((b) => `${b.name}: ${histogram.fmt(b.frequency ?? 0)}`), `n = ${histogram.fmt(read.n)}`] }
 }
 
+function normalAnswer(s: SettingsById['normal-curve']): ExampleDetails['answer'] {
+  const { read } = buildCurve(s)
+  const problem = [read.problems.mean, read.problems.sd, read.problems.ticks, ...read.problems.regions, ...read.problems.marks].find(Boolean)
+  if (problem) throw new Error(`The normal curve example can’t be drawn as written: ${problem}`)
+  // Whatever is left blank on the figure, worked out as students would.
+  const lines: string[] = []
+  for (const r of read.regions) {
+    const blankBounds = r.settings.bounds === 'blank' || r.settings.bounds === 'none'
+    const blankArea = r.settings.area === 'blank' || r.settings.area === 'none'
+    if (blankBounds && r.settings.by === 'area') lines.push(r.sentence)
+    else if (blankArea) lines.push(r.sentence)
+  }
+  for (const m of read.marks) {
+    if (m.settings.label === 'blank') lines.push(`Marked value: ${normal.rounded(read.xOf(m.z))} (z = ${normal.rounded(m.z)}, ${normal.percentileText(m.z)} percentile)`)
+  }
+  // A standard normal curve's blank ticks are left to the teacher's own mean and SD.
+  if ((s.numbers === 'blank' || s.second === 'blank') && (read.mu !== 0 || read.sigma !== 1)) {
+    const ks = Array.from({ length: 2 * s.reach + 1 }, (_, i) => i - s.reach)
+    lines.push(`Ticks: ${ks.map((k) => normal.rounded(read.xOf(k))).join(', ')}`)
+  }
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
 function vennAnswer(s: SettingsById['venn-diagram']): ExampleDetails['answer'] {
   const read = venn.readVenn(s)
   const problem = read.problems.elements
   if (problem) throw new Error(`The Venn diagram example can’t be drawn as written: ${problem}`)
   // The counts the diagram gives, and in elements mode each region's members.
   const lines = [...read.readout.counts, ...read.readout.members].map((l) => `${l.label}${read.readout.members.includes(l) ? ':' : ' ='} ${l.value}`)
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
+function treeAnswer(s: SettingsById['tree-diagram']): ExampleDetails['answer'] {
+  const read = tree.readTree(s)
+  const problem = read.problems.sums ?? read.problems.overOne
+  if (problem) throw new Error(`The tree diagram example can’t be drawn as written: ${problem}`)
+  // Each branch probability left blank on the figure, then every path's probability.
+  const blank = (key: string, show: tree.Show) => show === 'blank' || s.blanks.includes(key)
+  const branches = read.nodes.flat().flatMap((n) => {
+    if (!n.prob || !blank(`p${n.id}`, s.showProbs)) return []
+    const before = n.t.slice(0, -1).map((j, k) => s.stages[k].outcomes[j].trim())
+    return [`P(${n.outcome}${before.length ? ` after ${tree.pathName(before, 'comma')}` : ''}) = ${n.prob}`]
+  })
+  const paths = read.paths.flatMap((p) => (p.prob ? [`P(${tree.pathName(p.outcomes, 'comma')}) = ${p.prob.text}`] : []))
+  const lines = [...branches, ...paths]
   return lines.length ? { heading: 'Answer key', lines } : null
 }
 
@@ -375,6 +497,18 @@ function mappingAnswer(s: SettingsById['mapping-diagram']): ExampleDetails['answ
   return { heading: 'Answer key', lines: [map.verdict.text, `Ordered pairs: ${pairs.join(', ')}`] }
 }
 
+function tableOfValuesAnswer(s: SettingsById['table-of-values']): ExampleDetails['answer'] {
+  const read = tableOfValues.readTable(s)
+  const problem = read.problems.rule ?? read.problems.x ?? read.problems.typed
+  if (problem) throw new Error(`The table of values example can’t be drawn as written: ${problem}`)
+  if (read.missing.some((m) => m.value === null)) throw new Error('The table of values example has a blank that can’t be worked out')
+  // Each blank and its value, then the rule when it was left for students, and the pattern.
+  const lines = read.missing.map((m) => `${m.name}: ${m.value}`)
+  if (s.showRule === 'blank' && read.ruleText) lines.push(`The rule: ${mathText(tableOfValues.ruleAsY(read.ruleText))}`)
+  if (read.pattern) lines.push(read.pattern)
+  return lines.length ? { heading: 'Answer key', lines } : null
+}
+
 const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<SettingsById[G]>; answer: Answer<SettingsById[G]> } } = {
   'coordinate-grid': { definition: definitionOf(grid), answer: gridAnswer },
   'number-line': { definition: definitionOf(numberLine), answer: numberLineAnswer },
@@ -389,15 +523,22 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'pyramid': { definition: definitionOf(solidSettings('pyramid')), answer: solidAnswer },
   'cone': { definition: definitionOf(solidSettings('cone')), answer: solidAnswer },
   'sphere': { definition: definitionOf(solidSettings('sphere')), answer: solidAnswer },
+  'net': { definition: definitionOf(net), answer: netAnswer },
   'box-plot': { definition: definitionOf(boxPlot), answer: boxPlotAnswer },
+  'dot-plot': { definition: definitionOf(dotPlot), answer: dotPlotAnswer },
+  'scatter-plot': { definition: definitionOf(scatter), answer: scatterAnswer },
+  'segment-addition': { definition: definitionOf(segment), answer: segmentAnswer },
   'bar-graph': { definition: definitionOf(barGraph), answer: barGraphAnswer },
   'stem-and-leaf': { definition: definitionOf(stemAndLeaf), answer: stemAndLeafAnswer },
   'cumulative-frequency': { definition: definitionOf(cumulative), answer: cumulativeAnswer },
   'two-way-table': { definition: definitionOf(twoWay), answer: twoWayAnswer },
   'histogram': { definition: definitionOf(histogram), answer: histogramAnswer },
+  'normal-curve': { definition: definitionOf(normal), answer: normalAnswer },
   'venn-diagram': { definition: definitionOf(venn), answer: vennAnswer },
+  'tree-diagram': { definition: definitionOf(tree), answer: treeAnswer },
   'pie-chart': { definition: definitionOf(pieChart), answer: pieChartAnswer },
   'mapping-diagram': { definition: definitionOf(mapping), answer: mappingAnswer },
+  'table-of-values': { definition: definitionOf(tableOfValues), answer: tableOfValuesAnswer },
   'length-reading': { definition: lengthSettings, answer: (s) => ({ heading: 'Answer key', lines: lengthAnswer(s).split(' · ') }) },
   'circle': { definition: definitionOf(circle), answer: circleAnswer },
 }

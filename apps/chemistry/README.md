@@ -5,7 +5,7 @@ tests, worksheets and slides. Live at **https://chemistryfigures.com**, a
 teacher.dev project. See `CONTEXT.md` for the vocabulary (figure, generator,
 directory…) and `docs/adr/` for decisions.
 
-Start it from the workspace root with `./scripts/agent-dev.mjs stemfigures/apps/chemistry`.
+Start it with `bun run dev` (Vite) from `apps/chemistry`.
 
 ## Example figures
 
@@ -37,9 +37,9 @@ After adding or changing an example, or changing how a generator draws, take
 the pictures again. With the site running:
 
 ```sh
-./scripts/agent-dev.mjs stemfigures/apps/chemistry          # from the workspace root; prints its address
-node scripts/snapshot-examples.mjs http://localhost:10003/  # from stemfigures/, with that address
-node scripts/snapshot-examples.mjs http://localhost:10003/ buret   # just the examples whose page matches "buret"
+(cd apps/chemistry && bun run dev)          # from the repo root; Vite prints its address
+node scripts/snapshot-examples.mjs http://localhost:5173/  # from stemfigures/, with that address
+node scripts/snapshot-examples.mjs http://localhost:5173/ buret   # just the examples whose page matches "buret"
 ```
 
 It opens each example's generator, exports the figure as the Download buttons

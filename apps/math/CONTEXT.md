@@ -386,6 +386,28 @@ _Avoid_: Heading, bearing, rotation
 The angle over 180° that wraps around the outside, such as the 300° beside a 60° angle. It's an angle like any other, so it can be labeled, marked and shaded.
 _Avoid_: Exterior angle (a shape's is different), outside angle
 
+### Segment addition
+
+**Segment Addition**:
+A figure of points in order on one straight line, with the parts between them labeled, for segment addition, midpoint and bisector problems: AB + BC = AC. The line is a segment, a ray or a line, by how its two ends finish. Its generator is the Segment Addition Generator. Unlike a **Number Line**, it has no numbers along it; its lengths are what's written on its parts.
+_Avoid_: Segment diagram, collinear points figure (fine as search words), number line
+
+**Part** (in this figure):
+The piece of the line between two neighbouring points, named by them (AB), labeled above the line with a length, an expression in one letter like 2x + 3, a blank line or nothing, and marked with none to three congruence ticks. Parts with the same ticks are congruent, as the two halves at a midpoint are.
+_Avoid_: Segment (any two points make one; a part is between neighbours), piece, section
+
+**Span**:
+A stretch of the line from one point to a later one, over one or more parts, drawn as a brace under the point names with its own label: the AC in AB + BC = AC. Up to three; spans that overlap go in separate rows, the shorter nearer the line.
+_Avoid_: Whole, total, bracket, segment (alone)
+
+**Crossing line**:
+A line through one of the points at any angle, named like ℓ, with a right-angle mark at 90°: a segment bisector where it crosses at a midpoint. The braces go below its arrow.
+_Avoid_: Bisector (only when it crosses at a midpoint), transversal, perpendicular
+
+**Solving** (in this figure):
+Working out the letter and every length from the labels, as a check shown under the parts: each span equals the sum of its parts, and parts with the same ticks are equal. Only numbers and expressions linear in one letter are read; a blank part follows from a span around it. Each part is drawn as long as its length, worked out this way, unless the teacher types the drawn lengths; none is drawn shorter than a fifth of the longest.
+_Avoid_: Answer (fine in an example's answer key), check
+
 ### Circles
 
 **Circle** (the figure):
@@ -453,6 +475,30 @@ _Avoid_: Summary statistics, five statistics
 **Outlier**:
 A value more than 1.5 times the box's width beyond either end of the box, drawn as its own point with the whisker stopping at the last value that isn't one. Outliers are only drawn when the teacher turns them on; otherwise whiskers reach the minimum and maximum.
 _Avoid_: Extreme value, anomaly
+
+**Dot Plot**:
+A figure of one data set as marks stacked over a number line, one mark for each value, so equal values make a column. The teacher types the values as a list or as a table of values and counts; both give the same figure. Its generator is the Dot Plot Generator.
+_Avoid_: Line plot, dot diagram (fine as search words, not as the name; many US curricula call it a line plot); line graph (that joins points with lines)
+
+**Mark** (on a dot plot):
+What stands for one value on a dot plot: a dot, or an X as many line plots draw them. Marks over the same value stack upward from the line, and get smaller as the tallest column grows so the figure stays a printable size.
+_Avoid_: Point, symbol, dot (when it may be an X)
+
+**Count** (on a dot plot):
+How many times a value appears, typed beside it in the table of values and counts, and the number of marks drawn over it. A value typed on two rows has its counts added together; a count of 0 draws no marks but still widens the line.
+_Avoid_: Frequency (fine in teaching and as a search word), tally
+
+**Scatter Plot**:
+A figure of paired data as points on a graph, one for each pair, its x value across and its y value up, to show how two quantities go together. The teacher types the pairs as a table of x and y or pastes them as a list of pairs; both give the same figure. Its axes fit the data, with a step of room past it at each end, unless typed, and one that starts past 0 begins with a zig-zag break. Its generator is the Scatter Plot Generator.
+_Avoid_: Scatter graph, scatter diagram, scattergram (fine as search words, not as the name); coordinate grid (that graphs equations and points typed one by one, on axes the teacher sets)
+
+**Line of best fit**:
+The straight line drawn through a scatter plot's points: the least-squares line through every point (as LinReg on a calculator works it out), or the teacher's own typed as y = mx + b. Its equation can be written below the graph, left as a blank line for students, or hidden; it runs across the graph past any breaks.
+_Avoid_: Trend line, regression line, LSRL (fine as search words and in teaching), fit
+
+**Correlation coefficient**:
+r, how closely a scatter plot's points follow a straight line, from −1 to 1, written below the graph as r or r². It is worked out from every point typed, whether or not a line is drawn.
+_Avoid_: Correlation (alone, for the number), R, r value
 
 **Bar Graph**:
 A figure of separate bars, one for each category (or one for each series in each category), whose lengths show values read off a numbered value axis. The bars stand up as columns or run sideways; a column graph is a bar graph with upright bars. Its generator is the Bar Graph Generator.
@@ -570,6 +616,58 @@ _Avoid_: Universe, sample space (fine in teaching), rectangle
 The part of a Venn diagram inside exactly some of the sets and outside the rest, such as A only (A ∩ B′) or neither: four for two overlapping sets, eight for three, outside included. In text mode each holds what's typed for it, numbers, letters or words, split at its commas one piece to a line (as in red flesh, mushy, savory); in sets mode, the elements that belong there, written in rows round its middle; one left empty is drawn empty, or with a blank line when the teacher asks for one. Clicking a region on the figure fills it in or shades it. A shaded region is filled with a tint, gray or a black-and-white pattern, under the circles' outlines.
 _Avoid_: Section, area (that's a shape's measure), zone, part
 
+### Normal curves
+
+**Normal Curve**:
+A figure of the bell-shaped curve of a normal distribution over one horizontal axis, from a mean and standard deviation, with a tick at each standard deviation from the mean (to 3 or 4 either side). Its generator is the Normal Curve Generator.
+_Avoid_: Bell curve, normal distribution, Gaussian (fine as search words, not as the name)
+
+**SD line**:
+A dashed or solid line from an SD tick up to the curve, at the mean and at each standard deviation either side. The numbers under the ticks are in one or two rows: values, z-scores, μ ± σ, or blank lines for students.
+_Avoid_: Standard deviation marker, gridline
+
+**Shaded region**:
+The area under a normal curve left of a bound, right of one, between two, or outside two (both tails), filled down to the axis along the curve as drawn. Its bounds are typed as values or z-scores, or worked out from its area as invNorm does (a middle or outer area split evenly either side of the mean). Its area is written on it as a probability (to 4 decimal places) or a percent, as a blank line, or not at all, and its bounds are written under the axis, where they take the place of any SD number in their way. Not a Venn diagram's region.
+_Avoid_: Probability area, tail (fine for one outside the mean), region (alone, that's a Venn diagram's)
+
+**Section percent**:
+The share of a normal curve's area between two neighboring SD lines, written in its section (or over it when it's too thin): rounded as the empirical rule gives it (34%, 13.5%, 2.35%, and 0.15% past 3 standard deviations) or exact to two decimal places.
+_Avoid_: Empirical rule label, 68–95–99.7 (that's the rule, the sum of sections)
+
+**Marked value**:
+A dotted line from the axis up to a normal curve at a value the teacher types, with its value, its z-score, its percentile rank (2nd, 84th, <1st, >99th), the teacher's own text or a blank line over the curve.
+_Avoid_: Marker, point (a normal curve has no plotted points)
+
+### Tree diagrams
+
+**Tree diagram**:
+A probability tree: a figure showing every way a sequence of events can turn out, each event's outcomes branching from every outcome before it, with probabilities on the branches. Every node in a stage branches into the same outcomes. Its generator is the Tree Diagram Generator.
+_Avoid_: Probability tree (fine as a search word, not as the name), decision tree, factor tree
+
+**Stage**:
+One event in a tree diagram's sequence, such as a coin flip, a spin or a draw from a bag, drawn as one column of branches (one row when the tree grows downward). It may have a stage title over it, like 1st draw.
+_Avoid_: Level, round, trial, event column
+
+**Outcome**:
+One result a stage can have, such as H or Red, written at the end of its branch. Each stage's outcomes are typed once and repeat under every node.
+_Avoid_: Choice, option, result
+
+**Branch**:
+The line from a node to one of its outcomes, with that outcome's probability given the path before it, written as typed (3/7 stacked, 0.4 as a decimal). In a stage marked the same on every branch, each outcome has one probability wherever it appears; otherwise each branch has its own, as for drawing without replacement.
+_Avoid_: Edge, arm, line
+
+**Path**:
+One route from the start to a leaf: one way the whole sequence turns out, named by its outcomes (H, Red, or HR). Its probability is the product of its branches', written as a fraction in lowest terms when every branch's is a fraction.
+_Avoid_: Leaf outcome, final outcome, combination
+
+**Outcome column**:
+The list beside the leaves giving each path's name and probability, one line per leaf (an outcome row under the leaves when the tree grows downward).
+_Avoid_: Outcome list, results table, sample space list
+
+**Blank** (on a tree diagram):
+A label drawn as a blank line for students to fill in. A probability left empty is a blank, and clicking any label on the figure makes it one; a whole kind of label (outcomes, probabilities, path names, path probabilities) can be shown, blanked or hidden. A hidden label isn't drawn at all.
+_Avoid_: Missing value, gap, hidden label
+
 ### 3D shapes
 
 **3D Shape**:
@@ -615,6 +713,32 @@ _Avoid_: Slant, lateral height, side length
 How far an oblique shape's top slides sideways past its base, measured along the base's extended line. Any two of the height, the lean and the slanted side edge are enough; the third is worked out.
 _Avoid_: Offset, shift, overhang
 
+### Nets
+
+**Net**:
+A 3D shape unfolded flat, every face joined to another along an edge, so it folds back up into the shape: a cube in one of its 11 nets, a prism, a pyramid, a cylinder or a cone, drawn to scale from the same measures the 3D shape generators take. Its generator is the Net Generator. A net isn’t a **Shape**; each of its faces is.
+_Avoid_: Pattern, template (fine as search words), unfolding, flat pattern
+
+**Face** (of a net):
+One flat piece of a net: a rectangle, triangle or polygon, a cylinder’s or cone’s circle, or a cone’s **sector**, its curved side unrolled into part of a circle with the slant height for its radius. Faces can be named A, B, C … in reading order, have their areas written in them, and be tinted so faces of the same shape and size share a color.
+_Avoid_: Side (that’s a face’s edge on a flat shape), panel, piece
+
+**Fold line**:
+An edge two faces share on the net, folded when it’s made up; dashed unless the teacher wants it solid. An edge with a glue tab on it is a fold line too, between its face and the tab.
+_Avoid_: Crease, hinge, dotted line
+
+**Cut edge**:
+An edge round the outside of a net, solid and thicker. Each of a polyhedron’s cut edges meets one other when the net is folded; a cylinder’s or cone’s circle meets the edge it touches.
+_Avoid_: Outline, border, boundary
+
+**Glue tab**:
+A gray trapezoid out from one of each pair of cut edges that meet when the net is folded, for students to cut the net out and glue it up; a circle gets teeth round it instead. A tab only goes where it doesn’t lie over a face or another tab. The net prints to fit the page, not to an exact size.
+_Avoid_: Flap, tab (alone)
+
+**Cube net**:
+One of the 11 ways six squares can be joined so they fold into a cube, numbered 1 to 11: six with a row of four squares (net 1 is the cross), three with a row of three under two, the staircase, and two rows of three.
+_Avoid_: Hexomino (fine as a search word)
+
 ### Mapping diagrams
 
 **Mapping diagram**:
@@ -632,3 +756,29 @@ _Avoid_: Line, connection, link
 **Function** (on a mapping diagram):
 A mapping diagram where every input has exactly one arrow. The generator tells the teacher whether theirs is one, and why not (an input with two outputs, or one with none), but never writes it on the figure.
 _Avoid_: Well-defined, valid
+
+### Tables of values
+
+**Table of Values**:
+A figure of x-values and the y-value for each, in a table that runs across (an x row over a y row) or down (an x column beside a y column), each headed x and y, Input and Output, or the teacher's own words. Its values come from a rule or are typed as pairs. Its generator is the Table of Values Generator.
+_Avoid_: Function table, input-output table, in-out table, T-chart, x-y table (all fine as search words, not as the name); two-way table (counts sorted two ways)
+
+**Rule** (on a table of values):
+The equation the y-values come from, typed in x as y = 2x + 1 (y = can be left off, and f(x) = reads as y =), worked out at each x-value. It can be written above the table, left as a blank line after y = for students to find, or left off. Its worked-out values are written as whole numbers and fractions in lowest terms (or multiples of π, when the x-values are), or as decimals; anything else is rounded, and where the rule has no value it's written undefined.
+_Avoid_: Function (fine in teaching), formula, equation (that's a coordinate grid's or number line's row)
+
+**x-values**:
+The numbers a table of values works its rule out at: a range (From, To and Step, written as the range is typed, in fractions, π or degrees) or a list typed as the teacher wants them written. A table holds up to 20.
+_Avoid_: Inputs (that's a mapping diagram's), domain, x column
+
+**Pair** (on a table of values):
+One x-value and its y-value, typed when the table is Typed rather than from a rule. Either can be a number, math or words (Figure 1), and either can be left empty.
+_Avoid_: Ordered pair (fine in teaching), point, row
+
+**Blank** (on a table of values):
+A value left empty for students: clicked on the figure, set by Blank every y, or typed empty. Each one's value is worked out where it can be (what the rule gives, or, in a typed table, the value on the line the other pairs are on) and listed for the teacher, named by the headings: y when x = 3.
+_Avoid_: Missing value (that's the list of them), hidden value, gap
+
+**Pattern** (on a table of values):
+What the panel says the pairs do: linear, with its rate of change (and, for typed pairs, the line y = mx + b), not linear, or not a function when an x-value has two y-values. It's never written on the figure.
+_Avoid_: Trend, relationship, slope (fine in teaching)

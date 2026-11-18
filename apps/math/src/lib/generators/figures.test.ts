@@ -7,9 +7,18 @@ import { buildShape } from './3d-shape/layout.js'
 import * as shape from './3d-shape/settings.js'
 import { readShape } from './3d-shape/solve.js'
 import { buildBarGraph } from './bar-graph/layout.js'
+import { buildNet } from './net/layout.js'
+import * as netSettings from './net/settings.js'
+import { readNet } from './net/solve.js'
 import * as bar from './bar-graph/settings.js'
 import { buildPlot } from './box-plot/boxplot.js'
 import * as box from './box-plot/settings.js'
+import { buildPlot as buildDotPlot } from './dot-plot/dotplot.js'
+import * as dot from './dot-plot/settings.js'
+import { buildScatter } from './scatter-plot/scatter.js'
+import { buildSegments } from './segment-addition/layout.js'
+import * as segment from './segment-addition/settings.js'
+import * as scatter from './scatter-plot/settings.js'
 import { buildCumulative } from './cumulative-frequency/layout.js'
 import * as cumulative from './cumulative-frequency/settings.js'
 import { buildGraph } from './coordinate-grid/graph.js'
@@ -22,6 +31,8 @@ import { buildDiagram } from './mapping-diagram/layout.js'
 import * as mapping from './mapping-diagram/settings.js'
 import { buildTable } from './two-way-table/layout.js'
 import * as twoWay from './two-way-table/settings.js'
+import { buildTable as buildValues } from './table-of-values/layout.js'
+import * as values from './table-of-values/settings.js'
 import { buildPieChart } from './pie-chart/layout.js'
 import * as pie from './pie-chart/settings.js'
 import { buildQuadrilateral } from '$lib/shapes/quadrilateral/layout.js'
@@ -40,6 +51,10 @@ import { buildTriangle } from './triangle/layout.js'
 import * as triangle from './triangle/settings.js'
 import { buildStemAndLeaf } from './stem-and-leaf/layout.js'
 import * as stem from './stem-and-leaf/settings.js'
+import { buildTree } from './tree-diagram/layout.js'
+import * as tree from './tree-diagram/settings.js'
+import { buildCurve } from './normal-curve/layout.js'
+import * as normal from './normal-curve/settings.js'
 import { buildVenn } from './venn-diagram/layout.js'
 import * as venn from './venn-diagram/settings.js'
 
@@ -223,6 +238,25 @@ const MAPPING = [
   `inputs=1&outputs=2&${arrows(['1', '2'], ['5', '2'])}`,
 ]
 
+const NET = [
+  '',
+  'shape=cube&faceText=names',
+  'shape=cube&cubeNet=7&tabs=1&sideLabel=none',
+  'shape=cube&cubeNet=11&fold=solid&unit=in&side=2',
+  'base=right&triBase=6&triHeight=8&height=12',
+  'base=isosceles&triHeight=4&height=10&triHeightLabel=measure&tabs=1',
+  'base=regular&sides=6&side=4&height=9&apothemLabel=measure&showShape=1&shade=1',
+  'shape=pyramid&length=6&width=6',
+  'shape=pyramid&length=10&width=6&faceText=both&shade=1',
+  'shape=pyramid&base=regular&sides=3&side=6&height=4&tabs=1&labelSize=large',
+  'shape=cylinder&height=10&circLabel=measure&tabs=1',
+  'shape=cylinder&diameter=1&radius=8&heightLabel=text&heightText=h',
+  'shape=cone&angleLabel=measure&showShape=1',
+  'shape=cone&radius=2&height=&slant=9&tabs=1&faceText=areas',
+  'length=8&height=5&lengthLabel=text&lengthText=x&moved=length%3A10%2C4',
+  'shape=pyramid&length=6&width=6&height=&slant=2',
+]
+
 const SHAPE = [
   '',
   'depth=left&names=1',
@@ -278,6 +312,19 @@ const CUMULATIVE = [
 ]
 
 const TRAVEL = `cols=Walk%7CBus%7CCar&${rows('Year 7|12|10|8|30', 'Year 8|15|8|6|29', 'Year 9|9|14|5|28')}&tot=36%7C32%7C19%7C87`
+const VALUES = [
+  '',
+  'rule=y%3D2x%2B1&to=3&blank=y3%2Cy5&showRule=text',
+  'rule=y%3Dx%2F4&from=0&to=2&step=1%2F2&direction=down&xHeading=Input&yHeading=Output&title=Halves&titleMode=text&showRule=blank',
+  'rule=y%3D1%2Fx&from=-2&to=2&form=decimal&places=1',
+  'rule=y%3Dsin(x)&from=0&to=180%C2%B0&step=30%C2%B0&labelSize=large&headers=plain',
+  'rule=y%3D2x&from=0&to=pi&step=pi%2F2',
+  'rule=y%3D3x&xFrom=list&list=-2%2C+1%2F2%2C+a',
+  'source=typed&row=Figure+1%7C4&row=Figure+2%7C7&row=Figure+3%7C&xHeading=Figure&yHeading=&blank=x0',
+  'rule=x%3D4',
+  'from=0&to=100',
+]
+
 const TWO_WAY = [
   '',
   TRAVEL,
@@ -321,6 +368,19 @@ describe('coordinate grid', () => {
   })
 })
 
+const DOT = [
+  '',
+  'data=3%2C4%2C4%2C5%2C5%2C5%2C7',
+  'data=3%2C4%2C4%2C5&mark=x&title=Pets&titleMode=text&axisTitleMode=blank',
+  'input=table&row=0%7C4&row=1%7C6&row=2%7C5&row=3%7C2&row=4%7C0&row=5%7C1&mark=x',
+  'data=1%2F8%2C1%2F4%2C1%2F4%2C3%2F8%2C1%2F2%2C1+1%2F4&from=0',
+  'data=2.5%2C3%2C7.25&from=0&to=10&step=1&every=2&startCap=none&endCap=circle',
+  'data=1%2C2%2C12&from=0&to=10',
+  `data=${'4%2C'.repeat(60)}5&labelSize=large`,
+  'data=1%2Cx',
+  'input=table&row=1%7C2.5&row=%7C3',
+]
+
 describe('number line', () => {
   test.each(LINE)('%s', (q) => {
     const s = line.settingsFromParams(params(q))
@@ -334,6 +394,48 @@ describe('box plot', () => {
     const s = box.settingsFromParams(params(q))
     const { rows, problems } = box.readPlot(s)
     expect({ query: box.settingsToQuery(s), rows, problems, plot: buildPlot(s) }).toMatchSnapshot()
+  })
+})
+
+describe('dot plot', () => {
+  test.each(DOT)('%s', (q) => {
+    const s = dot.settingsFromParams(params(q))
+    const { stacks, problems } = dot.readPlot(s)
+    expect({ query: dot.settingsToQuery(s), stacks, problems, plot: buildDotPlot(s) }).toMatchSnapshot()
+  })
+})
+
+const SCATTER = [
+  '',
+  'row=1%7C52&row=2%7C60&row=3%7C65&row=4%7C71&row=5%7C70&fit=best&r=r&titleMode=text&title=Study&xTitleMode=text&xTitle=Hours',
+  'input=list&data=-5%2C12%0A-3%2C9%0A0%2C5%0A4%2C-1%0A6%2C-4&fit=best&r=r2&labelSize=large',
+  'input=list&data=61%2C215%0A80%2C445%0A94%2C650&mark=cross&gridlines=light&minor=2',
+  'input=list&data=2%2C20%0A5%2C31%0A8%2C45&fit=own&line=y%3D5x%2B10&equation=blank&r=blank',
+  'input=list&data=(1%2C2)%2C(3%2C4)&xFrom=0&xTo=10&xStep=1&yFrom=0&yTo=30&yStep=5&xEvery=2&yEvery=0',
+  'input=list&data=1%2C2%0A12%2C4&xFrom=0&xTo=10',
+  'input=list&data=1%2C2%0A3%2Cx&fit=own&line=y%3Dx%5E2',
+  'row=3%7C1&row=3%7C5&fit=best',
+]
+
+describe('scatter plot', () => {
+  test.each(SCATTER)('%s', (q) => {
+    const s = scatter.settingsFromParams(params(q))
+    const { points, problems, line, r } = scatter.readScatter(s)
+    expect({ query: scatter.settingsToQuery(s), points, problems, line, r, plot: buildScatter(s) }).toMatchSnapshot()
+  })
+})
+
+const SEGMENT = [
+  '',
+  'pt=A&pt=M&pt=B&part=4x-3%7Cticks%3D1&part=2x%252B9%7Cticks%3D1&span=0-2%7Cmode%3Dblank&cross=1&crossName=%E2%84%93&turn=20',
+  'pt=P&pt=Q&pt=R&pt=S&part=5&part=x%7Cmode%3Dblank&part=9&span=0-2%7Clabel%3D12&span=1-3%7Clabel%3D16&span=0-3&end=triangle&cross=2&crossAngle=60&crossName=m',
+  'pt=A&pt=B%7Cdot%3D0&part=%7Csize%3D2&span=&start=line&end=triangle&labelSize=large',
+]
+
+describe('segment addition', () => {
+  test.each(SEGMENT)('%s', (q) => {
+    const s = segment.settingsFromParams(params(q))
+    expect({ query: segment.settingsToQuery(s), figure: buildSegments(s) }).toMatchSnapshot()
   })
 })
 
@@ -380,6 +482,14 @@ describe('two-way table', () => {
   })
 })
 
+describe('table of values', () => {
+  test.each(VALUES)('%s', (q) => {
+    const s = values.settingsFromParams(params(q))
+    const { read, ...figure } = buildValues(s)
+    expect({ query: values.settingsToQuery(s), missing: read.missing, problems: read.problems, pattern: read.pattern, notes: read.notes, figure }).toMatchSnapshot()
+  })
+})
+
 describe('histogram', () => {
   test.each(HISTOGRAM)('%s', (q) => {
     const s = histogram.settingsFromParams(params(q))
@@ -388,10 +498,48 @@ describe('histogram', () => {
   })
 })
 
+const reg = (...r: string[]) => r.map((x) => `reg=${encodeURIComponent(x)}`).join('&')
+const NORMAL = [
+  '',
+  `mean=100&sd=15&second=z&titleMode=text&title=IQ%20scores&${reg('right|value|130||probability|value|')}`,
+  'numbers=symbols&second=z&percents=rule',
+  'reach=4&percents=exact&sdLines=solid&density=1&labelSize=large',
+  `mean=500&sd=100&${reg('between|value|400|650|blank|value|', 'left|value|300||percent|none|red')}`,
+  `numbers=z&look=bw&${reg('outside|area|0.05||probability|z|')}`,
+  `mean=70&sd=8&${reg('right|area|10%||percent|blank|')}&xTitleMode=text&xTitle=Exam%20mark`,
+  `mean=100&sd=15&sdLines=off&mark=70%7Cpercentile%7C&mark=85%7Cz%7C&mark=130%7Ctext%7CJo&mark=150%7Cblank%7C&ticks=92%2C%20108`,
+  `numbers=none&second=none&${reg('left|z|-0.5||probability|z|', 'right|z|0.5||probability|z|')}`,
+  `mean=x&sd=-2&${reg('between|value|5|1|probability|value|', 'right|value|99||probability|value|')}`,
+]
+
+describe('normal curve', () => {
+  test.each(NORMAL)('%s', (q) => {
+    const s = normal.settingsFromParams(params(q))
+    expect({ query: normal.settingsToQuery(s), figure: buildCurve(s) }).toMatchSnapshot()
+  })
+})
+
 describe('venn diagram', () => {
   test.each(VENN)('%s', (q) => {
     const s = venn.settingsFromParams(params(q))
     expect({ query: venn.settingsToQuery(s), figure: buildVenn(s) }).toMatchSnapshot()
+  })
+})
+
+const TREE = [
+  '',
+  'o1=R%7CB&p1=3%2F5%7C2%2F5&o2=R%7CB&p2=2%2F4%7C2%2F4%3B3%2F4%7C1%2F4&s2=0&stageTitles=1&t1=1st+draw&t2=2nd+draw',
+  'o1=H%7CT&p1=1%2F2%7C1%2F2&o2=1%7C2%7C3%7C4%7C5%7C6&p2=1%2F6%7C1%2F6%7C1%2F6%7C1%2F6%7C1%2F6%7C1%2F6',
+  'direction=down&start=Start&o1=Win%7CLose&p1=0.3%7C&o2=Win%7CLose&p2=x%7C1-x&pathStyle=joined&blank=p0-0%7Cq1-1',
+  'labelSize=large&showProbs=blank&showNames=hide&o1=A%7CB%7CC&p1=20%25%7C30%25%7C50%25',
+  'o1=H%7CT&o2=H%7CT&o3=H%7CT&o4=H%7CT&showOutcomes=hide&showPathProbs=hide',
+]
+
+describe('tree diagram', () => {
+  test.each(TREE)('%s', (q) => {
+    const s = tree.settingsFromParams(params(q))
+    const { read, ...figure } = buildTree(s)
+    expect({ query: tree.settingsToQuery(s), problems: read.problems, figure }).toMatchSnapshot()
   })
 })
 
@@ -463,6 +611,15 @@ describe('3D shape', () => {
     const read = readShape(s)
     const figure = read.values ? buildShape(s, { ...read, values: read.values }) : null
     expect({ query: kind.settingsToQuery(s), read, figure }).toMatchSnapshot()
+  })
+})
+
+describe('net', () => {
+  test.each(NET)('%s', (q) => {
+    const s = netSettings.settingsFromParams(params(q))
+    const read = readNet(s)
+    const figure = read.values ? buildNet(s, { ...read, values: read.values }) : null
+    expect({ query: netSettings.settingsToQuery(s), read, figure }).toMatchSnapshot()
   })
 })
 

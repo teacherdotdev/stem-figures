@@ -197,6 +197,21 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'segment-addition',
+    site: 'math',
+    name: 'Segment Addition Generator',
+    path: '/segment-addition',
+    blurb: 'Points on a segment with lengths or expressions on each part, braces and congruence ticks.',
+    description:
+      'Make printable segment addition figures for geometry. Put points in order on a segment, ray or line, label each part with a length or an expression like 2x + 3, add a brace for the whole, mark midpoints with congruence ticks or a bisector, and copy it into a worksheet or test.',
+    keywords: [
+      'segment addition', 'segment addition postulate', 'segments', 'line segment', 'line segments', 'midpoint', 'midpoints',
+      'segment bisector', 'bisector', 'perpendicular bisector', 'congruent segments', 'congruence marks', 'tick marks',
+      'collinear points', 'between', 'betweenness', 'partition', 'solve for x', 'algebraic expressions', 'ray', 'rays', 'line',
+      'brace', 'segment length', 'measuring segments', 'geometry', 'diagram', 'labels', 'printable',
+    ],
+  },
+  {
     id: 'circle',
     site: 'math',
     name: 'Circle Generator',
@@ -265,6 +280,22 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'net',
+    site: 'math',
+    name: 'Net Generator',
+    path: '/net',
+    blurb: 'Nets of cubes, prisms, pyramids, cylinders and cones, labeled for surface area.',
+    description:
+      'Make a printable net of a 3D shape for your class. Unfold a cube into any of its 11 nets, or a prism, pyramid, cylinder or cone drawn to scale, label its edges with their measures or with x, name the faces or write their areas, add glue tabs for cutting it out, then copy it into a worksheet or test on surface area.',
+    keywords: [
+      'net', 'nets', 'net of a cube', 'cube net', 'cube nets', '11 nets of a cube', 'net of a prism', 'net of a pyramid', 'net of a cylinder',
+      'net of a cone', 'net of a 3d shape', 'nets of 3d shapes', 'nets of solids', 'unfold', 'unfolded', 'flattened', 'fold', 'folding',
+      'surface area', 'lateral area', 'faces', 'edges', 'vertices', '3d', 'three dimensional', 'solid', 'solids', 'geometric solids', '3d shape',
+      'prism', 'rectangular prism', 'triangular prism', 'cube', 'pyramid', 'square pyramid', 'triangular pyramid', 'tetrahedron', 'cylinder', 'cone',
+      'polyhedra', 'polyhedron', 'slant height', 'sector', 'glue tabs', 'template', 'cut out', 'papercraft', 'to scale', 'geometry', 'printable',
+    ],
+  },
+  {
     id: 'sphere',
     site: 'math',
     name: 'Sphere Generator',
@@ -290,6 +321,36 @@ export const MATH: CatalogEntry[] = [
       'five-number summary', 'quartile', 'quartiles', 'q1', 'q3', 'median', 'minimum', 'maximum', 'range', 'interquartile range',
       'iqr', 'outlier', 'outliers', 'statistics', 'stats', 'data', 'data set', 'data display', 'compare data', 'distribution',
       'spread', 'center', 'printable',
+    ],
+  },
+  {
+    id: 'dot-plot',
+    site: 'math',
+    name: 'Dot Plot Generator',
+    path: '/dot-plot',
+    blurb: 'Dot plots and line plots from a list of values or a frequency table.',
+    description:
+      'Make a printable dot plot for your class. Type or paste the data, or each value with how many of it, draw dots or X’s over a number line, use fractions for line plots of measurements, and copy it into a worksheet or test.',
+    keywords: [
+      'dot plot', 'dot plots', 'dotplot', 'line plot', 'line plots', 'dot diagram', 'x plot', 'frequency', 'frequency table', 'tally',
+      'statistics', 'stats', 'data', 'data set', 'data display', 'distribution', 'shape of data', 'mode', 'median', 'range', 'cluster',
+      'gap', 'peak', 'outlier', 'skewed', 'symmetric', 'fractions', 'measurement', 'line plot with fractions', 'printable',
+    ],
+  },
+  {
+    id: 'scatter-plot',
+    site: 'math',
+    name: 'Scatter Plot Generator',
+    path: '/scatter-plot',
+    blurb: 'Scatter plots from paired data, with a line of best fit, its equation and r.',
+    description:
+      'Make a printable scatter plot for your class. Type or paste x and y values, let the axes fit the data with a zig-zag break, add the least-squares line of best fit or your own, write its equation and the correlation coefficient or leave blanks, and copy it into a worksheet or test.',
+    keywords: [
+      'scatter plot', 'scatter plots', 'scatterplot', 'scatter graph', 'scatter diagram', 'scattergram', 'scatter chart',
+      'line of best fit', 'best fit line', 'trend line', 'linear regression', 'least squares', 'least squares regression line', 'lsrl',
+      'regression line', 'linreg', 'correlation', 'correlation coefficient', 'r value', 'r squared', 'positive correlation',
+      'negative correlation', 'no correlation', 'bivariate data', 'paired data', 'two variable data', 'association', 'outlier',
+      'residual', 'prediction', 'extrapolation', 'interpolation', 'statistics', 'stats', 'data', 'data display', 'axis break', 'printable',
     ],
   },
   {
@@ -372,6 +433,22 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'normal-curve',
+    site: 'math',
+    name: 'Normal Curve Generator',
+    path: '/normal-curve',
+    blurb: 'Normal distribution curves from a mean and SD, with regions shaded and their areas written.',
+    description:
+      'Make a printable normal distribution curve for your class. Give the mean and standard deviation, number the axis in values or z-scores, shade the area left of, right of, between or outside values, write each area or leave a blank, find a cut-off from an area as invNorm does, and mark percentile ranks, then copy it into a worksheet or test.',
+    keywords: [
+      'normal curve', 'normal curves', 'normal distribution', 'normal distribution curve', 'bell curve', 'bell shaped curve', 'gaussian',
+      'standard normal', 'standard normal curve', 'standard normal distribution', 'z-score', 'z score', 'z-scores', 'z table',
+      'standard deviation', 'mean', 'empirical rule', '68-95-99.7', '68 95 99.7 rule', 'area under the curve', 'shaded area',
+      'shaded region', 'probability', 'normal probability', 'percentile', 'percentile rank', 'inverse normal', 'invnorm',
+      'normalcdf', 'two tailed', 'critical value', 'ap statistics', 'statistics', 'stats', 'distribution', 'printable',
+    ],
+  },
+  {
     id: 'venn-diagram',
     site: 'math',
     name: 'Venn Diagram Generator',
@@ -384,6 +461,22 @@ export const MATH: CatalogEntry[] = [
       'ξ', 'subset', 'disjoint', 'mutually exclusive', 'a ∩ b', 'a ∪ b', 'a′', 'shading', 'shade the region',
       'probability', 'conditional probability', 'elements', 'factors', 'multiples', 'prime factors', 'hcf', 'lcm',
       'sorting', 'three circles', 'three set venn diagram', 'two circles', 'printable',
+    ],
+  },
+  {
+    id: 'tree-diagram',
+    site: 'math',
+    name: 'Tree Diagram Generator',
+    path: '/tree-diagram',
+    blurb: 'Probability tree diagrams of up to four stages, with probabilities on the branches, the outcomes listed and blanks for students.',
+    description:
+      'Probability tree diagrams with outcomes, branch probabilities and blanks.',
+    keywords: [
+      'tree diagram', 'tree diagrams', 'probability tree', 'probability trees', 'probability tree diagram', 'tree diagram generator',
+      'sample space', 'outcomes', 'compound events', 'compound probability', 'independent events', 'dependent events',
+      'conditional probability', 'with replacement', 'without replacement', 'coin', 'coin flip', 'dice', 'spinner', 'marbles',
+      'branches', 'multiplication rule', 'and rule', 'probability', 'statistics', 'stats', 'ap stats', '7.sp.c.8', 'hss-cp',
+      'fill in the blanks', 'printable',
     ],
   },
   {
@@ -412,6 +505,21 @@ export const MATH: CatalogEntry[] = [
       'mapping diagram', 'mapping diagrams', 'mapping', 'arrow diagram', 'function', 'functions', 'relation', 'relations',
       'is it a function', 'not a function', 'function or not', 'one-to-one', 'many-to-one', 'input', 'output', 'inputs',
       'outputs', 'domain', 'range', 'codomain', 'ordered pairs', 'pairs', 'arrows', 'ovals', 'algebra', 'printable',
+    ],
+  },
+  {
+    id: 'table-of-values',
+    site: 'math',
+    name: 'Table of Values Generator',
+    path: '/table-of-values',
+    blurb: 'Tables of x and y values from a rule or typed pairs, with blanks for students to fill in.',
+    description:
+      'Make a printable table of values for your class. Type a rule like y = 2x + 1 and the x-values, or type the pairs yourself, run it across or down, click any value to leave a blank, write the rule or a blank for it, and copy it into a worksheet or test.',
+    keywords: [
+      'table of values', 'tables of values', 'value table', 'x y table', 'xy table', 'x-y table', 'input output table', 'input-output table',
+      'in out table', 'in-out table', 'function table', 'function tables', 't-chart', 't chart', 'rule', 'function rule', 'find the rule',
+      'complete the table', 'linear function', 'linear equation', 'rate of change', 'slope', 'pattern', 'patterns', 'sequence',
+      'quadratic', 'ordered pairs', 'input', 'output', 'function', 'functions', 'algebra', 'pre-algebra', 'printable',
     ],
   },
   {

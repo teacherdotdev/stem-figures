@@ -22,4 +22,4 @@ This project was created as a prototype during the 3-day "EdTech-a-thon" event b
 - Install once at the repo root (`npm install`); npm workspaces link `apps/*` and `packages/*`. Don't add per-app lockfiles.
 - Code used by more than one site lives in `packages/shared` and is imported as `$shared/...`. Changing a file there changes every site that imports it, so check and build each of those apps. A site that needs a different version keeps its own copy in its `src/lib/`.
 - Every generator is listed in `packages/shared/src/catalog/`, with the one site it lives on and any other sites that list it (`alsoOn`). Every directory searches all of them. See `packages/shared/README.md` for adding one. The exception is a generator copied onto several sites, each with its own entry and code (Length Reading, on Math, Physics and Chemistry, Math's with the ruler only): change every copy (`packages/shared/docs/adr/0001-a-generator-on-two-sites.md`).
-- Start an app with `./scripts/agent-dev.mjs stemfigures/apps/<app>` from the workspace root.
+- Start an app with `bun run dev` (runs `vite dev`) from `apps/<app>`; Vite prints its address (usually http://localhost:5173/).

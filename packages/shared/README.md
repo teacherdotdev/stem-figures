@@ -29,7 +29,7 @@ site's directory: its own generators with live previews, then those it lists
 from other sites, and, while searching, matches from every other site under
 their site's name. A site can only draw its own previews, so the others show
 pictures from `catalog/previews/`. Retake a site's pictures after changing its
-previews: start it with `./scripts/agent-dev.mjs`, then run
+previews: start it with `bun run dev` (Vite) in its app folder, then run
 `node scripts/snapshot-previews.mjs <its address>` from the monorepo root.
 
 A generator can instead be copied onto other sites, with an entry on each

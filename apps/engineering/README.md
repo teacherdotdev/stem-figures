@@ -42,7 +42,7 @@ under `src/routes/`. The directory, search and sitemap pick it up from the list.
 
 ```bash
 npm install   # once, from the stemfigures repo root (npm workspaces)
-../../../scripts/agent-dev.mjs stemfigures/apps/engineering   # from the workspace, never npm run dev directly
+bun run dev   # Vite dev server; prints its address
 npm run check   # svelte-check
 npm run build
 ```

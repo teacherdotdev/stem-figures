@@ -546,6 +546,48 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'Geometry'],
   },
 
+  'net': {
+    heading: 'Nets of cubes, prisms, pyramids, cylinders and cones',
+    intro: [
+      'The Net Generator unfolds a 3D shape flat, drawn to scale from the measures you type: a cube in any of its 11 nets, a prism on a rectangle, a right or isosceles triangle or a regular polygon, a pyramid on a rectangle or a regular polygon, a cylinder or a cone. The edges between faces are dashed fold lines, and the cut edges round the outside are solid.',
+      'Teachers use it for surface area, from counting the faces of a box to finding a cone’s sector, and for showing which flat shapes fold into which solids. Each edge length can be labeled with its measure, with text like x, or left off; the faces can be named or given their areas, and glue tabs can be added for students to cut it out and fold it up.',
+    ],
+    settings: [
+      'The 3D shape: a cube, a prism, a pyramid, a cylinder or a cone',
+      'Any of the 11 nets of a cube',
+      'A prism’s base: a rectangle, a right or isosceles triangle, or a regular polygon of 3 to 8 sides; a pyramid’s: a rectangle or a regular polygon',
+      'Each measure typed as a number, a fraction or with √, and labeled with its measure, text like x, or nothing',
+      'A pyramid’s or cone’s height or slant height, with the other worked out; a rectangular pyramid’s second slant height, a cylinder’s circumference and a cone’s sector angle worked out and labeled if you want',
+      'Fold lines dashed or solid, glue tabs, and right-angle squares',
+      'Face names (A, B, C …), face areas, or both, and matching faces tinted alike',
+      'The 3D shape drawn beside its net',
+      'A unit (cm, m, mm, in, ft, yd, units or your own), rounding for worked-out measures, and labels you can drag on the figure',
+    ],
+    faqs: [
+      {
+        q: 'Can I show all 11 nets of a cube?',
+        a: 'Yes. Choose Cube, and pick any of the 11 nets under Net. Each is drawn with the same edge, so you can make one figure per net, or ask students which of them fold into a cube.',
+      },
+      {
+        q: 'Which edges are labeled?',
+        a: 'One edge for each measure the shape has, on the outside of the net where there is room, so students find each face’s other sides by matching edges. An edge that is only ever a fold, like the base of a pyramid, is labeled just inside a face.',
+      },
+      {
+        q: 'Does it work out the surface area?',
+        a: 'Only if you ask. Under Faces, choose Areas to write each face’s area in it, for an answer key; with Nothing or Names, the net doesn’t give the answer away.',
+      },
+      {
+        q: 'Can students cut it out and fold it?',
+        a: 'Yes. Under Lines, turn on Glue tabs to add a tab on one of each pair of edges that meet when it’s folded, and teeth round a cylinder’s or cone’s circles. It prints to fit the page, not to an exact size, so measure the printed net if the size matters.',
+      },
+      {
+        q: 'Why is a pyramid’s height not on the net?',
+        a: 'A pyramid’s height runs up through its middle, so it isn’t on any face. You can still give the height, and the slant height drawn on the net is worked out from it.',
+      },
+    ],
+    imageAlt: 'A printable net of a rectangular prism, its faces joined by dashed fold lines and labeled 8 cm, 3 cm and 5 cm, made with the Net Generator',
+    educationalLevel: ['Elementary school', 'Middle school', 'High school', 'Geometry'],
+  },
   'sphere': {
     heading: 'Spheres and hemispheres with the radius or diameter labeled',
     intro: [
@@ -615,6 +657,78 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
     ],
     imageAlt: 'A printable box plot of 15 test scores over a number line from 60 to 100, titled Test scores, made with the Box Plot Generator',
+    educationalLevel: ['Middle school', 'High school'],
+  },
+
+  'dot-plot': {
+    heading: 'Dot plots and line plots from your data',
+    intro: [
+      'The Dot Plot Generator draws a dot plot, also called a line plot, from the values you type or paste: one dot or X for each value, stacked over its place on a number line. Or type each value once with how many of it there are, as a frequency table. The number line fits the data unless you set it, counting by 1 for whole numbers and by the data’s own step for halves, quarters or eighths, so every mark sits on a tick.',
+      'Teachers use it for questions on the mode, median and range, the shape of a data set (clusters, gaps, peaks and outliers), and for 4th and 5th grade line plots of measurements in fractions of a unit. Nothing on the figure gives the statistics away, so students work them out from the plot.',
+    ],
+    settings: [
+      'The data, as a list of values or as a table of values and counts, with fractions like 3/4 or 1 1/2',
+      'Dots or X’s as the marks',
+      'A chart title and an axis title, as text or a blank line for students',
+      'The number line’s range and count-by, worked out from the data unless you type them, and which ticks are numbered',
+      'How each end of the number line finishes: an arrow, a circle or nothing',
+    ],
+    faqs: [
+      {
+        q: 'What’s the difference between a dot plot and a line plot?',
+        a: 'They are the same kind of graph: a mark for each value, stacked over a number line. Many US curricula call it a line plot and draw X’s; others call it a dot plot and draw dots. Choose either mark under Marks.',
+      },
+      {
+        q: 'Can I make a dot plot from a frequency table?',
+        a: 'Yes. Choose Values and counts and type each value with how many times it appears, or paste the two columns from a spreadsheet. Switching from a list to a table, or back, fills in the other one from your data when it’s empty.',
+      },
+      {
+        q: 'Can I make a line plot with fractions?',
+        a: 'Yes. Type values like 1/8, 1/4 or 1 1/2 and the number line is numbered in fractions, counting by the smallest step your data uses, such as eighths of an inch.',
+      },
+      {
+        q: 'What if there are a lot of values?',
+        a: 'The marks get smaller as a column gets taller, so the figure stays a printable size. A single value can have up to 100 marks over it.',
+      },
+    ],
+    imageAlt: 'A printable dot plot of 20 students’ hours of sleep over a number line from 5 to 11, made with the Dot Plot Generator',
+    educationalLevel: ['Elementary school', 'Middle school'],
+  },
+
+  'scatter-plot': {
+    heading: 'Scatter plots with a line of best fit',
+    intro: [
+      'The Scatter Plot Generator draws a scatter plot from paired data you type or paste: an x and a y value for each point, such as hours studied and test score. The axes fit the data, with a step of room past it at each end, unless you set them, and an axis that starts well past 0 begins with a zig-zag break, so the points fill the graph.',
+      'Add the least-squares line of best fit, worked out as LinReg on a calculator, or draw your own line from its equation. Write the equation and the correlation coefficient r (or r²) below the graph, or leave a blank line for students to fill in the equation, or show the points alone for students to draw a line by eye.',
+    ],
+    settings: [
+      'The data, as a table of x and y values or a list of pairs pasted from a spreadsheet',
+      'Dots or crosses for the points',
+      'A line of best fit: none, least squares, or your own typed as y = mx + b',
+      'The line’s equation (written, as a blank line or hidden) and r or r² below the graph, rounded to the places you choose',
+      'A chart title and axis titles, as text or a blank line for students',
+      'Each axis’s range and count-by, worked out from the data unless you type them, and which lines are numbered',
+      'Light, standard, bold or no gridlines, and minor gridlines',
+    ],
+    faqs: [
+      {
+        q: 'How is the line of best fit worked out?',
+        a: 'It is the least-squares regression line through every point, the same line a TI-84’s LinReg(ax+b), Desmos or a spreadsheet’s trendline gives. Its equation is rounded to the decimal places you choose.',
+      },
+      {
+        q: 'Can students draw the line of best fit themselves?',
+        a: 'Yes. Leave the line off for students to draw one by eye, or draw it and set the equation to a blank line so they write it. You can also type your own line, such as y = 2x + 10, to show a line drawn by eye.',
+      },
+      {
+        q: 'Why does an axis have a zig-zag?',
+        a: 'When the data starts far from 0, such as test scores from 55 to 95, the axis starts a step below the data and the zig-zag shows that part of it has been left out. Type 0 in the axis’s From box to start it at 0 instead.',
+      },
+      {
+        q: 'Can I paste data from a spreadsheet?',
+        a: 'Yes. Copy two columns, x then y, and paste them into the table, or into the list of pairs. A row of column headings is skipped.',
+      },
+    ],
+    imageAlt: 'A printable scatter plot of hours studied against test scores with a line of best fit and its equation, made with the Scatter Plot Generator',
     educationalLevel: ['Middle school', 'High school'],
   },
 
@@ -782,6 +896,45 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'Algebra 1'],
   },
 
+  'tree-diagram': {
+    heading: 'Probability tree diagrams with blanks for students',
+    intro: [
+      'The Tree Diagram Generator draws a probability tree from the stages you type: each stage is one event, like a coin flip, a spin or a draw from a bag, and every branch of a stage splits into the same outcomes. Probabilities are written on the branches as you type them, fractions stacked, and the outcome column at the end lists each path, like H, T, with its probability worked out by multiplying along the branches.',
+      'Each stage’s probabilities can be the same on every branch, for independent events, or different on each, for dependent events like drawing without replacement. Leave a probability empty for students to fill in, click any label on the figure to make it a blank, or blank or hide every outcome, probability or path at once for a worksheet or exam question.',
+    ],
+    settings: [
+      'Up to four stages, each with two to six outcomes, up to 36 paths in all',
+      'Each outcome’s probability, the same on every branch or typed for each branch, written as typed: fractions, decimals, percents or letters like x',
+      'An outcome column of each path’s name, written H, T or HT, and its probability, multiplied out and in lowest terms when the branches are fractions',
+      'Outcomes, probabilities, path names and path probabilities each shown, left as blank lines or hidden, and any single label made a blank by clicking it',
+      'Left to right or top to bottom, a label at the start, a title over each stage, and small, medium or large labels',
+    ],
+    faqs: [
+      {
+        q: 'How do I make a tree diagram for drawing without replacement?',
+        a: 'Type the first draw’s outcomes and probabilities, like Red 3/5 and Blue 2/5, then add a second stage and untick Same on every branch. Each branch of the first draw gets its own row, so after Red you can type 2/4 and 2/4, and after Blue 3/4 and 1/4.',
+      },
+      {
+        q: 'How do I leave probabilities for students to fill in?',
+        a: 'Leave a probability empty and its branch gets a blank line. To blank a label you’ve typed, click it on the figure; click it again to bring it back, or click Clear blanks. Under Labels you can make every outcome, probability, path name or path probability a blank at once, or hide it.',
+      },
+      {
+        q: 'How are the path probabilities worked out?',
+        a: 'Each path’s probability is the product of the probabilities on its branches. When every one is a fraction it’s written as a fraction in lowest terms; otherwise as a decimal. If a branch on the path is blank or a letter, the path’s probability is left blank.',
+      },
+      {
+        q: 'What if my probabilities don’t add up to 1?',
+        a: 'The panel tells you which branches don’t add up to 1, so you can check a typo before printing. The tree is still drawn as you typed it.',
+      },
+      {
+        q: 'Can the tree go from top to bottom?',
+        a: 'Yes, under Layout, for trees of up to 12 paths. The outcome column becomes a row under the leaves, each path’s name over its probability.',
+      },
+    ],
+    imageAlt: 'A printable probability tree diagram of two marbles drawn without replacement from a bag of 3 red and 2 blue, with fractions on the branches and each outcome’s probability listed, made with the Tree Diagram Generator',
+    educationalLevel: ['Middle school', 'High school', 'AP Statistics'],
+  },
+
   'histogram': {
     heading: 'Histograms from a data set or a frequency table',
     intro: [
@@ -828,6 +981,46 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school'],
   },
 
+  'normal-curve': {
+    heading: 'Normal distribution curves with shaded areas',
+    intro: [
+      'The Normal Curve Generator draws a normal distribution curve from a mean and standard deviation, with a tick at each standard deviation from the mean, numbered in values, z-scores or μ ± σ, or left blank for students. Dashed lines rise from each tick to the curve, and the percent of the area in each section can be written, rounded as the empirical rule gives it or exactly.',
+      'Shade the area left of a value, right of one, between two or outside two, typed as values or z-scores, and write its area as a probability or a percent, or leave a blank line for students. Or type the area and the cut-off is worked out, as invNorm does. Areas match a calculator’s normalcdf to 4 decimal places, and the shading is drawn along the curve as printed.',
+    ],
+    settings: [
+      'The mean and standard deviation, with ticks to 3 or 4 standard deviations either side',
+      'One or two rows of numbers under the axis: values, z-scores, μ ± σ or blank lines, and more ticks at values you type',
+      'Dashed or solid lines at each standard deviation, and the percent in each section by the empirical rule or exactly',
+      'Up to four shaded regions, left of, right of, between or outside values or z-scores, or found from their area, each with its area as a probability, a percent or a blank line',
+      'Marked values: a dotted line up to the curve with the value, its z-score, its percentile rank or your own text over it',
+      'Color, or black and white with hatching for printing, and a density axis',
+      'A chart title and axis title, as text or a blank line for students',
+    ],
+    faqs: [
+      {
+        q: 'How do I draw the 68–95–99.7 rule?',
+        a: 'Leave the mean and standard deviation as they are, or type your own, and choose Empirical rule under Percent in each section. Each section is labeled 34%, 13.5%, 2.35% or 0.15%. Choose Exact to write the areas to two decimal places instead, such as 34.13%.',
+      },
+      {
+        q: 'How do I shade the area for a probability question?',
+        a: 'Add a region, choose Left of, Right of, Between or Outside, and type the bound or bounds as values or as z-scores. Its area is written on it as a probability, such as 0.0228, or as a percent. Choose Blank for a line students fill in. The panel lists each region’s probability.',
+      },
+      {
+        q: 'Can it find the value for a given area, like invNorm?',
+        a: 'Yes. Choose Area for how the region is given and type the area, such as 0.1 for the top 10% or 0.95 for the middle 95%. The cut-off is worked out and written under the axis as a value or a z-score, or left blank for students to find. Middle and outer areas are split evenly either side of the mean.',
+      },
+      {
+        q: 'Can I show z-scores and values together?',
+        a: 'Yes. Pick Values for Numbers and z-scores for Second row, and each tick has its value with its z-score under it. Pick μ ± σ to write μ − 2σ, μ − σ, μ and so on.',
+      },
+      {
+        q: 'How do I mark percentile ranks on a bell curve?',
+        a: 'Add a marked value for each score and choose Percentile for its label. A dotted line rises to the curve with the score’s percentile rank, such as 84th, over it, as school psychologists show standard scores with a mean of 100 and SD of 15.',
+      },
+    ],
+    imageAlt: 'A printable normal distribution curve with a mean of 100 and standard deviation of 15, the area above 130 shaded, made with the Normal Curve Generator',
+    educationalLevel: ['High school'],
+  },
   'venn-diagram': {
     heading: 'Venn diagrams with numbers, elements or shading',
     intro: [
@@ -939,6 +1132,78 @@ export const COPY: Record<string, GeneratorCopy> = {
     ],
     imageAlt: 'A printable mapping diagram with inputs 1, 2, 3 and 4 in an oval, outputs 3, 5, 7 and 9 in another, and one arrow from each input, made with the Mapping Diagram Generator',
     educationalLevel: ['Middle school', 'High school', 'Algebra 1'],
+  },
+
+  'segment-addition': {
+    heading: 'Segment addition, midpoint and bisector figures',
+    intro: [
+      'The Segment Addition Generator draws points in order on a segment, ray or line, with each part between two points labeled above the line: a length like 12, an expression like 2x + 3, or a blank line for students. Add a brace under the whole segment, or any stretch of it, with its own label, so the figure shows AB + BC = AC.',
+      'Mark congruent parts with ticks for midpoint problems, and add a line crossing at a point for a segment bisector or perpendicular bisector. When the labels use one letter, the generator solves for it as a check, and draws the parts to scale from the answer unless you set their lengths yourself.',
+    ],
+    settings: [
+      'Two to seven points in order, each named and dotted or not',
+      'Each part’s label: a length, an expression in one letter, a blank line or nothing, and none to three congruence ticks',
+      'Up to three braces under the line, from any point to a later one, each labeled, blank or unlabeled',
+      'Each end stopping at its point or running on to an arrow, for a segment, a ray or a line',
+      'A line crossing at any point, named, at any angle, with a right-angle mark at 90°',
+      'How long each part is drawn, worked out from the labels or typed for a figure not drawn to scale; turning the whole figure; small, medium or large labels',
+    ],
+    faqs: [
+      {
+        q: 'Does it solve for x?',
+        a: 'Yes, as a check. When every label is a number or an expression in the same letter, it writes the equations the figure gives (AB + BC = AC, and AM = MB for parts with the same ticks), solves for the letter and lists every length below the parts. It tells you when the labels don’t add up or a length comes out 0 or less.',
+      },
+      {
+        q: 'How do I make a midpoint or segment bisector problem?',
+        a: 'Use three points, such as A, M and B, label AM and MB with expressions, and give both parts one tick. For a bisector, add a crossing line at M and name it; at 90° it gets a right-angle mark, for a perpendicular bisector.',
+      },
+      {
+        q: 'Is the figure drawn to scale?',
+        a: 'When the labels can be worked out, each part is drawn as long as its length, with none shorter than a fifth of the longest. Type a size for each part under Drawn lengths to draw it however you like, such as for a figure marked not drawn to scale.',
+      },
+      {
+        q: 'Can I make a ray or a line instead of a segment?',
+        a: 'Yes. Set either end to an arrow under Ends: one arrow makes a ray, two make a line with its points named along it, for questions on collinear points and naming rays.',
+      },
+    ],
+    imageAlt: 'A printable segment addition figure: points A, B and C on a segment, with AB labeled 2x + 1, BC labeled 3x − 4 and a brace under AC labeled 27, made with the Segment Addition Generator',
+    educationalLevel: ['Middle school', 'High school', 'Geometry'],
+  },
+
+  'table-of-values': {
+    heading: 'Tables of values for functions, rules and patterns',
+    intro: [
+      'The Table of Values Generator draws a table of x-values and the y-values a rule gives for them, running across in two rows or down in two columns. Type a rule like y = 2x + 1, y = x^2 − 3 or y = 1/x and the x-values as a range or a list, and every y is worked out for you: whole numbers and fractions exactly, anything else rounded. Or type the pairs yourself, numbers or words, for a pattern or a table with no rule.',
+      'Click any value on the figure to leave it blank for students, or blank every y at once. The settings panel gives each missing value and says whether the table is linear and its rate of change, so the answer key is ready too. Write the rule above the table, or leave a blank line for students to find it.',
+    ],
+    settings: [
+      'A rule in x, like y = 2x + 1, y = x^2, y = 3(2)^x or y = sin x, or pairs typed or pasted one per row, words too',
+      'The x-values as a range (From, To and Step) or a list, written as fractions, multiples of π or degrees when you type them that way',
+      'Blanks: click any value to leave it blank, blank every y at once, or leave a cell empty in a typed table',
+      'Worked-out values as fractions in lowest terms or as decimals, rounded to 0 to 4 places; where the rule has no value, undefined',
+      'The headings (x and y, Input and Output, x and f(x), or your own), a table title, and the rule written above the table or left as a blank line',
+      'The table running across in two rows or down in two columns, gray or plain headings, and small, medium or large labels',
+    ],
+    faqs: [
+      {
+        q: 'How do I make a complete-the-table worksheet?',
+        a: 'Type the rule and x-values, then click Blank every y, or click the values you want students to find one by one. Each blank and its value is listed under the table for your answer key.',
+      },
+      {
+        q: 'Can I make a find-the-rule question?',
+        a: 'Yes. Type the rule and leave The rule, above the table on Blank line, so students write it in. Or pick Typed and type the pairs; the settings panel says whether they are linear and gives the line they follow.',
+      },
+      {
+        q: 'Can the values be fractions or decimals?',
+        a: 'Yes. Type x-values like 1/2 or a step of 0.5, and the y-values are written as fractions in lowest terms, or as decimals if you pick Decimals. Values that are not fractions, like the square root of 2, are rounded to the places you choose.',
+      },
+      {
+        q: 'Can I make an input-output table or a T-chart?',
+        a: 'Yes. Pick the Input / Output headings, or type your own, and set the table to run down for a T-chart in two columns.',
+      },
+    ],
+    imageAlt: 'A printable table of values for y = 2x + 1, with x from −2 to 3 across the top and two of the y-values left blank, made with the Table of Values Generator',
+    educationalLevel: ['Middle school', 'High school', 'Pre-algebra', 'Algebra 1'],
   },
 
   'circle': {

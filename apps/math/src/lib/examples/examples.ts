@@ -515,6 +515,73 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('net', [
+    {
+      slug: 'net-of-a-rectangular-prism-8-cm-by-3-cm-by-5-cm',
+      title: 'Net of a rectangular prism 8 cm by 3 cm by 5 cm',
+      alt: 'The net of a rectangular prism: four rectangles in a row with a rectangle above and below the second, fold lines dashed, labeled 8 cm, 3 cm and 5 cm',
+      caption:
+        'The net of a rectangular prism (a box) drawn to scale: its four sides in a row, 3 cm, 8 cm, 3 cm and 8 cm wide and 5 cm tall, with its top and bottom on the second. The fold lines between faces are dashed and the cut edges round the outside are solid. Only one edge of each length is labeled, so students match edges to find the rest. Use it for surface area.',
+      settings: { length: '8', height: '5' },
+    },
+    {
+      slug: 'net-of-a-cube-with-faces-named',
+      title: 'Net of a cube with its faces named',
+      alt: 'The cross-shaped net of a cube, six squares with dashed fold lines, the faces named A to F and one edge labeled 4 cm',
+      caption:
+        'The cross-shaped net of a cube: a row of four squares with one square above and one below the second. The faces are named A to F in reading order and one edge is labeled 4 cm. Ask which face is opposite A when it’s folded, or for its surface area.',
+      settings: { shape: 'cube', faceText: 'names' },
+    },
+    {
+      slug: 'cube-net-with-glue-tabs-to-cut-out',
+      title: 'Cube net with glue tabs to cut out',
+      alt: 'A net of a cube, two squares then a row of three then one, with gray glue tabs on seven of its edges and dashed fold lines',
+      caption:
+        'One of the 11 nets of a cube, two squares on top, a row of three below them and one square under that, with a gray glue tab on one of each pair of edges that meet when it’s folded. The fold lines, tabs’ included, are dashed. Print it for students to cut out, fold and glue into a cube.',
+      settings: { shape: 'cube', cubeNet: 7, tabs: true, sideLabel: 'none' },
+    },
+    {
+      slug: 'net-of-a-triangular-prism-with-a-right-triangle-base',
+      title: 'Net of a triangular prism with a right triangle base',
+      alt: 'The net of a triangular prism: three rectangles 8 cm, 6 cm and 10 cm wide and 12 cm long, with a right triangle above and below the middle one',
+      caption:
+        'The net of a triangular prism whose ends are right triangles with legs 6 cm and 8 cm and a 10 cm hypotenuse. Its three rectangular sides are in a row, all 12 cm long, with a triangle above and below the middle one and a right-angle square at each right angle. The 6 cm is written inside the middle rectangle, since that edge is a fold on both sides.',
+      settings: { base: 'right', triHeight: '8', height: '12' },
+    },
+    {
+      slug: 'net-of-a-square-pyramid-with-slant-height',
+      title: 'Net of a square pyramid with its slant height',
+      alt: 'The net of a square pyramid: a square with sides 6 cm and a triangle on each side, the bottom triangle’s slant height dashed and labeled 5 cm',
+      caption:
+        'The net of a square pyramid: a 6 cm square base with a triangle on each of its sides. The slant height is drawn dashed down the middle of the bottom triangle, with a right-angle square where it meets the base, and labeled 5 cm. Use it to find the lateral area or the surface area.',
+      settings: { shape: 'pyramid', length: '6', width: '6' },
+    },
+    {
+      slug: 'net-of-a-rectangular-pyramid-with-face-areas',
+      title: 'Net of a rectangular pyramid with face areas',
+      alt: 'The net of a rectangular pyramid, a 10 cm by 6 cm base with a triangle on each side, each face named and its area written in it, matching faces tinted alike',
+      caption:
+        'The net of a rectangular pyramid with a 10 cm by 6 cm base, whose two pairs of triangles have different slant heights, 5 cm and about 6.4 cm, each dashed and labeled. Each face is named A to E with its area written under its name, and faces that match are tinted alike. Use it as an answer key for surface area.',
+      settings: { shape: 'pyramid', length: '10', width: '6', faceText: 'both', shade: true },
+    },
+    {
+      slug: 'net-of-a-cylinder-with-radius-3-cm-and-height-10-cm',
+      title: 'Net of a cylinder with radius 3 cm and height 10 cm',
+      alt: 'The net of a cylinder: a rectangle 10 cm tall and 18.8 cm long with a circle of radius 3 cm touching its top and bottom',
+      caption:
+        'The net of a cylinder: a rectangle with a circle touching the middle of its top and of its bottom. The top circle’s radius is drawn and labeled 3 cm, the rectangle’s height 10 cm, and its length, the circles’ circumference, 18.8 cm. Use it to show why a cylinder’s lateral area is its circumference times its height.',
+      settings: { shape: 'cylinder', height: '10', circLabel: 'measure' },
+    },
+    {
+      slug: 'net-of-a-cone-with-its-sector-angle',
+      title: 'Net of a cone with its sector angle',
+      alt: 'The net of a cone: a sector of a circle with straight sides 5 cm and a 216° angle at its tip, and a circle of radius 3 cm touching its arc',
+      caption:
+        'The net of a cone with radius 3 cm and slant height 5 cm: its curved side unrolled into a sector of a circle of radius 5 cm, its angle of 216° marked at its tip, and its base, a circle of radius 3 cm, touching the middle of the arc. Use it to find a cone’s lateral area.',
+      settings: { shape: 'cone', angleLabel: 'measure' },
+    },
+  ]),
+
   ...examplesOf('sphere', [
     {
       slug: 'sphere-with-radius-6-cm',
@@ -630,6 +697,186 @@ export const EXAMPLES: Example[] = [
         q3Text: 'D',
         maxLabel: 'text',
         maxText: 'E',
+      },
+    },
+  ]),
+
+  ...examplesOf('dot-plot', [
+    {
+      slug: 'dot-plot-of-hours-of-sleep',
+      title: 'Dot plot of hours of sleep',
+      alt: 'A dot plot of 20 students’ hours of sleep, titled Hours of sleep last night, with dots stacked over a number line from 5 to 11',
+      caption:
+        'A dot plot of 20 students’ hours of sleep last night, with one dot per student stacked over a number line from 5 to 11 numbered every hour and titled Hours. The tallest column, over 8, has six dots. Students read the mode, median and range, or describe the shape of the data.',
+      settings: {
+        data: '5, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 11',
+        title: 'Hours of sleep last night',
+        titleMode: 'text',
+        axisTitle: 'Hours',
+        axisTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'line-plot-of-number-of-pets-from-a-frequency-table',
+      title: 'Line plot of number of pets, from a frequency table',
+      alt: 'A line plot with X’s stacked over 0 to 5 on a number line titled Number of pets: four over 0, six over 1, five over 2, two over 3, none over 4 and one over 5',
+      caption:
+        'A line plot of how many pets 18 students have, made from a frequency table, with an X for each student stacked over a number line from 0 to 5 titled Number of pets. There are four X’s over 0, six over 1, five over 2, two over 3, none over 4 and one over 5.',
+      settings: {
+        input: 'table',
+        rows: [
+          { name: '0', cells: [{ value: '4' }] },
+          { name: '1', cells: [{ value: '6' }] },
+          { name: '2', cells: [{ value: '5' }] },
+          { name: '3', cells: [{ value: '2' }] },
+          { name: '4', cells: [{ value: '0' }] },
+          { name: '5', cells: [{ value: '1' }] },
+        ],
+        mark: 'x',
+        axisTitle: 'Number of pets',
+        axisTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'line-plot-with-fractions-rainfall-in-eighths-of-an-inch',
+      title: 'Line plot with fractions: rainfall in eighths of an inch',
+      alt: 'A line plot of daily rainfall with X’s over a number line from 0 to 1 inch marked in eighths, titled Rainfall (inches)',
+      caption:
+        'A line plot of 12 days’ rainfall measured to the nearest eighth of an inch, with an X for each day over a number line from 0 to 1 with a numbered tick every eighth of an inch, titled Rainfall (inches). Use it for 4th and 5th grade line plots of fractional measurements.',
+      settings: {
+        data: '1/8, 1/4, 1/4, 3/8, 1/2, 1/2, 1/2, 5/8, 3/4, 3/4, 7/8, 1',
+        from: '0',
+        mark: 'x',
+        axisTitle: 'Rainfall (inches)',
+        axisTitleMode: 'text',
+      },
+    },
+  ]),
+
+  ...examplesOf('scatter-plot', [
+    {
+      slug: 'scatter-plot-of-hours-studied-and-test-scores-with-line-of-best-fit',
+      title: 'Scatter plot of hours studied and test scores, with a line of best fit',
+      alt: 'A scatter plot of 12 students’ hours studied against their test scores, with the least-squares line y = 5.07x + 48.33 drawn, the equation and r = 0.99 written below the graph, and a zig-zag break at the bottom of the score axis',
+      caption:
+        'A scatter plot of hours studied (0 to 10) against test score for 12 students, with the score axis running from 45 to 100 after a zig-zag break. The least-squares line of best fit, y = 5.07x + 48.33, runs through the points, and r = 0.99 shows a strong positive correlation. Use it to interpret the slope and intercept or to predict a score.',
+      settings: {
+        rows: [
+          { name: '1', cells: [{ value: '52' }] },
+          { name: '2', cells: [{ value: '60' }] },
+          { name: '2', cells: [{ value: '58' }] },
+          { name: '3', cells: [{ value: '65' }] },
+          { name: '4', cells: [{ value: '71' }] },
+          { name: '4', cells: [{ value: '68' }] },
+          { name: '5', cells: [{ value: '70' }] },
+          { name: '6', cells: [{ value: '80' }] },
+          { name: '6', cells: [{ value: '77' }] },
+          { name: '7', cells: [{ value: '84' }] },
+          { name: '8', cells: [{ value: '91' }] },
+          { name: '9', cells: [{ value: '93' }] },
+        ],
+        fit: 'best',
+        r: 'r',
+        title: 'Study time and test scores',
+        titleMode: 'text',
+        xTitle: 'Hours studied',
+        xTitleMode: 'text',
+        yTitle: 'Test score',
+        yTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'scatter-plot-of-temperature-and-ice-cream-sales',
+      title: 'Scatter plot of temperature and ice cream sales',
+      alt: 'A scatter plot of 12 days’ high temperature on an axis from 55 to 100 °F against ice cream sales on an axis from 150 to 700 dollars, with zig-zag breaks on both axes and no line drawn',
+      caption:
+        'A scatter plot of an ice cream stand’s sales against the day’s high temperature over 12 days, with temperature on an axis from 55 to 100 °F and sales from $150 to $700, both axes starting after a zig-zag break. No line is drawn, so students can describe the association and draw a line of best fit by eye.',
+      settings: {
+        input: 'list',
+        data: '61, 215\n65, 325\n68, 332\n72, 406\n74, 418\n77, 422\n80, 445\n83, 512\n85, 544\n88, 614\n91, 621\n94, 650',
+        title: 'Ice cream sales',
+        titleMode: 'text',
+        xTitle: 'High temperature (°F)',
+        xTitleMode: 'text',
+        yTitle: 'Sales ($)',
+        yTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'scatter-plot-with-negative-correlation-car-age-and-value',
+      title: 'Scatter plot with a negative correlation: car age and value',
+      alt: 'A scatter plot of 11 cars’ ages from 0 to 10 years, on an axis to 11, against their values from 0 to 30 thousand dollars, falling from left to right, with the line y = −2.38x + 29.66 and r = −0.99',
+      caption:
+        'A scatter plot of 11 used cars’ ages in years against their values in thousands of dollars, falling from left to right. The least-squares line y = −2.38x + 29.66 and r = −0.99 show a strong negative correlation: each extra year takes about $2,380 off a car’s value.',
+      settings: {
+        input: 'list',
+        data: '1, 28\n2, 25\n3, 22\n3, 24\n4, 19\n5, 17\n6, 15\n7, 12\n8, 11\n9, 8\n10, 7',
+        fit: 'best',
+        r: 'r',
+        yFrom: '0',
+        yStep: '5',
+        xTitle: 'Age (years)',
+        xTitleMode: 'text',
+        yTitle: 'Value ($1,000s)',
+        yTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'scatter-plot-with-no-correlation-shoe-size-and-quiz-score',
+      title: 'Scatter plot with no correlation: shoe size and quiz score',
+      alt: 'A scatter plot of 12 students’ shoe sizes from 6 to 12, on an axis from 5 to 13 after a zig-zag break, against quiz scores out of 10, scattered with no pattern, with r = −0.22 written below the graph',
+      caption:
+        'A scatter plot of 12 students’ shoe sizes against their scores on a 10-point quiz, with the points spread with no clear pattern and r = −0.22, little or no correlation. Use it beside positive and negative examples to compare kinds of association.',
+      settings: {
+        input: 'list',
+        data: '6, 7\n7, 9\n7, 4\n8, 6\n8, 9\n9, 5\n9, 8\n10, 6\n10, 3\n11, 8\n12, 5\n7, 6',
+        mark: 'cross',
+        r: 'r',
+        yFrom: '0',
+        yTo: '10',
+        xTitle: 'Shoe size',
+        xTitleMode: 'text',
+        yTitle: 'Quiz score',
+        yTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'find-the-equation-of-the-line-of-best-fit-arm-span-and-height',
+      title: 'Find the equation of the line of best fit: arm span and height',
+      alt: 'A scatter plot of 11 students’ arm spans from 150 to 180 cm against their heights from 152 to 181 cm, on axes from 145 cm after zig-zag breaks, with the line of best fit drawn and a blank line after y = below the graph for students to fill in',
+      caption:
+        'A scatter plot of 11 students’ arm spans against their heights in centimeters, with the least-squares line drawn and a blank line after y = for students to work out its equation. The answer key gives y = x + 0.23 and r = 0.98: height is close to arm span.',
+      settings: {
+        input: 'list',
+        data: '150, 152\n155, 154\n158, 160\n160, 159\n163, 165\n165, 163\n168, 170\n170, 172\n173, 171\n176, 178\n180, 181',
+        fit: 'best',
+        equation: 'blank',
+        xTitle: 'Arm span (cm)',
+        xTitleMode: 'text',
+        yTitle: 'Height (cm)',
+        yTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'blank-scatter-plot-axes-for-students-to-plot-data',
+      title: 'Blank scatter plot axes for students to plot data',
+      alt: 'Empty scatter plot axes titled Plant growth, with Week numbered 0 to 10 across and Height (cm) numbered 0 to 30 by 5 up the side, with a gridline every 2.5 cm',
+      caption:
+        'Empty axes for a scatter plot, titled Plant growth, with Week numbered 0 to 10 along the bottom and Height (cm) from 0 to 30 by 5 up the side. Give students a table of measurements to plot, then have them draw a line of best fit.',
+      settings: {
+        xFrom: '0',
+        xTo: '10',
+        xStep: '1',
+        yFrom: '0',
+        yTo: '30',
+        yStep: '2.5',
+        yEvery: 2,
+        title: 'Plant growth',
+        titleMode: 'text',
+        xTitle: 'Week',
+        xTitleMode: 'text',
+        yTitle: 'Height (cm)',
+        yTitleMode: 'text',
       },
     },
   ]),
@@ -1276,6 +1523,108 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('normal-curve', [
+    {
+      slug: 'normal-curve-iq-scores-area-above-130',
+      title: 'Normal curve of IQ scores with the area above 130 shaded',
+      alt: 'A normal curve titled IQ scores with a mean of 100 and standard deviation of 15, the area right of 130 shaded blue and labeled 0.0228',
+      caption:
+        'A bell-shaped normal curve titled IQ scores, with ticks at 55, 70, 85, 100, 115, 130 and 145 and their z-scores, −3 to 3, written under them. Dashed lines rise from each tick to the curve. The area under the curve right of 130 is shaded blue and labeled 0.0228, the probability of an IQ score above 130.',
+      settings: {
+        mean: '100',
+        sd: '15',
+        second: 'z',
+        regions: [{ kind: 'right', by: 'value', a: '130', b: '', area: 'probability', bounds: 'value', fill: '' }],
+        title: 'IQ scores',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'empirical-rule-68-95-99-7-normal-curve',
+      title: 'Empirical rule (68–95–99.7) on a normal curve',
+      alt: 'A normal curve with dashed lines at each standard deviation, labeled μ − 3σ to μ + 3σ, and the percent in each section: 34%, 13.5%, 2.35% and 0.15%',
+      caption:
+        'A normal curve with ticks at each standard deviation from the mean, labeled μ − 3σ, μ − 2σ, μ − σ, μ, μ + σ, μ + 2σ and μ + 3σ, with their z-scores from −3 to 3 under them. Dashed lines rise from each tick to the curve, and each section is labeled with its share of the area by the empirical rule: 34% either side of the mean, then 13.5%, 2.35%, and 0.15% in each tail.',
+      settings: {
+        numbers: 'symbols',
+        second: 'z',
+        percents: 'rule',
+      },
+    },
+    {
+      slug: 'normal-distribution-probability-between-two-values',
+      title: 'Normal distribution: probability between two values',
+      alt: 'A normal curve of test scores with a mean of 500 and standard deviation of 100, the area between 400 and 650 shaded with a blank line on it for the probability',
+      caption:
+        'A normal curve titled Test scores, with a mean of 500 and standard deviation of 100, and ticks at 200, 300, 400, 500, 600, 700 and 800. The area between 400 and 650 is shaded blue and both bounds are written under the axis. A blank line on the shaded area is for students to write the probability that a score is between 400 and 650.',
+      settings: {
+        mean: '500',
+        sd: '100',
+        regions: [{ kind: 'between', by: 'value', a: '400', b: '650', area: 'blank', bounds: 'value', fill: '' }],
+        title: 'Test scores',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'inverse-normal-top-10-percent-cut-off',
+      title: 'Inverse normal: the cut-off for the top 10%',
+      alt: 'A normal curve with a mean of 70 and standard deviation of 8, the top 10% shaded and labeled 10%, with a blank line under the axis for the cut-off score',
+      caption:
+        'A normal curve of exam marks with a mean of 70 and standard deviation of 8, with ticks at 46, 54, 62, 70, 78, 86 and 94. The area in the right tail is shaded blue and labeled 10%, and a blank line under the axis where it starts is for students to find the mark that cuts off the top 10%.',
+      settings: {
+        mean: '70',
+        sd: '8',
+        regions: [{ kind: 'right', by: 'area', a: '0.1', b: '', area: 'percent', bounds: 'blank', fill: '' }],
+        xTitle: 'Exam mark',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'two-tailed-95-percent-critical-values-z-1-96',
+      title: 'Two-tailed test: critical values z = ±1.96',
+      alt: 'A black-and-white standard normal curve with both tails beyond z = −1.96 and z = 1.96 shaded gray, each labeled 0.025',
+      caption:
+        'A standard normal curve in black and white with its axis numbered in z-scores from −3 to 3. Both tails are shaded with gray, left of z = −1.96 and right of z = 1.96, with the critical values written under the axis and each tail labeled 0.025, the 5% significance level split between the two tails of a two-tailed test.',
+      settings: {
+        numbers: 'z',
+        regions: [{ kind: 'outside', by: 'area', a: '0.05', b: '', area: 'probability', bounds: 'z', fill: '' }],
+        look: 'bw',
+      },
+    },
+    {
+      slug: 'percentile-ranks-on-a-bell-curve-standard-scores',
+      title: 'Percentile ranks on a bell curve of standard scores',
+      alt: 'A bell curve of standard scores with a mean of 100 and standard deviation of 15, with dotted lines at 70, 85, 115 and 130 labeled with their percentile ranks: 2nd, 16th, 84th and 98th',
+      caption:
+        'A bell curve of standard scores with a mean of 100 and standard deviation of 15, numbered 55 to 145 under the axis with z-scores from −3 to 3 below them. Dotted lines rise to the curve at scores of 70, 85, 115 and 130, labeled with their percentile ranks: 2nd, 16th, 84th and 98th. The axis is titled Standard score.',
+      settings: {
+        mean: '100',
+        sd: '15',
+        second: 'z',
+        sdLines: 'off',
+        marks: [
+          { at: '70', label: 'percentile', text: '' },
+          { at: '85', label: 'percentile', text: '' },
+          { at: '115', label: 'percentile', text: '' },
+          { at: '130', label: 'percentile', text: '' },
+        ],
+        xTitle: 'Standard score',
+        xTitleMode: 'text',
+      },
+    },
+    {
+      slug: 'blank-normal-curve-for-students-to-label',
+      title: 'Blank normal curve for students to label',
+      alt: 'A normal curve with dashed lines at each standard deviation and a blank line under each tick for students to write the values',
+      caption:
+        'A normal curve with seven ticks, at the mean and at one, two and three standard deviations either side, with dashed lines rising from each to the curve. A blank line under each tick is for students to write the values from a given mean and standard deviation, and a blank line under the axis is for its title.',
+      settings: {
+        numbers: 'blank',
+        xTitleMode: 'blank',
+      },
+    },
+  ]),
+
   ...examplesOf('venn-diagram', [
     {
       slug: 'venn-diagram-football-and-tennis',
@@ -1337,6 +1686,59 @@ export const EXAMPLES: Example[] = [
       caption:
         'Two overlapping circles named A and B inside a box marked U, with a probability in each region: 0.3 in A only, the unknown x in the overlap, 0.25 in B only, and 0.15 outside both circles in the lower right corner. Students find x, then probabilities such as P(A ∪ B).',
       settings: { mode: 'text', values: { a: '0.3', ab: 'x', b: '0.25', out: '0.15' } },
+    },
+  ]),
+
+  ...examplesOf('tree-diagram', [
+    {
+      slug: 'tree-diagram-two-marbles-without-replacement',
+      title: 'Tree diagram for drawing two marbles without replacement',
+      alt: 'A probability tree of two draws from a bag of 3 red and 2 blue marbles without replacement, with 3/5 and 2/5 on the first branches, 2/4 and 2/4 after red, 3/4 and 1/4 after blue, and each outcome’s probability listed at the right',
+      caption:
+        'A probability tree for drawing two marbles, one after the other without replacement, from a bag of 3 red (R) and 2 blue (B). The first draw branches into R with probability 3/5 and B with 2/5; after R the second draw is R or B with 2/4 each, and after B it’s R with 3/4 and B with 1/4. The outcome column lists R, R = 3/10, R, B = 3/10, B, R = 3/10 and B, B = 1/10.',
+      settings: {
+        stages: [
+          { title: '1st draw', outcomes: ['R', 'B'], probs: [['3/5', '2/5']] },
+          { title: '2nd draw', outcomes: ['R', 'B'], same: false, probs: [['2/4', '2/4'], ['3/4', '1/4']] },
+        ],
+        stageTitles: true,
+      },
+    },
+    {
+      slug: 'tree-diagram-coin-flipped-twice',
+      title: 'Tree diagram of a coin flipped twice',
+      alt: 'A probability tree of a coin flipped twice, with H and T and 0.5 on every branch, and the four outcomes HH, HT, TH and TT each listed with probability 0.25',
+      caption:
+        'A probability tree for flipping a coin twice. Each flip branches into H and T with probability 0.5 on every branch, and the outcome column lists the four paths, H, H, H, T, T, H and T, T, each with probability 0.25. Use it to introduce sample spaces and independent events.',
+      settings: {},
+    },
+    {
+      slug: 'tree-diagram-coin-and-a-die',
+      title: 'Tree diagram of flipping a coin and rolling a die',
+      alt: 'A probability tree of flipping a coin, then rolling a six-sided die, with 1/2 on the coin’s branches, 1/6 on each of the die’s, and the 12 outcomes from H, 1 to T, 6 each with probability 1/12',
+      caption:
+        'A probability tree for flipping a coin and then rolling a six-sided die. The coin branches into H and T with probability 1/2 each, and each of those into the numbers 1 to 6 with probability 1/6 each. The outcome column lists all 12 paths, H, 1 to T, 6, each with probability 1/12.',
+      settings: {
+        stages: [
+          { outcomes: ['H', 'T'], probs: [['1/2', '1/2']] },
+          { outcomes: ['1', '2', '3', '4', '5', '6'], probs: [['1/6', '1/6', '1/6', '1/6', '1/6', '1/6']] },
+        ],
+      },
+    },
+    {
+      slug: 'complete-the-tree-diagram-without-replacement',
+      title: 'Complete the tree diagram: two marbles without replacement',
+      alt: 'A probability tree of two draws from a bag of 3 red and 2 blue marbles without replacement, with 3/5 and 2/5 on the first branches and blank lines on the second draw’s branches and for every outcome’s probability',
+      caption:
+        'A probability tree for drawing two marbles without replacement from a bag of 3 red (R) and 2 blue (B), for students to complete. The first draw’s branches are labeled R, 3/5 and B, 2/5; the four branches of the second draw have blank lines for their probabilities, and so does each of the four outcomes R, R, R, B, B, R and B, B in the outcome column.',
+      settings: {
+        stages: [
+          { outcomes: ['R', 'B'], probs: [['3/5', '2/5']] },
+          { outcomes: ['R', 'B'], same: false, probs: [['2/4', '2/4'], ['3/4', '1/4']] },
+        ],
+        blanks: ['p0-0', 'p0-1', 'p1-0', 'p1-1'],
+        showPathProbs: 'blank',
+      },
     },
   ]),
 
@@ -1546,6 +1948,73 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('table-of-values', [
+    {
+      slug: 'complete-the-table-of-values-for-y-equals-2x-plus-1',
+      title: 'Complete the table of values for y = 2x + 1',
+      alt: 'A table of values for y = 2x + 1 with x from −2 to 3 across the top and the y-values for x = 1 and x = 3 left blank',
+      caption:
+        'The rule y = 2x + 1 written above a table of values that runs across in two rows. The x row reads −2, −1, 0, 1, 2 and 3, and the y row reads −3, −1, 1, blank, 5 and blank, for students to fill in 3 and 7.',
+      settings: { rule: 'y=2x+1', to: '3', blanks: ['y3', 'y5'], showRule: 'text' },
+    },
+    {
+      slug: 'table-of-values-for-a-parabola-y-equals-x-squared-minus-3',
+      title: 'Table of values for the parabola y = x² − 3',
+      alt: 'A table of values for y = x² − 3 with x from −3 to 3 and y-values 6, 1, −2, −3, −2, 1 and 6',
+      caption:
+        'A table of values for the quadratic y = x² − 3, written above it, with x from −3 to 3 across the top and the y-values 6, 1, −2, −3, −2, 1 and 6 under them, ready to plot the parabola on a coordinate grid.',
+      settings: { rule: 'y=x^2-3', from: '-3', to: '3', showRule: 'text' },
+    },
+    {
+      slug: 'input-output-table-find-the-rule',
+      title: 'Input-output table: find the rule',
+      alt: 'An input-output table running down, with inputs 1, 2, 3, 5 and 10, outputs 1, 4 and 7 given and two left blank, under a blank line for the rule',
+      caption:
+        'An input-output table in two columns headed Input and Output, under a blank line after y = for the rule. The inputs are 1, 2, 3, 5 and 10; the outputs for 1, 2 and 3 are 1, 4 and 7, and the outputs for 5 and 10 are blank. The rule is y = 3x − 2.',
+      settings: {
+        rule: 'y=3x-2', xFrom: 'list', list: '1, 2, 3, 5, 10', xHeading: 'Input', yHeading: 'Output', direction: 'down',
+        showRule: 'blank', blanks: ['y3', 'y4'],
+      },
+    },
+    {
+      slug: 'table-of-values-with-fractions-y-equals-half-x-plus-1',
+      title: 'Table of values with fractions for y = x/2 + 1',
+      alt: 'A table of values for y = x/2 + 1 with x from 0 to 2 by halves and every y-value left blank',
+      caption:
+        'A table of values for y = x/2 + 1, written above it, with x counting from 0 to 2 by halves (0, 1/2, 1, 3/2 and 2) as stacked fractions, and every y-value left blank for students to work out: 1, 5/4, 3/2, 7/4 and 2.',
+      settings: { rule: 'y=x/2+1', from: '0', to: '2', step: '1/2', showRule: 'text', blanks: ['y0', 'y1', 'y2', 'y3', 'y4'] },
+    },
+    {
+      slug: 'pattern-table-figure-number-and-number-of-tiles',
+      title: 'Pattern table: figure number and number of tiles',
+      alt: 'A table with Figure number 1, 2, 3, 4 and 10 across the top and Number of tiles 5, 8 and 11, with the tiles for figures 4 and 10 left blank',
+      caption:
+        'A table for a growing pattern titled Tile pattern, with the headings Figure number and Number of tiles. Figures 1, 2 and 3 have 5, 8 and 11 tiles; the numbers of tiles for figures 4 and 10 are blank, for students to find 14 and 32 from the pattern of adding 3.',
+      settings: {
+        source: 'typed',
+        rows: [
+          { name: '1', cells: [{ value: '5' }] },
+          { name: '2', cells: [{ value: '8' }] },
+          { name: '3', cells: [{ value: '11' }] },
+          { name: '4', cells: [{ value: '' }] },
+          { name: '10', cells: [{ value: '' }] },
+        ],
+        xHeading: 'Figure number',
+        yHeading: 'Number of tiles',
+        title: 'Tile pattern',
+        titleMode: 'text',
+      },
+    },
+    {
+      slug: 'table-of-values-for-an-exponential-function-y-equals-2-to-the-x',
+      title: 'Table of values for the exponential function y = 2ˣ',
+      alt: 'A table of values for y = 2 to the x with x from −2 to 3 and y-values 1/4, 1/2, 1, 2, 4 and 8',
+      caption:
+        'A table of values for the exponential function y = 2ˣ, written above it, with x from −2 to 3 and the y-values 1/4, 1/2, 1, 2, 4 and 8, written as fractions where they are, so students see the values double each time.',
+      settings: { rule: 'y=2^x', to: '3', showRule: 'text' },
+    },
+  ]),
+
   ...examplesOf('length-reading', [
     {
       slug: 'inch-ruler-measuring-to-the-nearest-quarter-inch',
@@ -1588,6 +2057,69 @@ export const EXAMPLES: Example[] = [
       settings: { system: 'imperial', imperialMarks: '4', start: 1, length: 2.5 },
     },
   ]),
+  ...examplesOf('segment-addition', [
+    {
+      slug: 'segment-addition-postulate-solve-for-x',
+      title: 'Segment addition postulate: solve for x',
+      alt: 'Points A, B and C on a segment, with AB labeled 3x − 2, BC labeled 2x + 7 and a brace under AC labeled 45',
+      caption:
+        'A segment addition problem: B lies between A and C, AB is 3x − 2, BC is 2x + 7, and a brace under the whole segment gives AC = 45. Students write AB + BC = AC, solve 5x + 5 = 45 for x = 8, and find AB = 22 and BC = 23. The parts are drawn to those lengths.',
+      settings: { parts: [{ label: '3x-2' }, { label: '2x+7' }], spans: [{ from: 0, to: 2, label: '45' }] },
+    },
+    {
+      slug: 'midpoint-of-a-segment-with-expressions',
+      title: 'Midpoint of a segment with expressions',
+      alt: 'Points A, M and B on a segment, with AM labeled 5x − 8 and MB labeled 3x + 6, each with one congruence tick, and a blank line under a brace for AB',
+      caption:
+        'M is the midpoint of AB: the single tick on each half marks AM and MB congruent, with AM = 5x − 8 and MB = 3x + 6. Students set them equal to get x = 7, so AM = MB = 27, and write the length of AB, 54, on the blank line under the brace.',
+      settings: {
+        points: [{ name: 'A' }, { name: 'M' }, { name: 'B' }],
+        parts: [{ label: '5x-8', ticks: 1 }, { label: '3x+6', ticks: 1 }],
+        spans: [{ from: 0, to: 2, label: '', mode: 'blank' }],
+      },
+    },
+    {
+      slug: 'perpendicular-bisector-of-a-segment',
+      title: 'Perpendicular bisector of a segment',
+      alt: 'Segment AB with midpoint M, AM labeled 2x + 5 and MB labeled 4x − 7 with one tick each, and line ℓ crossing at M with a right-angle mark',
+      caption:
+        'Line ℓ is the perpendicular bisector of AB: it crosses at the midpoint M at a right angle, and the ticks mark AM and MB congruent. With AM = 2x + 5 and MB = 4x − 7, x = 6 and each half is 17, so AB is 34.',
+      settings: {
+        points: [{ name: 'A' }, { name: 'M' }, { name: 'B' }],
+        parts: [{ label: '2x+5', ticks: 1 }, { label: '4x-7', ticks: 1 }],
+        spans: [],
+        cross: 1,
+        crossName: 'ℓ',
+      },
+    },
+    {
+      slug: 'segment-addition-with-four-points-and-overlapping-segments',
+      title: 'Segment addition with four points and overlapping segments',
+      alt: 'Points P, Q, R and S on a segment, with PQ labeled 5, RS labeled 9, a blank line over QR, and braces for PR = 12, QS = 16 and PS left unlabeled',
+      caption:
+        'Four collinear points with overlapping segments: PQ = 5 and RS = 9 are given, and braces show PR = 12 and QS = 16. Students find QR = 7 from PR, check it against QS, and find the whole segment PS = 21.',
+      settings: {
+        points: [{ name: 'P' }, { name: 'Q' }, { name: 'R' }, { name: 'S' }],
+        parts: [{ label: '5' }, { label: '', mode: 'blank' }, { label: '9' }],
+        spans: [{ from: 0, to: 2, label: '12' }, { from: 1, to: 3, label: '16' }, { from: 0, to: 3, label: '' }],
+      },
+    },
+    {
+      slug: 'line-with-four-collinear-points',
+      title: 'Line with four collinear points',
+      alt: 'A line with arrows at both ends through four points A, B, C and D, with no lengths',
+      caption:
+        'A line through four collinear points A, B, C and D, with an arrow at each end. Use it to name the line, segments and rays (such as ray BD and ray BA, which are opposite rays), or to ask which point is between two others.',
+      settings: {
+        points: [{ name: 'A' }, { name: 'B' }, { name: 'C' }, { name: 'D' }],
+        parts: [{ label: '' }, { label: '' }, { label: '' }],
+        spans: [],
+        start: 'triangle',
+        end: 'triangle',
+      },
+    },
+  ]),
+
   ...examplesOf('circle', [
     {
       slug: 'central-angle-and-inscribed-angle-on-the-same-arc',
