@@ -57,7 +57,7 @@ A figure of a coil of wire seen from the side, with a bar magnet, a battery or n
 _Avoid_: Induction diagram, solenoid (fine as a search word)
 
 **Field line**:
-A curve showing the direction of a magnetic field, with arrowheads along it. Field lines follow the real shape of the field, so they never cross.
+A curve showing the direction of a magnetic or electric field, with arrowheads along it. Field lines follow the real shape of the field, so they never cross. The Electric and Magnetic Field figure uses the word too.
 _Avoid_: Flux line, field arrow
 
 **Meter**:
@@ -67,6 +67,24 @@ _Avoid_: Ammeter, gauge
 **Current arrow**:
 A small arrow on a coil's wire showing which way the current flows. It often gives away the answer, so it can be turned off.
 _Avoid_: Current direction, flow arrow
+
+### Electric and Magnetic Field
+
+**Electric and Magnetic Field**:
+A figure of the field lines around one of six setups: one point charge, opposite charges, like charges, parallel plates, a bar magnet, or a wire seen end-on. Its generator is the Electric and Magnetic Field Generator.
+_Avoid_: Field diagram (fine as a search word), E-field, B-field
+
+**Setup**:
+Which of the six things the Electric and Magnetic Field figure draws the field of. Charges are always equal in size; one sign switch makes a single charge, or both like charges, positive or negative.
+_Avoid_: Configuration, scenario, arrangement
+
+**Point charge**:
+A charge drawn as a circle with + or − in it. Its field lines start evenly spaced around it.
+_Avoid_: Particle, ion
+
+**Wire, end-on**:
+A straight wire carrying a current, seen from one end: a circle with a dot when the current flows out of the page, a cross when it flows into it. Its field lines are circles around it.
+_Avoid_: Conductor, current element
 
 ### Inclined Plane
 
@@ -328,3 +346,193 @@ _Avoid_: Zero offset (that's a spring scale's), offset, calibration error
 **Jaws**:
 What holds the object on a caliper (its outside jaws) or a micrometer (its anvil and spindle): nothing, a block, a cylinder, a ball or a wire, drawn as wide as the reading less the zero error.
 _Avoid_: Clamp, grip
+
+### Lever
+
+**Lever**:
+A figure of a level, weightless beam resting on a fulcrum, with one load and one effort on it, always balanced. Its generator is the Lever Generator. The beam is drawn to scale from its two arms, and the effort is worked out from the load and the arms. A beam with several weights, its own weight, two supports or no balance is a Torque figure, not a Lever.
+_Avoid_: Seesaw (fine as a search word), simple machine (fine as a search word), balance
+
+**Lever class**:
+Which part is in the middle of a lever: the fulcrum (class 1, both forces down), the load (class 2, the effort up and farther out) or the effort (class 3, the effort up and nearer the fulcrum). Arms that don't suit the class are swapped.
+_Avoid_: Type, kind, order (as in "first-order lever")
+
+**Fulcrum**:
+The point a lever turns about, drawn as a triangle under the beam standing on a hatched ground line. On a class 2 or 3 lever it sits a little in from one end of the beam. Lever figures say "fulcrum"; "pivot" is the Torque figure's word.
+_Avoid_: Pivot (on a Lever figure), support, hinge
+
+**Effort**:
+The force put on a lever to work it, an arrow down onto the beam on a class 1 lever and up from it on class 2 and 3. It is never typed: it is the load's weight × the load arm ÷ the effort arm, in full when it comes out even and otherwise to 3 significant figures, trailing zeros kept (0.0300 N), in lb for a load in lb and in N otherwise.
+_Avoid_: Input force (fine as a search word), applied force, push
+
+**Load**:
+What a lever moves: a force in N or lb, drawn as a block (an Object) on the beam or an arrow down onto it, or a mass in kg or g, always drawn as a block, whose weight is its mass × 9.8 N/kg, rounded like the effort.
+_Avoid_: Resistance, output force (both fine as search words), weight (for the thing drawn)
+
+**Effort arm**:
+The distance from the fulcrum to the effort, along the beam, marked with a dimension line under the ground.
+_Avoid_: Effort distance, input arm, moment arm
+
+**Load arm**:
+The distance from the fulcrum to the load, along the beam, marked with a dimension line under the ground. No arm is drawn shorter than 15% of the beam, so its label fits; the form says when an arm isn't to scale.
+_Avoid_: Load distance, resistance arm, output arm
+
+**Mechanical advantage**:
+The effort arm ÷ the load arm, which for a balanced lever is also the load ÷ the effort. It is in the answer key, never on the figure.
+_Avoid_: MA (fine in the answer key), leverage, ratio
+
+### Circular Motion
+
+**Circular Motion**:
+A figure of an object going round a circle at a steady speed, in one of three setups, with its velocity along the tangent, its centripetal acceleration toward the center, and the forces on it. Its generator is the Circular Motion Generator. A planet or moon going round is a future orbits generator's; a track of several hills and dips is a Roller Coaster figure.
+_Avoid_: Centrifugal (never drawn or named), orbit, UCM diagram (UCM is fine as a search word)
+
+**Setup**:
+Which of the three ways the Circular Motion figure draws the circle: the Top view, the Vertical circle or the Conical pendulum. Each has a choice or two of its own, and fixes which forces can be drawn; they are only switched on and named.
+_Avoid_: View (alone), mode, scenario
+
+**Top view**:
+The circle seen from above, dashed, with its center, and the object at 1 to 8 positions on it: on its own, on a string to the center, on a turntable (with a second object halfway out, if wanted) or on a flat road. It shows velocity, acceleration and one inward force, never gravity. With a second object, the first one's radius is measured beside the line through both, from the center all the way out.
+_Avoid_: Horizontal circle, overhead view
+
+**Vertical circle**:
+The circle standing upright, seen from the side, with the object at the top, side or bottom: on a string, inside a loop, at the top of a hill or the bottom of a dip. Gravity is one length everywhere; the tension or normal force is shorter than gravity at the top and longer at the bottom, so the net force points to the center. The speed is steady, so the net force is the same everywhere: at the bottom the tension is two gravities longer than at the top, and at the side it is the whole net force. Over a hill the normal force is less than gravity, and a dip mirrors it.
+_Avoid_: Loop-the-loop (it's a loop), side view (alone)
+
+**Conical pendulum**:
+A bob on a string from a hatched ceiling at 15° to 60° from the vertical, going round a level circle drawn as an ellipse, its back half lighter. Its forces are to scale: the tension's vertical component is as long as gravity. At a small angle the horizontal component is too short to come out from under the bob, so it is drawn from the vertical component's tip to the tension's. Its velocity is along the line of sight, a dot (out of the page) or a cross (into it).
+_Avoid_: Cone pendulum, swing
+
+**Inward force**:
+The Top view's one solid arrow toward the center, beside the acceleration, named by the teacher for what supplies it (F_c, T, F_f, F_g). The side views draw the real forces instead.
+_Avoid_: Centripetal force (fine as its default label and as a search word), net force, center-seeking force
+
+**Position**:
+One of the places the object is drawn on the circle, all evenly spaced from the first, which can be lettered A, B, C… in the order the object reaches them. Past four, only the first position's vectors are labeled.
+_Avoid_: Point (fine in "top and bottom points"), instant, snapshot
+
+### Roller Coaster
+
+**Roller Coaster**:
+A picture of a track of hills and dips, and maybe one loop, with an object on it, labelled points and their heights, for conservation of energy. Its generator is the Roller Coaster Generator. Only the heights and the loop's radius are to scale; nothing (speed, energy) is worked out from them. A single hill or dip with its radius and forces is a Circular Motion figure.
+_Avoid_: Energy track (fine as a search word), graph (it's a picture, not a graph)
+
+**Track**:
+The smooth curve the object rides, through the points from left to right. It never goes higher than a hill's height or lower than a dip's, and two points at the same height make a level stretch.
+_Avoid_: Path, rail, curve (alone)
+
+**Point**:
+One row of the track: a place on it, evenly spaced from the others, with a height from 0 to 100. A point higher than both neighbours is the top of a hill, a lower one the bottom of a dip. It can have a dot and a label (A, PE_g, KE = 0) or none, when it only shapes the track.
+_Avoid_: Node, waypoint, knot
+
+**Hill** and **dip**:
+A point higher, or lower, than both its neighbours, where the track is level.
+_Avoid_: Bump (for a hill), valley (for a dip; fine as a search word)
+
+**Height mark**:
+A dimension line from the ground straight up to a point, with its label beside it (40 m, h, h/2) or a line to write on. Point heights are measured from the ground line.
+_Avoid_: Height arrow, altitude
+
+**Loop**:
+A full circle standing on one point, at its bottom, where the track is level. Its radius is in the units of the heights and drawn to scale with them, unless there's no room, when it's drawn smaller and the panel says so. One per figure.
+_Avoid_: Loop-de-loop and loop-the-loop (fine as search words), circle (alone)
+
+**Rough stretch**:
+The track from one point to the next with friction on it, hatched along its underside. Its length mark is horizontal, under the ground: on a level stretch its length, on a slope its distance along the ground. A rough stretch with no length label of its own is taken into the mark of the one before it.
+_Avoid_: Friction zone, rough patch
+
+### Torque
+
+**Torque**:
+A figure of a level beam held up by a Support, with up to six Loads at set distances along it, for torque and the principle of moments. Its generator is the Torque Generator, which works out the torques, the Support forces or the cable's tension beside the figure. The beam is always drawn level, balanced or not. A beam with one load and one effort, named by its lever class, is a Lever figure; a ladder against a wall is neither, for now.
+_Avoid_: Seesaw, balance and beam balance (fine as search words), moment diagram (moment is fine in About copy and search words; the page says torque)
+
+**Beam**:
+The bar the loads are on, drawn to scale along its length (up to 480 px), light or with its own weight drawn at its middle. Places along it are measured from its left end, which is the wall's end; mirrored, from its right end.
+_Avoid_: Rod, plank (fine in an example), lever
+
+**Support**:
+What holds a Torque figure's beam up: one Pivot, two supports A and B (triangles like the Pivot), or a hatched wall at the beam's end, with a Cable (a hinge dot where the beam meets the wall) or without one (the beam fixed into the wall, a cantilever).
+_Avoid_: Setup, mount, fulcrum
+
+**Pivot**:
+The one triangle a Torque figure's beam rests on, anywhere along it. Torques are taken about it. The Lever's word for the same triangle is fulcrum.
+_Avoid_: Fulcrum (on a Torque figure; fine as a search word), axis, hinge
+
+**Load**:
+One thing on a Torque figure's beam: an Object hanging from it on a string, an Object resting on it, or a force arrow down or up with no object. Its value is a weight in N or a mass in kg or g (all the same unit), and its label shows the value unless the teacher types over it.
+_Avoid_: Mass or weight (for the thing drawn), effort (that's a Lever's)
+
+**Distance mark**:
+A dimension line from the Pivot, support A or the wall to a load (and to B, or to where the Cable meets the beam), stacked in rows above the beam, the nearest load on the lowest row, with dashed lines down to what it measures. Rows that don't fit are left off, farthest first, and the form says so.
+_Avoid_: Lever arm, moment arm (fine as search words), dimension
+
+**Cable**:
+The line from a beam up to the wall it is hinged to, at 15° to 75° to the beam, with an angle mark at the beam. It is drawn at its true angle, so a steep cable shortens the beam drawn; too steep to fit, it meets the wall above the figure.
+_Avoid_: Rope, wire, string (a string holds a hanging object)
+
+**Support force**:
+A force holding the beam up, drawn as a solid arrow: up at the Pivot or at A and B (down onto the beam when it comes out down: a pivot under forces that are all up, or a support the beam would lift off), or at a wall its parts along the beam and up the wall, with the Cable's tension along the cable. A beam fixed into a wall also gets the wall's moment, a curved arrow labelled M round the beam's end, turning against the loads (on the other side of the beam from the wall's force). Off by default, since they are often the answer.
+_Avoid_: Reaction (fine as a search word), normal force
+
+### Pendulum
+
+**Pendulum**:
+A figure of a simple pendulum: a Bob on a string from a Pivot under a hatched ceiling, swung out 5° to 75° from the vertical, either as the Swing or as one bob with the forces on it. Its generator is the Pendulum Generator. The string is one length in every figure, so θ alone sets the shape; nothing is worked out from it. A bob going round a level circle is the Circular Motion figure's conical pendulum, and a spring is the Spring Generator's.
+_Avoid_: Swing (for the figure; that's one picture of it), simple harmonic oscillator (fine as a search word)
+
+**Pivot**:
+The dot under the ceiling the string hangs from, and the point θ is measured at. The Torque figure uses the word for its beam's triangle.
+_Avoid_: Hinge, support, suspension point
+
+**Bob**:
+The ball at the end of a pendulum's string. Its label (m) is its own.
+_Avoid_: Weight (that's the force on it), mass (fine in its label), ball, object (alone)
+
+The pendulum's **string** is drawn solid from the pivot to the bob, never a rope or rod, with its length label (L) beside it.
+
+**Swing**:
+The picture of the bob at three places, for energy problems: its release point, the bottom, and the far side, at the same height as the release point, with its dashed path between them. The bottom and far-side bobs are lighter copies with dashed strings. It needs θ of at least 15°, so the three bobs stand apart, and it can letter them A, B, C and show the velocity at the bottom (none at the two ends, where the bob is at rest).
+_Avoid_: Three positions, energy diagram, oscillation (fine as a search word)
+
+**Release point**:
+Where the bob is let go from rest, θ from the vertical on the chosen side: the solid bob in the Swing, and the one bob otherwise. Forces are drawn only there, on one bob: weight straight down and the tension as long as weight's component along the string, mg cos θ, which is right while the bob is at rest; weight's components (mg cos θ along the string, mg sin θ along the path) are thinner and dashed, as on the Free Body Diagram. All are to scale with each other, weight drawn longer at a wide angle so mg cos θ shows past the bob, except mg sin θ at a small angle, drawn just long enough to show.
+_Avoid_: Start, amplitude position, extreme
+
+**Height mark**:
+On a Pendulum, a dimension line on the far side from the release point, from the release point's height down to the lowest point's, with dashed lines across to them, labelled h. When it is too short for its arrowheads, they sit outside it, pointing in. The Roller Coaster's height mark is measured from the ground instead.
+_Avoid_: Height arrow, drop
+
+### Spring
+
+**Spring**:
+A figure of a spring, or two or three joined in series or in parallel, fixed to a Support with an Object on its free end, drawn once, Before and after, or at Three positions, for Hooke's law and simple harmonic motion. Its generator is the Spring Generator. Labels are text, so nothing is worked out or drawn to scale, and springs in series stretch equally whatever their k. Reading a spring scale is the Spring Scale's; a spring inside a ramp or pulley setup is left to those generators.
+_Avoid_: Slinky, coil (alone, for the figure), spring diagram (fine as a search word)
+
+**Support**:
+What a Spring figure's springs are fixed to: a hatched ceiling they hang from, or a hatched wall on the left with a hatched floor the Object rests on. Hanging copies share one ceiling; horizontal copies are rows, each with its own wall and floor.
+_Avoid_: Mount, anchor, base
+
+**Natural length**:
+How long a spring is with nothing pulling or pushing it, L₀. Drawn as a dashed line where the free end would be, and as a dimension line on the spring drawn at it.
+_Avoid_: Rest length, unstretched length (fine in captions), original length
+
+**Extension**:
+How far the free end has moved from where it would be at the natural length, as a share of that length: up to 100% stretched, or, on a floor, down to −50%, squashed. Marked with a dimension line labelled x. A hanging spring with an Object on it is always stretched, by at least 5%.
+_Avoid_: Stretch (as a noun), displacement (fine for Three positions), compression (fine for a squashed spring)
+
+**Equilibrium line**:
+A dashed line across the figure where the free end rests: on a floor, at the natural length; hanging, where the Object hangs at rest, stretched, so it is left off while an applied force pulls a hanging Object further. Labelled x = 0 unless the teacher types another label. The Wave's rest line is a different thing.
+_Avoid_: Rest line (that's a Wave's), midline, zero line
+
+**Before and after**:
+The Spring figure drawn twice: at the natural length (hanging, with nothing on it but a hook), then stretched or squashed with the Object on it, side by side under one ceiling or in two rows, with the natural length's dashed line through both so the extension reads off.
+_Avoid_: Comparison, two states
+
+**Three positions**:
+The Spring figure drawn at −A, at equilibrium and at +A, for simple harmonic motion: side by side when hanging (+A, up, on the left) or three rows on a floor (−A, squashed, on top). A is the amplitude. A hanging spring oscillates about where it hangs at rest, stretched by half its natural length. Only one spring, never series or parallel. At each end the acceleration arrow points back to equilibrium and there is no velocity arrow; at equilibrium there is only the velocity arrow, toward or away from the Support.
+_Avoid_: Snapshots, SHM positions, phases
+
+**Coil style**:
+How a spring's coil is drawn: a zigzag or loops (a helix seen from the side). Either is redrawn at every length with the same number of turns and the same line weight, never scaled, so a stretched spring looks like the same spring pulled out. Squashed loops are drawn narrower along the spring so they never cross.
+_Avoid_: Spring type, coil shape

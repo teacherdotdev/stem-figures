@@ -37,6 +37,16 @@ and `docs/adr/` for decisions.
   sibling; the family is written into the address. It checks the family
   against every mode and says how students can tell, and can show carriers
   (half filled or a dot), genotypes as answers or blanks, numbers and a key.
+- `/cladogram` **Cladogram**: a cladogram or phylogenetic tree of 2 to 16
+  taxa the teacher types and groups into clades inside clades, in an outline
+  editor (add, group, ungroup, move, remove). Each clade, and any taxon, can
+  have a trait, drawn as a tick across the branch leading into it; the
+  root's goes on the root stem. Diagonal 45° branches with the taxa along the
+  top, or rectangular with the taxa down the right; trait labels that would
+  touch spread the tips apart. Text only: taxa as names or blank lines (an
+  empty name is one blank), traits as names, numbered blank lines, ticks or
+  none, numbered nodes, and an answer key. Setups: vertebrates, land
+  plants, apes, and taxa A to F with numbered traits.
 - `/cell-division` **Mitosis & Meiosis** (turned off for now, a 404): cells at the phases of mitosis
   (interphase G1 or G2 through cytokinesis) or meiosis (prophase I through the
   four haploid cells), for 2n = 2, 4, 6 or 8, in an animal or plant cell. One

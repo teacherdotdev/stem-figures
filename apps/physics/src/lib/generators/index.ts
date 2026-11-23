@@ -10,17 +10,24 @@
 import type { Component } from 'svelte'
 import { generatorsOn, matches } from '$shared/catalog/index'
 import { SITE_ID } from '$lib/site/config'
+import CircularMotionPreview from './circular-motion/Preview.svelte'
 import CircuitDiagramPreview from './circuit-diagram/Preview.svelte'
+import FieldsPreview from './fields/Preview.svelte'
 import FreeBodyPreview from './free-body-diagram/Preview.svelte'
 import InclinedPlanePreview from './inclined-plane/Preview.svelte'
+import LeverPreview from './lever/Preview.svelte'
 import LengthReadingPreview from './length-reading/Preview.svelte'
 import MotionGraphsPreview from './motion-graphs/Preview.svelte'
 import MotionMapPreview from './motion-map/Preview.svelte'
+import PendulumPreview from './pendulum/Preview.svelte'
 import StartFromGraph from './motion-map/StartFromGraph.svelte'
 import ProjectileMotionPreview from './projectile-motion/Preview.svelte'
 import PulleyPreview from './pulley/Preview.svelte'
 import RayDiagramPreview from './ray-diagram/Preview.svelte'
+import RollerCoasterPreview from './roller-coaster/Preview.svelte'
 import SpringScalePreview from './spring-scale/Preview.svelte'
+import SpringPreview from './spring/Preview.svelte'
+import TorquePreview from './torque/Preview.svelte'
 import VectorDiagramPreview from './vector-diagram/Preview.svelte'
 import WavePreview from './waves/Preview.svelte'
 
@@ -38,6 +45,13 @@ export const PREVIEWS: Record<string, Component> = {
   'waves': WavePreview,
   'circuit-diagram': CircuitDiagramPreview,
   'ray-diagram': RayDiagramPreview,
+  'roller-coaster': RollerCoasterPreview,
+  'electric-and-magnetic-fields': FieldsPreview,
+  'circular-motion': CircularMotionPreview,
+  'lever': LeverPreview,
+  'torque': TorquePreview,
+  'pendulum': PendulumPreview,
+  'spring': SpringPreview,
 }
 
 /** Another way to start, under "Start from an example" in a generator's lead

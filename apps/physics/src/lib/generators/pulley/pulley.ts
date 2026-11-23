@@ -8,20 +8,18 @@ import { objectHeight, objectLabelHeight, objectWidth, type ObjectKind } from '$
 import { labelRuns, withoutVectors, type Label } from '$lib/shared/label'
 import { boxAround, boxesMeet, polygonHits, segmentHits, type Box } from '$lib/shared/overlap'
 import { labelPoint, numbered, type LabeledVector, type Segment } from '$lib/shared/vector'
+import { CEILING_Y, groundHatches, HATCH_LENGTH, HATCH_SPACING } from '$lib/shared/support'
 import type { PulleyObject, PulleySettings } from './settings'
 
 export const WIDTH = 640
 export const HEIGHT = 420
 const WHEEL_R = 34
 const OBJECT_GAP = 18
-const CEILING_Y = 34
 const CEILING_HALF = 110
 const HANG_TOP = 250
 const LOWER_BY = 60
 const BOTTOM_MARGIN = 16
 const GROUND_Y = HEIGHT - 30
-const HATCH_SPACING = 13
-const HATCH_LENGTH = 9
 const TABLE_TOP = 170
 const TABLE_LEFT = 50
 const TABLE_EDGE = 400
@@ -135,12 +133,6 @@ function resting(o: PulleyObject, at: Point, tilt: number, n: Point): PlacedObje
     gravityLabel: o.gravityLabel,
     moves: 'along',
   }
-}
-
-function groundHatches(g: Segment): Segment[] {
-  const out: Segment[] = []
-  for (let x = g.x1 + 4; x < g.x2; x += HATCH_SPACING) out.push(seg(pt(x + HATCH_LENGTH * 0.8, g.y1), pt(x, g.y1 + HATCH_LENGTH)))
-  return out
 }
 
 /** A block hanging with its top middle at (x, top); it rises or falls as the figure goes forward. */

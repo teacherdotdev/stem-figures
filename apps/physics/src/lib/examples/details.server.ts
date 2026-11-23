@@ -8,18 +8,26 @@
 // written (a force past the scale, a misspelled choice) fails the build.
 
 import { circuitAnswer } from '$lib/generators/circuit-diagram/circuit'
+import { circularSettings } from '$lib/generators/circular-motion/settings'
 import { circuitSettings } from '$lib/generators/circuit-diagram/settings'
+import { fieldSettings } from '$lib/generators/fields/settings'
 import { fbdSettings } from '$lib/generators/free-body-diagram/settings'
 import { inclineSettings } from '$lib/generators/inclined-plane/settings'
 import { lengthSettings, workingLines as lengthWorking } from '$lib/generators/length-reading/settings'
+import { answerLines as leverAnswer, leverSettings } from '$lib/generators/lever/settings'
 import { motionOf, numberText, segmentLines, tangentAt } from '$lib/generators/motion-graphs/motion'
 import { motionSettings, viewsOf } from '$lib/generators/motion-graphs/settings'
 import { mapAnswer } from '$lib/generators/motion-map/map'
 import { mapSettings } from '$lib/generators/motion-map/settings'
+import { pendulumSettings } from '$lib/generators/pendulum/settings'
 import { projectileSettings } from '$lib/generators/projectile-motion/settings'
 import { pulleySettings } from '$lib/generators/pulley/settings'
 import { answerLines as rayAnswer, raySettings } from '$lib/generators/ray-diagram/settings'
+import { coasterSettings } from '$lib/generators/roller-coaster/settings'
 import { answerLines as springScaleAnswer, springScaleSettings } from '$lib/generators/spring-scale/settings'
+import { springSettings } from '$lib/generators/spring/settings'
+import { answerLines as torqueAnswer } from '$lib/generators/torque/moments'
+import { torqueSettings } from '$lib/generators/torque/settings'
 import { resultantOf } from '$lib/generators/vector-diagram/vd'
 import { vectorSettings } from '$lib/generators/vector-diagram/settings'
 import { answerLines as waveAnswer, waveSettings } from '$lib/generators/waves/settings'
@@ -116,6 +124,13 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
     },
   },
   'ray-diagram': { definition: raySettings, answer: (s) => ({ heading: 'Answer key (real is positive)', lines: rayAnswer(s) }) },
+  'roller-coaster': { definition: physics(coasterSettings), answer: none },
+  'electric-and-magnetic-fields': { definition: physics(fieldSettings), answer: none },
+  'lever': { definition: leverSettings, answer: (s) => ({ heading: 'Answer key', lines: leverAnswer(s) }) },
+  'circular-motion': { definition: physics(circularSettings), answer: none },
+  'torque': { definition: physics(torqueSettings), answer: (s) => ({ heading: 'Answer key (directions as drawn)', lines: torqueAnswer(s) }) },
+  'pendulum': { definition: pendulumSettings, answer: none },
+  'spring': { definition: springSettings, answer: none },
 }
 
 function detailsOf<G extends ExampleGeneratorId>(generator: G, example: Example): ExampleDetails {

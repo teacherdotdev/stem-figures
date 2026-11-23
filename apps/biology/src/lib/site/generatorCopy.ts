@@ -173,6 +173,43 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'AP Biology'],
   },
 
+  cladogram: {
+    heading: 'Cladograms and phylogenetic trees with shared derived traits',
+    intro: [
+      'Cladogram draws a cladogram or phylogenetic tree from the taxa you type, grouped into clades. Each clade can have a trait its members share, drawn as a tick across the branch leading into it, so every taxon past a tick has that trait. Draw it the classic way, with straight branches and the taxa along the top, or as a rectangular tree with the taxa down the right. It is text only: taxa and traits are whatever words, letters or numbers you type.',
+      'Teachers use it for questions on shared derived characters, common ancestors, relatedness and outgroups. Start from vertebrates, land plants, apes or a lettered tree, then rename, add, group or reorder anything. Leave taxon names or traits as blank lines for students to fill in, number the nodes for questions on common ancestors, and print an answer key under the figure.',
+    ],
+    settings: [
+      'The tree: 2 to 16 taxa, grouped into clades inside clades, in any order',
+      'A trait for each clade, drawn as a tick on the branch leading into it, and one on the root shared by every taxon',
+      'Four setups to start from: vertebrates, land plants, apes, and taxa A to F with numbered traits',
+      'Branches: diagonal with the taxa along the top, or rectangular with the taxa down the right',
+      'Taxon names written or as blank lines, and any one taxon left blank',
+      'Traits written, as numbered blank lines, as ticks alone, or left off',
+      'Numbered nodes, a chart title, and an answer key line',
+    ],
+    faqs: [
+      {
+        q: 'How do you read a cladogram?',
+        a: 'Each tick on a branch is a trait gained there, and every taxon past it, toward the tips, has that trait. Taxa that branch off later share more traits and a more recent common ancestor. The point where two branches meet, a node, stands for their most recent common ancestor. The taxon that branches off first, sharing the fewest traits, is the outgroup.',
+      },
+      {
+        q: 'What is the difference between a cladogram and a phylogenetic tree?',
+        a: 'Both show how taxa are related by common descent. A cladogram usually shows only the branching order, often with the shared derived traits that define each group. A phylogenetic tree can also show time or the amount of change along its branches. In class the words are often used for the same picture; this generator draws the branching order, either way.',
+      },
+      {
+        q: 'How do I make a worksheet where students fill in the traits?',
+        a: 'Set Traits to Blank lines. Each tick then gets a numbered blank line, and the answer key lists the traits by the same numbers. Set Taxa to Blank lines instead to have students place the taxa, or leave just one taxon’s name empty for a single blank.',
+      },
+      {
+        q: 'How do I make a classic ladder cladogram?',
+        a: 'Start from the Vertebrates or Land plants setup. Each group holds one taxon and the next group, so the first taxon branches off first and each trait is gained before the next taxon branches off. To add a taxon to the end, press Group with a new taxon beside the last one.',
+      },
+    ],
+    imageAlt: 'A diagonal cladogram of lancelet, lamprey, shark, perch, frog, lizard and mouse, with ticks for notochord, vertebrae, jaws, bony skeleton, four limbs, amniotic egg and hair on its branches, made with Cladogram',
+    educationalLevel: ['Middle school', 'High school', 'AP Biology'],
+  },
+
   'predator-prey': {
     heading: 'Predator–prey population graphs and phase planes',
     intro: [

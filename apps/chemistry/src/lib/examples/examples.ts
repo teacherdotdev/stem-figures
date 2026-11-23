@@ -469,6 +469,49 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('phase-diagram', [
+    {
+      slug: 'phase-diagram-of-water',
+      title: 'Phase diagram of water',
+      alt: 'Phase diagram of water, not to scale, with Solid, Liquid and Gas regions, the fusion line leaning left, and the triple point at 0.01 °C and 0.00604 atm and the critical point at 373.9 °C and 218 atm',
+      caption:
+        'The pressure–temperature phase diagram of water, drawn not to scale in the textbook’s shape. The sublimation curve rises to the triple point, the fusion line runs up from it, leaning left because ice is less dense than liquid water, and the vaporization curve runs to the critical point, where it stops. The regions are named Solid, Liquid and Gas, and dashed lines from the two points carry their real values to the axes: 0.01 °C and 0.00604 atm, and 373.9 °C and 218 atm.',
+      settings: {},
+    },
+    {
+      slug: 'phase-diagram-of-carbon-dioxide-dry-ice-sublimes',
+      title: 'Phase diagram of carbon dioxide: why dry ice sublimes',
+      alt: 'Phase diagram of carbon dioxide, not to scale, its triple point at 5.11 atm above a dashed 1 atm line that crosses only the sublimation curve, at −78.5 °C',
+      caption:
+        'The phase diagram of carbon dioxide, not to scale, with a dashed line across at 1 atm. Its triple point, at −56.6 °C and 5.11 atm, is above 1 atm, so the 1 atm line crosses only the sublimation curve, at −78.5 °C: at normal pressure solid carbon dioxide, dry ice, turns straight into gas. Its fusion line leans right, as almost every substance’s does, and its critical point is at 31.0 °C and 72.8 atm.',
+      settings: { substance: 'co2', isobar: true },
+    },
+    {
+      slug: 'phase-diagram-of-nitrogen-kelvin-kpa',
+      title: 'Phase diagram of nitrogen in kelvin and kPa',
+      alt: 'Phase diagram of nitrogen, not to scale, in K and kPa: triple point 63.2 K and 12.5 kPa, critical point 126.2 K and 3,400 kPa, and a 101.3 kPa line crossing the vaporization curve at its normal boiling point, 77.4 K',
+      caption:
+        'The phase diagram of nitrogen, not to scale, with temperatures in kelvin and pressures in kPa. The triple point is at 63.2 K and 12.5 kPa and the critical point at 126.2 K and 3,400 kPa. A dashed line at 101.3 kPa, 1 atm, crosses the fusion line and the vaporization curve, which it meets at the normal boiling point, 77.4 K. Nitrogen melts within a few hundredths of a kelvin of its triple point’s temperature, so the melting point isn’t written apart from it.',
+      settings: { substance: 'nitrogen', tUnit: 'K', pUnit: 'kPa', isobar: true },
+    },
+    {
+      slug: 'phase-diagram-worksheet-blank',
+      title: 'Blank phase diagram worksheet: label the regions and points',
+      alt: 'Phase diagram of water, not to scale, with blank lines for the three regions, the triple and critical points, their temperatures and pressures at the axes, and the normal melting and boiling points on a dashed 1 atm line',
+      caption:
+        'A blank phase diagram of water for students to fill in, drawn not to scale. Each region, the triple point and the critical point have a blank line, and so do the temperatures and pressures at the axes where the dashed lines from the two points land. A dashed line at 1 atm crosses the fusion line and the vaporization curve, with a blank line under each crossing for the normal melting and boiling points.',
+      settings: { regions: 'blank', points: 'blank', axisValues: 'blank', isobar: true, normalPoints: 'blank' },
+    },
+    {
+      slug: 'phase-diagram-on-a-grid-substance-x-lettered',
+      title: 'Phase diagram on a grid: read the values for Substance X',
+      alt: 'Phase diagram of a made-up Substance X on numbered axes and gridlines, its regions, triple point, critical point and the crossings of a dashed 1 atm line lettered A to G',
+      caption:
+        'The phase diagram of a made-up substance, Substance X, drawn to scale on numbered axes and gridlines, so students can read values off it. Its triple point is at 20 °C and 0.4 atm and its critical point at 140 °C and 3 atm; at 1 atm, the dashed line across, it melts at 22 °C and boils at 75 °C. The solid, liquid and gas regions are lettered A, B and C, the triple and critical points D and E, and the normal melting and boiling points F and G.',
+      settings: { substance: 'custom', axes: 'numbered', regions: 'letters', points: 'letters', isobar: true, normalPoints: 'letters' },
+    },
+  ]),
+
   ...examplesOf('potential-energy-diagram', [
     {
       slug: 'potential-energy-diagram-exothermic-reaction',
@@ -531,6 +574,52 @@ export const EXAMPLES: Example[] = [
         style: 'levels', levels: [0, 100, -92], reactantsLabel: 'N_2 + 3H_2', productsLabel: '2NH_3', dhLabel: 'value', unit: 'kj',
         yFrom: '-100', yTo: '20', yStep: '10', yTitle: 'Potential energy (kJ)',
       },
+    },
+  ]),
+
+  ...examplesOf('bond-energy-curve', [
+    {
+      slug: 'bond-energy-curve-potential-energy-vs-internuclear-distance',
+      title: 'Bond energy curve: potential energy vs internuclear distance',
+      alt: 'Potential energy in kJ/mol against internuclear distance in pm for a made-up Bond X: a curve falling steeply to a minimum at 150 pm and −300 kJ/mol, then rising toward 0, with dashed guide lines from the minimum to both axes',
+      caption:
+        'The potential energy of two bonded atoms against the distance between their nuclei, for a made-up bond, Bond X. The curve drops steeply to its lowest point and rises toward 0, the energy of the atoms far apart. Dashed guide lines run from the minimum down to the distance axis at 150 pm, the bond length, and across to the energy axis at −300 kJ/mol, so the bond energy is 300 kJ/mol. Bond X is not a real bond: its numbers are round ones chosen for reading off the graph.',
+      settings: { guides: true },
+    },
+    {
+      slug: 'two-bond-energy-curves-compared',
+      title: 'Two bond energy curves on one graph: which bond is stronger?',
+      alt: 'Two potential energy curves against internuclear distance: Bond X, solid, with its minimum at 150 pm and −300 kJ/mol, and Bond Y, dashed, with a deeper minimum at 120 pm and −500 kJ/mol, named in a key',
+      caption:
+        'Two made-up bonds, Bond X and Bond Y, on the same axes, solid and dashed so they read apart in black and white, with a key. Bond Y’s minimum is further left and lower: it is the shorter bond, at 120 pm against 150 pm, and the stronger one, with a bond energy of 500 kJ/mol against 300 kJ/mol. Neither is a real bond; the numbers are made up for comparing.',
+      settings: { count: 2, yFrom: '-550', yTo: '150', yStep: '50' },
+    },
+    {
+      slug: 'single-double-triple-bond-energy-curves',
+      title: 'Single, double and triple bond energy curves',
+      alt: 'Three potential energy curves for a single, a double and a triple bond between the same two atoms, X–X, X=X and X≡X, each shorter and deeper than the one before',
+      caption:
+        'A single, a double and a triple bond between the same two atoms, X–X, X=X and X≡X, as bond order goes up: each curve’s minimum is further left and lower than the one before, at 150 pm and −300 kJ/mol, 130 pm and −550 kJ/mol, and 115 pm and −800 kJ/mol. The more electrons two atoms share, the shorter and the stronger the bond. X is a made-up element, and the lengths and energies are made up too.',
+      settings: {
+        count: 3, name1: 'X–X', name2: 'X=X', name3: 'X≡X', length2: 130, energy2: 550, length3: 115, energy3: 800,
+        yFrom: '-900', yTo: '200', yStep: '100', minor: 2,
+      },
+    },
+    {
+      slug: 'identify-the-bond-from-its-energy-curve',
+      title: 'Identify the bond from its energy curve: three hidden bonds',
+      alt: 'Three potential energy curves against internuclear distance, solid, dashed and dotted, named only Bond A, Bond B and Bond C in a key',
+      caption:
+        'Three bonds on one graph with their names hidden: the key calls them only Bond A, B and C. Students read each bond length and bond energy from its curve’s minimum and match the curves to three names in a table of bond lengths and bond energies. The three bonds here are made up; the answer key gives the names they stand for.',
+      settings: { count: 3, names: false, xTo: '600', xStep: '50', yFrom: '-550', yTo: '150', yStep: '50', minor: 2 },
+    },
+    {
+      slug: 'bond-energy-curve-repulsion-and-attraction',
+      title: 'Bond energy curve with repulsion and attraction labeled',
+      alt: 'The shape of a potential energy curve against internuclear distance with no numbers but 0 on the energy axis: Repulsion beside the steep wall left of the minimum and Attraction along the rise to its right',
+      caption:
+        'The shape of a bond energy curve with no numbers on its axes, only the 0 where the atoms are far apart. Right of the minimum the atoms attract each other, and the energy falls as they come together; left of it the repulsion between them wins, and the energy climbs steeply. The minimum between the two is the bond length. The curve is for a made-up bond.',
+      settings: { axes: 'shape', regions: 'words', xEndCap: 'triangle', yEndCap: 'triangle' },
     },
   ]),
 
@@ -841,6 +930,49 @@ export const EXAMPLES: Example[] = [
       caption:
         'The Lewis structure of the sulfate ion, SO₄²⁻, following the octet rule: sulfur single-bonded to four oxygen atoms, each oxygen with three lone pairs. The structure is in square brackets with the 2− charge, and formal charges are shown (+2 on sulfur, −1 on each oxygen).',
       settings: { formula: 'SO4 2-', formalCharges: true },
+    },
+  ]),
+
+  ...examplesOf('vsepr-shapes', [
+    {
+      slug: 'vsepr-shape-of-nh3-trigonal-pyramidal',
+      title: 'VSEPR shape of NH₃ (ammonia): trigonal pyramidal',
+      alt: 'Ammonia drawn wedge-and-dash: a nitrogen with a lone pair lobe on top and three hydrogens below, one on a wedge and one on a dashed bond',
+      caption:
+        'The VSEPR shape of ammonia, NH₃, drawn with wedges and dashes. Nitrogen has three bonded atoms and one lone pair, AX₃E, so its four electron groups point to the corners of a tetrahedron and the atoms make a trigonal pyramid, with the lone pair on top.',
+      settings: { formula: 'NH3', electronGeometry: true, axe: true },
+    },
+    {
+      slug: 'vsepr-shape-of-h2o-bent-with-bond-angle',
+      title: 'VSEPR shape of H₂O (water): bent, with its bond angle',
+      alt: 'Water drawn wedge-and-dash: an oxygen with two lone pair lobes and two hydrogens below it, with the H–O–H angle marked 104.5°',
+      caption:
+        'The VSEPR shape of water, H₂O: bent, with two lone pairs on the oxygen drawn above it. The H–O–H angle is labeled 104.5°, less than the tetrahedral 109.5° because the lone pairs push the bonds closer.',
+      settings: { formula: 'H2O', bondAngles: true, angles: '104.5°' },
+    },
+    {
+      slug: 'ball-and-stick-model-of-sf6-octahedral',
+      title: 'Ball-and-stick model of SF₆ (sulfur hexafluoride): octahedral',
+      alt: 'A ball-and-stick model of sulfur hexafluoride: a yellow sulfur with six green fluorines, one above, one below and four around it',
+      caption:
+        'A ball-and-stick model of sulfur hexafluoride, SF₆: six fluorine atoms round a sulfur atom at the corners of an octahedron, every bond angle 90°. The nearer atoms are drawn in front of the farther ones.',
+      settings: { formula: 'SF6', style: 'ball-and-stick', bondAngles: true },
+    },
+    {
+      slug: 'vsepr-shape-of-sf4-seesaw-ball-and-stick',
+      title: 'VSEPR shape of SF₄: seesaw, ball-and-stick',
+      alt: 'A ball-and-stick model of sulfur tetrafluoride: two fluorines above and below the sulfur, two more to the right, and a lone pair lobe to the left',
+      caption:
+        'A ball-and-stick model of sulfur tetrafluoride, SF₄: a seesaw shape, AX₄E. The lone pair takes an equatorial position of the trigonal bipyramid, leaving two axial and two equatorial fluorines, with bond angles less than 90° and less than 120°.',
+      settings: { formula: 'SF4', style: 'ball-and-stick', bondAngles: true, axe: true },
+    },
+    {
+      slug: 'name-the-shape-xef4-square-planar',
+      title: 'Name the shape: XeF₄ (xenon tetrafluoride), with answer key',
+      alt: 'Xenon tetrafluoride drawn wedge-and-dash with blank lines for its shape and electron geometry, and the answers square planar and octahedral below',
+      caption:
+        'A “name the shape” question for xenon tetrafluoride, XeF₄: four fluorines round the xenon with two lone pairs above and below, and blank lines for the shape and electron geometry. The answer key gives square planar and octahedral.',
+      settings: { formula: 'XeF4', electronGeometry: true, question: true, answerKey: true },
     },
   ]),
 
@@ -1222,6 +1354,178 @@ export const EXAMPLES: Example[] = [
       caption:
         'The points of a made-up Isotope X with a half-life of 10 years, its percent remaining at the start and after each half-life, 100%, 50%, 25%, 12.5% and so on, with the curve left off. Students join the dots with a smooth curve and see that it never reaches zero.',
       settings: { iso1: 'x', curve: false, dots: true, xTo: '50', xStep: '5', xEvery: 1 },
+    },
+  ]),
+
+  ...examplesOf('rate-law-graphs', [
+    {
+      slug: 'first-order-rate-law-graphs',
+      title: 'Rate law graphs: [A], ln[A] and 1/[A] vs time for a first-order reaction',
+      alt: 'Three graphs side by side against time in seconds from 0 to 120: [A] in M curving down from 1, ln[A] falling in a straight line from 0, and 1/[A] in M⁻¹ curving up from 1',
+      caption:
+        'A reaction A → products drawn three ways against the same time axis, from 0 to 120 s: the concentration [A] from 1.00 M, ln[A] and 1/[A]. Only the ln[A] graph is a straight line, so the reaction is first order; [A] falls in a curve that levels off, and 1/[A] rises in a curve that gets steeper. The figure doesn’t say the order, so students pick it from the straight graph.',
+      settings: {},
+    },
+    {
+      slug: 'zero-order-data-points-with-scatter',
+      title: 'Zero-order reaction data: which graph is straight?',
+      alt: 'Eight data points on each of three graphs against time in seconds: [A] in M falling in a nearly straight line, ln[A] curving down more and more steeply, and 1/[A] in M⁻¹ curving up',
+      caption:
+        'Eight measurements of [A] every 12 s from a reaction starting at 1.00 M, with a little scatter, as real data would have, and no curves drawn: the same data plotted as [A], ln[A] and 1/[A] against time. The [A] points lie close to a straight line, so the reaction is zero order, while the ln[A] and 1/[A] points curve away more and more as the reactant runs out.',
+      settings: { order: '0', k: 0.01, curve: false, points: true, noise: '2' },
+    },
+    {
+      slug: 'second-order-data-table-plot-the-graphs',
+      title: 'Plot the rate law graphs from a data table: second-order reaction',
+      alt: 'Three empty grids for [A], ln[A] and 1/[A] against time from 0 to 500 s, over a table of time and [A] from 0 to 420 s',
+      caption:
+        'A table of time and [A] for a reaction starting at 1.00 M, measured every 60 s up to 420 s, under three empty grids numbered for [A], ln[A] and 1/[A] against time. Students work out ln[A] and 1/[A] from the table, plot all three graphs and find the order from the straight one: here 1/[A], so the reaction is second order.',
+      settings: { order: '2', curve: false, table: 'conc' },
+    },
+    {
+      slug: 'first-order-concentration-vs-time-half-lives',
+      title: 'First-order concentration vs time in mol/L with three half-lives',
+      alt: 'Concentration of A in mol/L falling from 1 against time in seconds, with dashed guide lines from 0.5, 0.25 and 0.125 mol/L to the curve and down to 34.7, 69.3 and 104 s',
+      caption:
+        'The concentration of the reactant A in mol/L against time for a first-order reaction, falling from 1.00 mol/L. Dashed guide lines run from 0.5, 0.25 and 0.125 mol/L across to the curve and down to the time axis, each labeled with its time: 34.7, 69.3 and 104 s. Each half-life takes the same 34.7 s, as a first-order reaction’s always does.',
+      settings: { graphs: 'conc', concUnit: 'mol/L', guides: 3 },
+    },
+  ]),
+
+  ...examplesOf('equilibrium-graph', [
+    {
+      slug: 'haber-process-reaching-equilibrium',
+      title: 'Haber process reaching equilibrium: concentration vs time',
+      alt: 'Concentration in mol/L against time in minutes for N₂ + 3H₂ ⇌ 2NH₃: N₂ falling from 1 and H₂ from 3 while NH₃ rises from 0, all three leveling off by about 4 minutes, each line labeled with its formula',
+      caption:
+        'N₂ + 3H₂ ⇌ 2NH₃ starting from 1 mol/L of nitrogen and 3 mol/L of hydrogen with no ammonia. The reactants fall and ammonia rises, steeply at first and then more slowly, until all three level off at equilibrium: the forward and reverse rates are equal, and the concentrations stop changing. N₂ and H₂ fall in a 1 : 3 ratio and NH₃ rises twice as fast as N₂ falls, as the coefficients say. K is an example value chosen to give a clear graph, not the measured one.',
+      settings: {},
+    },
+    {
+      slug: 'le-chatelier-nitrogen-added-haber-process',
+      title: 'Le Châtelier’s principle: nitrogen added to the Haber process',
+      alt: 'Concentration against time for N₂ + 3H₂ ⇌ 2NH₃: the three lines level off, then at 8 minutes, marked by a dashed line labeled N₂ added, the N₂ line jumps up and the system shifts, H₂ falling and NH₃ rising to new levels',
+      caption:
+        'N₂ + 3H₂ ⇌ 2NH₃ settles to equilibrium, then more nitrogen is added at 8 minutes, marked with a dashed line. Only the N₂ line jumps; the system then shifts toward the products, using up some of the added nitrogen and some hydrogen to make more ammonia, until it levels off again. Nitrogen ends above where it was before the stress, never back down to it. K is an example value, the same before and after.',
+      settings: { count: 1, xTo: '16', xStep: '1' },
+    },
+    {
+      slug: 'n2o4-no2-equilibrium-volume-halved',
+      title: 'N₂O₄ ⇌ 2NO₂ equilibrium with the volume halved',
+      alt: 'Concentration against time for N₂O₄ ⇌ 2NO₂: N₂O₄ falls from 1 and NO₂ rises from 0 until both level off, then at 8 minutes, at a dashed line labeled Volume halved, both lines jump to double, then N₂O₄ rises and NO₂ falls to new levels',
+      caption:
+        'Dinitrogen tetroxide dissociating, N₂O₄ ⇌ 2NO₂, from 1 mol/L of N₂O₄. At 8 minutes the volume is halved, so every concentration doubles at once, a vertical jump in both lines. The system then shifts toward N₂O₄, the side with fewer moles of gas, so NO₂ falls and N₂O₄ rises until they level off again. K is an example value chosen to give a clear graph.',
+      settings: {
+        reaction: 'n2o4', start1: 1, start2: 0, start3: 0, k: 0.2, count: 1, s1Kind: 'volume',
+        xTo: '14', xStep: '1', yTo: '1.8', yStep: '0.1',
+      },
+    },
+    {
+      slug: 'exothermic-equilibrium-temperature-raised',
+      title: 'Exothermic equilibrium heated: 2SO₂ + O₂ ⇌ 2SO₃',
+      alt: 'Concentration against time for 2SO₂ + O₂ ⇌ 2SO₃: the lines level off, then at 8 minutes, at a dashed line labeled Temperature raised, no line jumps but each turns a corner, SO₃ falling and SO₂ and O₂ rising to new levels',
+      caption:
+        'The Contact process equilibrium, 2SO₂ + O₂ ⇌ 2SO₃, whose forward reaction is exothermic. When the temperature is raised at 8 minutes nothing jumps, since no concentration changes at that moment: K changes. Heating an exothermic reaction makes K smaller, so the system shifts toward the reactants, SO₃ falling and SO₂ and O₂ rising to a new equilibrium. K is an example value chosen to give a clear graph.',
+      settings: {
+        reaction: 'so3', start1: 1, start2: 0.8, start3: 0, k: 10, count: 1, s1Kind: 'raise',
+        xTo: '14', xStep: '1', yTo: '1.2', yStep: '0.1',
+      },
+    },
+    {
+      slug: 'name-the-three-stresses-equilibrium-graph',
+      title: 'Name the three stresses: an equilibrium graph for students',
+      alt: 'A black and white graph of concentration against time for N₂ + 3H₂ ⇌ 2NH₃, the three lines solid, dashed and dotted with no names, and three unlabeled dashed lines at 8, 16 and 24 minutes where the system is stressed',
+      caption:
+        'N₂ + 3H₂ ⇌ 2NH₃ stressed three times, at 8, 16 and 24 minutes, in black with the lines told apart only by their dashes and with no names or words on the figure. Students work out which line is which species from the coefficients, then say what happened at each dashed line and which way the equilibrium shifted: one line jumping alone, all three jumping together, or every line turning a corner with no jump.',
+      settings: { count: 3, s1Text: '', s2Text: '', s3Text: '', color: false, speciesLabels: false, xTo: '28', xStep: '2' },
+    },
+  ]),
+  ...examplesOf('chromatography', [
+    {
+      slug: 'paper-chromatogram-calculate-rf-values',
+      title: 'Paper chromatogram: calculate Rf values',
+      alt: 'Chromatography paper hanging from a glass rod in a beaker of water, with inks A, B and C separated into colored spots and arrows marking each spot’s distance and the solvent front’s 8.0 cm from the pencil origin line',
+      caption:
+        'Three inks, A, B and C, after water has carried them up chromatography paper hanging from a glass rod in a beaker. Arrows from the pencil origin line mark how far the solvent front traveled, 8.0 cm, and how far each spot traveled, for working out each spot’s Rf. Ink C’s three spots are level with A’s blue and yellow spots and B’s red one.',
+      settings: { measurements: true },
+    },
+    {
+      slug: 'chromatography-identify-dyes-in-unknown-ink',
+      title: 'Chromatography: identify the dyes in an unknown ink',
+      alt: 'A paper chromatogram of an unknown ink X beside four known dyes, red, yellow, green and blue: X has a red spot and a blue spot level with the red and blue dyes’ spots',
+      caption:
+        'A paper chromatogram of an unknown ink, X, run beside four known dyes: red, yellow, green and blue. X separates into two spots, a red one level with the red dye and a blue one level with the blue dye, and nothing level with the yellow or green dye. The solvent front is 10.0 cm above the pencil origin line.',
+      settings: {
+        setup: false,
+        front: 10,
+        samples: [
+          { name: 'X', spots: [{ color: 'red', distance: 3.5 }, { color: 'blue', distance: 7.2 }] },
+          { name: 'Red', spots: [{ color: 'red', distance: 3.5 }] },
+          { name: 'Yellow', spots: [{ color: 'yellow', distance: 5 }] },
+          { name: 'Green', spots: [{ color: 'green', distance: 6 }] },
+          { name: 'Blue', spots: [{ color: 'blue', distance: 7.2 }] },
+        ],
+      },
+    },
+    {
+      slug: 'labeled-paper-chromatography-setup-before-and-after',
+      title: 'Labeled paper chromatography setup, before and after',
+      alt: 'Two beakers of water side by side, each with chromatography paper hanging from a glass rod: before, three ink spots on the pencil line; after, the inks separated up the paper, with the glass rod, paper, solvent front, pencil line, water and beaker labeled',
+      caption:
+        'A paper chromatography setup before and after the solvent runs. Before, inks A, B and C sit as single spots on the pencil origin line, above the water. After, water has risen up the paper to the solvent front and separated each ink into its dyes. The labels name the glass rod, the chromatography paper, the solvent front, the pencil line (origin), the water (solvent) and the beaker.',
+      settings: { show: 'both', labels: true },
+    },
+    {
+      slug: 'chromatogram-pure-substances-and-mixtures',
+      title: 'Chromatogram: which inks are pure substances and which are mixtures?',
+      alt: 'A paper chromatogram of four inks: P a single purple spot, Q a red and a blue spot, R a black spot left on the origin line and a yellow spot, and S a single orange spot',
+      caption:
+        'A paper chromatogram of four inks, P, Q, R and S, with the solvent front 9.0 cm above the pencil origin line. P and S each give a single spot, while Q separates into red and blue spots and R into a yellow spot and a black spot that stayed on the origin line, not dissolving in the solvent.',
+      settings: {
+        setup: false,
+        front: 9,
+        samples: [
+          { name: 'P', spots: [{ color: 'purple', distance: 4.5 }] },
+          { name: 'Q', spots: [{ color: 'red', distance: 3 }, { color: 'blue', distance: 6 }] },
+          { name: 'R', spots: [{ color: 'black', distance: 0 }, { color: 'yellow', distance: 2.7 }] },
+          { name: 'S', spots: [{ color: 'orange', distance: 5.4 }] },
+        ],
+      },
+    },
+  ]),
+
+  ...examplesOf('electrochemical-cells', [
+    {
+      slug: 'zinc-copper-galvanic-cell-salt-bridge',
+      title: 'Zinc–copper galvanic cell with a salt bridge',
+      alt: 'A zinc–copper galvanic cell: a zinc strip in Zn²⁺(aq) and a copper strip in Cu²⁺(aq), joined by a salt bridge and wired to a digital voltmeter reading 1.10 V, with zinc labeled Anode (−), copper Cathode (+) and arrows marked e⁻ along the wire from zinc to copper',
+      caption:
+        'A zinc–copper (Daniell) galvanic cell: a zinc electrode in a solution of zinc ions and a copper electrode in a solution of copper(II) ions, the two beakers joined by a salt bridge. A digital voltmeter wired between the electrodes reads 1.10 V. Zinc is labeled the anode (−) and copper the cathode (+), and arrows show electrons flowing through the wire from zinc to copper.',
+      settings: { electrodes: true, electronFlow: true },
+    },
+    {
+      slug: 'copper-silver-galvanic-cell-label-anode-cathode',
+      title: 'Copper–silver galvanic cell: label the anode and cathode',
+      alt: 'A galvanic cell of a copper strip in Cu²⁺(aq) and a silver strip in Ag⁺(aq), joined by a salt bridge and wired to a digital voltmeter reading 0.46 V, with no anode, cathode or electron flow marked',
+      caption:
+        'A galvanic cell of a copper electrode in a solution of copper(II) ions and a silver electrode in a solution of silver ions, joined by a salt bridge. A digital voltmeter wired between them reads 0.46 V, its + terminal on the silver side. The anode, the cathode and the direction of electron flow are left for students to work out.',
+      settings: { left: 'Cu', right: 'Ag' },
+    },
+    {
+      slug: 'calculate-e-cell-zinc-silver-cell',
+      title: 'Calculate E°cell: zinc–silver cell',
+      alt: 'A galvanic cell of a zinc strip in Zn²⁺(aq) and a silver strip in Ag⁺(aq), joined by a salt bridge, with the electrodes wired to a coil of wire instead of a voltmeter',
+      caption:
+        'A galvanic cell of a zinc electrode in a solution of zinc ions and a silver electrode in a solution of silver ions, joined by a salt bridge. The electrodes are wired to a coil of wire rather than a voltmeter, so the figure gives no voltage: students work out E°cell from the standard reduction potentials.',
+      settings: { right: 'Ag', meter: 'coil' },
+    },
+    {
+      slug: 'aluminum-silver-voltaic-cell-dial-voltmeter',
+      title: 'Aluminum–silver voltaic cell with a dial voltmeter',
+      alt: 'A voltaic cell with a silver strip in Ag⁺(aq) on the left and an aluminum strip in Al³⁺(aq) on the right, joined by a salt bridge and wired to a dial voltmeter reading about 2.5 V, with aluminum labeled Anode (−), silver Cathode (+) and e⁻ arrows along the wire from right to left',
+      caption:
+        'A voltaic cell with a silver electrode in a solution of silver ions on the left and an aluminum electrode in a solution of aluminum ions on the right, joined by a salt bridge. A dial voltmeter wired between them reads 2.46 V, the needle a little under halfway from 2 to 3. The anode is on the right this time: aluminum is labeled the anode (−) and silver the cathode (+), and the arrows show electrons flowing through the wire from right to left.',
+      settings: { left: 'Ag', right: 'Al', meter: 'dial', electrodes: true, electronFlow: true },
     },
   ]),
 ]

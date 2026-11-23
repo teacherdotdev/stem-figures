@@ -65,6 +65,16 @@ export const BIOLOGY: CatalogEntry[] = [
     keywords: ['pedigree', 'pedigree chart', 'family tree', 'genetics', 'inheritance', 'carrier', 'affected', 'autosomal', 'dominant', 'recessive', 'x-linked', 'sex-linked', 'y-linked', 'genotype', 'hemophilia', 'huntington', 'cystic fibrosis', 'albinism', 'color blindness', 'printable'],
   },
   {
+    id: 'cladogram',
+    site: 'biology',
+    name: 'Cladogram',
+    path: '/cladogram',
+    blurb: 'A cladogram or phylogenetic tree of the taxa and traits you type.',
+    description:
+      'Make printable cladograms and phylogenetic trees for biology tests. Type the taxa, group them, and mark the shared derived traits on the branches, or leave names and traits blank for students.',
+    keywords: ['cladogram', 'phylogenetic tree', 'phylogeny', 'evolutionary tree', 'tree of life', 'clade', 'taxa', 'taxon', 'shared derived characters', 'derived traits', 'synapomorphy', 'common ancestor', 'node', 'outgroup', 'monophyletic', 'evolution', 'classification', 'cladistics', 'printable'],
+  },
+  {
     id: 'cell-division',
     site: 'biology',
     off: true,

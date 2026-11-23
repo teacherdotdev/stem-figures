@@ -10,6 +10,7 @@ import CellDiagramPreview from './cell-diagram/Preview.svelte'
 import PopulationGrowthPreview from './population-growth/Preview.svelte'
 import PunnettSquarePreview from './punnett-square/Preview.svelte'
 import PedigreePreview from './pedigree/Preview.svelte'
+import CladogramPreview from './cladogram/Preview.svelte'
 import CellDivisionPreview from './cell-division/Preview.svelte'
 import PredatorPreyPreview from './predator-prey/Preview.svelte'
 import FoodWebPreview from './food-web/Preview.svelte'
@@ -27,6 +28,7 @@ export const PREVIEWS: Record<string, Component> = {
   'population-growth': PopulationGrowthPreview,
   'punnett-square': PunnettSquarePreview,
   pedigree: PedigreePreview,
+  cladogram: CladogramPreview,
   'cell-division': CellDivisionPreview,
   'predator-prey': PredatorPreyPreview,
   'food-web': FoodWebPreview,

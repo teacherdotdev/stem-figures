@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { readAxes } from './axes'
-import { clipPath, layoutGrid } from './grid'
+import { CELL, clipPath, layoutGrid } from './grid'
 import type { GridSettings } from './axes'
 
 const box = { x0: 0, x1: 10, y0: 0, y1: 10 }
@@ -44,6 +44,28 @@ describe('layoutGrid', () => {
     expect(crossing.xAxis.y).toBeLessThan(crossing.grid.y + crossing.grid.h)
     expect(edges.xAxis.y).toBe(edges.grid.y + edges.grid.h)
     expect(edges.numbers.filter((n) => n.text === '0')).toHaveLength(2)
+  })
+
+  it('writes two different numbers at the corner of axes along the edges level with their own lines', () => {
+    const below = readAxes({ xFrom: '0', xTo: '20', xStep: '1', yFrom: '-20', yTo: '120', yStep: '10' })
+    const edges = layoutGrid(s, below, { edges: true })
+    const bottom = edges.grid.y + edges.grid.h
+    const corner = edges.numbers.find((n) => n.text === '−20')!
+    const above = edges.numbers.find((n) => n.text === '−10')!
+    // The −20 sits on its gridline as −10 sits on its own, one square higher.
+    expect(corner.y).toBeCloseTo(above.y + CELL, 9)
+    expect(corner.y).toBeGreaterThan(bottom)
+    // The time 0 is under its line, as the other times are.
+    const zero = edges.numbers.find((n) => n.text === '0' && n.y > bottom + 1)!
+    expect(zero).toMatchObject({ x: edges.grid.x, anchor: 'middle' })
+
+    // Not along the edges, or with the same number on both: tucked into the corner as before.
+    const positive = readAxes({ xFrom: '0', xTo: '20', xStep: '1', yFrom: '20', yTo: '120', yStep: '10' })
+    const plain = layoutGrid(s, positive)
+    expect(plain.numbers.find((n) => n.text === '20' && n.anchor === 'end' && n.x < plain.grid.x)!.y).toBeCloseTo(plain.grid.y + plain.grid.h - 5, 9)
+    expect(plain.numbers.find((n) => n.text === '0')).toMatchObject({ x: plain.grid.x - 8, anchor: 'end' })
+    const same = layoutGrid(s, readAxes({ xFrom: '0', xTo: '20', xStep: '1', yFrom: '0', yTo: '120', yStep: '10' }), { edges: true })
+    expect(same.numbers.filter((n) => n.text === '0')).toEqual([expect.objectContaining({ x: same.grid.x - 8, anchor: 'end' })])
   })
 
   it('keeps room for a generator’s own labels, moving the axis titles out past it', () => {

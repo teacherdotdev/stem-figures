@@ -7,7 +7,6 @@
   import { Box, PenLine, Tag } from '@lucide/svelte'
   import GeneratorPage from '$shared/GeneratorPage.svelte'
   import { generatorState } from '$shared/generatorState.svelte'
-  import HelpTip from '$shared/HelpTip.svelte'
   import MathInput from '$lib/shared/MathInput.svelte'
   import Section from '$shared/Section.svelte'
   import PartLabel from '$lib/shapes/PartLabel.svelte'
@@ -50,16 +49,7 @@
     const given = typed(k) ? clean[k as Measure].trim() : ''
     return `${given ? pretty(given) : solvedText(k) || '?'}${unitText}`
   }
-  const measureNote = (k: Part) =>
-    typed(k) && clean[k as Measure].trim() ? 'Its measure, as you typed it.' : `Rounded to the nearest ${['whole number', 'tenth', 'hundredth'][clean.round]}.`
   const fieldProblem = $derived(form.inputs.map((k) => read.problems[k]).find(Boolean) ?? null)
-
-  /** How to fill in the measures, for the help tip. */
-  const measureHelp = $derived(
-    form.shape === 'pyramid' || form.shape === 'cone'
-      ? 'Give the height or the slant height, and the other is worked out. Only the slant height is on the net.'
-      : form.shape === 'cube' ? 'Give the length of an edge.' : 'Give every measure.',
-  )
 
   function moveLabel(part: string, offset: Offset) {
     const moved = readMoved(s.moved)
@@ -162,9 +152,6 @@
 
       <div class="head-row">
         <h2 class="card-head">Measures</h2>
-        <HelpTip id="measure-tip" label="How to give the measures">
-          {measureHelp} Worked-out measures are shown faintly. Type sqrt for √, / for a fraction and pi for π.
-        </HelpTip>
       </div>
       {#each form.rows as k (k)}
         <div class="row">
@@ -180,7 +167,7 @@
           <span class="suffix unit" aria-hidden="true">{k === 'angle' ? '°' : clean.unit.trim()}</span>
           {#if labeled(k)}
             <PartLabel
-              name={title(k)} id="l-{k}" given={typed(k) && !!clean[k as Measure].trim()} measure={measureText(k)} note={measureNote(k)}
+              name={title(k)} id="l-{k}" given={typed(k) && !!clean[k as Measure].trim()} measure={measureText(k)}
               bind:mode={s[`${k}Label` as const]} bind:text={s[`${k}Text` as const]}
             />
           {:else}
@@ -191,7 +178,7 @@
       {#if form.rows.includes('radius')}
         <label class="check diameter">
           <input type="checkbox" bind:checked={s.diameter} />
-          <span>Give the diameter instead <span class="hint">drawn right across the circle</span></span>
+          <span>Give the diameter instead</span>
         </label>
       {/if}
 
@@ -208,12 +195,12 @@
       </div>
       <label class="check">
         <input type="checkbox" bind:checked={s.tabs} />
-        <span>Glue tabs <span class="hint">on one of each pair of edges that meet when it’s folded, for cutting it out</span></span>
+        <span>Glue tabs</span>
       </label>
       {#if hasSquares}
         <label class="check">
           <input type="checkbox" bind:checked={s.square} />
-          <span>Right-angle squares <span class="hint">where a height or slant height meets a side</span></span>
+          <span>Right-angle squares</span>
         </label>
       {/if}
     </Section>
@@ -227,11 +214,11 @@
       </label>
       <label class="check">
         <input type="checkbox" bind:checked={s.shade} />
-        <span>Tint matching faces <span class="hint">faces the same shape and size share a color</span></span>
+        <span>Tint matching faces</span>
       </label>
       <label class="check">
         <input type="checkbox" bind:checked={s.showShape} />
-        <span>Show the 3D shape <span class="hint">beside the net, the shape it folds into</span></span>
+        <span>Show the 3D shape</span>
       </label>
     </Section>
 
@@ -261,7 +248,6 @@
         </label>
       {/if}
       <div class="reset-row">
-        <p class="hint">Drag any label on the figure to move it.</p>
         <button class="btn-ghost small" disabled={!clean.moved} onclick={() => (s.moved = '')}>Reset label positions</button>
       </div>
     </Section>
@@ -287,11 +273,9 @@
 
   .help { margin: 0.2rem 0 0; font-size: 0.84rem; color: var(--muted); }
   .help.problem { color: var(--red); font-weight: 600; }
-  .hint { font-weight: 400; color: var(--muted); font-size: 0.84rem; margin: 0; }
 
   .check { display: flex; align-items: flex-start; gap: 0.5rem; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.75rem; cursor: pointer; }
   .check input { width: 1.05rem; height: 1.05rem; margin: 0.08rem 0 0; accent-color: var(--blue); flex: none; }
-  .check .hint { display: block; }
   .check.diameter { margin: 0.2rem 0 0; }
 
   .field { display: flex; flex-direction: column; gap: 0.35rem; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.4rem; }

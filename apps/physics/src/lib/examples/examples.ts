@@ -16,6 +16,8 @@ import type { Force } from '$lib/generators/free-body-diagram/settings'
 import type { InclineObject } from '$lib/generators/inclined-plane/settings'
 import type { Segment } from '$lib/generators/motion-graphs/settings'
 import type { PulleyObject } from '$lib/generators/pulley/settings'
+import type { TrackPoint } from '$lib/generators/roller-coaster/settings'
+import type { Load as TorqueLoad } from '$lib/generators/torque/settings'
 import type { Vector } from '$lib/generators/vector-diagram/settings'
 import type { Label } from '$lib/shared/label'
 import { SITE_ID } from '$lib/site/config'
@@ -85,6 +87,28 @@ const onRamp = (label: string, more: Partial<InclineObject> = {}): InclineObject
 /** A Circuit Diagram resistor (or bulb), its name numbered automatically unless given. */
 const load = (value: Label, more: Partial<Load> = {}): Load => ({ kind: 'resistor', name: text(''), value, ...more })
 const none = (t: string): Label => ({ mode: 'none', text: t })
+
+/** A Roller Coaster point, its height marked as "40 m" unless `more` says otherwise. */
+/** A Torque load, every field written out, its labels showing its values unless given. */
+const onBeam = (kind: TorqueLoad['kind'], position: number, value: number, more: Partial<TorqueLoad> = {}): TorqueLoad => ({
+  kind,
+  position,
+  value,
+  label: text(''),
+  distanceLabel: text(''),
+  shape: 'block',
+  size: 1,
+  ...more,
+})
+
+const coasterPoint = (height: number, label: string, more: Partial<TrackPoint> = {}): TrackPoint => ({
+  height,
+  label: text(label),
+  heightLabel: text(`${height} m`),
+  rough: false,
+  lengthLabel: text('d'),
+  ...more,
+})
 
 export const EXAMPLES: Example[] = [
   ...examplesOf('free-body-diagram', [
@@ -806,6 +830,321 @@ export const EXAMPLES: Example[] = [
       caption:
         'A converging lens of focal length 10 cm on its principal axis with F, F′, 2F and 2F′ marked and an object 15 cm away, between F and 2F, and no rays: a template for students to draw the principal rays and find the image. A cm scale numbered from the lens runs under it, for measuring the image distance.',
       settings: { distance: 15, shown: 'setup', scale: true },
+    },
+  ]),
+
+  ...examplesOf('electric-and-magnetic-fields', [
+    {
+      slug: 'electric-field-lines-of-a-positive-and-a-negative-charge',
+      title: 'Electric field lines of a positive and a negative charge',
+      alt: 'A positive and a negative point charge side by side, with curved electric field lines running from the positive charge to the negative one, and lines running off the figure from the positive charge and in from outside to the negative one, each with an arrowhead',
+      caption:
+        'A positive and a negative point charge of equal size side by side, an electric dipole. Twelve field lines leave the positive charge evenly spaced; those on the side facing the negative charge curve across and end on it, and the rest run off the figure. Lines come in to the negative charge from outside the same way. The lines never cross, and the arrows point from + to −.',
+      settings: {},
+    },
+    {
+      slug: 'electric-field-of-two-positive-charges',
+      title: 'Electric field of two positive charges',
+      alt: 'Two positive point charges side by side, with electric field lines pointing away from each, bending apart between them and leaving an empty space in the middle',
+      caption:
+        'Two equal positive point charges side by side. Their field lines point outward and bend away from each other, so none runs from one charge to the other, and the space midway between them, where the field is zero, has no lines through it.',
+      settings: { setup: 'like' },
+    },
+    {
+      slug: 'electric-field-lines-of-a-negative-point-charge',
+      title: 'Electric field lines of a negative point charge',
+      alt: 'A negative point charge with twelve straight electric field lines coming in to it from every direction, each with an arrowhead pointing toward the charge',
+      caption:
+        'One negative point charge with twelve straight field lines evenly spaced around it. The arrows point in, toward the charge, as the field of a negative charge always does.',
+      settings: { setup: 'charge', sign: '-' },
+    },
+    {
+      slug: 'uniform-electric-field-between-parallel-plates',
+      title: 'Uniform electric field between parallel plates',
+      alt: 'Two horizontal parallel plates, the top one marked with plus signs and the bottom one with minus signs, with seven evenly spaced straight field lines pointing down from the top plate to the bottom one',
+      caption:
+        'Two parallel plates, positive on top and negative below, with seven evenly spaced, straight field lines between them, each pointing down from the positive plate to the negative one: a uniform electric field, as between the plates of a capacitor.',
+      settings: { setup: 'plates' },
+    },
+    {
+      slug: 'magnetic-field-lines-of-a-bar-magnet',
+      title: 'Magnetic field lines of a bar magnet',
+      alt: 'A bar magnet with S on the left half and N on the right half, with nested field line loops above and below it running from the north end round to the south end, and a straight line out of each end along its axis',
+      caption:
+        'A bar magnet, south pole on the left and north pole on the right, with four nested field line loops above it and four below. Each runs out of the north end and round to the south end, and two straight lines run along the magnet’s axis, out of the north end and in to the south end.',
+      settings: { setup: 'magnet' },
+    },
+    {
+      slug: 'magnetic-field-around-a-wire-with-current-into-the-page',
+      title: 'Magnetic field around a wire with current into the page',
+      alt: 'A wire seen end-on, drawn as a circle with a cross in it, with four circular field lines around it, further apart further out, and arrowheads showing the field running clockwise',
+      caption:
+        'A straight wire seen end-on, its current flowing into the page, shown by the cross. Its magnetic field lines are circles around it, further apart further out as the field weakens, running clockwise, as the right-hand rule gives for a current into the page.',
+      settings: { setup: 'wire', current: 'in' },
+    },
+    {
+      slug: 'draw-the-electric-field-of-two-negative-charges',
+      title: 'Draw the electric field of two negative charges',
+      alt: 'Two negative point charges side by side with no field lines drawn, for students to draw the field',
+      caption:
+        'Two equal negative point charges side by side and nothing else, for students to sketch the electric field: lines coming in to each charge from all around and bending away from each other between them.',
+      settings: { setup: 'like', sign: '-', fieldLines: false },
+    },
+  ]),
+  ...examplesOf('lever', [
+    {
+      slug: 'class-1-lever-find-the-effort',
+      title: 'Class 1 lever: find the effort',
+      alt: 'A class 1 lever: a beam on a fulcrum with a 300 N load on a block 0.5 m to the left of the fulcrum and an effort arrow marked with a question mark pointing down 1.5 m to the right of it',
+      caption:
+        'A class 1 lever, with the fulcrum between the load and the effort. A 300 N load sits on the beam 0.5 m from the fulcrum, and the effort pushes down on the other end, 1.5 m from the fulcrum. The effort is marked ? for students to find. The beam is drawn to scale, so the effort arm is three times as long as the load arm.',
+      settings: { effortLabel: text('?') },
+    },
+    {
+      slug: 'class-2-lever-mechanical-advantage',
+      title: 'Class 2 lever with its mechanical advantage',
+      alt: 'A class 2 lever: a beam with the fulcrum at its left end, a 600 N load on a block 0.4 m from the fulcrum and a 200 N effort arrow pointing up at the far end, 1.2 m from the fulcrum, with the working for its mechanical advantage of 3 printed underneath',
+      caption:
+        'A class 2 lever, like a wheelbarrow: the fulcrum is at one end, the 600 N load is 0.4 m from it, and the 200 N effort lifts the far end, 1.2 m from the fulcrum. Both arms are marked from the fulcrum, and the answer key under the figure works out the mechanical advantage, 3, and the effort.',
+      settings: { class: '2', load: 600, effortArm: 1.2, loadArm: 0.4, answerKey: true },
+    },
+    {
+      slug: 'class-3-lever-load-in-kg',
+      title: 'Class 3 lever with a load in kg',
+      alt: 'A class 3 lever: a beam with the fulcrum at its left end, a 196 N effort arrow pointing up 10 cm from the fulcrum and a 5 kg block as the load at the far end, 40 cm from the fulcrum',
+      caption:
+        'A class 3 lever, like a forearm or a fishing rod: the effort is between the fulcrum and the load. A 5 kg load sits at the end of the beam, 40 cm from the fulcrum, and the effort pulls up only 10 cm from the fulcrum, so it has to be four times the load’s weight: 196 N.',
+      settings: { class: '3', effortArm: 10, loadArm: 40, lengthUnit: 'cm', load: 5, loadUnit: 'kg' },
+    },
+    {
+      slug: 'label-the-parts-of-a-lever',
+      title: 'Label the parts of a lever',
+      alt: 'A class 1 lever with no values: a beam on a fulcrum with an arrow pointing down on each end, and a blank line beside the fulcrum and above each arrow for students to write on',
+      caption:
+        'A class 1 lever with nothing written on it: a blank line beside the fulcrum and one above each force arrow, for students to label the fulcrum, the load and the effort. The longer arrow is the bigger force, the load, which is nearer the fulcrum.',
+      settings: {
+        loadShown: 'arrow',
+        loadLabel: none(''),
+        effortLabel: none(''),
+        effortName: blank('Effort'),
+        loadName: blank('Load'),
+        fulcrumName: blank('Fulcrum'),
+        arms: false,
+      },
+    },
+  ]),
+  ...examplesOf('torque', [
+    {
+      slug: 'balanced-seesaw-with-two-masses',
+      title: 'Balanced seesaw with two masses',
+      alt: 'A beam on a pivot at its middle with a 3 kg block hanging 0.2 m to the left of the pivot and a 2 kg block hanging 0.3 m to the right, with both distances marked from the pivot',
+      caption:
+        'The principle of moments on a seesaw: a 3 kg mass hangs 0.2 m to the left of the pivot and a 2 kg mass 0.3 m to the right. Both turn the beam equally, 3 kg × 0.2 m against 2 kg × 0.3 m, so it balances. The beam is drawn to scale, so the 0.3 m distance is drawn half as long again as the 0.2 m one.',
+      settings: { unit: 'kg', loads: [onBeam('hanging', 0.3, 3), onBeam('hanging', 0.8, 2)] },
+    },
+    {
+      slug: 'find-the-unknown-weight-on-a-balanced-beam',
+      title: 'Find the unknown weight on a balanced beam',
+      alt: 'A balanced beam on a pivot at its middle with three hanging blocks: 8 N 0.4 m to the left of the pivot, one with a blank line 0.2 m to the right, and 4 N 0.4 m to the right',
+      caption:
+        'A beam balanced on a pivot with three weights: 8 N 0.4 m to the left, and two to the right, one 0.2 m from the pivot with a blank line for its weight and 4 N at 0.4 m. Students take moments about the pivot: 8 × 0.4 = W × 0.2 + 4 × 0.4, so the missing weight is 8 N.',
+      settings: { loads: [onBeam('hanging', 0.1, 8), onBeam('hanging', 0.7, 8, { label: blank('') }), onBeam('hanging', 0.9, 4)] },
+    },
+    {
+      slug: 'uniform-plank-on-two-supports',
+      title: 'Uniform plank on two supports',
+      alt: 'A 4 m plank resting on supports A and B at its two ends, with a 600 N block on it 1 m from A, its own 200 N weight drawn down from its middle, and the forces F_A and F_B pointing up at the supports',
+      caption:
+        'A uniform 4 m plank weighing 200 N on two supports at its ends, with a 600 N load 1 m from support A. The forces at the supports, F_A and F_B, are drawn and left for students to find: taking moments about A gives F_B = 250 N, and then F_A = 800 − 250 = 550 N.',
+      settings: { support: 'two', length: 4, supportA: 0, supportB: 4, beamWeight: 200, supportForces: true, loads: [onBeam('resting', 1, 600)] },
+    },
+    {
+      slug: 'hanging-sign-on-a-beam-with-a-cable-at-30-degrees',
+      title: 'Hanging sign on a beam with a cable at 30°',
+      alt: 'A 2 m beam hinged to a wall at its left end, held up by a cable from its far end to the wall above at angle theta to the beam, with a 100 N sign hanging 1.5 m from the wall and the beam’s own 50 N weight at its middle',
+      caption:
+        'A hanging sign: a 2 m beam weighing 50 N is hinged to a wall and held by a cable from its far end at 30° to the beam, with a 100 N sign hanging 1.5 m from the wall. Taking moments about the hinge, T sin 30° × 2 m = 50 N × 1 m + 100 N × 1.5 m, so the tension is 200 N.',
+      settings: { support: 'wall', length: 2, cableAt: 2, cableAngle: 30, beamWeight: 50, loads: [onBeam('hanging', 1.5, 100)] },
+    },
+    {
+      slug: 'cantilever-with-two-loads',
+      title: 'Cantilever with two loads',
+      alt: 'A 1 m beam fixed into a wall at its left end with no other support, a 20 N block hanging 0.5 m from the wall and a 30 N block hanging from its far end, the wall’s force F pointing up and the wall’s moment M drawn as a curved arrow turning counterclockwise round the beam’s end',
+      caption:
+        'A cantilever: a light 1 m beam fixed into a wall, with a 20 N weight hanging halfway along and a 30 N weight hanging from its end. The wall’s force F holds it all up, 50 N, and the wall’s moment M, the curved arrow, supplies 20 × 0.5 + 30 × 1 = 40 N·m counterclockwise, against the loads’ clockwise turning effect.',
+      settings: { support: 'wall', cable: false, supportForces: true, loads: [onBeam('hanging', 0.5, 20), onBeam('hanging', 1, 30)] },
+    },
+  ]),
+  ...examplesOf('circular-motion', [
+    {
+      slug: 'velocity-and-centripetal-acceleration-in-uniform-circular-motion',
+      title: 'Velocity and centripetal acceleration in uniform circular motion',
+      alt: 'A ball at four points of a dashed circle seen from above, going counterclockwise, each with a dashed velocity arrow v along the tangent and a dashed centripetal acceleration arrow a_c pointing at the center',
+      caption:
+        'An object in uniform circular motion, seen from above, drawn at four points a quarter turn apart as it goes counterclockwise. At each point the velocity is along the tangent and the centripetal acceleration points at the center, so both turn as the object goes round while staying the same length.',
+      settings: { positions: 4 },
+    },
+    {
+      slug: 'two-coins-on-a-turntable',
+      title: 'Two coins on a turntable',
+      alt: 'A turntable seen from above with two coins on one radius, one at the edge of the dashed path and one halfway out, each with a velocity arrow, the inner one half as long, the radii r_1 and r_2, and a curved arrow ω round the center',
+      caption:
+        'Two coins on a turning turntable, seen from above, on the same radius: one twice as far from the center as the other. Both go round with the same angular speed ω, shown by the curved arrow, so the outer coin, at r₁, moves twice as fast as the inner one, at r₂: its velocity arrow is twice as long, because v = ωr.',
+      settings: { around: 'turntable', inner: true, angularSpeed: true, radius: 'radius', acceleration: false },
+    },
+    {
+      slug: 'ball-on-a-string-in-a-vertical-circle',
+      title: 'Ball on a string in a vertical circle',
+      alt: 'A ball on a string going round a vertical dashed circle, drawn at the top and the bottom. At the top gravity F_g and a shorter tension T both point down; at the bottom a longer tension points up and gravity down. Each has a velocity arrow along the tangent and a centripetal acceleration arrow beside it pointing at the center',
+      caption:
+        'A ball whirled on a string in a vertical circle, at the top and the bottom. Gravity is the same at both. At the top the tension adds to gravity, both pointing down to the center, so the tension is small; at the bottom it has to hold the ball up and turn it toward the center, so it is longer than gravity. The ball goes round at a steady speed, so the net force toward the center is the same at both: the tension at the bottom is longer than the one at the top by two gravities. The centripetal acceleration, drawn beside the ball, points at the center and is the same length both times.',
+      settings: { setup: 'vertical' },
+    },
+    {
+      slug: 'car-going-over-a-hill',
+      title: 'Car going over the top of a hill',
+      alt: 'A block on the top of a rounded hill, with a short normal force F_N pointing up, a longer gravity arrow F_g pointing down, a velocity arrow v along the road, a centripetal acceleration arrow a_c pointing down beside it, and the radius r dashed down to the center of the curve below the hill',
+      caption:
+        'A car, drawn as a block, at the top of a hill whose top is part of a circle of radius r. Its centripetal acceleration points down, to the center of that circle below the road, so the net force is down: the normal force is shorter than gravity, and the car feels lighter going over the top.',
+      settings: { setup: 'vertical', held: 'hill', object: 'block', radius: 'radius' },
+    },
+    {
+      slug: 'conical-pendulum-with-tension-components',
+      title: 'Conical pendulum with the tension’s components',
+      alt: 'A ball on a string from a hatched ceiling at an angle θ from a dashed vertical, going round a dashed level circle drawn as an ellipse, with the tension T along the string split into a horizontal component T_x toward the center and a vertical component T_y as tall as gravity F_g, the velocity v out of the page as a dot, and the centripetal acceleration a_c beside it',
+      caption:
+        'A conical pendulum: a ball on a string of length L, at θ from the vertical, going round a level circle of radius r. The forces are drawn to scale. The tension’s vertical component T_y is exactly as long as gravity, so the ball neither rises nor falls, and its horizontal component T_x, toward the center of the circle, is the centripetal force.',
+      settings: { setup: 'conical', angle: 40, components: true, radius: 'radius' },
+    },
+  ]),
+
+  // A hidden label's text isn't in a link, so it's written as the row's default: A for a point, 0 m for a height mark.
+  ...examplesOf('roller-coaster', [
+    {
+      slug: 'roller-coaster-hill-and-dip-with-heights',
+      title: 'Roller coaster with a hill and a dip, heights marked',
+      alt: 'A roller coaster track with a cart at the top of the first hill A, 40 m high, running down to a dip B at 10 m, up over a lower hill C at 25 m and down to D at 5 m, each height marked from the ground',
+      caption:
+        'A cart at the top of a 40 m hill, A, on a track that runs down to a dip at B, 10 m above the ground, over a lower hill at C, 25 m, and down to D, 5 m. The heights are drawn to scale with each other, ready for questions about potential and kinetic energy at each point.',
+      settings: {},
+    },
+    {
+      slug: 'roller-coaster-three-hills-getting-lower',
+      title: 'Roller coaster with three hills, each lower than the last',
+      alt: 'A roller coaster track with three hills, A at 45 m, C at 35 m and E at 25 m, with dips B and D at ground level between them and the track ending at F on the ground, a cart at the top of A',
+      caption:
+        'Three hills in a row, each lower than the one before: 45 m at A, 35 m at C and 25 m at E, with the track down to the ground at the dips B and D and at the end, F. A cart waits at the top of the first hill.',
+      settings: {
+        points: [coasterPoint(45, 'A'), coasterPoint(0, 'B'), coasterPoint(35, 'C'), coasterPoint(0, 'D'), coasterPoint(25, 'E'), coasterPoint(0, 'F')],
+      },
+    },
+    {
+      slug: 'roller-coaster-ramp-into-a-loop',
+      title: 'Roller coaster ramp into a loop-the-loop',
+      alt: 'A cart at the top of a ramp A of height h, running down to the bottom B of a vertical loop of radius R, with point C at the top of the loop, and the track running on level to D',
+      caption:
+        'A cart starts at the top of a ramp, A, at height h, runs down into a loop of radius R, from its bottom, B, round to its top, C, and out along level track to D. The loop is drawn to scale with the ramp, for finding the least height that gets the cart round the loop.',
+      settings: {
+        points: [coasterPoint(50, 'A', { heightLabel: text('h') }), coasterPoint(0, 'B'), coasterPoint(0, 'D')],
+        loopAt: 2,
+        loopRadius: 15,
+        loopTopLabel: text('C'),
+      },
+    },
+    {
+      slug: 'half-pipe-skate-ramp',
+      title: 'Half-pipe skate ramp',
+      alt: 'A U-shaped half-pipe with its two rims A and C at the same height h and its lowest point B on the ground, with a ball moving to the right at B with velocity v',
+      caption:
+        'A half-pipe, like a skate ramp: two rims, A and C, at the same height h, and the bottom, B, on the ground. The ball, at the bottom, moves to the right with velocity v.',
+      settings: {
+        points: [coasterPoint(20, 'A', { heightLabel: text('h') }), coasterPoint(0, 'B'), coasterPoint(20, 'C', { heightLabel: none('0 m') })],
+        object: 'ball',
+        objectAt: 2,
+        velocity: 'forward',
+      },
+    },
+    {
+      slug: 'ramp-down-to-a-rough-level-stretch',
+      title: 'Ramp down to a rough level stretch',
+      alt: 'A block at the top of a curved ramp A of height h, running down to the ground at B, then a hatched rough level stretch from B to C marked mu_k, with its length d marked below the ground',
+      caption:
+        'A block starts at the top of a smooth ramp, A, at height h, and slides down to B, where the track runs level along the ground. From B to C the track is rough, hatched and marked with its coefficient of kinetic friction μₖ, and the length of the rough stretch, d, is marked below it: for finding how far the block slides before it stops.',
+      settings: {
+        points: [coasterPoint(30, 'A', { heightLabel: text('h') }), coasterPoint(0, 'B', { rough: true }), coasterPoint(0, 'C')],
+        object: 'block',
+      },
+    },
+    {
+      slug: 'roller-coaster-track-ending-at-a-cliff',
+      title: 'Roller coaster track ending at a cliff',
+      alt: 'A cart moving right at the top of a 30 m hill A, on a track down to a dip B at 5 m, up to C at 15 m and along level to D, where the track ends 15 m above the ground',
+      caption:
+        'A cart moving at the top of a 30 m hill, A, on a track that dips to 5 m at B, rises to 15 m at C and runs level to D, where it ends in the air, 15 m above the ground, like the edge of a cliff.',
+      settings: {
+        points: [coasterPoint(30, 'A'), coasterPoint(5, 'B'), coasterPoint(15, 'C'), coasterPoint(15, 'D')],
+        velocity: 'forward',
+      },
+    },
+  ]),
+  ...examplesOf('pendulum', [
+    {
+      slug: 'pendulum-energy-conversion-release-bottom-and-far-side',
+      title: 'Pendulum energy conversion: release point, bottom and far side',
+      alt: 'A bob on a string of length L from a hatched ceiling, released at angle θ from a dashed vertical at A, drawn lighter at the bottom B and at the same height on the far side C, with its dashed path between them and the height h from the lowest point up to A marked on the far side',
+      caption:
+        'A simple pendulum released from rest at A, θ from the vertical, swings through the bottom, B, and up to C on the far side. Without friction C is at the same height as A. The bob drops a height h from A to B, so its potential energy mgh there becomes kinetic energy at B, where it moves fastest.',
+      settings: { angle: 40, pointLabels: true },
+    },
+    {
+      slug: 'forces-on-a-pendulum-with-weight-components',
+      title: 'Forces on a pendulum, with weight’s components',
+      alt: 'A bob on a string from a hatched ceiling at 25° from a dashed vertical, with the tension T along the string toward the pivot, its weight mg straight down, and weight’s components drawn dashed: mg cos θ along the string, away from the pivot, and mg sin θ along the path, toward the bottom',
+      caption:
+        'The forces on a pendulum bob at its release point, 25° from the vertical: the tension T along the string and its weight mg straight down. Weight is split into mg cos θ along the string, which the tension balances while the bob is at rest, and mg sin θ along its path, the restoring force that pulls it back toward the bottom.',
+      settings: { picture: 'one', angle: 25, forces: 'components', arc: false, heightMark: false },
+    },
+    {
+      slug: 'simple-pendulum-with-angle-and-length',
+      title: 'Simple pendulum with its angle and length',
+      alt: 'A bob m on a string of length L from a hatched ceiling, pulled to the right at angle θ from a dashed vertical line through the pivot',
+      caption:
+        'A simple pendulum: a bob of mass m on a string of length L, pulled aside to an angle θ from the vertical. The dashed vertical through the pivot is where it hangs at rest. Use it for questions on the period, T = 2π√(L/g), which for small angles does not depend on m or θ.',
+      settings: { picture: 'one', arc: false, heightMark: false },
+    },
+  ]),
+  ...examplesOf('spring', [
+    {
+      slug: 'hookes-law-spring-extension-before-and-after',
+      title: 'Hooke’s law: a spring before and after a mass is hung on it',
+      alt: 'Two identical springs k hanging from a hatched ceiling: the left one at its natural length L_0 with nothing on it, the right one stretched by a block m, with a dashed line at the natural length running across both and the extension x marked between it and the stretched end',
+      caption:
+        'The same spring drawn twice under one ceiling: on the left at its natural length L₀, on the right stretched by the block m hanging on it. The dashed line at the end of the unstretched spring runs across both, so the extension x reads off between it and the stretched end. The block hangs at rest, so the spring force kx balances its weight mg.',
+      settings: { lengthMark: true },
+    },
+    {
+      slug: 'compressed-horizontal-spring-with-applied-force',
+      title: 'Compressed horizontal spring with an applied force',
+      alt: 'Two rows, each a spring k fixed to a hatched wall with a block m on a hatched floor: in the upper row the spring is at its natural length, in the lower row it is squashed by x, marked from a dashed line at the natural end, and an applied force F pushes the block toward the wall',
+      caption:
+        'A spring on a floor, fixed to a wall, drawn at its natural length and again squashed by x, measured from the dashed line where its free end was. The applied force F pushes the block toward the wall, and the coil is drawn shorter with the same number of turns, so it looks like the same spring pushed in.',
+      settings: { orientation: 'horizontal', stretch: -0.4, appliedForce: true },
+    },
+    {
+      slug: 'simple-harmonic-motion-mass-on-a-spring-three-positions',
+      title: 'Simple harmonic motion: a mass on a spring at −A, 0 and +A',
+      alt: 'Three rows of a block m on a floor on a spring k from a hatched wall, at x = −A with the spring squashed, at x = 0 and at x = +A with it stretched, a dashed vertical equilibrium line through all three, a dashed velocity arrow v pointing right at x = 0, and dashed acceleration arrows a pointing back toward x = 0 at −A and +A',
+      caption:
+        'A mass on a spring oscillating on a frictionless floor, drawn at three positions: squashed at x = −A, passing equilibrium at x = 0 and stretched at x = +A. At each end it stops for an instant, so it has no velocity there, and its acceleration a, back toward equilibrium, is greatest. At equilibrium its velocity v is greatest and its acceleration is zero.',
+      settings: { orientation: 'horizontal', picture: 'positions', stretch: 0.5, equilibriumLine: true },
+    },
+    {
+      slug: 'two-springs-in-parallel-with-a-hanging-mass',
+      title: 'Two springs in parallel with a hanging mass',
+      alt: 'Two springs k_1 and k_2 side by side from a hatched ceiling to a light bar, with a block m hanging from the middle of the bar, and the extension x marked from a dashed line at the springs’ natural length',
+      caption:
+        'Two springs, k₁ and k₂, hang side by side from a ceiling and hold a light bar level, with the block m hanging from it. Both springs stretch by the same extension x, from the dashed line at their natural length, so together they act as one spring with k = k₁ + k₂. Hung from the bar’s middle, as drawn, the bar stays level only if k₁ = k₂; with different springs the block hangs nearer the stiffer one.',
+      settings: { picture: 'one', springs: '2p' },
     },
   ]),
 ]

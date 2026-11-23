@@ -11,7 +11,6 @@
   import { generatorState } from '$shared/generatorState.svelte'
   import GridlineSettings from '$shared/graph/GridlineSettings.svelte'
   import TitleSettings from '$shared/graph/TitleSettings.svelte'
-  import HelpTip from '$shared/HelpTip.svelte'
   import Section from '$shared/Section.svelte'
   import { niceText } from '$shared/graph/numbering'
   import MathInput from '$lib/shared/MathInput.svelte'
@@ -104,14 +103,7 @@
 <GeneratorPage name="Scatter Plot Generator" {filename} {gen} {svg} bind:labelSize={s.labelSize}>
   {#snippet inputs()}
     <section class="data">
-      <div class="head-row">
-        <h2 class="card-head">Data</h2>
-        <HelpTip id="data-tip" label="How to type the data">
-          Type each point's x and y values in the table, or paste two columns from a spreadsheet. Or choose List of pairs and type
-          one point a line, like 3, 72, or write them as (3, 72), (5, 80). A heading row is skipped. Leave it empty for blank axes
-          to plot on.
-        </HelpTip>
-      </div>
+      <h2 class="card-head">Data</h2>
       <div class="segmented" role="radiogroup" aria-label="Data">
         {#each Object.entries(INPUTS) as [value, title]}
           <button type="button" role="radio" aria-checked={clean.input === value} class:on={clean.input === value} onclick={() => setInput(value as Input)}>{title}</button>
@@ -228,7 +220,6 @@
   .card-head { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 
   .data { padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.5rem; }
-  .head-row { display: flex; align-items: center; justify-content: space-between; }
   .segmented button { flex: 1; }
   textarea {
     width: 100%; padding: 0.5rem 0.6rem; border: 1.5px solid var(--border); border-radius: 10px;

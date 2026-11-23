@@ -7,7 +7,6 @@
   import { Circle, Move, Plus, RotateCw, Ruler, X } from '@lucide/svelte'
   import GeneratorPage from '$shared/GeneratorPage.svelte'
   import { generatorState } from '$shared/generatorState.svelte'
-  import HelpTip from '$shared/HelpTip.svelte'
   import Section from '$shared/Section.svelte'
   import MathInput from '$lib/shared/MathInput.svelte'
   import { buildSegments } from './layout.js'
@@ -84,15 +83,7 @@
 <GeneratorPage name="Segment Addition Generator" {filename} {gen} {svg} {printWidth} settingsWidth="minmax(25rem, 34%)" bind:labelSize={s.labelSize}>
   {#snippet inputs()}
     <section class="card-body">
-      <div class="head-row">
-        <h2 class="card-head">Points</h2>
-        <HelpTip id="points-tip" label="How to build the figure">
-          The points sit in order along one line. Each part, the piece between two neighbouring points, is labeled above the line
-          with a length like 12 or an expression like 2x + 3, or left as a blank line for students. A span is a brace under the
-          line from one point to a later one, like AC, with its own label. Give parts the same ticks to mark them congruent, as at
-          a midpoint. Labels in one letter are solved below as a check.
-        </HelpTip>
-      </div>
+      <h2 class="card-head">Points</h2>
       <div class="points" role="group" aria-label="Points, in order along the line">
         {#each clean.points as p, k (k)}
           <span class="point">
@@ -179,7 +170,6 @@
           </label>
         {/each}
       </div>
-      <p class="hint">Stopping at both points makes a segment; one arrow makes a ray, two a line.</p>
     </Section>
 
     <Section title="Crossing line" icon={Plus} summary={crossSummary}>
@@ -204,7 +194,6 @@
         {#if clean.crossAngle === 90}
           <label class="check"><input type="checkbox" bind:checked={s.crossSquare} /> Right-angle mark</label>
         {/if}
-        <p class="hint">A bisector crosses at the midpoint: give the parts either side the same ticks.</p>
       {/if}
     </Section>
 
@@ -217,7 +206,7 @@
     </Section>
 
     <Section title="Drawn lengths" icon={Ruler} summary={sizesSummary}>
-      <p class="hint">How long each part is drawn. Leave them empty to draw the lengths as labeled (or as solved), or type sizes for a figure not drawn to scale.</p>
+      <p class="hint">Leave empty to draw to scale.</p>
       <div class="sizes">
         {#each clean.parts as p, k (k)}
           <label class="field">
@@ -245,7 +234,6 @@
   .card-head { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
   .card-head.sub { margin-top: 0.4rem; }
   .card-body { padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.6rem; }
-  .head-row { display: flex; align-items: center; justify-content: space-between; }
   .help { margin: 0; font-size: 0.84rem; color: var(--muted); }
   .help.answer { color: var(--ink); font-weight: 600; }
   .help.problem { color: var(--red); font-weight: 600; }

@@ -3,8 +3,12 @@
 // only, so the gallery on a generator page doesn't pull in every generator.
 
 import type { BohrSettings } from '$lib/generators/bohr-model/settings'
+import type { BondSettings } from '$lib/generators/bond-energy-curve/settings'
+import type { ChromatographySettings } from '$lib/generators/chromatography/settings'
 import type { DotCrossSettings } from '$lib/generators/dot-and-cross/settings'
 import type { SyringeSettings } from '$lib/generators/gas-syringe/settings'
+import type { CellSettings } from '$lib/generators/electrochemical-cells/settings'
+import type { EquilibriumSettings } from '$lib/generators/equilibrium-graph/settings'
 import type { HalfLifeSettings } from '$lib/generators/half-life-graph/settings'
 import type { CurveSettings } from '$lib/generators/heating-cooling-curve/settings'
 import type { LengthSettings } from '$lib/generators/length-reading/settings'
@@ -17,11 +21,14 @@ import type { OrbitalSettings } from '$lib/generators/orbital-diagram/settings'
 import type { ParticleSettings } from '$lib/generators/particle-diagram/settings'
 import type { PhSettings } from '$lib/generators/ph-reading/settings'
 import type { PesSettings } from '$lib/generators/photoelectron-spectrum/settings'
+import type { PhaseSettings } from '$lib/generators/phase-diagram/settings'
 import type { EnergySettings } from '$lib/generators/potential-energy-diagram/settings'
+import type { RateLawSettings } from '$lib/generators/rate-law-graphs/settings'
 import type { TemperatureSettings } from '$lib/generators/temperature-reading/settings'
 import type { TitrationSettings } from '$lib/generators/titration-curve/settings'
 import type { DisplacementSettings } from '$lib/generators/volume-by-displacement/settings'
 import type { VolumeSettings } from '$lib/generators/volume-reading/settings'
+import type { VseprSettings } from '$lib/generators/vsepr-shapes/settings'
 
 /** Each generator's settings, by generator id. */
 export interface SettingsById {
@@ -34,17 +41,24 @@ export interface SettingsById {
   'ph-reading': PhSettings
   'titration-curve': TitrationSettings
   'heating-cooling-curve': CurveSettings
+  'phase-diagram': PhaseSettings
   'potential-energy-diagram': EnergySettings
+  'bond-energy-curve': BondSettings
   'particle-diagram': ParticleSettings
   'bohr-model': BohrSettings
   'nuclide-notation': NuclideSettings
   'lewis-structures': LewisSettings
+  'vsepr-shapes': VseprSettings
   'dot-and-cross': DotCrossSettings
   'orbital-diagram': OrbitalSettings
   'line-spectrum': SpectrumSettings
   'photoelectron-spectrum': PesSettings
   'mass-spectrum': MassSpectrumSettings
   'half-life-graph': HalfLifeSettings
+  'rate-law-graphs': RateLawSettings
+  'equilibrium-graph': EquilibriumSettings
+  chromatography: ChromatographySettings
+  'electrochemical-cells': CellSettings
 }
 
 export type ExampleGeneratorId = keyof SettingsById

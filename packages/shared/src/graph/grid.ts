@@ -134,16 +134,21 @@ export function layoutGrid(
   const onXAxis = (j: number) => Math.abs(T + gridH - j * CELL - axisY) < 0.5
   const xCross = xTicks.find((t) => onYAxis(t.i))
   const yCross = yTicks.find((t) => onXAxis(t.i))
+  // Axes along the edges meeting at two different numbers (time 0 and
+  // ln[A] −3, say): each is written as the rest of its axis is, the y one
+  // level with its gridline and the x one under its line, rather than
+  // tucked into the corner, where the y one would read as off its line.
+  const apart = edges && !!xCross && !!yCross && xCross.text !== yCross.text
   const numbers: (Text & { anchor: 'middle' | 'end' })[] = []
   for (const t of xTicks) {
     const x = L + t.i * CELL
-    const cross = t === xCross
+    const cross = t === xCross && !apart
     numbers.push({ x: cross ? x - 8 : x, y: axisY + FS + 6, text: t.text, anchor: cross ? 'end' : 'middle' })
   }
   for (const t of yTicks) {
     const y = T + gridH - t.i * CELL
     if (t === yCross && xCross && xCross.text === t.text) continue
-    numbers.push({ x: axisX - 6, y: t === yCross ? y - 5 : y + FS * 0.35, text: t.text, anchor: 'end' })
+    numbers.push({ x: axisX - 6, y: t === yCross && !apart ? y - 5 : y + FS * 0.35, text: t.text, anchor: 'end' })
   }
 
   // Titles, axis labels, and write-on lines for any left blank.

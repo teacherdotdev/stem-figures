@@ -6,7 +6,6 @@
   import { Heading, MapPin, MoveRight, PaintBucket, Percent, Plus, X } from '@lucide/svelte'
   import GeneratorPage from '$shared/GeneratorPage.svelte'
   import { generatorState } from '$shared/generatorState.svelte'
-  import HelpTip from '$shared/HelpTip.svelte'
   import LabelField from '$shared/LabelField.svelte'
   import Section from '$shared/Section.svelte'
   import { FILLS } from '$lib/stats/fills'
@@ -89,14 +88,7 @@
 <GeneratorPage name="Normal Curve Generator" {filename} {gen} {svg} settingsWidth="minmax(26rem, 38%)" bind:labelSize={s.labelSize}>
   {#snippet inputs()}
     <section class="data">
-      <div class="head-row">
-        <h2 class="card-head">Distribution</h2>
-        <HelpTip id="distribution-tip" label="About the mean and standard deviation">
-          Type the mean and standard deviation; the curve’s ticks go at each standard deviation from the mean. Leave them at 0 and 1
-          for the standard normal curve, numbered in z-scores. Shade regions under Shaded regions, typing their bounds as values or
-          z-scores, or their area to find the bound, as invNorm does.
-        </HelpTip>
-      </div>
+      <h2 class="card-head">Distribution</h2>
       <div class="pair">
         <div class="range-field">
           <label for="mean">Mean (μ)</label>
@@ -234,7 +226,6 @@
 <style>
   .card-head { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
   .data { padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.6rem; }
-  .head-row { display: flex; align-items: center; justify-content: space-between; }
   .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
   .triple { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
   .range-field { display: flex; flex-direction: column; gap: 0.3rem; font-weight: 600; font-size: 0.88rem; min-width: 0; }

@@ -181,6 +181,28 @@ _Avoid_: Zoom, callout, inset
 An optional line printed under the instrument stating its reading, so one figure can serve as both question and key.
 _Avoid_: Solution, label
 
+### Chromatography
+
+**Chromatogram**:
+A strip of chromatography paper with samples spotted on its origin line, after the solvent has carried each sample's dyes up the paper to the solvent front. The generator is Chromatography; it draws paper chromatography only.
+_Avoid_: Chromatography paper (that's the paper itself), TLC plate
+
+**Sample**:
+One ink (or other mixture) spotted on the origin line, named in pencil under it, and the colored **spots** it separates into. Each spot is a color and how far its middle traveled from the origin line, in cm; a spot at 0 cm didn't dissolve.
+_Avoid_: Lane (fine in code), dye (one spot is one dye), track
+
+**Origin line** / **Solvent front**:
+The pencil line the samples start on, always drawn above the solvent's surface, and the dashed line the solvent reached. Measurements run from the origin line to the middle of each spot and to the solvent front; Rf is the first over the second.
+_Avoid_: Baseline (fine in search keywords), start line, finish line
+
+**Before** / **After**:
+The paper before the solvent runs (each sample one spot on the origin line, colored as its dyes mixed) and after. A figure shows after, or before and after side by side; never before alone.
+_Avoid_: Start, end, stage (fine in code)
+
+**Setup**:
+The paper hanging from a glass rod across a beaker, dipping into the solvent; its part labels call the rod "Glass rod" (there is no lid). Without it the figure is the paper alone.
+_Avoid_: Apparatus, tank, chamber
+
 ### Particle diagrams
 
 **Particle diagram**:
@@ -292,6 +314,42 @@ _Avoid_: Edit, modification, override, error
 **Mistake**:
 One way a changed structure is wrong, written as a sentence ("O has 10 electrons around it", "Total is 18 valence electrons; should be 16", "C should be the central atom"). A change can leave a structure correct, such as another resonance structure, so mistakes come from checking the structure, not from listing changes. The answer key of a changed structure lists its mistakes.
 _Avoid_: Error, problem, issue
+
+### VSEPR shapes
+
+**VSEPR figure**:
+A figure of one molecule or polyatomic ion with a single central atom (two to six electron groups, linear through octahedral), drawn in its real 3D shape. It is built from the formula the same way as a Lewis structure's built structure (octet rule), with its double and triple bonds drawn as such and, for an ion like NO₃⁻, its first resonance structure; a polyatomic ion is in square brackets with its charge at the top right. Listed structures (several central atoms) and single atoms aren't drawn. The generator is VSEPR Shapes, not a shape of a Lewis structure.
+_Avoid_: Lewis structure (that's a flat drawing), 3D Lewis structure
+
+**Style**:
+How a VSEPR figure is drawn: wedge-and-dash (the default) or ball-and-stick.
+_Avoid_: Mode, model, shape (that's a Lewis structure's), view (that's which way it's turned)
+
+**Wedge-and-dash**:
+A VSEPR figure drawn as textbooks do: each atom a plain circle with its symbol, all the same size, bonds in the page as lines, a bond toward the viewer as a solid wedge and one away from the viewer as a hashed dash.
+_Avoid_: Flat (that's a Lewis structure's shape), 2D
+
+**Ball-and-stick**:
+A VSEPR figure drawn as a model: shaded spheres for atoms in their usual model colors (C dark gray, H white, O red, N blue), each with its symbol unless the teacher hides them, shaded sticks for bonds, nearer atoms in front of farther ones. It can be grayscale for printing.
+_Avoid_: 3D (fine in help text), space-filling (a different model), render
+
+**View**:
+Which way a VSEPR figure's molecule is turned. It starts at the textbook view for its shape (a tetrahedron with two bonds in the page, one wedge and one dash) and the teacher can turn it; Reset view returns to the textbook view.
+_Avoid_: Camera, rotation, orientation (fine in help text)
+
+**Lone pair lobe**:
+A central atom's lone pair drawn as a balloon pointing out from the atom, with two dots in it. The central atom's lone pairs can instead be drawn as two dots or left off; outer atoms' lone pairs are left off unless the teacher turns them on.
+_Avoid_: Orbital (that's an orbital diagram's), cloud
+
+**Shape name** / **Electron geometry**:
+The name of a VSEPR figure's shape by where its atoms are (trigonal pyramidal for NH₃), and by where all its electron groups are, lone pairs included (tetrahedral for NH₃). Either can be written under the figure, with its **AXE notation** (AX₃E).
+_Avoid_: Molecular geometry (fine in search keywords), VSEPR shape
+
+**Bond angle**:
+An arc between two bonds with the angle written beside it, one for each kind of angle the shape has (trigonal bipyramidal has a 90° and a 120°). The figure is always drawn at the ideal angles of its electron geometry, lone pairs or not, so only the label says an angle is smaller: it reads the ideal angle, with "<" when lone pairs squeeze it (<109.5° for H₂O), until the teacher types their own (104.5°). A radical's lone electron squeezes nothing, so a shape with one has no "<" (NO₂ reads 120°; it is really 134°), and a period 2 atom with three atoms and a lone electron (CH₃•) is trigonal planar. There's no table of measured angles.
+_Avoid_: Angle label, real angle
+
+In a "name the shape" question the shape name, electron geometry, AXE notation and bond angles that are on are left blank, and the answer key fills them in. Outer atoms of different elements go where the usual rule puts them (in a trigonal bipyramid the more electronegative axial and lone pairs equatorial; in a square pyramid the odd atom out at the apex, opposite the lone pair, as O in XeOF₄, however the formula is typed), and the teacher can't swap them. A question needs a label that's on to leave blank; with none, it isn't one. A figure is one molecule or ion.
 
 ### Bohr models
 
@@ -605,6 +663,38 @@ _Avoid_: Annotation, caption
 What's written by the temperature axis just above (or below) a plateau's dashed line: its temperature (78.3 °C), m.p. or b.p. (f.p. and b.p. on a cooling curve), or a blank line for students to write the melting or boiling point on. It goes along the line, inside the grid, as far from the axis as the curve makes it. The temperature by default.
 _Avoid_: Axis label (that's the letter at an axis's end), tick label
 
+### Phase diagrams
+
+**Phase diagram**:
+A graph of one substance's pressure (up the side) against its temperature (along the bottom), split by its phase boundaries into regions. The generator is Phase Diagram. The substance is water, carbon dioxide, nitrogen, oxygen, argon, methane or ammonia, with values from each one's reference equation of state as the NIST Chemistry WebBook gives them (cited in `phase.ts`), or Your own, from six typed values: the triple point, the critical point and the normal melting and boiling points.
+_Avoid_: Phase change diagram (a search word only; it is also what teachers call a heating curve), P–T diagram
+
+**Phase boundary**:
+One of the three lines between regions: the **sublimation curve**, from the graph's bottom left corner up to the triple point; the **fusion line**, straight from the triple point to the top of the graph, leaning left only for water among the real substances (and for Your own when its melting point is below its triple point's temperature); and the **vaporization curve**, from the triple point to the critical point, rising ever more steeply, where it stops. The sublimation curve arrives at the triple point steeper than the vaporization curve leaves it. Each can be named along it with its changes (Melting / freezing, Boiling / condensing, Sublimation / deposition), lettered beside a small dot on it, or given a blank line.
+_Avoid_: Equilibrium line, phase line, coexistence curve
+
+**Region**:
+The area of one phase: Solid left of the sublimation curve and fusion line, Liquid between the fusion line and the vaporization curve, Gas below and right. With the supercritical fluid marked, dashed lines run up and right from the critical point and the region past them is Supercritical fluid.
+_Avoid_: Vapor (for the Gas region), phase area, zone
+
+**Triple point**:
+Where the three phase boundaries meet: the one temperature and pressure where solid, liquid and gas can be present together. A dot, named, lettered, blank or bare, with dashed lines to both axes. A blank line for it is joined to its dot by a short line, so it isn't taken for a region's.
+
+**Critical point**:
+Where the vaporization curve ends: past it the liquid and gas can't be told apart. A dot, labeled as the triple point is.
+
+**1 atm line**:
+A dashed line across the graph at 1 atm (101.3 kPa), named at the pressure axis (on a grid, whose axis is numbered, on the graph beside the line), with a dot and a dashed line down where it crosses each boundary. Not to scale, a crossing with no value to write at its foot (a real substance's melting point, below) has no line down. For carbon dioxide, whose triple point is above 1 atm, it crosses only the sublimation curve. In the panel it's the "1 atm line".
+_Avoid_: Isobar (the setting's name in the address, not in the panel), normal pressure line
+
+**Normal melting point** / **Normal boiling point**:
+Where the 1 atm line crosses the fusion line and the vaporization curve: the temperatures a substance melts and boils at under 1 atm. Marked by its temperature, its name (Normal m.p., Normal b.p.), a letter or a blank line. Every real substance but water melts within a few hundredths of a kelvin of its triple point's temperature, so its melting point isn't written apart from the triple point's, and with the temperatures shown its crossing has a dot but no line down to the axis; for Your own both are typed.
+_Avoid_: Melting point / boiling point alone (fine in help text), m.p. and b.p. alone
+
+**Not to scale** / **On a grid**:
+The two kinds of axes. Not to scale (the default, and the only one for a real substance) is the textbook figure on a fixed block grid with no numbers or gridlines: the triple point low and left, the critical point high and right, 1 atm between, and the real values written at the axes where the dashed lines land. On a grid is Your own substance on numbered axes and gridlines, to scale, its vaporization curve bent to pass through the typed boiling point. Named in the address as Potential Energy Diagram's are, shape and numbered.
+_Avoid_: Schematic (that's a heating curve's), log scale, qualitative
+
 ### Half-life graphs
 
 **Half-life graph**:
@@ -649,6 +739,75 @@ _Avoid_: Product, decay product (fine in help text), daughter isotope (that's th
 
 **Answer key** (half-life graphs):
 The lines in the settings panel and on example pages giving each isotope's half-life, decay constant and how it decays and to what, naming each hidden one ("Isotope A is carbon-14"), then what's left of the first isotope at each guide line ("After 3 half-lives (17,190 years): 12.5%").
+
+### Rate law graphs
+
+**Rate law graph**:
+A graph against time of one reactant in a reaction A → products with rate = k[A]ⁿ: its concentration [A], ln[A] or 1/[A]. The generator is Rate Law Graphs, which draws the three side by side on the same time axis (each 6 squares tall), or one alone, for students to find the order from which is a straight line. The figure never says the order; the answer key does. The grids are `$shared/graph`'s, the axes along the left and bottom edges (ln[A] is negative below 1 M), always fitted: time from 0 to when a tenth of [A]₀ is left, rounded up to a round step, and each y-axis to its own values. Not the curves of product made or gas collected under different conditions (temperature, catalyst, surface area): those would be a rate of reaction graph, not built.
+_Avoid_: Kinetics graph, linearised plot (both fine in search keywords), rate graph (the conditions curves), decay curve (that's Half-Life Graph)
+
+**Order**:
+Zero, first or second: the power n of [A] in the rate law. Its integrated rate law makes one graph straight: [A] = [A]₀ − kt for zero order, ln[A] = ln[A]₀ − kt for first, 1/[A] = 1/[A]₀ + kt for second. A zero-order reaction ends when [A] reaches 0, at [A]₀/k; nothing is drawn after it. Third order and pseudo-order aren't drawn.
+_Avoid_: Reaction order (fine in help text and search keywords), zeroth order (fine in search keywords), rate order
+
+**Rate constant**:
+k, typed by the teacher, in the unit its order gives it, written from the concentration and time units: M s⁻¹, s⁻¹ or M⁻¹ s⁻¹ (mol L⁻¹ min⁻¹, dm³ mol⁻¹ s⁻¹ and so on). Changing the order sets k so the first half-life stays the same (to three significant figures); the time axis then changes, as a tenth of [A]₀ is left after 1.8, 3.3 or 9 half-lives. Where the k it needs is outside 10⁻⁶ to 10⁶, k stops at that end and the page says the half-life couldn't be kept. Where the time axis's numbers run to long strings of zeros (k near either end), the page suggests another time unit or k. The half-lives follow from it: [A]₀/2k, each half as long as the last, for zero order; ln 2/k, all the same, for first; 1/(k[A]₀), each twice the last, for second.
+_Avoid_: Rate coefficient, k value
+
+**Straight graph**:
+The one of the three graphs that is a straight line for the order: [A] for zero order, ln[A] for first, 1/[A] for second, with slope −k, −k and +k. The answer key names it with its slope and intercept.
+_Avoid_: Linear plot, linearised graph, best fit
+
+**Data points**:
+5 to 10 measurements of [A], evenly spaced from time 0 at a plain spacing (every 12 s, not every 14.3 s) to the end of the time axis, or for zero order to when a tenth of [A]₀ is left (where its ln[A] and 1/[A] axes are fitted to, so no point runs off them or reads [A] = 0), drawn as dots on each graph, in a data table under the graphs (time and [A], or ln[A] and 1/[A] too), or both. Each [A] is the model's value with any scatter, rounded to three significant figures, and ln[A] and 1/[A] are worked out from that rounded [A], as a student would: ln[A] to three decimal places (a log has as many decimal places as its number has significant figures), 1/[A] to three significant figures; the first is [A]₀ exactly. With a table, the screen reader's description reads the table out. With the curve off they are the data for students to judge; with the dots off too and the table on, the grids are empty for students to plot. The answer key gives r² of each graph's points.
+_Avoid_: Half-life dots (that's Half-Life Graph), measurements (fine in help text), readings
+
+**Scatter**:
+About 1, 2 or 5% random error on each data point's [A], drawn from a seed kept in the address (`docs/adr/0002-particles-placed-from-settings.md`), so a link redraws the same data; New data draws another seed. When the scatter makes another graph's points straighter than the right one's, the page says so.
+_Avoid_: Noise (that's the address parameter's name only), error, random data
+
+**Guide line** (rate law graphs):
+As on a half-life graph: a dashed line at one of the first one to three half-lives, from [A]₀/2, [A]₀/4 or [A]₀/8 across to the curve and down to the time axis, on the [A] graph only, labeled with its time, how many half-lives, a blank line or nothing. Where the labels can't all fit (three on a small graph in the row), the page says so.
+
+**Answer key** (rate law graphs):
+The lines in the settings panel and on example pages: the order and rate law ("First order: rate = k[A]"), the integrated rate law, k with its unit, the straight graph with its slope and intercept, the half-life, [A] at each guide line, and with data, r² of each graph's points and the scatter.
+
+### Equilibrium graphs
+
+**Equilibrium graph**:
+A graph of every species' concentration in mol/L (up the side) against time (along the bottom) for a reversible reaction: settling to equilibrium from its starting concentrations, then answering up to three **stresses**. The generator is Equilibrium Graph. The graphs are solved from K, never drawn from typed levels: every level stretch gives the K it should and the lines always move in the ratio of the coefficients (`model.ts`). Each species is its own line, solid, dashed or dotted in the order of the equation, in color or all black, with its formula beside it where it first levels off unless the teacher turns the formulas off. The grid and titles are `$shared/graph`'s, as a half-life graph's.
+_Avoid_: Le Châtelier graph, concentration–time graph (both fine in search keywords), plateau (for an equilibrium; fine in help text)
+
+**Reaction setup**:
+One of the seven reactions a graph can show: N₂ + 3H₂ ⇌ 2NH₃, H₂ + I₂ ⇌ 2HI, N₂O₄ ⇌ 2NO₂, 2SO₂ + O₂ ⇌ 2SO₃, PCl₅ ⇌ PCl₃ + Cl₂, Fe³⁺ + SCN⁻ ⇌ FeSCN²⁺ (the one in solution) and the made-up A + B ⇌ C, which stands in for any other. Each has its species, coefficients, its real direction of heat (cited in `reactions.ts`, and shown under the K box with what backs it up: ΔH°, such as "exothermic: ΔH° = −92 kJ/mol", or for the iron(III) thiocyanate demonstration "the red color fades on warming"; A + B ⇌ C's is the teacher's to choose) and an **example K** with example starting concentrations, which picking it fills in. The teacher can't type a reaction of their own.
+_Avoid_: Preset (that's a teacher's saved settings), equation (fine in help text), system
+
+**Example K**:
+The K a reaction setup starts with, chosen with its starting concentrations so the lines level off well apart: not the reaction's measured equilibrium constant. The page says so in grey text always shown under the K box, in the answer key's first line ("K = 0.5 (an example value, not measured)"), in the About copy and in `/linking`; it is never written on the figure. The note stays when the teacher types their own K. K is Kc, from concentrations.
+_Avoid_: Real K, default K, Keq (fine in search keywords)
+
+**Stress**:
+What's done to the system at a time the teacher types: a species added or removed (that line alone jumps; a removal never goes below 0), the volume changed by a factor (every concentration jumps by 1 over it at once; for the solution setup it's water added or evaporated), or the temperature raised or lowered (no jump: K is multiplied or divided by a factor, down on heating an exothermic reaction, and the approach runs faster when heated, slower when cooled). Each is marked with a dashed vertical line with its words above the grid: the page's own ("N₂ added", "Volume halved", "Temperature raised") until the teacher types theirs, or none, for students to say what happened. Two stresses at the same moment act together: the system shifts once, answering both.
+_Avoid_: Disturbance, perturbation (both search words only), pressure change (it's a volume change here), change (alone)
+
+**Shift**:
+Which way the reaction runs after a stress to reach its new equilibrium: right, toward the products; left, toward the reactants; or no shift (a volume change with the same moles of gas on both sides, H₂ + I₂ ⇌ 2HI). The answer key gives it for each stress, with the new equilibrium concentrations, and the new K after a temperature change.
+_Avoid_: Response, direction (alone)
+
+**Established**:
+The time equilibrium is first reached, the first approach coming within 1% of it, typed by the teacher (4 by default). It sets how fast the whole graph runs: the same rate constants carry every later shift, so a shift can take longer or shorter than the first approach. The page says when a stress comes before the system has settled, or the time axis ends mid-shift.
+_Avoid_: Equilibrium time, rate (alone)
+
+**Extent** (code only):
+The one number that moves between stresses, ξ: each concentration is its start plus its coefficient × ξ, reactants minus. Where it settles is the ξ where Q = K; how it gets there is the reaction taken as elementary, rate forward minus rate reverse. Not a word on the page.
+_Avoid_: Progress, x (fine in an ICE table)
+
+**Fitted axes** (equilibrium graphs):
+What picking a setup, adding or removing a stress, and the Fit button give: time from 0 until the last shift has settled and stayed level as long again, concentration from 0 to a little over the highest any line goes, both in round steps. Typing a number never moves the axes.
+_Avoid_: Auto-scale, zoom
+
+**Answer key** (equilibrium graphs):
+The lines in the settings panel and on example pages: K, marked an example value, and the equilibrium concentrations first reached; then for each stress what it did, which way the system shifts, the new K after a temperature change and the new equilibrium concentrations, to three significant figures. A removal of more than is there says all of it went, and how much that was; the first of two stresses at the same moment shares the second's shift.
 
 ### Potential energy diagrams
 
@@ -696,6 +855,48 @@ _Avoid_: Enthalpy diagram (fine in search keywords), energy level diagram (fine 
 The energy axis with no numbers or gridlines, fitted to the levels, for a diagram where the shape is the point (the enzyme setup). Numbered, with light gridlines, is the default.
 _Avoid_: Unnumbered, qualitative
 
+### Bond energy curves
+
+**Bond energy curve**:
+A graph of the potential energy of two bonded atoms (up the side, in kJ/mol or kJ mol⁻¹) against the internuclear distance (along the bottom): a curve that comes steeply down a wall, through a lowest point at the bond length and minus the bond energy, and rises toward the zero line. The generator is Bond Energy Curve. Only the bond length and bond energy are data: every curve has the same shape, stretched to its own two numbers (`morse.ts`, a Morse curve with a · r₀ = 3, near most real bonds' value, so it crosses 0 at about 0.77 of the bond length), so the minimum is exact and the width is not. The grid and titles are `$shared/graph`'s, with the axes along the grid's edges as on a heating curve.
+_Avoid_: Potential energy diagram (the other figure, against the reaction coordinate), Morse curve, Lennard-Jones (both search words only), potential well diagram
+
+**Internuclear distance**:
+The x-axis: how far apart the two nuclei are, a real length, numbered. Kept in pm; the teacher can show it in Å or nm instead, which changes the axis and the labels, not the curve.
+_Avoid_: Separation, bond distance (fine in search keywords), reaction coordinate, equilibrium distance
+
+**Bond length**:
+The internuclear distance at a curve's lowest point, typed by the teacher, 10 to 1000 pm.
+_Avoid_: Equilibrium distance, r₀ (fine in code)
+
+**Bond energy**:
+How far below the zero line a curve's lowest point is, typed by the teacher as a positive number, 1 to 2000 kJ/mol. The minimum is at minus the bond energy.
+_Avoid_: Bond enthalpy, bond dissociation energy (both fine in help text), well depth (fine in code)
+
+**Bond**:
+One curve on the graph: one of up to three, each a name, a bond length and a bond energy the teacher types. The first screen's Bond X, Bond Y and Bond Z are made up, and the page says so. An empty name is "Bond 1".
+_Avoid_: Molecule, substance, curve (for what the teacher types)
+
+**Zero line**:
+The line across the grid at 0 on the energy axis, the energy of the two atoms far apart, drawn in the axes' ink. Every curve ends under it; the fitted axes always put it on a gridline.
+_Avoid_: Baseline, x-axis (the distance axis is along the grid's bottom edge, below the well)
+
+**Well**:
+The dip in a curve around its lowest point. A well under two blocks deep is too squashed to read, and the page says so.
+_Avoid_: Trough, valley
+
+**Hidden names**:
+The bonds' names left off the figure, so its key and its screen-reader description call them Bond A, B and C, for students to match to a table. The answer key names them ("Bond A is Bond X"). Only with two or three bonds: one bond is always named.
+_Avoid_: Anonymous, mystery bond
+
+**Guide line**:
+A dashed line from a curve's minimum across to the energy axis, or down to the distance axis. Off by default, so students find the minimum themselves. Each can be labeled by its foot with the value ("150 pm", "−300 kJ/mol"), with "Bond length" and "Bond energy", or with a blank line. Where two bonds' guide lines lie along each other, one is drawn, with one label. A length with no room beside its line is written on it, on a white patch; where the labels are crowded anyway, the page says so.
+_Avoid_: Drop line, reference line
+
+**Fitted axes**:
+What the Fit button gives, and what shape only always uses: the distance axis from 0 to about three times the longest bond length, the energy axis from just below the deepest well to about a quarter of its depth above 0, both in round steps, so the bond length and energy are read from the graph, not from a gridline made for them. Typing a length or energy never moves the axes; the page says when a minimum is off the grid.
+_Avoid_: Auto-scale, zoom
+
 ### Organic structures
 
 **Organic structure**:
@@ -741,3 +942,13 @@ _Avoid_: Displayed formula, expanded structural formula, Lewis structure (that h
 **Carbon numbering**:
 Small numbers beside the carbons of one chain or ring in each organic structure, shown in every view. The editor numbers the ring if there is one, otherwise the chain through a C=O (then through a carbon bonded to O or N), longest first, from the end nearest the C=O, then an O or N, then a multiple bond, then a branch (so an acid's or ester's C=O carbon is 1); the teacher can flip it to run the other way. Branch carbons aren't numbered. It isn't IUPAC naming.
 _Avoid_: Locants (fine in help text), carbon labels
+
+### Electrochemical cells
+
+**Electrochemical cell**:
+A galvanic (voltaic) cell of two metals: each an electrode standing in a 1 M solution of its own ion, in its own beaker, the beakers joined by a salt bridge and the electrodes by a wire through a **meter**. The metal with the lower standard reduction potential is the anode, on whichever side the teacher puts it. The answer key gives the anode, the cathode and E°cell, then the half-reaction at each electrode and the overall reaction, balanced so the electrons cancel. Electrolytic cells, concentrations other than 1 M and cell notation aren't drawn.
+_Avoid_: Battery, voltaic pile, half-cell (one beaker of it)
+
+**Meter**:
+What the wire passes through between the electrodes: a digital voltmeter, a dial voltmeter (0–4 V) or a plain coil of wire with no reading. A voltmeter's + terminal is wired to the cathode, so it always reads E°cell as a positive number: the table's, or the teacher's own, typed from 0 to 9.99 V and kept to 0.01 V (a dial's needle stops at 4 V).
+_Avoid_: Galvanometer, load, resistor

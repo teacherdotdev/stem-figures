@@ -126,10 +126,7 @@
       <div class="head-row">
         <h2 class="card-head">Values</h2>
         <HelpTip id="values-tip" label="How to fill in the table">
-          Type a rule like y = 2x + 1 or y = x^2 − 3, and the x-values as a range (From, To and Step) or a list like −2, 0, 1/2, 3; each y is
-          worked out for you, as a fraction or a decimal. Type the range in fractions, π or degrees (0, 30°, 90°) and the x-values are written
-          that way. Or pick Typed and type or paste the pairs yourself, words too, leaving any cell empty. Click any value on the figure to
-          make it a blank for students.
+          Type the range in fractions, π or degrees (0, 30°, 90°) and the x-values are written that way.
         </HelpTip>
       </div>
       <div class="segmented" role="radiogroup" aria-label="Values">

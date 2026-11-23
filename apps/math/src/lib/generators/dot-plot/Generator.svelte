@@ -107,9 +107,7 @@
       <div class="head-row">
         <h2 class="card-head">Data</h2>
         <HelpTip id="data-tip" label="How to type the data">
-          Type or paste the values, separated by commas or spaces, like 3, 4, 4, 5, 7. Each value gets one dot, and equal values
-          stack up. Fractions like 3/4 and 1 1/2 work too, and number the line in fractions. Or type each value once with how many
-          of it there are, as a frequency table. Leave it empty for a blank number line.
+          Fractions like 3/4 and 1 1/2 work too. Leave it empty for a blank number line.
         </HelpTip>
       </div>
       <div class="segmented" role="radiogroup" aria-label="Data">
@@ -163,7 +161,6 @@
       {#each RANGE_FIELDS as [key]}
         {#if plot.problems[key]}<p class="help problem">{plot.problems[key]}</p>{/if}
       {/each}
-      <p class="hint range-hint">Leave these empty to fit the data.</p>
       <label class="field">
         Numbers
         <select bind:value={s.every}>
@@ -200,12 +197,10 @@
   textarea[aria-invalid='true'] { border-color: var(--red); }
   .help { margin: 0; font-size: 0.84rem; color: var(--muted); }
   .help.problem { color: var(--red); font-weight: 600; }
-  .hint { font-weight: 400; color: var(--muted); font-size: 0.84rem; margin: 0; }
 
-  .range-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; margin-bottom: 0.5rem; }
+  .range-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; margin-bottom: 0.75rem; }
   .range-field { display: flex; flex-direction: column; gap: 0.3rem; font-weight: 600; font-size: 0.88rem; min-width: 0; }
   .range-fields ~ .help { margin: -0.1rem 0 0.5rem; }
-  .range-hint { margin-bottom: 0.75rem; }
   .field { display: flex; flex-direction: column; gap: 0.35rem; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.75rem; }
   .field:last-child { margin-bottom: 0; }
   .ends { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }

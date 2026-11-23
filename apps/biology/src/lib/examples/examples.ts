@@ -551,6 +551,43 @@ export const EXAMPLES: Example[] = [
     },
   ]),
 
+  ...examplesOf('cladogram', [
+    {
+      slug: 'vertebrate-cladogram-shared-derived-characters',
+      title: 'Vertebrate cladogram with shared derived characters',
+      alt: 'A diagonal cladogram of lancelet, lamprey, shark, perch, frog, lizard and mouse, with ticks on the main branch for notochord, vertebrae, jaws, bony skeleton, four limbs, amniotic egg and hair',
+      caption:
+        'A cladogram of seven chordates, with the lancelet as the outgroup. Each tick on the main branch is a shared derived character, from a notochord on the root to vertebrae, jaws, a bony skeleton, four limbs, the amniotic egg and hair, and every animal past a tick has that trait.',
+      settings: {},
+    },
+    {
+      slug: 'land-plant-cladogram-worksheet-fill-in-the-traits',
+      title: 'Land plant cladogram worksheet: fill in the traits',
+      alt: 'A diagonal cladogram of green algae, mosses, ferns, conifers and flowering plants, with four numbered blank lines beside ticks on the main branch',
+      caption:
+        'A cladogram of green algae, mosses, ferns, conifers and flowering plants, with a numbered blank line beside each tick on the main branch. Students write the trait gained at each tick: embryos, vascular tissue, seeds and flowers.',
+      settings: {
+        tree: {
+          trait: '',
+          children: [
+            { name: 'Green algae' },
+            {
+              trait: 'Embryos',
+              children: [
+                { name: 'Mosses' },
+                {
+                  trait: 'Vascular tissue',
+                  children: [{ name: 'Ferns' }, { trait: 'Seeds', children: [{ name: 'Conifers' }, { name: 'Flowering plants', trait: 'Flowers' }] }],
+                },
+              ],
+            },
+          ],
+        },
+        traits: 'blank',
+      },
+    },
+  ]),
+
   ...examplesOf('gel-electrophoresis', [
     {
       slug: 'dna-fingerprinting-gel-crime-scene-suspects',

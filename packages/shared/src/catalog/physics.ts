@@ -182,4 +182,113 @@ export const PHYSICS: CatalogEntry[] = [
       'thin lens equation', 'lens equation', 'mirror equation', 'magnifying glass', 'reflection', 'refraction', 'printable',
     ],
   },
+  {
+    id: 'electric-and-magnetic-fields',
+    site: 'physics',
+    name: 'Electric and Magnetic Field Generator',
+    path: '/electric-and-magnetic-fields',
+    blurb: 'Field lines around charges, plates, a bar magnet or a wire.',
+    description:
+      'Make printable electric and magnetic field diagrams for physics tests. Draw the field lines of point charges, parallel plates, a bar magnet or a current-carrying wire, or leave them off for students.',
+    keywords: [
+      'field', 'fields', 'field lines', 'field diagram', 'electric field', 'electric field lines', 'e-field', 'magnetic field',
+      'magnetic field lines', 'b-field', 'electrostatics', 'charge', 'charges', 'point charge', 'positive charge',
+      'negative charge', 'dipole', 'electric dipole', 'opposite charges', 'like charges', 'attract', 'repel', 'coulomb',
+      "coulomb's law", 'parallel plates', 'capacitor', 'uniform field', 'magnet', 'bar magnet', 'north', 'south', 'poles',
+      'wire', 'current', 'straight wire', 'right hand rule', 'dot', 'cross', 'into the page', 'out of the page',
+      'non-contact forces', 'electromagnetism', 'e&m', 'printable',
+    ],
+  },
+  {
+    id: 'circular-motion',
+    site: 'physics',
+    name: 'Circular Motion Generator',
+    path: '/circular-motion',
+    blurb: 'An object going round a circle, with its velocity, acceleration and forces.',
+    description:
+      'Make printable circular motion diagrams for physics tests. Draw an object on a circle from above, on a vertical circle, loop, hill or dip, or a conical pendulum, with velocity, centripetal acceleration and forces.',
+    keywords: [
+      'circular motion', 'uniform circular motion', 'ucm', 'circle', 'centripetal', 'centripetal force',
+      'centripetal acceleration', 'tangential velocity', 'velocity', 'acceleration', 'radius', 'diameter', 'angular speed',
+      'angular velocity', 'omega', 'rotation', 'turntable', 'record player', 'merry-go-round', 'ball on a string',
+      'vertical circle', 'loop', 'loop-the-loop', 'hill', 'dip', 'car over a hill', 'conical pendulum', 'flat curve', 'curve',
+      'car on a curve', 'tension', 'normal force', 'gravity', 'net force', 'top view', 'side view', 'printable',
+    ],
+  },
+  {
+    id: 'roller-coaster',
+    site: 'physics',
+    name: 'Roller Coaster Generator',
+    path: '/roller-coaster',
+    blurb: 'A track of hills, dips and a loop, with labelled points and heights.',
+    description:
+      'Make printable roller coaster figures for conservation of energy problems. Set the height of each hill and dip, label the points, add a loop, a cart, a rough stretch and height marks.',
+    keywords: [
+      'roller coaster', 'rollercoaster', 'energy track', 'track', 'hill', 'hills', 'dip', 'valley', 'loop', 'loop-the-loop',
+      'loop-de-loop', 'skate ramp', 'half-pipe', 'ramp', 'conservation of energy', 'mechanical energy', 'potential energy',
+      'kinetic energy', 'pe', 'ke', 'gravitational potential energy', 'height', 'cart', 'work and energy', 'friction',
+      'circular motion', 'printable',
+    ],
+  },
+  {
+    id: 'lever',
+    site: 'physics',
+    name: 'Lever Generator',
+    path: '/lever',
+    blurb: 'Class 1, 2 and 3 levers with the fulcrum, load, effort and both arms.',
+    description:
+      'Make printable lever diagrams for physics and engineering classes. Pick a class 1, 2 or 3 lever, set the load and the two arms, and the effort and mechanical advantage are worked out, with any value left for students to find.',
+    keywords: [
+      'lever', 'levers', 'class 1 lever', 'class 2 lever', 'class 3 lever', 'first class', 'second class', 'third class',
+      '1st 2nd 3rd', 'fulcrum', 'pivot', 'effort', 'load', 'resistance', 'input force', 'output force', 'effort arm',
+      'load arm', 'mechanical advantage', 'simple machine', 'simple machines', 'seesaw', 'wheelbarrow', 'crowbar', 'tweezers',
+      'engineering', 'printable',
+    ],
+  },
+  {
+    id: 'torque',
+    site: 'physics',
+    name: 'Torque Generator',
+    path: '/torque',
+    blurb: 'A beam on a pivot, two supports or a wall, with weights at set distances.',
+    description:
+      'Make printable torque and moments diagrams for physics tests. Put up to six weights, masses or forces on a beam on a pivot, two supports or a wall with a cable, and the torques, support forces and tension are worked out.',
+    keywords: [
+      'torque', 'moment', 'moments', 'moment of a force', 'turning force', 'turning effect', 'principle of moments',
+      'equilibrium', 'rotational equilibrium', 'statics', 'balance', 'beam', 'beam balance', 'seesaw', 'see-saw', 'pivot',
+      'fulcrum', 'lever', 'lever arm', 'meter stick', 'metre rule', 'cantilever', 'hanging sign', 'cable', 'tension',
+      'support force', 'reaction', 'clockwise', 'anticlockwise', 'counterclockwise', 'center of gravity', 'printable',
+    ],
+  },
+  {
+    id: 'pendulum',
+    site: 'physics',
+    name: 'Pendulum Generator',
+    path: '/pendulum',
+    blurb: 'A pendulum swinging, or one bob with the forces on it.',
+    description:
+      'Make printable pendulum diagrams for physics tests. Draw a bob swinging from its release point to the bottom and the far side, with θ, L and the height h for energy problems, or one bob with its tension, weight and components.',
+    keywords: [
+      'pendulum', 'simple pendulum', 'pendulums', 'swinging', 'swing', 'bob', 'string', 'energy conversion',
+      'conservation of energy', 'potential energy', 'kinetic energy', 'height', 'release point', 'tension', 'weight',
+      'mg cos theta', 'mg sin theta', 'components', 'forces on a pendulum', 'restoring force', 'simple harmonic motion',
+      'shm', 'oscillation', 'oscillations', 'period', 'amplitude', 'velocity', 'printable',
+    ],
+  },
+  {
+    id: 'spring',
+    site: 'physics',
+    name: 'Spring Generator',
+    path: '/spring',
+    blurb: 'A mass on a spring, hanging or on a floor, stretched or squashed.',
+    description:
+      "Make printable spring diagrams for physics tests. Draw a mass on a spring, hanging or horizontal, before and after it stretches for Hooke's law, at three positions for simple harmonic motion, or springs in series and parallel.",
+    keywords: [
+      'spring', 'springs', "hooke's law", 'hookes law', 'hooke', 'mass on a spring', 'mass-spring system', 'spring constant',
+      'k', 'extension', 'spring extension', 'stretch', 'stretched spring', 'compression', 'compressed spring', 'natural length',
+      'equilibrium', 'equilibrium position', 'displacement', 'simple harmonic motion', 'shm', 'oscillation', 'oscillator',
+      'amplitude', 'springs in series', 'springs in parallel', 'series', 'parallel', 'hanging mass', 'horizontal spring',
+      'elastic', 'elastic potential energy', 'restoring force', 'printable',
+    ],
+  },
 ]

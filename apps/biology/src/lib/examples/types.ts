@@ -8,6 +8,7 @@ import type { OsmosisSettings } from '$lib/generators/osmosis/settings'
 import type { GelSettings } from '$lib/generators/gel-electrophoresis/settings'
 import type { PipetteSettings } from '$lib/generators/micropipette-reading/settings'
 import type { PedigreeSettings } from '$lib/generators/pedigree/settings'
+import type { CladogramSettings } from '$lib/generators/cladogram/settings'
 import type { PhotosynthesisSettings } from '$lib/generators/photosynthesis-rate/settings'
 import type { PopulationSettings } from '$lib/generators/population-growth/settings'
 import type { PredatorPreySettings } from '$lib/generators/predator-prey/settings'
@@ -19,6 +20,7 @@ export interface SettingsById {
   'population-growth': PopulationSettings
   'punnett-square': PunnettSettings
   pedigree: PedigreeSettings
+  cladogram: CladogramSettings
   'predator-prey': PredatorPreySettings
   'food-web': FoodWebSettings
   'enzyme-activity': EnzymeSettings

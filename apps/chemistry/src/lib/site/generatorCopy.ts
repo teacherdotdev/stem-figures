@@ -145,6 +145,43 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school'],
   },
 
+  chromatography: {
+    heading: 'Paper chromatography diagrams with Rf measurements',
+    intro: [
+      'Chromatography draws a paper chromatogram: the inks you type spotted on a pencil origin line, each separated into its colored spots up the paper, with the solvent front dashed across the top. Type how far each color travels, in cm, and the spots are drawn to scale.',
+      'Show the paper hanging from a glass rod in a beaker of water, or the paper alone. Add the paper before the solvent ran beside it, with each ink still a single spot on the origin line, and mark the distance from the origin line to each spot and to the solvent front so students can work out Rf values. Teachers use it for questions on separating mixtures, identifying an unknown ink by comparing it with known dyes, and calculating Rf.',
+    ],
+    settings: [
+      'Up to 6 inks, each named and with up to 5 colors, and how far each color traveled from the origin line',
+      'How far the solvent front is above the origin line',
+      'The paper after the solvent has run, or before and after side by side',
+      'The beaker setup with a glass rod and solvent, or the paper alone',
+      'Measurements from the origin line to each spot and to the solvent front, in cm',
+      'Labels naming the glass rod, paper, solvent front, pencil line, solvent and beaker',
+      'A chart title, and an answer key with each spot’s Rf value',
+    ],
+    faqs: [
+      {
+        q: 'How do you calculate an Rf value?',
+        a: 'Divide the distance from the origin line to the middle of the spot by the distance from the origin line to the solvent front. A spot 5.6 cm up with the front at 8.0 cm has an Rf of 0.70. Turn on the answer key to print every spot’s Rf.',
+      },
+      {
+        q: 'Why is the origin line drawn in pencil, above the water?',
+        a: 'Pencil is graphite, which doesn’t dissolve and travel up the paper as ink would. The line sits above the solvent so the inks spread up the paper instead of dissolving into the solvent in the beaker, so the figure always draws the water below it.',
+      },
+      {
+        q: 'How do I show an ink that doesn’t move?',
+        a: 'Give its color a distance of 0 cm. It stays on the origin line, as an insoluble ink would, and gets no measurement arrow.',
+      },
+      {
+        q: 'Can I show the paper before the solvent runs?',
+        a: 'Yes: choose Before and after. The paper before shows each ink as one spot on the origin line, colored as its dyes mixed, beside the paper after.',
+      },
+    ],
+    imageAlt: 'A printable paper chromatography diagram of three inks separated up the paper in a beaker of water, made with Chromatography',
+    educationalLevel: ['Middle school', 'High school'],
+  },
+
   'length-reading': {
     heading: 'Ruler, caliper and micrometer figures for measuring length',
     intro: [
@@ -381,6 +418,47 @@ export const COPY: Record<string, GeneratorCopy> = {
     educationalLevel: ['Middle school', 'High school', 'AP Chemistry'],
   },
 
+  'phase-diagram': {
+    heading: 'Phase diagrams',
+    intro: [
+      'Phase Diagram draws a substance’s pressure against temperature: the sublimation curve rising to the triple point, the fusion line running up from it, and the vaporization curve running from it to the critical point, where it stops. The regions between them are the solid, the liquid and the gas. Pick water, carbon dioxide, nitrogen, oxygen, argon, methane or ammonia, or type your own substance’s triple point, critical point and normal melting and boiling points. A real substance is drawn not to scale, as textbooks draw it, with its real temperatures and pressures written at the axes where dashed lines from each point land. Your own substance can also go on numbered axes and gridlines, to scale, for students to read values from.',
+      'Teachers use it for questions on states of matter and phase changes: what phase is the substance in at 1 atm and 50 °C, what are its normal melting and boiling points, why does dry ice sublime. Name the regions, the points and the phase boundaries, letter them for questions, or leave blank lines for students to fill in, and add the 1 atm line with a dot where it crosses each boundary. Everything lettered shares one run of A, B, C…, which you can shuffle, and the answer key lists each point’s values and what each letter marks.',
+    ],
+    settings: [
+      'The substance: water, carbon dioxide, nitrogen, oxygen, argon, methane or ammonia, or your own, from its triple point, critical point and normal melting and boiling points',
+      'Not to scale, with the values written at the axes, or, for your own substance, numbered axes and gridlines, to scale',
+      'Temperatures in °C or K, pressures in atm or kPa',
+      'The regions (Solid, Liquid, Gas), the triple and critical points and the phase boundaries each named, lettered, left as blank lines, or bare',
+      'Dashed lines from the triple and critical points to the axes, with the values, blank lines or nothing written there',
+      'The 1 atm line, with the normal melting and boiling points (or the sublimation point) marked by their temperatures, names, letters or blank lines',
+      'The supercritical fluid region, shuffled letters, the curve’s color, the chart and axis titles (or blank lines), the axis ranges and numbering on a grid, and label size',
+    ],
+    faqs: [
+      {
+        q: 'What are the triple point and the critical point?',
+        a: 'The triple point is the one temperature and pressure where the solid, the liquid and the gas can all be present together; it is where the three phase boundaries meet. The critical point is where the vaporization curve ends: above its temperature and pressure the liquid and the gas can no longer be told apart, and the substance is a supercritical fluid.',
+      },
+      {
+        q: 'Why does water’s fusion line lean left?',
+        a: 'Ice is less dense than liquid water, so squeezing ice favors the denser liquid and lowers the melting point: the higher the pressure, the lower the temperature the solid melts at, and the line between solid and liquid leans to the left. Almost every other substance’s solid is denser than its liquid, so its fusion line leans right.',
+      },
+      {
+        q: 'Why does dry ice sublime instead of melting?',
+        a: 'Carbon dioxide’s triple point is at 5.11 atm, above normal air pressure. At 1 atm the liquid can’t exist at any temperature, so the 1 atm line crosses only the sublimation curve, at −78.5 °C: solid carbon dioxide turns straight into gas.',
+      },
+      {
+        q: 'Are the real substances drawn to scale?',
+        a: 'No. Their pressures span too much for one plain axis: water’s triple point is at 0.006 atm and its critical point at 218 atm. So the real substances are drawn not to scale, in the textbook’s shape, with their real values written at the axes. The fusion line’s lean is exaggerated too: a real one is nearly upright, so for every substance but water the normal melting point is within a few hundredths of a degree of the triple point’s temperature. To read values off a graph to scale, type your own substance and choose On a grid.',
+      },
+      {
+        q: 'Where do the values come from?',
+        a: 'The triple and critical points and the normal boiling points are from each substance’s reference equation of state, as the NIST Chemistry WebBook gives them; water’s normal melting point is from the IAPWS melting curve of ice.',
+      },
+    ],
+    imageAlt: 'A printable phase diagram of water, not to scale, its solid, liquid and gas regions and its triple and critical points named, with their temperatures and pressures written at the axes, made with Phase Diagram',
+    educationalLevel: ['Middle school', 'High school', 'AP Chemistry'],
+  },
+
   'potential-energy-diagram': {
     heading: 'Potential energy diagrams and reaction energy profiles',
     intro: [
@@ -420,6 +498,51 @@ export const COPY: Record<string, GeneratorCopy> = {
     ],
     imageAlt: 'A printable potential energy diagram of an exothermic reaction with its Eₐ and ΔH arrows labeled with their values, made with Potential Energy Diagram',
     educationalLevel: ['High school', 'AP Chemistry', 'IB Chemistry'],
+  },
+
+  'bond-energy-curve': {
+    heading: 'Bond energy curves: potential energy against internuclear distance',
+    intro: [
+      'Bond Energy Curve draws the potential energy of two bonded atoms against the distance between their nuclei, from the two numbers students read back from it: the bond length and the bond energy. Type a bond’s name, its bond length in pm, Å or nm and its bond energy in kJ/mol, and the curve’s lowest point sits exactly at that length and that far below zero. Zero is the two atoms far apart: the curve rises toward it as they separate and climbs steeply past it when they are pushed together. Both axes are numbered in round steps, with light gridlines, so the values are read from the graph.',
+      'Teachers use it for AP Chemistry questions on bond length and bond energy. Put up to three bonds on one graph, solid, dashed and dotted, to compare a short strong bond with a long weak one or a single, a double and a triple bond, and hide the names so students match Bond A, B and C to a table. Add dashed guide lines from each minimum to both axes, labeled with the values, the words or blank lines, mark where the atoms repel and attract, or leave the numbers off for the shape alone. The answer key gives each bond’s length and energy.',
+    ],
+    settings: [
+      'Up to three bonds, each your own name, bond length and bond energy',
+      'Lengths in pm, Å or nm, and energies written kJ/mol or kJ mol⁻¹',
+      'Dashed guide lines from each minimum to both axes, labeled with the values, Bond length and Bond energy, blank lines or nothing, and a dot on each minimum',
+      'Repulsion and Attraction either side of one curve’s minimum, as words or blank lines',
+      'Names shown in a key, or hidden as Bond A, B and C',
+      'Numbered axes with a Fit button, or shape only, with just the 0 on the energy axis',
+      'Color or black and white curves, chart and axis titles (or blank lines), the axis ranges and numbering, gridlines, and label size',
+    ],
+    faqs: [
+      {
+        q: 'How do you read bond length and bond energy from the graph?',
+        a: 'Find the lowest point of the curve. The distance under it, on the horizontal axis, is the bond length. Its depth below zero, on the energy axis, is the bond energy: a minimum at −300 kJ/mol means it takes 300 kJ to break a mole of those bonds and take the atoms far apart, where the energy is 0. The guide lines draw exactly this.',
+      },
+      {
+        q: 'Why does the curve rise so steeply at short distances?',
+        a: 'Closer than the bond length, the two nuclei repel each other and so do the atoms’ inner electrons, and that repulsion grows much faster than the attraction, so the energy shoots up. Further apart than the bond length, the attraction between each nucleus and the other atom’s electrons wins, and the energy falls as the atoms come together. The bond length is where the two balance.',
+      },
+      {
+        q: 'Why are shorter bonds usually stronger?',
+        a: 'Between the same two atoms, a double bond shares more electrons than a single bond, and a triple bond more again. More shared electrons pull the nuclei closer and hold them harder, so the minimum moves left and down: shorter and deeper. Put a single, a double and a triple bond on one graph to show it.',
+      },
+      {
+        q: 'Is Bond X a real bond?',
+        a: 'No. Bond X, Bond Y and Bond Z are made up, with round numbers in the range of real bonds: 150 pm and 300 kJ/mol, 120 pm and 500 kJ/mol, 200 pm and 200 kJ/mol. For a real bond, type its name, bond length and bond energy from your own textbook’s table.',
+      },
+      {
+        q: 'Is the curve’s shape exact?',
+        a: 'Its minimum is: it is exactly at the bond length and the bond energy you type. The rest is a model. Every curve has the same shape, stretched to its own length and energy, while a real bond has a width of its own. So read the minimum, not the width of the well.',
+      },
+      {
+        q: 'Looking for potential energy against the reaction coordinate, with Eₐ and ΔH?',
+        a: 'That’s Potential Energy Diagram, for exothermic and endothermic reactions, catalysts and mechanisms. Bond Energy Curve is for one bond: potential energy against the distance between two nuclei.',
+      },
+    ],
+    imageAlt: 'A printable graph of potential energy against internuclear distance for a bond, with dashed guide lines from its minimum to 150 pm and −300 kJ/mol, made with Bond Energy Curve',
+    educationalLevel: ['High school', 'AP Chemistry'],
   },
 
   'particle-diagram': {
@@ -599,6 +722,69 @@ export const COPY: Record<string, GeneratorCopy> = {
       },
     ],
     imageAlt: 'A printable Lewis dot structure of a molecule, with bonds and lone electrons, made with Lewis Structures',
+    educationalLevel: ['High school', 'AP Chemistry'],
+  },
+
+  'vsepr-shapes': {
+    heading: 'VSEPR shapes in 3D, wedge-and-dash or ball-and-stick',
+    intro: [
+      'VSEPR Shapes draws the real 3D shape of a molecule or polyatomic ion with one central atom. Type NH3, SF4, XeF4 or SO4 2- and it builds the structure the way Lewis Structures does, counts the atoms and lone pairs around the central atom, and draws the shape: linear, bent, trigonal planar, trigonal pyramidal, tetrahedral, T-shaped, seesaw, trigonal bipyramidal, square planar, square pyramidal or octahedral.',
+      'Draw it wedge-and-dash, as textbooks and students do, or as a shaded ball-and-stick model, and drag it to turn it any way. Label the shape name, electron geometry, AXE notation and bond angles, or leave them blank for a “name the shape” question with an answer key.',
+    ],
+    settings: [
+      'The formula: main-group elements through period 5 with one central atom, molecules and polyatomic ions',
+      'Wedge-and-dash or ball-and-stick, the balls in color or grayscale, with or without their symbols',
+      'The view: the textbook view, or turned any way by dragging the figure',
+      'The central atom’s lone pairs as lobes, as dots or hidden, and the outer atoms’ lone pairs',
+      'The shape name, electron geometry, AXE notation and bond angles, with your own angle labels',
+      'A “name the shape” question with the labels blank, a chart title and an answer key',
+    ],
+    faqs: [
+      {
+        q: 'Why does water’s angle say <109.5° and not 104.5°?',
+        a: 'The figure is drawn at the ideal angles of the electron geometry, and lone pairs squeeze the bonds closer, so the label starts as less than the ideal angle. Type 104.5° in its box if your course teaches the measured angle.',
+      },
+      {
+        q: 'Which molecules can it draw?',
+        a: 'Any molecule or polyatomic ion with one central atom and two to six electron groups around it, from CO₂ and BF₃ to SF₆, ClF₃, XeF₄ and I₃⁻, as well as two-atom molecules like HCl. Molecules with more than one central atom, like ethanol, aren’t drawn: the Request it button asks us to add what you need.',
+      },
+      {
+        q: 'Where do the different atoms go in PCl₃F₂ or XeOF₄?',
+        a: 'Lone pairs go in the equatorial positions of a trigonal bipyramid, and the more electronegative outer atoms take the axial ones, as the usual VSEPR rules say. In a square pyramid like XeOF₄ the odd atom out, O, sits at the top, opposite the lone pair, whichever order you type the formula in.',
+      },
+      {
+        q: 'How do I turn the molecule?',
+        a: 'Drag the figure, or use the arrows under View to turn it 15° at a time. Reset view goes back to the textbook view, and the view is saved in the link with the other settings.',
+      },
+    ],
+    imageAlt: 'A printable VSEPR shape of a molecule drawn with wedges and dashes, made with VSEPR Shapes',
+    educationalLevel: ['High school', 'AP Chemistry'],
+  },
+
+  'electrochemical-cells': {
+    heading: 'Galvanic cell diagrams with a salt bridge and voltmeter',
+    intro: [
+      'Electrochemical Cells draws a galvanic (voltaic) cell: two beakers, each a metal electrode standing in a 1 M solution of its own ion, joined by a salt bridge, with wires from the electrodes to a digital voltmeter, a dial voltmeter or a simple coil of wire. Pick two of magnesium, aluminum, zinc, iron, nickel, lead, copper and silver.',
+      'The metal with the lower standard reduction potential is the anode, and the voltmeter reads the standard cell potential, 1.10 V for zinc and copper. Label the anode, cathode and electron flow, or leave the names off for students to label.',
+    ],
+    settings: [
+      'Two metals, each in a solution of its own ion, on either side',
+      'A digital voltmeter, a dial voltmeter or a coil of wire between the electrodes',
+      'The names of the metals, solutions and salt bridge, or none for students to fill in',
+      'Anode and cathode with their signs, and electron flow arrows',
+      'A chart title and an answer key with the anode, cathode and E°cell, the half-reactions and the balanced overall reaction',
+    ],
+    faqs: [
+      {
+        q: 'How does it decide which electrode is the anode?',
+        a: 'The metal with the lower (more negative) standard reduction potential is oxidized, so it is the anode, on whichever side you put it. Electrons flow through the wire from it to the cathode.',
+      },
+      {
+        q: 'What does the voltmeter read?',
+        a: 'The standard cell potential, E°cathode − E°anode, with 1 M solutions at 25 °C. Its + terminal is wired to the cathode, so the reading is always positive.',
+      },
+    ],
+    imageAlt: 'A printable galvanic cell of zinc and copper with a salt bridge and a digital voltmeter, made with Electrochemical Cells',
     educationalLevel: ['High school', 'AP Chemistry'],
   },
 
@@ -811,6 +997,49 @@ export const COPY: Record<string, GeneratorCopy> = {
     imageAlt: 'A printable mass spectrum of magnesium with a peak for each isotope and its percent abundance, made with Mass Spectrum',
     educationalLevel: ['High school', 'AP Chemistry'],
   },
+  'equilibrium-graph': {
+    heading: 'Equilibrium graphs for Le Châtelier’s principle',
+    intro: [
+      'Equilibrium Graph draws concentration against time for a reversible reaction: the reactants falling and the products rising until they level off at equilibrium, then shifting when the system is stressed. Pick N₂ + 3H₂ ⇌ 2NH₃, H₂ + I₂ ⇌ 2HI, N₂O₄ ⇌ 2NO₂, 2SO₂ + O₂ ⇌ 2SO₃, PCl₅ ⇌ PCl₃ + Cl₂, Fe³⁺ + SCN⁻ ⇌ FeSCN²⁺ or a made-up A + B ⇌ C, type each starting concentration and K, and add up to three stresses: a species added or removed, the volume changed, or the temperature raised or lowered.',
+      'The page solves the chemistry instead of sketching it, so the lines always move in the ratio of the coefficients and every level stretch gives the same K: students can read the concentrations off the numbered axes and work out K, or fill in an ICE table. Each stress is marked with a dashed line and a few words, which you can change or leave off for students to say what happened. The answer key gives the equilibrium concentrations, which way each stress shifts the system, and the new K after a temperature change.',
+    ],
+    settings: [
+      'Reaction: six real reversible reactions and a made-up A + B ⇌ C, exothermic or endothermic',
+      'Each species’ starting concentration in mol/L (start from reactants, products or a mixture), K, and the time equilibrium is first established',
+      'Up to three stresses, each at the time you type: add or remove a species, change the volume, or raise or lower the temperature',
+      'The words over each stress’s dashed line: the page’s own (“N₂ added”, “Volume halved”), yours, or none',
+      'Each line’s formula beside it or hidden, and lines in color or in black, told apart as solid, dashed and dotted',
+      'Chart and axis titles (or blank lines), the axis ranges and numbering with a Fit button, gridlines, and label size',
+    ],
+    faqs: [
+      {
+        q: 'Are the K values real?',
+        a: 'No. Each reaction starts with an example K and example starting concentrations, chosen to give a clear graph with the lines well apart. They are not the reactions’ measured equilibrium constants. Type your own K and concentrations to match your textbook or a problem; the page says the same under the K box and in the answer key. Whether each reaction is exothermic or endothermic is real, and the page backs it up under the K box with its ΔH°, or for Fe³⁺ + SCN⁻ ⇌ FeSCN²⁺ with the red color fading on warming.',
+      },
+      {
+        q: 'How does the graph show Le Châtelier’s principle?',
+        a: 'Add a stress and the lines answer it. Adding a species makes its line jump up, then every line bends as the system shifts to use some of it up: the added species ends above where it was before, never back to it. Changing the volume makes every line jump together, then shift toward the side with fewer moles of gas if the volume fell. Changing the temperature has no jump: K changes, so every line turns a corner toward the new equilibrium.',
+      },
+      {
+        q: 'Can students work out K from the graph?',
+        a: 'Yes. The axes are numbered and every level stretch is at a true equilibrium, so the concentrations read off it give the K you typed, before and after a concentration or volume stress. After a temperature stress they give the new K, which the answer key lists.',
+      },
+      {
+        q: 'How is the shape of the curves worked out?',
+        a: 'Each stretch settles where the reaction quotient Q equals K. It gets there as an elementary reaction would: the forward rate is a constant times each reactant’s concentration to the power of its coefficient, and the reverse rate the same for the products. That is the usual teaching model and gives the familiar curve that is steep at first and then levels off. You choose when equilibrium is first established, which sets how fast the whole graph runs.',
+      },
+      {
+        q: 'Why does nothing shift when I change the volume for H₂ + I₂ ⇌ 2HI?',
+        a: 'There are two moles of gas on each side, so a volume change doesn’t move the equilibrium. Every concentration jumps by the same factor and then stays level, which is a good question to put to students.',
+      },
+      {
+        q: 'Can it show pressure changes, a catalyst or a rate graph?',
+        a: 'A pressure change by changing the volume is the volume stress: halving the volume doubles the pressure and every concentration. Adding an inert gas, adding a catalyst, partial pressures and the graph of forward and reverse rates against time aren’t drawn yet.',
+      },
+    ],
+    imageAlt: 'A printable equilibrium graph of N₂ + 3H₂ ⇌ 2NH₃, concentration against time, the three lines leveling off at equilibrium, made with Equilibrium Graph',
+    educationalLevel: ['High school', 'AP Chemistry', 'IB Chemistry'],
+  },
   'half-life-graph': {
     heading: 'Half-life graphs of radioactive decay',
     intro: [
@@ -853,6 +1082,50 @@ export const COPY: Record<string, GeneratorCopy> = {
     ],
     imageAlt: 'A printable half-life graph of carbon-14, percent remaining against time in years, with dashed guide lines at its first three half-lives, made with Half-Life Graph',
     educationalLevel: ['Middle school', 'High school', 'AP Chemistry', 'AP Physics'],
+  },
+  'rate-law-graphs': {
+    heading: 'Rate law graphs for zero, first and second order reactions',
+    intro: [
+      'Rate Law Graphs draws how a reactant’s concentration falls with time in a reaction A → products with rate = k[A]ⁿ, and the three graphs that tell its order apart: [A], ln[A] and 1/[A] against time. A zero-order reaction gives a straight [A] graph, a first-order one a straight ln[A] graph, and a second-order one a straight 1/[A] graph. Set the order, the starting concentration [A]₀ and the rate constant k, and get all three side by side on the same time axis, or one graph alone.',
+      'Teachers use it for the AP Chemistry question of picking the order from the graph that is a straight line: the figure never says the order, and the answer key does. Show the curves, data points (with a little scatter if you like) or both, put a data table of time and [A] under the graphs for students to plot on empty grids, or draw dashed guide lines at the first one to three half-lives. Name the reactant (N2O5 is written N₂O₅), give concentrations in M, mol/L or mol dm⁻³ and time in seconds, minutes or hours, and k’s unit follows.',
+    ],
+    settings: [
+      'Order: zero, first or second, with [A]₀ and k; changing the order keeps the first half-life',
+      'Graphs: [A], ln[A] and 1/[A] against time side by side, or any one of them alone',
+      'The curve, 5 to 10 data points, or both, with no scatter or about 1, 2 or 5%, and New data for another set',
+      'A data table under the graphs of time and [A], or of ln[A] and 1/[A] too, and Copy data for a spreadsheet',
+      'Dashed guide lines at the first 1 to 3 half-lives on the [A] graph, labeled with their times, half-lives, blank lines or nothing',
+      'The reactant’s name or formula, concentration in M, mol/L or mol dm⁻³, time in seconds, minutes or hours',
+      'Numbers on the axes or sketch graphs without them, gridlines, color or black and white, chart and axis titles (or blank lines), and label size',
+    ],
+    faqs: [
+      {
+        q: 'How do you tell the order of a reaction from its graphs?',
+        a: 'Plot [A], ln[A] and 1/[A] against time and see which is a straight line. If [A] against time is straight, the reaction is zero order; if ln[A] is, first order; if 1/[A] is, second order. The other two graphs curve. This comes from the integrated rate laws: [A] = [A]₀ − kt, ln[A] = ln[A]₀ − kt and 1/[A] = 1/[A]₀ + kt.',
+      },
+      {
+        q: 'How do you find k from the straight graph?',
+        a: 'k is the size of its slope. For zero and first order the line falls, with slope −k; for second order it rises, with slope +k. The intercept on the y-axis is [A]₀, ln[A]₀ or 1/[A]₀. The answer key gives k with its unit, the slope and the intercept.',
+      },
+      {
+        q: 'What are the units of k?',
+        a: 'They depend on the order. With concentration in M and time in seconds, k is in M s⁻¹ for zero order, s⁻¹ for first order and M⁻¹ s⁻¹ for second order. The generator writes k’s unit from the units you choose, such as mol L⁻¹ min⁻¹ or dm³ mol⁻¹ s⁻¹.',
+      },
+      {
+        q: 'How does the half-life depend on the order?',
+        a: 'A first-order half-life is ln 2 / k and never changes. A zero-order one is [A]₀ / 2k, so each is half as long as the last; a second-order one is 1 / (k[A]₀), so each is twice as long as the last. The guide lines show the first one to three on the [A] graph.',
+      },
+      {
+        q: 'Can students plot the data themselves?',
+        a: 'Yes. Turn off the curve and the data points and add the data table: the grids are left empty for students to work out ln[A] and 1/[A] from the table and plot them. Each [A] in the table is rounded to three significant figures, and the ln[A] and 1/[A] rows, if shown, are worked out from those rounded values, as a student would: ln[A] to three decimal places, as a log of a three-significant-figure number takes, and 1/[A] to three significant figures.',
+      },
+      {
+        q: 'Why does the zero-order line stop?',
+        a: 'A zero-order reaction goes at the same rate until the reactant runs out, so [A] reaches 0 at t = [A]₀ / k and the reaction is over. Nothing is drawn after that, and ln[A] and 1/[A] have no value at 0, so their curves leave the top or bottom of the grid before it.',
+      },
+    ],
+    imageAlt: 'Printable rate law graphs of a first-order reaction: [A], ln[A] and 1/[A] against time side by side, the ln[A] graph a straight line, made with Rate Law Graphs',
+    educationalLevel: ['High school', 'AP Chemistry', 'IB Chemistry'],
   },
 }
 

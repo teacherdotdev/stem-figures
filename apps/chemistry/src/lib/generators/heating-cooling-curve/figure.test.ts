@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { SUBSTANCES } from './curve'
-import { buildCurve, fittedAxes, niceRange } from './figure'
+import { buildCurve, fittedAxes } from './figure'
 import { curveSettings } from './settings'
 
 const build = (query: string) => buildCurve(curveSettings.fromParams(new URLSearchParams(query)))
@@ -121,13 +121,5 @@ describe('placing labels', () => {
                 }
               }
     expect(problems).toEqual([])
-  })
-})
-
-describe('fitting an axis', () => {
-  it('counts in tidy steps', () => {
-    expect(niceRange(0, 308.8, true)).toEqual([0, 320, 20])
-    expect(niceRange(-20, 120)).toEqual([-20, 120, 10])
-    expect(niceRange(0, 20, true)).toEqual([0, 20, 1])
   })
 })

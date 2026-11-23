@@ -6,6 +6,7 @@
 import { axisEnd, readAxes } from '$shared/graph/axes'
 import { COLORS } from '$shared/graph/colors'
 import { clipPath, layoutGrid, pathOf, round, type Point } from '$shared/graph/grid'
+import { niceRange } from '$lib/shared/niceRange'
 import { curveEnd, curvePoints, heatOf, isPlateau, placeSegments, segmentsOf, type Direction, type SegmentKey } from './curve'
 import { propertiesOf, temperaturesOf, WIDTH_KEYS, type CurveSettings } from './settings'
 
@@ -93,21 +94,6 @@ export function placedSegments(s: CurveSettings) {
 
 /** A temperature as written on the figure: −114.1 °C. */
 export const degrees = (t: number) => `${String(round(t)).replace('-', '−')} °C`
-
-/** A tidy axis range covering from..to: [start, end, step], in 8 to 20 blocks. */
-export function niceRange(from: number, to: number, zero = false): [number, number, number] {
-  const span = Math.max(to - from, 1e-6)
-  for (const k of [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6]) {
-    for (const m of [1, 2, 2.5, 5]) {
-      const step = m * 10 ** k
-      const start = zero ? 0 : Math.floor(from / step + 1e-9) * step
-      const end = Math.ceil(to / step - 1e-9) * step
-      const blocks = Math.round((end - start) / step)
-      if (blocks <= 20 && (blocks >= 8 || span / step < 8)) return [round(start), round(end), step]
-    }
-  }
-  return [from, to, span / 10]
-}
 
 /** Axes that just fit the curve, counting in tidy steps, or none when there's no curve. */
 export function fittedAxes(s: CurveSettings) {

@@ -15,6 +15,8 @@ import type { Run } from '$lib/generators/punnett-square/text'
 import { answerText, pedigreeFigure } from '$lib/generators/pedigree/figure'
 import { tellsMode, type Mode } from '$lib/generators/pedigree/genetics'
 import { familyOf, pedigreeSettings } from '$lib/generators/pedigree/settings'
+import { answerLines as cladogramAnswer } from '$lib/generators/cladogram/layout'
+import { cladogramSettings } from '$lib/generators/cladogram/settings'
 import { buildPredatorPrey, timeText } from '$lib/generators/predator-prey/figure'
 import { pairNamed } from '$lib/generators/predator-prey/pairs'
 import { predatorPreySettings } from '$lib/generators/predator-prey/settings'
@@ -158,6 +160,14 @@ const GENERATORS: { [G in ExampleGeneratorId]: { definition: Definition<Settings
   'population-growth': { definition: populationSettings, answer: none },
   'punnett-square': { definition: punnettSettings, answer: punnettSquareAnswer },
   pedigree: { definition: pedigreeSettings, answer: pedigreeAnswer },
+  // The taxa when their names are blank, and the traits by number when they are.
+  cladogram: {
+    definition: cladogramSettings,
+    answer: (s) => {
+      const lines = cladogramAnswer(s)
+      return lines.length ? { heading: 'Answer key', lines } : null
+    },
+  },
   'predator-prey': { definition: predatorPreySettings, answer: predatorPreyAnswer },
   // Each trophic level and what is at it (so any blank name), the chain in order, or each pyramid level's energy.
   'food-web': { definition: foodWebSettings, answer: (s) => ({ heading: 'Answer key', lines: foodWebAnswer(s) }) },

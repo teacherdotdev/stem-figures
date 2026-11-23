@@ -551,6 +551,315 @@ export const COPY: Record<string, GeneratorCopy> = {
     imageAlt: 'A printable ray diagram of a converging lens with the object beyond 2F, three principal rays and the real, inverted, smaller image, made with the Ray Diagram Generator',
     educationalLevel: ['Middle school', 'High school', 'AP Physics'],
   },
+
+  'roller-coaster': {
+    heading: 'Roller coaster figures for conservation of energy: hills, dips and a loop',
+    intro: [
+      'The Roller Coaster Generator draws a track from a short list of points, left to right, each with a height. A smooth curve runs through them: a point higher than its neighbours is the top of a hill, a lower one is the bottom of a dip, and two points at the same height make a level stretch. Each point can have a dot and a label on the track, and a mark from the ground up to it with its height.',
+      'Add a loop at any point, a cart, ball or block at a point or upside down at the top of the loop, a dashed velocity arrow, and friction on part of the track, hatched with its length marked under the ground. Teachers use it for potential and kinetic energy, conservation of mechanical energy, work done by friction, and the least speed at the top of a loop.',
+      'The heights and the loop’s radius are drawn to scale with each other. Nothing is worked out from them: no speeds and no energies, so the figure can go with any question, including a hill the cart can’t reach.',
+    ],
+    settings: [
+      'Two to eight points, each with a height from 0 to 100, evenly spaced from left to right',
+      'Each point’s label, like A, PE_g or KE = 0, a blank line, or none for a point that only shapes the track',
+      'Each point’s height mark, like 40 m, h or h/2, a blank line, or none',
+      'A loop at one point, its radius in the same units as the heights, a label for the radius and one for the top of the loop',
+      'A cart, ball or block with its label and size, at any point or at the top of the loop',
+      'Velocity forward or back along the track, drawn dashed',
+      'A rough stretch from any point to the next, hatched, with a friction label and a length mark like d or 12 m',
+      'The ground line on or off, Mirror, so the track runs right to left, and color for slides',
+    ],
+    faqs: [
+      {
+        q: 'Is the roller coaster drawn to scale?',
+        a: 'Up and down, yes: the heights and the loop’s radius share one scale, and the tallest fills the figure, so a 40 m hill is drawn twice as high as a 20 m one. Across, no: the points are evenly spaced, with extra room at the loop for its circle. If a loop is too big for the room between its neighbours it is drawn smaller, and a note under its radius says so.',
+      },
+      {
+        q: 'Does it work out the speed or the energy at each point?',
+        a: 'No. It draws the track, the heights and the labels, and leaves the numbers to you, so nothing on the figure gives an answer away. It doesn’t check that the cart can reach a point either, since a hill the cart can’t climb makes a good question.',
+      },
+      {
+        q: 'How do I make a hill, a dip, a level stretch or a cliff?',
+        a: 'Type the heights in order. A point higher than both its neighbours is the top of a hill, and a lower one is the bottom of a dip. Two points at the same height make a level stretch between them. A last point above the ground leaves the track ending in the air. The curve never goes higher than a hill’s height or lower than a dip’s.',
+      },
+      {
+        q: 'How do I show friction on part of the track?',
+        a: 'Turn on Rough at the point where the friction starts, and the track from there to the next point is hatched along its underside. Its length mark is drawn under the ground and is always horizontal: on a level stretch it is the stretch’s length, and on a sloping one it is the distance along the ground, not along the slope. Leave the next rough stretch’s length mark off and one mark spans both.',
+      },
+      {
+        q: 'Can it draw energy bar charts, a spring launcher or more than one loop?',
+        a: 'Not yet. A track has one loop, and the figure is the track only. If you need one of these, use Request a generator on the home page and tell us what it should draw.',
+      },
+    ],
+    imageAlt: 'A printable roller coaster figure with a cart at the top of the first hill, a dip, a second lower hill and four lettered points with their heights marked, made with the Roller Coaster Generator',
+    educationalLevel: ['Middle school', 'High school', 'AP Physics'],
+  },
+
+  'electric-and-magnetic-fields': {
+    heading: 'Electric and magnetic field lines, drawn from the real field',
+    intro: [
+      'The Electric and Magnetic Field Generator draws the field lines of six setups textbooks use again and again: one point charge, a positive and a negative charge, two like charges, a pair of parallel plates, a bar magnet, and a straight wire seen end-on carrying a current into or out of the page. Pick one, and the field lines are drawn with arrows showing their direction.',
+      'Lines around charges are traced through the real field, so they curve the way they should and never cross: from a positive charge into the negative one, or bending away from each other between like charges. Turn the lines off to leave just the charges, plates, magnet or wire for students to draw the field themselves.',
+    ],
+    settings: [
+      'One point charge, positive or negative',
+      'A positive and a negative charge, or two positive or two negative charges, side by side',
+      'Two parallel plates, positive on top, with a uniform field between them',
+      'A bar magnet, with field lines from north round to south',
+      'A straight wire seen end-on, with its current out of the page (a dot) or into it (a cross), and circular field lines around it',
+      'Fewer, normal or more field lines, with or without arrows, or none at all, and color for slides',
+    ],
+    faqs: [
+      {
+        q: 'Are the field lines accurate?',
+        a: 'Around charges, yes: each line is traced step by step through the combined field of the charges, each falling off with the square of the distance, so the lines bend the way the real field does and never cross. Lines start evenly spaced around each charge. The bar magnet’s lines are traced the same way, and the wire’s are circles, further apart further out, because the field weakens with distance from the wire.',
+      },
+      {
+        q: 'Which way do the arrows point?',
+        a: 'Electric field lines point away from positive charges and toward negative ones, and from the positive plate to the negative plate. Magnetic field lines run from the magnet’s north pole round to its south pole outside it. Around a wire with its current out of the page they run counterclockwise, and clockwise with the current into the page, as the right-hand rule says.',
+      },
+      {
+        q: 'Can students draw the field lines themselves?',
+        a: 'Yes. Turn off Draw the field lines to leave just the charges, plates, magnet or wire, or keep the lines and turn off the arrows, so students add the direction.',
+      },
+      {
+        q: 'Can I make the charges different sizes, add more charges or show equipotential lines?',
+        a: 'Not yet. The generator keeps to the setups teachers ask for most, with equal charges. If you need another setup, use Request a generator on the home page and tell us what it should draw.',
+      },
+    ],
+    imageAlt: 'A printable electric field diagram of a positive and a negative point charge side by side, with curved field lines running from the positive charge to the negative one, made with the Electric and Magnetic Field Generator',
+    educationalLevel: ['Middle school', 'High school', 'AP Physics'],
+  },
+
+  'circular-motion': {
+    heading: 'Circular motion diagrams with velocity, acceleration and forces',
+    intro: [
+      'The Circular Motion Generator draws an object going round a circle in one of three setups. The Top view shows the circle from above, with the object at one to eight positions: on its own, on a string, on a turntable or on a flat curved road. The Vertical circle shows it from the side at the top, side or bottom: on a string, inside a loop, over a hill or through a dip. The Conical pendulum is a bob on a string from a ceiling, going round a level circle.',
+      'Each figure can show the velocity along the tangent, the centripetal acceleration toward the center, and the forces: one inward force in the Top view, or gravity with the tension or the normal force in the side views. Velocity and acceleration are dashed and forces are solid, so they are never mixed up, even photocopied. Turn any of them off for students to draw, or rename any label.',
+    ],
+    settings: [
+      'The setup: Top view, Vertical circle or Conical pendulum',
+      'Top view: nothing, a string, a turntable or a road around the object, 1 to 8 positions, where the first one is, and clockwise or counterclockwise',
+      'A second object halfway out on a turntable, with a velocity arrow half as long',
+      'Vertical circle: a string, a loop, a hill or a dip, with the object at the top, the bottom, the side, or several of them',
+      'Conical pendulum: the string’s angle from the vertical, 15° to 60°, its angle and length labels, and the velocity into or out of the page',
+      'Velocity, centripetal acceleration, an inward force, gravity, tension and the normal force, each on or off with its own label',
+      'The tension’s horizontal and vertical components on the conical pendulum',
+      'A radius or diameter, the angular speed ω, an angle mark, and letters A, B, C… at the positions',
+      'A ball or a block with its own label, vector notation (an arrow over each label, or bold), and color for slides',
+    ],
+    faqs: [
+      {
+        q: 'Which way do the velocity and the acceleration point?',
+        a: 'The velocity is along the tangent to the circle, the way the object is going round. The centripetal acceleration points from the object straight at the center of the circle. In the Top view both are drawn on the object; in the side views the acceleration is drawn beside the object, so it is not read as one of the forces.',
+      },
+      {
+        q: 'Are the arrows drawn to scale?',
+        a: 'The motion is uniform, so every velocity arrow in a figure is the same length, and so is every acceleration arrow. On a turntable the second object, halfway out, has arrows half as long, because v = ωr. On the Vertical circle gravity is the same length everywhere, and the tension or normal force is shorter than gravity at the top and longer at the bottom, so the net force points to the center there. The speed is steady, so the net force is the same size at the top, the side and the bottom: the tension at the bottom is two gravities longer than at the top. The Conical pendulum’s forces are to scale: the tension’s vertical component is exactly as long as gravity.',
+      },
+      {
+        q: 'Is there an arrow for the centripetal force?',
+        a: 'In the Top view, turn on Inward force. It is one solid arrow toward the center, labeled F_c until you rename it for the force that supplies it: T for a string, F_f for friction on a road or turntable, F_g for gravity. The side views draw the real forces instead (gravity, and the tension or the normal force), since the centripetal force there is their sum.',
+      },
+      {
+        q: 'Can it draw a car going over a hill or through a dip?',
+        a: 'Yes. Choose Vertical circle, then Hill or Dip, and Block for the object. Gravity and the normal force are drawn on it, with the centripetal acceleration beside it, and the radius can be marked with the center of the curve dashed below the hill or above the dip.',
+      },
+      {
+        q: 'Can it draw a banked curve, or work out the forces from a mass and a speed?',
+        a: 'Not yet. A flat curve seen from above is the Top view’s road. Labels are text you type, so no values are worked out. If you need a banked curve or worked values, use Request a generator on the home page and tell us what it should draw.',
+      },
+    ],
+    imageAlt: 'A printable circular motion diagram of a ball at four points of a dashed circle seen from above, each with a velocity arrow along the tangent and a centripetal acceleration arrow pointing at the center, made with the Circular Motion Generator',
+    educationalLevel: ['High school', 'AP Physics'],
+  },
+
+  'lever': {
+    heading: 'Class 1, 2 and 3 levers, drawn to scale',
+    intro: [
+      'The Lever Generator draws a beam on a triangular fulcrum with a load, an effort arrow, and the two arms marked underneath: the effort arm and the load arm, each measured from the fulcrum. Pick a class 1, 2 or 3 lever and type the two arms and the load. The beam is drawn to scale, and the effort is worked out for you, because an ideal lever balances: effort × effort arm = load × load arm.',
+      'Teachers use it for simple machines and mechanical advantage questions on bellringers, homework, tests and lab instructions. All four values start on the figure; blank one, or type ? or a symbol over it, and that is the one students find. Name the fulcrum, load and effort, leave blank lines for students to label the parts, or turn the arms off and ask which class of lever it is.',
+    ],
+    settings: [
+      'A class 1, 2 or 3 lever: the fulcrum, the load or the effort in the middle',
+      'The effort arm and the load arm, in cm, m, in or ft, drawn to scale',
+      'The load, as a force in N or lb or a mass in kg or g, drawn as a block on the beam or a force arrow',
+      'The effort, worked out from the load and the arms, to 3 significant figures',
+      'Labels for the load, the effort and each arm: its value, your own text such as F_E or ?, a blank line for students, or left off',
+      'Names for the effort, load and fulcrum, written, a blank line for students to label, or left off',
+      'The two arms’ dimension lines on or off',
+      'A chart title, an answer key with the mechanical advantage, label size, mirror, and color for slides',
+    ],
+    faqs: [
+      {
+        q: 'What are the three classes of lever?',
+        a: 'They differ in what is in the middle. A class 1 lever has the fulcrum between the load and the effort, like a seesaw, a crowbar or scissors. A class 2 lever has the load in the middle, like a wheelbarrow or a nutcracker, so the effort is always smaller than the load. A class 3 lever has the effort in the middle, like tweezers, a fishing rod or a forearm, so the effort is always bigger than the load, but the load moves farther.',
+      },
+      {
+        q: 'How is the effort worked out?',
+        a: 'The lever is ideal: it balances, there is no friction, and the beam has no weight. So effort × effort arm = load × load arm, and the effort is the load × the load arm ÷ the effort arm. When it doesn’t come out even it is rounded to 3 significant figures, so 0.03003 N is 0.0300 N, and the label, the form and the answer key all show the same rounded value.',
+      },
+      {
+        q: 'How is mechanical advantage worked out?',
+        a: 'Mechanical advantage is the effort arm ÷ the load arm, which for an ideal lever is also the load ÷ the effort. A lever with a 1.5 m effort arm and a 0.5 m load arm has a mechanical advantage of 3, so a 300 N load is lifted by a 100 N effort. Turn on the answer key to print the working under the figure.',
+      },
+      {
+        q: 'What if the load is a mass in kg or g?',
+        a: 'Then it is drawn as a block labeled with its mass, and its weight is its mass × 9.8 N/kg, so a 30 kg load weighs 294 N, and a weight that doesn’t come out even is rounded to 3 significant figures, like the effort. The effort is always a force in newtons. The answer key shows the weight first. A load in N or lb is already a force, and can be drawn as a block or as an arrow pointing down.',
+      },
+      {
+        q: 'How do I make one value the unknown?',
+        a: 'Each of the four values, the load, the effort and the two arms, has its own label. Leave it empty and it shows its value; type ? or a symbol such as F_E or d_1 to replace it, or pick a blank line for students to write on. The answer key is the same whichever one you hide.',
+      },
+      {
+        q: 'Is the lever drawn to scale?',
+        a: 'Yes. The beam is split in the ratio of the two arms, so a 1.5 m arm is drawn three times as long as a 0.5 m one. The one exception is a very short arm: no arm is drawn shorter than 15% of the beam, so its label and dimension line still fit, and the form says when that happens. The longer force arrow is the bigger force.',
+      },
+      {
+        q: 'Can I draw a seesaw with several masses, a beam with its own weight, or a beam that doesn’t balance?',
+        a: 'Not on this generator. A lever here has one load, one effort and a weightless beam, and always balances. Moments about a pivot with several weights, a heavy beam or two supports are a torque figure: use the Torque Generator.',
+      },
+    ],
+    imageAlt: 'Three printable lever diagrams side by side, a class 1, a class 2 and a class 3 lever, each a beam on a fulcrum with its load, effort and arms labeled, made with the Lever Generator',
+    educationalLevel: ['Middle school', 'High school', 'AP Physics'],
+  },
+  'torque': {
+    heading: 'Torque and moments diagrams, worked out',
+    intro: [
+      'The Torque Generator draws a level beam held up by a pivot, by two supports, or by a wall, with up to six loads on it: objects hanging from it or resting on it, and force arrows pushing down or pulling up. Every load is at a set distance along the beam, drawn to scale, with its distance marked from the pivot, from support A or from the wall. A Torque section beside the figure works out each torque, the clockwise and counterclockwise totals, the forces on two supports, or a cable’s tension and the wall’s force.',
+      'Teachers use it for the principle of moments, seesaws and beam balances, planks on two trestles, hanging signs and cantilevers, on tests, worksheets and slides. Every weight and distance shows its value until you type over it: type ? or a symbol such as m_1 or x, or pick a blank line, and that is the unknown students find. The Balance with this load button sets a load to the value that balances the beam, so a “find the missing weight” question takes a moment to write.',
+    ],
+    settings: [
+      'What holds the beam up: a pivot anywhere along it, two supports A and B, or a wall with a cable at 15° to 75° (a hanging sign) or with none (a cantilever)',
+      'The beam’s length in m or cm, drawn to scale, and its own weight or mass at its middle, or a light beam',
+      'Up to six loads: a block or ball hanging from the beam or resting on it, or a force arrow down or up, each at its own place along the beam',
+      'Values in N, or masses in kg or g with g = 9.8, 9.81 or 10 N/kg',
+      'A label for every load and distance: its value, your own text such as m_1, x or ?, a blank line for students, or left off',
+      'Distance marks from the pivot, support A or the wall, the beam’s whole length, weight arrows on objects, and the forces holding the beam up',
+      'The torques, support forces or tension worked out step by step, and a button that balances the beam with any load',
+      'Mirror, to put the wall on the right, and color for slides',
+    ],
+    faqs: [
+      {
+        q: 'Is the figure drawn to scale?',
+        a: 'Along the beam, yes: a load 0.4 m from the pivot is drawn twice as far from it as one 0.2 m away, on whatever length of beam you set. Up and down, nothing is to scale: objects, strings and force arrows are drawn at fixed sizes, so a 6 N block is no bigger than a 3 N one and every force arrow is the same length. A beam held by a cable is drawn shorter when the cable is steep, so the cable reaches the wall at its true angle.',
+      },
+      {
+        q: 'Why doesn’t the beam tilt when it isn’t balanced?',
+        a: 'Exam figures draw the beam level whether it balances or not, since the question is usually whether it does, or what would make it. A tilted beam would give the answer away, and would change every distance. The Torque section says whether it balances, and if not, the net torque and which way it turns.',
+      },
+      {
+        q: 'How do I make one weight or distance the unknown?',
+        a: 'Each load has a label and a distance label. Left empty they show their values, such as 6 N and 0.2 m. Type ? or a symbol such as W, m_1 or d to replace one, or pick a blank line for students to write on. The load still counts at its real value in the working, so set it to the right answer first: with a pivot, Balance with this load sets it to the value that balances the beam.',
+      },
+      {
+        q: 'Should I use kg or N?',
+        a: 'Either. Values in N are weights, drawn as they are. Values in kg or g are masses, and the working turns each into a weight with g = 9.8, 9.81 or 10 N/kg, whichever your course uses, before taking moments. Every load and the beam’s own weight use the same unit.',
+      },
+      {
+        q: 'How are the forces on two supports worked out?',
+        a: 'By taking moments about support A: the force at B times the distance from A to B equals the sum of each weight times its distance from A. Then the forces up equal the forces down, which gives the force at A. If either comes out negative, the beam would tip over the other support, and the generator says so.',
+      },
+      {
+        q: 'How is a hanging sign’s cable tension worked out?',
+        a: 'By taking moments about the wall, where the beam is hinged: T sin θ times the cable’s distance from the wall equals the sum of each weight times its distance from the wall, so T = Σ(W d) ÷ (d sin θ). The wall’s force on the beam is then T cos θ along the beam and the rest of the weight up the wall. With no cable, the beam is a cantilever fixed into the wall, which holds up all of its weight and supplies the torque, drawn with the support forces as a curved arrow M round the beam’s end.',
+      },
+      {
+        q: 'Is a moment the same as a torque?',
+        a: 'Yes. Torque and moment (or moment of a force, or turning effect) are names for the same thing: a force times its perpendicular distance from the pivot, in N·m. British and IGCSE courses tend to say moment; American and AP courses say torque. The generator says torque, clockwise and counterclockwise (anticlockwise).',
+      },
+      {
+        q: 'Where are levers, effort and mechanical advantage?',
+        a: 'On the Lever Generator, which draws a class 1, 2 or 3 lever with its fulcrum, load and effort named, and works out the mechanical advantage. A balanced seesaw can be drawn on either; this one is for several loads, a heavy beam, two supports or a wall.',
+      },
+    ],
+    imageAlt: 'Three printable torque diagrams side by side: a balanced beam on a pivot with two hanging weights, a beam on two supports A and B with its weight at its middle, and a hanging sign on a beam held at a wall by a cable, each with its distances marked, made with the Torque Generator',
+    educationalLevel: ['Middle school', 'High school', 'AP Physics', 'IGCSE', 'A level'],
+  },
+
+  'pendulum': {
+    heading: 'Pendulum diagrams for energy, forces and simple harmonic motion',
+    intro: [
+      'The Pendulum Generator draws a bob on a string hanging from a pivot under a hatched ceiling, swung out θ from the vertical. The Swing shows the bob at its release point, at the bottom and at the same height on the far side, with its dashed path between them, the angle θ, the string’s length L and the height h it drops: the figure for energy conversion problems. The bottom and far-side bobs are drawn lighter, with dashed strings, so the release point stands out.',
+      'One bob shows the pendulum at one angle, with the tension and its weight, or with weight split into its components along the string (mg cos θ) and along the path (mg sin θ). The arrows are drawn at the release point, where the bob is momentarily at rest, so the tension is drawn as long as mg cos θ. Rename any label, leave it blank for students to fill in, or turn it off.',
+    ],
+    settings: [
+      'The picture: the Swing (release point, bottom and far side) or One bob',
+      'The angle from the vertical, 5° to 75° (at least 15° in the Swing, so its three bobs stand apart), and the side the bob is on',
+      'The bob’s dashed path, the angle mark θ, the string length L and the height mark h, each with its own label',
+      'Letters A, B and C at the release point, the bottom and the far side of the Swing, each editable',
+      'The velocity at the bottom of the Swing, with its label',
+      'On One bob: no forces, the tension and weight, or those with weight’s components along the string and the path',
+      'The bob’s label, a chart title, and color for slides',
+    ],
+    faqs: [
+      {
+        q: 'How do I make a figure for a pendulum energy problem?',
+        a: 'Keep the Swing, the default. It shows the bob at its release point, at the bottom and at the far side, the height h from the lowest point up to the release point, and the angle θ and string length L. Turn on Letter the three bobs to name them A, B and C for questions like “find the speed at B”. The far-side bob is at the same height as the release point, as energy conservation says it should be without friction.',
+      },
+      {
+        q: 'Why is there no velocity arrow at the ends of the swing?',
+        a: 'At the release point and at the far side the bob stops for a moment before swinging back, so its velocity there is zero. The velocity arrow is drawn only on the bottom bob, along the path toward the far side, where the bob is fastest.',
+      },
+      {
+        q: 'Are the force arrows drawn to scale?',
+        a: 'They are drawn to scale with each other: the components along the string and along the path are weight’s true components, mg cos θ and mg sin θ, with dotted lines from weight’s tip to theirs. At a wide angle every arrow is drawn longer, so mg cos θ still shows past the bob; at a small angle mg sin θ is drawn a little longer than to scale, so it shows at all. The tension is drawn as long as mg cos θ, which is right at the release point, where the bob is momentarily at rest. Lower in the swing the tension is larger, so the forces are only drawn on One bob, at its release point.',
+      },
+      {
+        q: 'Can it draw a pendulum for simple harmonic motion?',
+        a: 'Yes: the Swing with its dashed path and the velocity at the bottom is the usual figure, with θ as the amplitude angle. Turn off the height mark if you don’t need it. Values like the period are not worked out; type them into the labels or the chart title.',
+      },
+      {
+        q: 'Can it work out the height, the speed or the period?',
+        a: 'Not yet. Labels are text you type, so nothing is worked out from θ and L. If you would like values and an answer key (h = L(1 − cos θ) and the speed at the bottom, for example), or a conical, double or ballistic pendulum, use Request a generator on the home page and tell us what it should draw. A conical pendulum is on the Circular Motion Generator.',
+      },
+    ],
+    imageAlt: 'A printable pendulum diagram of a bob on a string from a hatched ceiling, released at an angle θ from the vertical, drawn again lighter at the bottom and at the same height on the far side, with its dashed path, the string length L and the height h it drops, made with the Pendulum Generator',
+    educationalLevel: ['Middle school', 'High school', 'AP Physics'],
+  },
+
+  'spring': {
+    heading: 'Spring diagrams for Hooke’s law, simple harmonic motion, and springs in series and parallel',
+    intro: [
+      'The Spring Generator draws a spring fixed to a support, hanging from a ceiling or lying on a floor from a wall, with a block, a ball or slotted masses on its free end. Draw it once; before and after, at its natural length beside the same spring stretched or squashed, for Hooke’s law; or at three positions, −A, equilibrium and +A, for simple harmonic motion.',
+      'The coil is redrawn at every length with the same number of turns and the same line, so a stretched spring looks like the same spring pulled out, not a picture stretched. Mark the extension x, the natural length L₀ and the equilibrium line, add an applied force, or draw two or three springs in series or in parallel.',
+    ],
+    settings: [
+      'Hanging from a ceiling, or horizontal from a wall with the object on a floor',
+      'One spring; before and after; or three positions for simple harmonic motion',
+      'One spring, or two or three in series or in parallel, each labeled k or numbered k₁, k₂, k₃',
+      'The extension, up to the natural length again, or squashed by up to half of it on a floor; in three positions, the amplitude A',
+      'Zigzag or looped coils',
+      'A block, a ball or slotted masses, with its own label',
+      'The extension and the natural length as dimension lines, a dashed equilibrium line, and an applied force pulling or pushing',
+      'In three positions, the velocity at equilibrium and the acceleration at each end, with the way the object is moving',
+      'Every label written, a blank line for students, or left off; a chart title; and color for slides',
+    ],
+    faqs: [
+      {
+        q: 'How do I draw a Hooke’s law figure?',
+        a: 'Keep the default, Before and after: the spring at its natural length with nothing on it, and beside it the same spring stretched by the object, with a dashed line at the natural length running across both and the extension x marked between it and the stretched end. Change the extension to stretch it more or less, or turn on the natural length L₀.',
+      },
+      {
+        q: 'Can it draw a compressed spring?',
+        a: 'Yes, on a floor. Choose Horizontal and move the extension below 0; the spring is squashed by up to half its natural length, and the applied force pushes the object toward the wall. A hanging spring with a mass on it is always stretched.',
+      },
+      {
+        q: 'How does it show simple harmonic motion?',
+        a: 'Choose Three positions. The same spring is drawn at −A, at equilibrium and at +A, side by side when hanging or in three rows on a floor, with a dashed equilibrium line. At each end the velocity is zero and the acceleration, pointing back to equilibrium, is greatest; at equilibrium the velocity is greatest and the acceleration is zero, so each copy has at most one arrow. A hanging spring oscillates about the point where it rests stretched by the object, not about its natural length.',
+      },
+      {
+        q: 'Do springs in series stretch by different amounts?',
+        a: 'Not in the figure. The spring constants are labels you type, so springs in series are drawn stretching equally, and springs in parallel all have the same extension, as they do in real life. If your springs have different k, say so in the question.',
+      },
+      {
+        q: 'Can it work out the extension from the mass and k?',
+        a: 'Not yet. Labels are text you type, so nothing is worked out or drawn to scale. If you would like values and an answer key, a spring on a ramp or between blocks, or a force–extension graph, use Request a generator on the home page and tell us what it should draw.',
+      },
+    ],
+    imageAlt: 'A printable Hooke’s law diagram of a spring hanging from a hatched ceiling at its natural length beside the same spring stretched by a block labeled m, with a dashed line at the natural length and the extension x marked, made with the Spring Generator',
+    educationalLevel: ['Middle school', 'High school', 'AP Physics'],
+  },
 }
 
 /** The copy for a generator; every generator on the site has some. */

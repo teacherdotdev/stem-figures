@@ -34,6 +34,16 @@ export const CHEMISTRY: CatalogEntry[] = [
     keywords: ['gas', 'syringe', 'plunger', 'collecting', 'collection', 'rate', 'reaction', 'volume', 'cm3', 'mL', 'conical', 'flask', 'delivery', 'tube', 'measurement', 'lab', 'apparatus'],
   },
   {
+    id: 'chromatography',
+    site: 'chemistry',
+    name: 'Chromatography',
+    path: '/chromatography',
+    blurb: 'Paper chromatography: inks separated up the paper, with Rf measurements.',
+    description:
+      'Make printable paper chromatography diagrams for chemistry tests. Type the inks and how far each color travels and get the chromatogram after the solvent has run, with the paper before it, the beaker setup and the distances from the origin line for working out Rf values, or any of those left off.',
+    keywords: ['chromatography', 'chromatogram', 'paper', 'ink', 'inks', 'dye', 'dyes', 'pigment', 'Rf', 'value', 'values', 'retention', 'factor', 'solvent', 'front', 'origin', 'baseline', 'pencil', 'line', 'separation', 'separating', 'mixture', 'mixtures', 'spot', 'spots', 'beaker', 'stationary', 'mobile', 'phase'],
+  },
+  {
     id: 'structure-editor',
     site: 'chemistry',
     kind: 'editor',
@@ -112,6 +122,16 @@ export const CHEMISTRY: CatalogEntry[] = [
     keywords: ['heating', 'cooling', 'curve', 'graph', 'phase', 'change', 'changes', 'state', 'states', 'matter', 'melting', 'freezing', 'boiling', 'condensation', 'condensing', 'vaporization', 'fusion', 'plateau', 'point', 'temperature', 'time', 'heat', 'energy', 'specific', 'enthalpy', 'supercooling', 'solid', 'liquid', 'gas', 'ice', 'water', 'steam', 'ethanol', 'acetone', 'mercury', 'salt', 'kinetic', 'potential', 'thermochemistry', 'AP'],
   },
   {
+    id: 'phase-diagram',
+    site: 'chemistry',
+    name: 'Phase Diagram',
+    path: '/phase-diagram',
+    blurb: 'A pressure–temperature phase diagram for water, carbon dioxide and other substances, or your own, labeled, lettered or blank.',
+    description:
+      'Make printable phase diagrams for chemistry tests. Pick water, carbon dioxide, nitrogen, oxygen, argon, methane or ammonia, or type your own triple and critical points, and get the pressure–temperature diagram with its solid, liquid and gas regions, triple point, critical point and 1 atm line named, lettered or left blank for students.',
+    keywords: ['phase', 'diagram', 'phase-change', 'change', 'triple', 'critical', 'point', 'pressure', 'temperature', 'sublimation', 'deposition', 'fusion', 'vaporization', 'supercritical', 'fluid', 'normal', 'boiling', 'melting', 'freezing', 'solid', 'liquid', 'gas', 'vapor', 'water', 'carbon', 'dioxide', 'CO2', 'dry', 'ice', 'nitrogen', 'oxygen', 'argon', 'methane', 'ammonia', 'states', 'matter', 'atm', 'kPa', 'AP'],
+  },
+  {
     id: 'potential-energy-diagram',
     site: 'chemistry',
     alsoOn: ['biology'],
@@ -121,6 +141,26 @@ export const CHEMISTRY: CatalogEntry[] = [
     description:
       'Make printable potential energy diagrams for chemistry tests. Type the energies of the reactants, transition states, intermediates and products, or Ea and ΔH, and get the reaction energy profile for an exothermic or endothermic reaction, with or without a catalyst or an enzyme, in up to three steps, its Ea and ΔH arrows labeled, lettered or left blank for students.',
     keywords: ['potential', 'energy', 'diagram', 'reaction', 'profile', 'enthalpy', 'coordinate', 'progress', 'activation', 'Ea', 'ΔH', 'delta', 'transition', 'state', 'activated', 'complex', 'intermediate', 'catalyst', 'catalysed', 'catalyzed', 'enzyme', 'exothermic', 'endothermic', 'mechanism', 'multistep', 'step', 'rate', 'determining', 'level', 'kinetics', 'thermochemistry', 'AP', 'IB'],
+  },
+  {
+    id: 'bond-energy-curve',
+    site: 'chemistry',
+    name: 'Bond Energy Curve',
+    path: '/bond-energy-curve',
+    blurb: 'Potential energy against internuclear distance for a covalent bond, from its bond length and bond energy, up to three bonds on one graph.',
+    description:
+      'Make printable bond energy curves for chemistry tests. Type a bond’s name, bond length and bond energy and get the graph of potential energy against internuclear distance, its lowest point at the bond length and as far below zero as the bond energy, with numbered axes, up to three bonds on one graph, guide lines to the axes, and the names hidden for students to work out.',
+    keywords: ['bond', 'energy', 'length', 'curve', 'graph', 'diagram', 'potential', 'internuclear', 'distance', 'separation', 'covalent', 'well', 'minimum', 'attraction', 'repulsion', 'Morse', 'Lennard-Jones', 'Leonard', 'Jones', 'single', 'double', 'triple', 'order', 'compare', 'kJ/mol', 'pm', 'picometer', 'angstrom', 'AP'],
+  },
+  {
+    id: 'equilibrium-graph',
+    site: 'chemistry',
+    name: 'Equilibrium Graph',
+    path: '/equilibrium-graph',
+    blurb: 'Concentration against time for a reversible reaction settling to equilibrium, then shifting when it’s stressed: Le Châtelier’s principle.',
+    description:
+      'Make printable equilibrium graphs for chemistry tests. Pick a reversible reaction such as N₂ + 3H₂ ⇌ 2NH₃, type its starting concentrations and K, and get concentration against time settling to equilibrium, then shifting as Le Châtelier’s principle says when a species is added or removed, the volume changed or the temperature raised or lowered, on numbered axes with an answer key.',
+    keywords: ['equilibrium', 'equilibria', 'graph', 'Le', 'Chatelier', 'Châtelier', 'Chatelier’s', 'principle', 'concentration', 'vs', 'versus', 'against', 'time', 'reversible', 'reaction', 'stress', 'shift', 'disturbance', 'perturbation', 'Kc', 'Keq', 'K', 'constant', 'quotient', 'Q', 'Haber', 'ammonia', 'NH3', 'N2O4', 'NO2', 'HI', 'SO3', 'PCl5', 'FeSCN', 'ICE', 'table', 'dynamic', 'volume', 'pressure', 'temperature', 'exothermic', 'endothermic', 'AP', 'IB'],
   },
   {
     id: 'particle-diagram',
@@ -162,6 +202,16 @@ export const CHEMISTRY: CatalogEntry[] = [
     description:
       'Make printable Lewis structures for chemistry tests. Type a formula like H2O or SO4 2- and get its Lewis dot structure, with formal charges and resonance structures, a structure for students to complete, or a wrong one for students to find the mistakes in.',
     keywords: ['lewis', 'dot', 'electron', 'structure', 'structures', 'diagram', 'lone', 'pair', 'pairs', 'bond', 'bonds', 'bonding', 'covalent', 'molecule', 'polyatomic', 'ion', 'octet', 'formal', 'charge', 'resonance', 'valence', 'VSEPR'],
+  },
+  {
+    id: 'vsepr-shapes',
+    site: 'chemistry',
+    name: 'VSEPR Shapes',
+    path: '/vsepr-shapes',
+    blurb: 'A molecule’s 3D shape, wedge-and-dash or ball-and-stick, with its shape name and bond angles.',
+    description:
+      'Make printable VSEPR shape diagrams for chemistry tests. Type a formula like NH3, SF4 or XeF4 and get its molecular geometry drawn wedge-and-dash or as a ball-and-stick model, turned any way, with lone pairs, the shape name, electron geometry, AXE notation and bond angles, or those left blank for students.',
+    keywords: ['VSEPR', 'molecular', 'geometry', 'shape', 'shapes', 'electron', 'domain', 'AXE', 'bond', 'angle', 'angles', 'lone', 'pair', 'pairs', 'wedge', 'dash', 'ball', 'stick', 'ball-and-stick', '3D', 'model', 'tetrahedral', 'trigonal', 'pyramidal', 'planar', 'bipyramidal', 'bent', 'linear', 'octahedral', 'seesaw', 'T-shaped', 'square', 'molecule'],
   },
   {
     id: 'dot-and-cross',
@@ -223,5 +273,25 @@ export const CHEMISTRY: CatalogEntry[] = [
     description:
       'Make printable half-life graphs for chemistry and physics tests. Pick carbon-14, iodine-131, uranium-238 or another isotope, or type your own half-life, and get its decay curve as percent, mass, nuclei or activity remaining, with guide lines at each half-life, a stable daughter, or up to three isotopes with their names hidden for students.',
     keywords: ['half-life', 'half', 'life', 'decay', 'radioactive', 'radioactivity', 'exponential', 'nuclear', 'isotope', 'parent', 'daughter', 'carbon', 'dating', 'radiometric', 'activity', 'becquerel', 'Bq', 'count', 'rate', 'remaining', 'iodine', 'uranium', 'curve', 'graph'],
+  },
+  {
+    id: 'rate-law-graphs',
+    site: 'chemistry',
+    name: 'Rate Law Graphs',
+    path: '/rate-law-graphs',
+    blurb: 'Concentration, ln[A] and 1/[A] against time for a zero, first or second order reaction, side by side.',
+    description:
+      'Make printable rate law graphs for chemistry tests. Set the order, the starting concentration and the rate constant and get [A], ln[A] and 1/[A] against time, side by side or one alone, for students to find the order from which graph is a straight line, with data points, a data table, scatter, or guide lines at each half-life.',
+    keywords: ['rate', 'law', 'laws', 'graph', 'graphs', 'kinetics', 'reaction', 'integrated', 'order', 'orders', 'zero', 'zeroth', 'first', 'second', 'constant', 'k', 'concentration', 'vs', 'versus', 'time', 'ln', 'ln[A]', '1/[A]', 'natural', 'log', 'inverse', 'reciprocal', 'half-life', 'half', 'life', 'linear', 'straight', 'line', 'slope', 'molarity', 'mol/L', 'reactant', 'data', 'table', 'plot', 'AP'],
+  },
+  {
+    id: 'electrochemical-cells',
+    site: 'chemistry',
+    name: 'Electrochemical Cells',
+    path: '/electrochemical-cells',
+    blurb: 'A galvanic cell of two metals and a salt bridge, with a digital or dial voltmeter or a coil of wire.',
+    description:
+      'Make printable electrochemical cell diagrams for chemistry tests. Pick two metals and get a galvanic (voltaic) cell, each electrode in a solution of its own ion, joined by a salt bridge and wired to a digital voltmeter, a dial voltmeter or a coil of wire, with the anode, cathode and electron flow labeled or left for students.',
+    keywords: ['electrochemical', 'electrochemistry', 'cell', 'cells', 'galvanic', 'voltaic', 'daniell', 'battery', 'salt', 'bridge', 'electrode', 'electrodes', 'anode', 'cathode', 'voltmeter', 'voltage', 'potential', 'E°cell', 'redox', 'oxidation', 'reduction', 'half-cell', 'electron', 'flow', 'zinc', 'copper'],
   },
 ]

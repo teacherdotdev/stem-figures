@@ -140,11 +140,7 @@
       <div class="head-row">
         <h2 class="card-head">Stages</h2>
         <HelpTip id="tree-tip" label="How to fill in the tree">
-          Each stage is one event, like a coin flip or a draw from a bag, and every branch of a stage splits into the same
-          outcomes. Type each outcome’s name and its probability as you want it written: 3/7 as a fraction, 0.4 or 40% as a
-          decimal or percent, or a letter like x. For dependent events, like drawing without replacement, untick Same on every
-          branch and type each branch’s probability. Leave any probability empty for students to fill in, or click any label
-          on the figure to make it a blank.
+          Probabilities are written as typed: 3/7, 0.4, 40% or x. Leave one empty, or click a label on the figure, for a blank.
         </HelpTip>
       </div>
 

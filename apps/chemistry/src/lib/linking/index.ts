@@ -4,7 +4,10 @@
 import { CATALOG, type CatalogEntry } from '$shared/catalog/index'
 import { SITE_ID } from '$lib/site/config'
 import { bohrLinking } from '$lib/generators/bohr-model/linking'
+import { bondLinking } from '$lib/generators/bond-energy-curve/linking'
+import { chromatographyLinking } from '$lib/generators/chromatography/linking'
 import { dotCrossLinking } from '$lib/generators/dot-and-cross/linking'
+import { equilibriumLinking } from '$lib/generators/equilibrium-graph/linking'
 import { syringeLinking } from '$lib/generators/gas-syringe/linking'
 import { halfLifeLinking } from '$lib/generators/half-life-graph/linking'
 import { curveLinking } from '$lib/generators/heating-cooling-curve/linking'
@@ -17,12 +20,16 @@ import { nuclideLinking } from '$lib/generators/nuclide-notation/linking'
 import { orbitalLinking } from '$lib/generators/orbital-diagram/linking'
 import { particleLinking } from '$lib/generators/particle-diagram/linking'
 import { phLinking } from '$lib/generators/ph-reading/linking'
+import { phaseLinking } from '$lib/generators/phase-diagram/linking'
 import { pesLinking } from '$lib/generators/photoelectron-spectrum/linking'
 import { energyLinking } from '$lib/generators/potential-energy-diagram/linking'
+import { rateLawLinking } from '$lib/generators/rate-law-graphs/linking'
 import { temperatureLinking } from '$lib/generators/temperature-reading/linking'
 import { titrationLinking } from '$lib/generators/titration-curve/linking'
 import { displacementLinking } from '$lib/generators/volume-by-displacement/linking'
 import { volumeLinking } from '$lib/generators/volume-reading/linking'
+import { vseprLinking } from '$lib/generators/vsepr-shapes/linking'
+import { cellLinking } from '$lib/generators/electrochemical-cells/linking'
 import type { GeneratorLinking } from './define'
 
 const BY_ID: Record<string, GeneratorLinking> = Object.fromEntries(
@@ -30,23 +37,30 @@ const BY_ID: Record<string, GeneratorLinking> = Object.fromEntries(
     volumeLinking,
     displacementLinking,
     syringeLinking,
+    chromatographyLinking,
     lengthLinking,
     massLinking,
     temperatureLinking,
     phLinking,
     titrationLinking,
     curveLinking,
+    phaseLinking,
     energyLinking,
+    bondLinking,
     particleLinking,
     bohrLinking,
     nuclideLinking,
     lewisLinking,
+    vseprLinking,
     dotCrossLinking,
     orbitalLinking,
     spectrumLinking,
     pesLinking,
     massSpectrumLinking,
     halfLifeLinking,
+    equilibriumLinking,
+    rateLawLinking,
+    cellLinking,
   ].map((l) => [l.id, l as GeneratorLinking]),
 )
 

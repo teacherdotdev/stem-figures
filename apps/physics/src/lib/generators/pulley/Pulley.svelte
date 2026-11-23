@@ -5,6 +5,8 @@
   import FigureLabel from '$lib/shared/FigureLabel.svelte'
   import { baselineBelowMiddle } from '$lib/shared/label'
   import ObjectShape from '$lib/shared/ObjectShape.svelte'
+  import Support from '$lib/shared/Support.svelte'
+  import { ceilingHatches } from '$lib/shared/support'
   import VectorArrow from '$lib/shared/VectorArrow.svelte'
   import { styleOf } from '$lib/shared/vector'
   import { mirrorTransform, mirrorX, palette } from '$lib/shared/figure'
@@ -17,7 +19,6 @@
   const p = $derived(palette(settings.color))
   const mx = (x: number) => mirrorX(settings.mirror, fig.width, x)
   const SIZE = 22
-  const HATCH = 10
 
   function arcPath(wheel: Wheel, from: number, to: number) {
     const at = (deg: number) => {
@@ -49,18 +50,8 @@
 >
   <rect class="paper" width={fig.width} height={fig.height} fill="#fff" />
   <g transform={mirrorTransform(settings.mirror, fig.width)} fill="none" stroke-linecap="round">
-    {#if fig.ceiling}
-      {@const c = fig.ceiling}
-      <line x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2} stroke={p.ink} stroke-width="2.5" />
-      {#each Array.from({ length: Math.floor((c.x2 - c.x1) / 13) }, (_, i) => c.x1 + 4 + i * 13) as x}
-        <line x1={x} y1={c.y1} x2={x + HATCH * 0.8} y2={c.y1 - HATCH} stroke={p.ink} stroke-width="1.3" />
-      {/each}
-    {/if}
-    {#if fig.ground}
-      {@const g = fig.ground}
-      <line x1={g.x1} y1={g.y1} x2={g.x2} y2={g.y2} stroke={p.ink} stroke-width="2.5" />
-      {#each fig.groundHatches as h}<line x1={h.x1} y1={h.y1} x2={h.x2} y2={h.y2} stroke={p.ink} stroke-width="1.3" />{/each}
-    {/if}
+    {#if fig.ceiling}<Support support={{ line: fig.ceiling, hatches: ceilingHatches(fig.ceiling) }} ink={p.ink} />{/if}
+    {#if fig.ground}<Support support={{ line: fig.ground, hatches: fig.groundHatches }} ink={p.ink} />{/if}
     {#if fig.table}
       {#each fig.table.legs as l}<rect x={l.x} y={l.y} width={l.w} height={l.h} fill={p.surface} stroke={p.ink} stroke-width="2" />{/each}
       {@const t = fig.table.slab}

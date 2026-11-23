@@ -51,7 +51,11 @@ const CARD = { width: 1200, height: 630, padX: 80, padY: 50 }
  *  query of the generator's address. Length Reading shows its three
  *  instruments (Math's copy has only the ruler, so it keeps its example). */
 const CARD_COLUMNS = {
-  physics: { 'length-reading': ['view=whole', 'instrument=caliper&closeUp=whole', 'instrument=micrometer&closeUp=whole'] },
+  physics: {
+    'length-reading': ['view=whole', 'instrument=caliper&closeUp=whole', 'instrument=micrometer&closeUp=whole'],
+    lever: ['labelSize=large', 'class=2&labelSize=large', 'class=3&labelSize=large'],
+    torque: ['', 'support=two&length=4&supportB=4&beamWeight=200&loads=resting,1,600&supportForces=1', 'support=wall&length=2&cableAt=2&beamWeight=50&loads=hanging,1.5,100'],
+  },
   chemistry: { 'length-reading': ['view=whole', 'instrument=caliper&closeUp=whole', 'instrument=micrometer&closeUp=whole'] },
 }[appName] ?? {}
 /** The white space around and between a columned card's figures. */
