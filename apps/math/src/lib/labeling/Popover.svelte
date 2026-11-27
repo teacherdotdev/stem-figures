@@ -18,11 +18,15 @@
 
   type Spot = { left: number; top: number }
   let {
-    at, label, owner = null, side = 'below', around = null, movable = false, title = '', moved = $bindable(null), onclose, children,
+    at, label, owner = null, side = 'below', around = null, movable = false, title = '', moved = $bindable(null), top = null, focus = true, onclose, children,
   }: {
     at: { x: number; y: number }; label: string; owner?: Element | null; side?: 'below' | 'above' | 'left' | 'right'
     around?: { x: number; y: number; w: number; h: number } | null
     movable?: boolean; title?: string; moved?: Spot | null
+    /** A fixed top edge, on the screen, whatever the panel is beside: an editor that keeps all its panels level. The panel scrolls if it's too tall. */
+    top?: number | null
+    /** Whether it takes the keyboard when it opens; off where keys still belong to the page (Backspace deleting the selected piece). */
+    focus?: boolean
     onclose: () => void; children: Snippet
   } = $props()
 
@@ -32,6 +36,11 @@
   const EDGE = 8
 
   async function place() {
+    await spot()
+    // Level with the others, unless the teacher has dragged it somewhere.
+    if (top != null && !moved) pos = { ...pos, top }
+  }
+  async function spot() {
     await tick()
     if (!panel) return
     const [w, h] = [panel.offsetWidth, panel.offsetHeight]
@@ -66,11 +75,12 @@
     }
   }
   $effect(() => {
-    void at.x, at.y, around, moved
+    void at.x, at.y, around, moved, top
     place()
   })
   // A movable panel keeps its place as its contents change, so only a fresh one takes focus.
   $effect(() => {
+    if (!focus) return
     panel?.querySelector<HTMLElement>(movable ? '.body input, .body button, .body [tabindex]' : 'input, button, [tabindex]')?.focus({ preventScroll: true })
   })
 
@@ -106,7 +116,7 @@
   onscrollcapture={(e) => !movable && !panel?.contains(e.target as Node) && onclose()}
 />
 
-<div bind:this={panel} class="panel" class:movable role="dialog" tabindex="-1" aria-label={label} style="left: {pos.left}px; top: {pos.top}px">
+<div bind:this={panel} class="panel" class:movable role="dialog" tabindex="-1" aria-label={label} style="left: {pos.left}px; top: {pos.top}px{top != null ? `; max-height: calc(100dvh - ${top + 8}px); overflow-y: auto` : ''}">
   {#if movable}
     <div class="grip" role="presentation" title="Drag to move" onpointerdown={down} onpointermove={move} onpointerup={up} onpointercancel={up}>
       <span class="title">{title}</span>

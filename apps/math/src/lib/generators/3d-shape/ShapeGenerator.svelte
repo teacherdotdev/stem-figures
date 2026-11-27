@@ -283,6 +283,7 @@
           {/if}
           {#if round && form.shape !== 'hemisphere'}<p class="hint">Round shapes are always seen from a little above.</p>{/if}
         </Section>
+        <p class="also">Several shapes together, like a cone on a cylinder or a box with a hole? Build them in the <a href="/composite-3d-shape">Composite 3D Shape Editor</a>.</p>
   {/snippet}
 
   {#snippet figure()}
@@ -291,6 +292,8 @@
 </GeneratorPage>
 
 <style>
+  .also { margin: 0.9rem 0.2rem 0; color: var(--muted); font-size: 0.84rem; line-height: 1.45; }
+  .also a { color: var(--blue-dark); font-weight: 600; }
   .card-head { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 
   .measures { padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.45rem; }

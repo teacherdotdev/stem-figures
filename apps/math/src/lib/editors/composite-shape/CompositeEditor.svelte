@@ -1193,6 +1193,7 @@
         <section class="start-menu" aria-labelledby="start-with">
           <h2 id="start-with">Start with</h2>
           <p class="note">One piece, or a shape already built from pieces. Then add more pieces onto any straight side.</p>
+          <p class="note">Building in 3D? Try the <a href="/composite-3d-shape">Composite 3D Shape Editor</a>.</p>
           <div class="tray">
             {#each [...SIDE_KINDS, ...STARTERS] as kind}
               <button type="button" class="start" onclick={() => start(kind)}>
@@ -1870,6 +1871,7 @@
   .start-menu { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; padding: 1.5rem; text-align: center; }
   .start-menu h2 { font-size: 1.25rem; font-weight: 800; }
   .note { margin: 0; color: var(--muted); font-size: 0.9rem; max-width: 30rem; }
+  .note a { color: var(--blue-dark); font-weight: 600; }
   .tray { display: grid; grid-template-columns: repeat(4, minmax(0, 9rem)); gap: 0.7rem; margin-top: 1rem; }
   .start {
     display: flex; flex-direction: column; align-items: center; gap: 0.4rem; padding: 0.9rem 0.6rem 0.75rem;

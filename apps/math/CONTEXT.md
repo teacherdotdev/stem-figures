@@ -713,6 +713,32 @@ _Avoid_: Slant, lateral height, side length
 How far an oblique shape's top slides sideways past its base, measured along the base's extended line. Any two of the height, the lean and the slanted side edge are enough; the third is worked out.
 _Avoid_: Offset, shift, overhang
 
+### Composite 3D shapes
+
+**Composite 3D Shape**:
+A 3D figure made of simpler 3D shapes joined face to face, such as an L-shaped block of two boxes, a house (a triangular prism on a box) or an ice cream cone (a hemisphere on a cone), drawn to scale and labeled for volume and surface area questions. Its editor is the Composite 3D Shape Editor. It's the three-dimensional cousin of a **Composite Shape**, which is flat.
+_Avoid_: Composite solid, compound shape, 3D composite, composite figure (all fine as search words, not as the name)
+
+**Piece** (of a composite 3D shape):
+One of the 3D shapes a composite 3D shape is built from (a box, triangular prism, cylinder, half cylinder, cone, square pyramid, sphere or hemisphere): the first piece, or one dragged onto a flat face of a piece already there, where it lines up with that face's middle, sits flush with one of its edges, or steps a half unit at a time along it. It's turned a quarter at a time, and can be dragged onto another face later. Pieces never float free or sink into one another.
+_Avoid_: Part (a part is what carries a label), component, object, solid, shape (alone)
+
+**Half cylinder**:
+A cylinder cut in half along its length, lying on its flat side like a treasure chest's lid, or stood on one of its half circles. It can be a piece or a hole (an arch).
+_Avoid_: Half-pipe, semicylinder (fine as a search word)
+
+**First piece**:
+The piece a composite 3D shape starts from, which every other piece is attached onto, directly or through other pieces.
+_Avoid_: Base (a 3D shape's base is one of its faces), root, main shape
+
+**Hole** (in a composite 3D shape):
+A piece taken away from a composite 3D shape instead of added to it, such as a cylinder drilled through a box or a cone carved out of a cylinder. It goes straight in from a face, all the way through or to a depth the teacher types. Not the hole on a graph or number line, which is a point left out.
+_Avoid_: Cut-out, void, subtraction, negative piece
+
+**Seam** (on a composite 3D shape):
+Where two pieces meet. Where the surface bends there, as where a cone sits on a cylinder, it's an edge like any other and is drawn. Where the two pieces' faces are flush, as along the join of an L-shaped block, it isn't drawn, so students find the split themselves, unless the teacher turns seams on.
+_Avoid_: Join, shared face, boundary
+
 ### Nets
 
 **Net**:
