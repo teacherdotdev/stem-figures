@@ -43,6 +43,22 @@ export const MATH: CatalogEntry[] = [
     ],
   },
   {
+    id: 'composite-3d-shape',
+    site: 'math',
+    kind: 'editor',
+    name: 'Composite 3D Shape Editor',
+    path: '/composite-3d-shape',
+    blurb: 'Build a 3D figure from boxes, prisms, cylinders, cones, pyramids and spheres, or cut one out of another.',
+    description:
+      'Build composite 3D shapes for volume and surface area problems. Start from a box, prism, cylinder, cone, pyramid or sphere, attach more shapes onto any flat face or cut holes out of them, type their sizes, label edges, heights and radii, and copy the finished figure into your worksheet or test.',
+    keywords: [
+      'composite 3d shape', 'composite 3d shapes', 'composite solid', 'composite solids', 'composite figure', 'composite figures',
+      '3d composite', 'compound shape', 'compound solid', 'combined solids', 'volume', 'surface area', 'volume of composite figures',
+      'l-shaped prism', 'rectangular prism', 'prism', 'cylinder', 'cone', 'pyramid', 'sphere', 'hemisphere', 'cube', 'unit cubes',
+      'hole', 'cut out', 'ice cream cone', 'silo', 'decompose', 'geometry', 'editor', 'draw', 'build', 'printable',
+    ],
+  },
+  {
     id: 'transformations',
     site: 'math',
     kind: 'editor',

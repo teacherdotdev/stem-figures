@@ -13,6 +13,7 @@ import BoxPlotPreview from './box-plot/Preview.svelte'
 import CirclePreview from './circle/Preview.svelte'
 import CumulativeFrequencyPreview from './cumulative-frequency/Preview.svelte'
 import CompositeShapePreview from '$lib/editors/composite-shape/Preview.svelte'
+import Composite3DShapePreview from '$lib/editors/composite-3d/Preview.svelte'
 import TransformationsPreview from '$lib/editors/transformations/Preview.svelte'
 import ConePreview from './cone/Preview.svelte'
 import CoordinateGridPreview from './coordinate-grid/Preview.svelte'
@@ -78,6 +79,7 @@ export const PREVIEWS: Record<string, Component> = {
   'table-of-values': TableOfValuesPreview,
   'length-reading': LengthReadingPreview,
   'composite-shape': CompositeShapePreview,
+  'composite-3d-shape': Composite3DShapePreview,
   transformations: TransformationsPreview,
 }
 
